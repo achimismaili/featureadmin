@@ -598,7 +598,7 @@ namespace FeatureAdmin
             this.ClientSize = new System.Drawing.Size(892, 730);
             this.Controls.Add(this.splitContainerCompleteMainframe);
             this.Name = "FrmMain";
-            this.Text = "Feature Admin Tool for SP2010 and SP Foundation   v2.1";
+            this.Text = "Feature Admin Tool for SP2010 and SP Foundation   v2.2";
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.tabControl1.ResumeLayout(false);
             this.FarmFeatures.ResumeLayout(false);

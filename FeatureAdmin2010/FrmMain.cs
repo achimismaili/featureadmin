@@ -1087,42 +1087,68 @@ namespace FeatureAdmin
             Guid faultyID = Guid.Empty;
             string msgString = string.Empty;
 
+            // string DBName = string.Empty; // tbd: retrieve the database name of the featureCollection
+            string featuresName = features.ToString();
+
             if (features != null)
             {
-                foreach (SPFeature feature in features)
+
+                try
                 {
-                    string parentString;
-                    try
+                    foreach (SPFeature feature in features)
                     {
-                        // a feature activated somewhere with no manifest file available causes
-                        // an error when asking for the DisplayName
-                        // If this happens, we found a faulty feature
-                        faultyID = feature.DefinitionId;
-                        dummy = feature.Definition.DisplayName;
-                    }
-                    catch
-                    {
-                        if (features[faultyID].Parent is SPWeb)
+                        string parentString;
+                        try
                         {
-                            parentString = "Scope:Web, " + ((SPWeb)features[faultyID].Parent).Url.ToString();
+                            // a feature activated somewhere with no manifest file available causes
+                            // an error when asking for the DisplayName
+                            // If this happens, we found a faulty feature
+                            faultyID = feature.DefinitionId;
+                            dummy = feature.Definition.DisplayName;
                         }
-                        else
+                        catch
                         {
-                            parentString = features[faultyID].Parent.ToString();
-                        }
+                            if (features[faultyID].Parent is SPWeb)
+                            {
+                                parentString = "Scope:Web, " + ((SPWeb)features[faultyID].Parent).Url.ToString();
+                            }
+                            else
+                            {
+                                parentString = features[faultyID].Parent.ToString();
+                            }
 
-                        msgString = "Faulty Feature found! Id: '" + faultyID.ToString() + Environment.NewLine +
-                            "Found in " + parentString + ". Should it be removed from the farm?";
-                        txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
-                        if (MessageBox.Show(msgString, "Success! Please Decide",
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                        {
-                            removeFeaturesWithinFarm(faultyID, scope);
-                        }
+                            msgString = "Faulty Feature found! Id: '" + faultyID.ToString() + Environment.NewLine +
+                                "Found in " + parentString + ". Should it be removed from the farm?";
+                            txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                            if (MessageBox.Show(msgString, "Success! Please Decide",
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                            {
+                                removeFeaturesWithinFarm(faultyID, scope);
+                            }
 
-                        return true;
+                            return true;
+                        }
                     }
+
                 }
+                catch (Exception ex)
+                {
+                    if (ex is SqlException)
+                    {
+                        string msgstring = string.Format("Cannot access a feature collection of scope '{0}'! Not enough access rights for a content DB on SQL Server! dbOwner rights are recommended. Please read the following error message:\n\n'{1}'", scope.ToString(), ex.ToString());
+                        string MessageCaption = string.Format("FeatureCollection in a Content DB not accessible");
+                        if(MessageBox.Show(msgstring, MessageCaption,MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OK);
+                    }
+                    return false;
+                }
+
 
             }
             else
@@ -1472,24 +1498,55 @@ namespace FeatureAdmin
                         return;
                     }
 
+                    string SiteCollectionDBName = site.ContentDatabase.Name.ToString();
+                    string SiteCollectionUrl = site.ServerRelativeUrl.ToString();
 
-                    foreach (SPWeb web in site.AllWebs)
+                    try
                     {
-                        // check webs
-                        if (findFaultyFeatureInCollection(web.Features, SPFeatureScope.Web))
+                        foreach (SPWeb web in site.AllWebs)
                         {
-                            return;
+                            // check webs
+                            if (findFaultyFeatureInCollection(web.Features, SPFeatureScope.Web))
+                            {
+                                return;
+                            }
+
+                            if (web != null)
+                            {
+                                web.Dispose();
+                            }
                         }
 
-                        if (web != null)
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex is SqlException)
                         {
-                            web.Dispose();
+                            string msgstring = string.Format("Cannot list Web sites of SiteCollection '{0}'!\n\n Not enough access rights for content DB '{1}' on SQL Server!\n\n dbOwner rights are recommended.", SiteCollectionUrl, SiteCollectionDBName);
+                            string MessageCaption = string.Format("Sites of SiteCollection '{1}' in Content DB '{0}' not accessible", SiteCollectionDBName, SiteCollectionUrl);
+
+                            if (MessageBox.Show(msgstring, MessageCaption, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                            {
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            if (MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                            {
+                                return;
+                            }
                         }
                     }
-                    if (site != null)
+                    finally
                     {
-                        site.Dispose();
+                        if (site != null)
+                        {
+                            site.Dispose();
+                        }
                     }
+
+
                 }
             }
             msgString = "No Faulty Feature was found in the farm!";
