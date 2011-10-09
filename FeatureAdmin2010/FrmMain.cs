@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
+using System.Data.SqlClient;
 
 namespace FeatureAdmin
 {
@@ -135,8 +136,14 @@ namespace FeatureAdmin
         /// <summary>triggers removeFeaturesFromCurrentLists</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnRemoveFromList_Click(object sender, EventArgs e)
+        private void btnRemoveFromSPWeb_Click(object sender, EventArgs e)
         {
+            if (clbSPSiteFeatures.CheckedItems.Count > 0)
+            {
+                MessageBox.Show("Please uncheck all SiteCollection scoped features. Action canceled.",
+                    "No SiteCollection scoped Features must be checked");
+                return;
+            }
             removeSPWebFeaturesFromCurrentList();
         }
 
@@ -145,17 +152,12 @@ namespace FeatureAdmin
         /// <param name="e"></param>
         private void removeSPWebFeaturesFromCurrentList()
         {
-            if (clbSPSiteFeatures.CheckedItems.Count > 0)
-            {
-                MessageBox.Show("Please uncheck all SiteCollection scoped features. Action canceled.",
-                    "No SiteCollection scoped Features must be checked");
-                return;
-            }
+
             if (clbSPWebFeatures.CheckedItems.Count > 0)
             {
                 int featuresRemoved = 0;
                 string msgString;
-                msgString = "This will force remove/deactivate the selected Web scoped Feature(s) from the selected Site(SPWeb) only. Continue ?";
+                msgString = "This will force remove/deactivate the selected Feature(s) from the selected Site(SPWeb) only. Continue ?";
 
                 if (MessageBox.Show(msgString, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
@@ -188,46 +190,69 @@ namespace FeatureAdmin
             if ((clbSPSiteFeatures.CheckedItems.Count > 0) || (clbSPWebFeatures.CheckedItems.Count > 0))
             {
                 int featuresRemoved = 0;
-                if (clbSPSiteFeatures.CheckedItems.Count == 0)
+                DialogResult continueRemoval = DialogResult.No;
+
+                // only SPWeb AND SPSite Features selected
+                if ((clbSPSiteFeatures.CheckedItems.Count > 0) && (clbSPWebFeatures.CheckedItems.Count > 0))
                 {
-                    // normal removal of SiteColl Features from one site collection
-                    removeSPWebFeaturesFromCurrentList();
-                    return;
+                    msgString = "This will force remove/deactivate all selected Features (Scoped SiteCollection AND Site (SPWeb)!) from " +
+                               "the complete SiteCollection. Please be aware, that the selected Web Scoped Features " +
+                               "will be removed from each Site within the currently selected Site Collection!! " +
+                               "It is recommended to select only one Feature for Multisite deletion! Continue?";
+
                 }
+                // only SPSite Features selected
+                else if (clbSPSiteFeatures.CheckedItems.Count > 0)
+                {
+                    msgString = "This will force remove/deactivate the selected SiteCollection scoped Feature(s) from the selected SiteCollection(SPSite). Continue ?";
+                }
+
+                // only SPWeb Features selected
                 else
                 {
-                    // check which message, because there should be a warning, 
-                    // when spweb and spsite features are mixed up in one action
-                    if (clbSPWebFeatures.CheckedItems.Count == 0)
-                    {
-                        // only remove SPWeb features from a site collection
-                        msgString = "This will force remove/deactivate the selected Site scoped Feature(s) from the selected SiteCollection. Continue ?";
-                    }
-                    else
-                    {
-                        msgString = "This will force remove/deactivate all selected Features (Scoped Site AND Web!) from " +
-                            "the complete SiteCollection. Please be aware, that the selected Web Scoped Features " +
-                            "will be removed from each Site within the currently selected Site Collection!! " +
-                            "It is recommended to select only one Feature for Multisite deletion! Continue?";
-                    }
-                    if (MessageBox.Show(msgString, "Warning - Multi Site Deletion!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                    {
-                        Cursor.Current = Cursors.WaitCursor;
+                    msgString = "This will force remove/deactivate the selected Site(SPWeb) scoped Feature(s) from the selected SiteCollection(SPSite). Continue ?";
 
+                }
+
+
+                #region remove features
+                try
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+
+
+                    // remove the SPSite scoped Feature(s)
+                    if (clbSPSiteFeatures.CheckedItems.Count > 0)
+                    {
                         // the site collection features can be easily removed same as before
                         featuresRemoved += DeleteSelectedFeatures(siteFeatureManager, clbSPSiteFeatures.CheckedItems);
 
-                        // the web features need a special treatment
-                        foreach (Feature checkedFeature in clbSPWebFeatures.CheckedItems)
+                    }
+
+                    // remove the SPWeb scoped Feature(s)
+                    if (clbSPWebFeatures.CheckedItems.Count > 0)
+                    {
+                        continueRemoval = MessageBox.Show(msgString, "Warning - Multi Site Deletion!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                        if (continueRemoval == System.Windows.Forms.DialogResult.Yes)
                         {
-                            featuresRemoved += removeWebFeaturesWithinSiteCollection(m_CurrentSite, checkedFeature.Id);
+                            // remove web features from SiteCollection
+                            foreach (Feature checkedFeature in clbSPWebFeatures.CheckedItems)
+                            {
+                                featuresRemoved += removeWebFeaturesWithinSiteCollection(m_CurrentSite, checkedFeature.Id);
+                            }
                         }
-
-                        Cursor.Current = Cursors.Default;
-
-                        removeReady(featuresRemoved);
                     }
                 }
+
+                finally
+                {
+                    removeReady(featuresRemoved);
+                    Cursor.Current = Cursors.Default;
+                }
+                #endregion remove features
+
+
             }
 
             else
@@ -1025,7 +1050,7 @@ namespace FeatureAdmin
         /// <param name="enabled">true = enabled, false = disabled</param>
         private void removeBtnEnabled(bool enabled)
         {
-            btnRemoveFromList.Enabled = enabled;
+            btnRemoveFromSPweb.Enabled = enabled;
             btnRemoveFromSiteCollection.Enabled = enabled;
             btnRemoveFromWebApp.Enabled = enabled;
             btnRemoveFromFarm.Enabled = enabled;
@@ -1148,6 +1173,7 @@ namespace FeatureAdmin
             else
             {
                 listWebApplications.Items.Add("SPWebService.ContentService == null");
+                MessageBox.Show("No Content web application found. Are you Farm-Administrator? Is the database accessible?");
             }
 
             if (listWebApplications.Items.Count > 0)
@@ -1225,15 +1251,44 @@ namespace FeatureAdmin
                 //If there is only one site collection chosen, list the subsites.
                 if (listSiteCollections.SelectedItems.Count == 1)
                 {
-                    m_CurrentSite = m_CurrentWebApp.Sites[listSiteCollections.SelectedIndices[0]];
-                    foreach (SPWeb web in m_CurrentSite.AllWebs)
+                    string SiteCollectionDBName = string.Empty;
+                    string SiteCollectionUrl = string.Empty; 
+                    try
                     {
-                        listSites.Items.Add(web.Name + " - " + web.Title + " - " + web.Url);
-                    }
+                        m_CurrentSite = m_CurrentWebApp.Sites[listSiteCollections.SelectedIndices[0]];
 
+                        SiteCollectionDBName = m_CurrentSite.ContentDatabase.Name.ToString();
+                        SiteCollectionUrl = m_CurrentSite.ServerRelativeUrl.ToString();
+                        foreach (SPWeb web in m_CurrentSite.AllWebs)
+                        {
+                            listSites.Items.Add(web.Name + " - " + web.Title + " - " + web.Url);
+                        }
+
+                    }
+                    catch ( Exception ex)
+                    {
+                        Cursor.Current = Cursors.Default;
+
+                        if (ex is SqlException)
+                        {
+                            string msgstring = string.Format("Cannot list Web sites of SiteCollection '{0}'!\n\n Not enough access rights for content DB '{1}' on SQL Server!\n\n dbOwner rights are recommended.", SiteCollectionUrl, SiteCollectionDBName);
+                            string MessageCaption = string.Format("Sites of SiteCollection '{1}' in Content DB '{0}' not accessible", SiteCollectionDBName, SiteCollectionUrl);
+                            MessageBox.Show(msgstring, MessageCaption);
+                        }
+                        else
+                        {
+                            MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OK);
+                        }
+
+                        
+                        return;
+                        
+
+                    }
                     //List the features for the site.
                     //FillFeatureList();                    
                 }
+                
                 Cursor.Current = Cursors.Default;
             }
             else
@@ -1307,7 +1362,7 @@ namespace FeatureAdmin
             featureActivater(SPFeatureScope.Farm);
         }
 
-  
+
 
         private void btnFindActivatedFeature_Click(object sender, EventArgs e)
         {
@@ -1389,8 +1444,8 @@ namespace FeatureAdmin
 
         private void btnFindFaultyFeature_Click(object sender, EventArgs e)
         {
-           
-            
+
+
             string msgString = string.Empty;
 
 
