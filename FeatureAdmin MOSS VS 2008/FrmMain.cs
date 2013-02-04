@@ -1357,7 +1357,7 @@ namespace FeatureAdmin
                 foreach (SPWebApplication webApp in webApplicationCollection)
                 {
                     // check web apps
-                    if ((SPWebService.ContentService.Features[feature.Id] is SPFeature))
+                    if (webApp.Features[feature.Id] is SPFeature)
                     {
                         msgString = "Web App scoped Feature is activated in WebApp '" + webApp.Name.ToString() + "'!";
                         MessageBox.Show(msgString);
