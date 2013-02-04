@@ -198,7 +198,7 @@ namespace FeatureAdmin
                     msgString = "This will force remove/deactivate all selected Features (Scoped SiteCollection AND Site (SPWeb)!) from " +
                                "the complete SiteCollection. Please be aware, that the selected Web Scoped Features " +
                                "will be removed from each Site within the currently selected Site Collection!! " +
-                               "It is recommended to select only one Feature for Multisite deletion! Continue?";
+                               "It is recommended to select only one Feature for Multisite deactivation! Continue?";
 
                 }
                 // only SPSite Features selected
@@ -232,7 +232,7 @@ namespace FeatureAdmin
                     // remove the SPWeb scoped Feature(s)
                     if (clbSPWebFeatures.CheckedItems.Count > 0)
                     {
-                        continueRemoval = MessageBox.Show(msgString, "Warning - Multi Site Deletion!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        continueRemoval = MessageBox.Show(msgString, "Warning - Multi Site Deactivation!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                         if (continueRemoval == System.Windows.Forms.DialogResult.Yes)
                         {
