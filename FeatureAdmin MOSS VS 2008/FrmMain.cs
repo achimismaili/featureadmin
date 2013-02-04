@@ -444,10 +444,9 @@ namespace FeatureAdmin
                 // activate web feature in every SPWeb in this SPSite
                 foreach (SPWeb web in site.AllWebs)
                 {
-                    featuresActivated += featureActivateInSPWeb(web, featureID);
-                    if (web != null)
+                    using (web)
                     {
-                        web.Dispose();
+                        featuresActivated += featureActivateInSPWeb(web, featureID);
                     }
                 }
             }
@@ -527,10 +526,10 @@ namespace FeatureAdmin
                     // activate site feature in every SPSit in this Web Application
                     foreach (SPSite site in webApp.Sites)
                     {
-                        featuresActivated += featureActivateInSPSite(site, featureID, featureScope);
-
-                        if (site != null)
-                            site.Dispose();
+                        using (site)
+                        {
+                            featuresActivated += featureActivateInSPSite(site, featureID, featureScope);
+                        }
                     }
 
                     break;
@@ -541,17 +540,15 @@ namespace FeatureAdmin
                     // activate web feature in every SPWeb in this Web Application
                     foreach (SPSite site in webApp.Sites)
                     {
-                        foreach (SPWeb web in site.AllWebs)
+                        using (site)
                         {
-                            featuresActivated += featureActivateInSPWeb(web, featureID);
-                            if (web != null)
+                            foreach (SPWeb web in site.AllWebs)
                             {
-                                web.Dispose();
+                                using (web)
+                                {
+                                    featuresActivated += featureActivateInSPWeb(web, featureID);
+                                }
                             }
-                        }
-                        if (site != null)
-                        {
-                            site.Dispose();
                         }
                     }
                     break;
@@ -624,10 +621,10 @@ namespace FeatureAdmin
                         // activate site feature in every SPSite in this Web Application
                         foreach (SPSite site in webApp.Sites)
                         {
-                            featuresActivated += featureActivateInSPSite(site, featureID, featureScope);
-
-                            if (site != null)
-                                site.Dispose();
+                            using (site)
+                            {
+                                featuresActivated += featureActivateInSPSite(site, featureID, featureScope);
+                            }
                         }
                     }
                     break;
@@ -641,17 +638,15 @@ namespace FeatureAdmin
                         // activate web feature in every SPWeb in this Web Application
                         foreach (SPSite site in webApp.Sites)
                         {
-                            foreach (SPWeb web in site.AllWebs)
+                            using (site)
                             {
-                                featuresActivated += featureActivateInSPWeb(web, featureID);
-                                if (web != null)
+                                foreach (SPWeb web in site.AllWebs)
                                 {
-                                    web.Dispose();
+                                    using (web)
+                                    {
+                                        featuresActivated += featureActivateInSPWeb(web, featureID);
+                                    }
                                 }
-                            }
-                            if (site != null)
-                            {
-                                site.Dispose();
                             }
                         }
                     }
@@ -919,7 +914,7 @@ namespace FeatureAdmin
 
                         foreach (SPSite site in webApp.Sites)
                         {
-                            try
+                            using (site)
                             {
                                 if (featureScope == SPFeatureScope.Web)
                                 {
@@ -934,18 +929,6 @@ namespace FeatureAdmin
                                 }
                                 scannedThrough++;
                             }
-                            catch
-                            {
-                            }
-                            finally
-                            {
-                                if (site != null)
-                                {
-                                    site.Dispose();
-                                }
-
-                            }
-
                         }
                     }
 
@@ -1407,36 +1390,31 @@ namespace FeatureAdmin
                     {
                         foreach (SPSite site in webApp.Sites)
                         {
-                            // check sites
-                            if (site.Features[feature.Id] is SPFeature)
+                            using (site)
                             {
-                                msgString = "Site Feature is activated in SiteCollection '" + site.Url.ToString() + "'!";
-                                MessageBox.Show(msgString);
-                                logDateMsg(msgString);
-                                site.Dispose();
-                                return;
-                            }
-
-
-                            foreach (SPWeb web in site.AllWebs)
-                            {
-                                // check webs
-                                if (web.Features[feature.Id] is SPFeature)
+                                // check sites
+                                if (site.Features[feature.Id] is SPFeature)
                                 {
-                                    msgString = "Web scoped Feature is activated in Site '" + web.Url.ToString() + "'!";
+                                    msgString = "Site Feature is activated in SiteCollection '" + site.Url.ToString() + "'!";
                                     MessageBox.Show(msgString);
                                     logDateMsg(msgString);
-                                    web.Dispose();
                                     return;
                                 }
-                                if (web != null)
+                                // check subwebs
+                                foreach (SPWeb web in site.AllWebs)
                                 {
-                                    web.Dispose();
+                                    using (web)
+                                    {
+                                        // check webs
+                                        if (web.Features[feature.Id] is SPFeature)
+                                        {
+                                            msgString = "Web scoped Feature is activated in Site '" + web.Url.ToString() + "'!";
+                                            MessageBox.Show(msgString);
+                                            logDateMsg(msgString);
+                                            return;
+                                        }
+                                    }
                                 }
-                            }
-                            if (site != null)
-                            {
-                                site.Dispose();
                             }
                         }
                     }
@@ -1500,51 +1478,48 @@ namespace FeatureAdmin
                         // then check all site collections
                         foreach (SPSite site in webApp.Sites)
                         {
-                            try
+                            using (site)
                             {
-                                // check sites
-                                if (findFaultyFeatureInCollection(site.Features, SPFeatureScope.Site))
+                                try
                                 {
-                                    return;
-                                }
-                            }
-                            catch (Exception exc)
-                            {
-                                logException(exc, "Exception checking features in site " + site.Url);
-                            }
-
-
-                            try
-                            {
-                                foreach (SPWeb web in site.AllWebs)
-                                {
-                                    try
+                                    // check sites
+                                    if (findFaultyFeatureInCollection(site.Features, SPFeatureScope.Site))
                                     {
-                                        // check webs
-                                        if (findFaultyFeatureInCollection(web.Features, SPFeatureScope.Web))
+                                        return;
+                                    }
+                                }
+                                catch (Exception exc)
+                                {
+                                    logException(exc, "Exception checking features in site " + site.Url);
+                                }
+
+
+                                try
+                                {
+                                    foreach (SPWeb web in site.AllWebs)
+                                    {
+                                        using (web)
                                         {
-                                            return;
+                                            try
+                                            {
+                                                // check webs
+                                                if (findFaultyFeatureInCollection(web.Features, SPFeatureScope.Web))
+                                                {
+                                                    return;
+                                                }
+                                            }
+                                            catch (Exception exc)
+                                            {
+                                                logException(exc, "Exception checking features in web " + web.Url);
+                                            }
                                         }
                                     }
-                                    catch (Exception exc)
-                                    {
-                                        logException(exc, "Exception checking features in web " + web.Url);
-                                    }
-
-                                    if (web != null)
-                                    {
-                                        web.Dispose();
-                                    }
                                 }
-                            }
-                            catch (Exception exc)
-                            {
-                                string msg = FormatSiteException(site, exc, "Error enumerating webs");
-                                logException(exc, msg);
-                            }
-                            if (site != null)
-                            {
-                                site.Dispose();
+                                catch (Exception exc)
+                                {
+                                    string msg = FormatSiteException(site, exc, "Error enumerating webs");
+                                    logException(exc, msg);
+                                }
                             }
                         }
                     }
