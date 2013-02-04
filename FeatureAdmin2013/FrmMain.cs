@@ -1169,6 +1169,10 @@ namespace FeatureAdmin
 
         protected string DescribeException(Exception exc)
         {
+            if (exc is System.UnauthorizedAccessException && exc.InnerException == null)
+            {
+                return "Access is Denied";
+            }
             StringBuilder txt = new StringBuilder();
             while (exc != null)
             {
