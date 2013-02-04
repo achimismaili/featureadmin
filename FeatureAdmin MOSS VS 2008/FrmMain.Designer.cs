@@ -333,6 +333,7 @@ namespace FeatureAdmin
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.FarmFeatures);
             this.tabControl1.Controls.Add(this.RemoveFeatures);
             this.tabControl1.Location = new System.Drawing.Point(421, 2);
