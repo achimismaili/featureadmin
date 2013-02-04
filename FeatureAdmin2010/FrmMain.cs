@@ -1161,14 +1161,39 @@ namespace FeatureAdmin
         #endregion
         #region Logging Methods
 
+        protected void ReportError(string msg)
+        {
+            ReportError(msg, "Error");
+        }
+        protected void ReportError(string msg, string caption)
+        {
+            // TODO - be nice to have an option to suppress message boxes
+            MessageBox.Show(msg, caption);
+        }
+
+        protected string FormatSiteException(SPSite site, Exception exc, string msg)
+        {
+            msg += " on site " + site.ServerRelativeUrl + " (ContentDB: " + site.ContentDatabase.Name + ")";
+            if (IsSimpleAccessDenied(exc))
+            {
+                msg += " (dbOwner rights recommended on contentdb)";
+            }
+            return msg;
+        }
+
         protected void logException(Exception exc, string msg)
         {
             logDateMsg(msg + " -- " + DescribeException(exc));
         }
 
+        protected bool IsSimpleAccessDenied(Exception exc)
+        {
+            return (exc is System.UnauthorizedAccessException && exc.InnerException == null);
+        }
+
         protected string DescribeException(Exception exc)
         {
-            if (exc is System.UnauthorizedAccessException && exc.InnerException == null)
+            if (IsSimpleAccessDenied(exc))
             {
                 return "Access is Denied";
             }
@@ -1305,42 +1330,23 @@ namespace FeatureAdmin
                 //If there is only one site collection chosen, list the subsites.
                 if (listSiteCollections.SelectedItems.Count == 1)
                 {
-                    string SiteCollectionDBName = string.Empty;
-                    string SiteCollectionUrl = string.Empty; 
+                    m_CurrentSite = m_CurrentWebApp.Sites[listSiteCollections.SelectedIndices[0]];
                     try
                     {
-                        m_CurrentSite = m_CurrentWebApp.Sites[listSiteCollections.SelectedIndices[0]];
-
-                        SiteCollectionDBName = m_CurrentSite.ContentDatabase.Name.ToString();
-                        SiteCollectionUrl = m_CurrentSite.ServerRelativeUrl.ToString();
                         foreach (SPWeb web in m_CurrentSite.AllWebs)
                         {
                             listSites.Items.Add(web.Name + " - " + web.Title + " - " + web.Url);
                         }
-
                     }
-                    catch ( Exception ex)
+                    catch (Exception exc)
                     {
-                        Cursor.Current = Cursors.Default;
-
-                        if (ex is SqlException)
-                        {
-                            string msgstring = string.Format("Cannot list Web sites of SiteCollection '{0}'!\n\n Not enough access rights for content DB '{1}' on SQL Server!\n\n dbOwner rights are recommended.", SiteCollectionUrl, SiteCollectionDBName);
-                            string MessageCaption = string.Format("Sites of SiteCollection '{1}' in Content DB '{0}' not accessible", SiteCollectionDBName, SiteCollectionUrl);
-                            MessageBox.Show(msgstring, MessageCaption);
-                        }
-                        else
-                        {
-                            MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OK);
-                        }
-
-                        
-                        return;
-                        
-
+                        string msg = FormatSiteException(m_CurrentSite, exc, "Error enumerating webs");
+                        ReportError(msg);
+                        logException(exc, msg);
                     }
+
                     //List the features for the site.
-                    //FillFeatureList();                    
+                    //FillFeatureList();
                 }
                 
                 Cursor.Current = Cursors.Default;

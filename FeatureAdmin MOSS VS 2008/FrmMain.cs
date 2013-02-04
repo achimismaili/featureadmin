@@ -1109,16 +1109,41 @@ namespace FeatureAdmin
         }
 
         #endregion
-        #region Logging Methods
+        #region Error & Logging Methods
+
+        protected void ReportError(string msg)
+        {
+            ReportError(msg, "Error");
+        }
+        protected void ReportError(string msg, string caption)
+        {
+            // TODO - be nice to have an option to suppress message boxes
+            MessageBox.Show(msg, caption);
+        }
+
+        protected string FormatSiteException(SPSite site, Exception exc, string msg)
+        {
+            msg += " on site " + site.ServerRelativeUrl + " (ContentDB: " + site.ContentDatabase.Name + ")";
+            if (IsSimpleAccessDenied(exc))
+            {
+                msg += " (dbOwner rights recommended on contentdb)";
+            }
+            return msg;
+        }
 
         protected void logException(Exception exc, string msg)
         {
             logDateMsg(msg + " -- " + DescribeException(exc));
         }
 
+        protected bool IsSimpleAccessDenied(Exception exc)
+        {
+            return (exc is System.UnauthorizedAccessException && exc.InnerException == null);
+        }
+
         protected string DescribeException(Exception exc)
         {
-            if (exc is System.UnauthorizedAccessException && exc.InnerException == null)
+            if (IsSimpleAccessDenied(exc))
             {
                 return "Access is Denied";
             }
@@ -1255,13 +1280,22 @@ namespace FeatureAdmin
                 if (listSiteCollections.SelectedItems.Count == 1)
                 {
                     m_CurrentSite = m_CurrentWebApp.Sites[listSiteCollections.SelectedIndices[0]];
-                    foreach (SPWeb web in m_CurrentSite.AllWebs)
+                    try
                     {
-                        listSites.Items.Add(web.Name + " - " + web.Title + " - " + web.Url);
+                        foreach (SPWeb web in m_CurrentSite.AllWebs)
+                        {
+                            listSites.Items.Add(web.Name + " - " + web.Title + " - " + web.Url);
+                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        string msg = FormatSiteException(m_CurrentSite, exc, "Error enumerating webs");
+                        ReportError(msg);
+                        logException(exc, msg);
                     }
 
                     //List the features for the site.
-                    //FillFeatureList();                    
+                    //FillFeatureList();
                 }
                 Cursor.Current = Cursors.Default;
             }
