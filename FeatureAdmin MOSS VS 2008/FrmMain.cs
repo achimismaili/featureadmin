@@ -1108,6 +1108,31 @@ namespace FeatureAdmin
             return false;
         }
 
+        #endregion
+        #region Logging Methods
+
+        protected void logException(Exception exc, string msg)
+        {
+            logDateMsg(msg + " -- " + DescribeException(exc));
+        }
+
+        protected string DescribeException(Exception exc)
+        {
+            StringBuilder txt = new StringBuilder();
+            while (exc != null)
+            {
+                if (txt.Length > 0) txt.Append(" =++= ");
+                txt.Append(exc.Message);
+                exc = exc.InnerException;
+            }
+            return txt.ToString();
+        }
+
+        protected void logDateMsg(string msg)
+        {
+            logTxt(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msg + Environment.NewLine);
+        }
+
         /// <summary>adds log string to the logfile</summary>
         /// <param name="logtext"></param>
         public void logTxt(string logtext)
