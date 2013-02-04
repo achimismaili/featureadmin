@@ -68,7 +68,7 @@ namespace FeatureAdmin
 
 
 
-            txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + "Feature Definition list updated." + Environment.NewLine);
+            logDateMsg("Feature Definition list updated.");
 
             Cursor.Current = Cursors.Default;
             // tabControl1.Enabled = false;
@@ -167,7 +167,7 @@ namespace FeatureAdmin
                     Cursor.Current = Cursors.Default;
 
                     msgString = "Done. Please refresh the feature list, when all features are removed!";
-                    txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                    logDateMsg(msgString);
                 }
             }
             else
@@ -388,7 +388,7 @@ namespace FeatureAdmin
 
                         msgString = "Error, selected feature can't be activated - " + checkedFeature.ToString();
                         MessageBox.Show(msgString, "Warning!");
-                        txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                        logDateMsg(msgString);
                         break;
 
                 }
@@ -396,7 +396,7 @@ namespace FeatureAdmin
             }
             msgString = featuresActivated.ToString() + " Feature(s) were/was activated.";
             MessageBox.Show(msgString);
-            txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+            logDateMsg(msgString);
 
         }
 
@@ -421,11 +421,11 @@ namespace FeatureAdmin
             {
                 msgString = "Error, selected feature can't be activated - " + featureID.ToString() + " in Web: '" + web.Name.ToString() + " - " + web.Url.ToString() + "'.";
                 MessageBox.Show(msgString, "Warning!");
-                txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                logDateMsg(msgString);
                 return 0;
             }
             msgString = featuresActivated + " Feature added in Site" + web.Url.ToString();
-            txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+            logDateMsg(msgString);
             return featuresActivated;
         }
 
@@ -468,7 +468,7 @@ namespace FeatureAdmin
                     {
                         msgString = "Error, selected feature can't be activated - " + featureID.ToString() + " in SiteCollection: '" + site.Url.ToString() + "'.";
                         MessageBox.Show(msgString, "Warning!");
-                        txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                        logDateMsg(msgString);
                     }
                 }
 
@@ -476,12 +476,12 @@ namespace FeatureAdmin
                 {
                     msgString = "Error, Scope " + featureScope + " not allowed for Activation in SiteCollection";
                     MessageBox.Show(msgString, "Warning!");
-                    txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                    logDateMsg(msgString);
                     return 0;
                 }
             }
             msgString = featuresActivated + " Features added in SiteCollection" + site.Url.ToString();
-            txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+            logDateMsg(msgString);
 
             return featuresActivated;
         }
@@ -515,7 +515,7 @@ namespace FeatureAdmin
                     {
                         msgString = "Error, selected feature can't be activated - in WebApp: '" + webApp.Name.ToString() + "'.";
                         MessageBox.Show(msgString, "Warning!");
-                        txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                        logDateMsg(msgString);
                     }
 
 
@@ -560,7 +560,7 @@ namespace FeatureAdmin
                 default:
                     msgString = "Error, Scope " + featureScope + " not allowed for Activation in Web Application";
                     MessageBox.Show(msgString, "Warning!");
-                    txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                    logDateMsg(msgString);
                     break;
             }
             return featuresActivated;
@@ -596,7 +596,7 @@ namespace FeatureAdmin
                     {
                         msgString = "Error, selected feature can't be activated - " + featureID.ToString() + " on Farm level.";
                         MessageBox.Show(msgString, "Warning!");
-                        txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                        logDateMsg(msgString);
                     }
                     break;
 
@@ -662,7 +662,7 @@ namespace FeatureAdmin
                 default:
                     msgString = "Error, Scope " + featureScope + " not allowed for Activation in Web Application";
                     MessageBox.Show(msgString, "Warning!");
-                    txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                    logDateMsg(msgString);
                     break;
             }
             return featuresActivated;
@@ -1049,7 +1049,7 @@ namespace FeatureAdmin
             string msgString;
             msgString = featuresRemoved.ToString() + " Features were removed. Please 'Reload Web Applications'!";
             MessageBox.Show(msgString);
-            txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+            logDateMsg(msgString);
         }
 
         /// <summary>searches for faulty features and provides the option to remove them</summary>
@@ -1088,7 +1088,7 @@ namespace FeatureAdmin
 
                         msgString = "Faulty Feature found! Id: '" + faultyID.ToString() + Environment.NewLine +
                             "Found in " + parentString + ". Should it be removed from the farm?";
-                        txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                        logDateMsg(msgString);
                         if (MessageBox.Show(msgString, "Success! Please Decide",
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                         {
@@ -1351,7 +1351,7 @@ namespace FeatureAdmin
                 {
                     msgString = "Farm Feature is activated in the Farm on farm level!";
                     MessageBox.Show(msgString);
-                    txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                    logDateMsg(msgString);
                     return;
                 }
 
@@ -1365,7 +1365,7 @@ namespace FeatureAdmin
                     {
                         msgString = "Web App scoped Feature is activated in WebApp '" + webApp.Name.ToString() + "'!";
                         MessageBox.Show(msgString);
-                        txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                        logDateMsg(msgString);
                         return;
                     }
 
@@ -1378,7 +1378,7 @@ namespace FeatureAdmin
                             {
                                 msgString = "Site Feature is activated in SiteCollection '" + site.Url.ToString() + "'!";
                                 MessageBox.Show(msgString);
-                                txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                                logDateMsg(msgString);
                                 site.Dispose();
                                 return;
                             }
@@ -1391,7 +1391,7 @@ namespace FeatureAdmin
                                 {
                                     msgString = "Web scoped Feature is activated in Site '" + web.Url.ToString() + "'!";
                                     MessageBox.Show(msgString);
-                                    txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                                    logDateMsg(msgString);
                                     web.Dispose();
                                     return;
                                 }
@@ -1414,7 +1414,7 @@ namespace FeatureAdmin
                 }
                 msgString = "Feature was not found activated in the farm.";
                 MessageBox.Show(msgString);
-                txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                logDateMsg(msgString);
 
             }
             else
@@ -1528,7 +1528,7 @@ namespace FeatureAdmin
             }
             msgString = "No Faulty Feature was found in the farm!";
             MessageBox.Show(msgString);
-            txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+            logDateMsg(msgString);
 
         }
 
