@@ -448,6 +448,7 @@ namespace FeatureAdmin
             // 
             // btnClearLog
             // 
+            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClearLog.Location = new System.Drawing.Point(431, 602);
             this.btnClearLog.Name = "btnClearLog";
             this.btnClearLog.Size = new System.Drawing.Size(90, 23);
@@ -458,6 +459,7 @@ namespace FeatureAdmin
             // 
             // btnFindFaultyFeature
             // 
+            this.btnFindFaultyFeature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnFindFaultyFeature.Location = new System.Drawing.Point(431, 631);
             this.btnFindFaultyFeature.Name = "btnFindFaultyFeature";
             this.btnFindFaultyFeature.Size = new System.Drawing.Size(200, 23);
