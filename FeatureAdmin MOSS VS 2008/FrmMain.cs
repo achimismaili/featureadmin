@@ -1422,60 +1422,111 @@ namespace FeatureAdmin
 
         private void btnFindFaultyFeature_Click(object sender, EventArgs e)
         {
-           
-            
+
+
             string msgString = string.Empty;
 
 
             //first, Look in Farm
-            if (findFaultyFeatureInCollection(SPWebService.ContentService.Features, SPFeatureScope.Farm))
+            try
             {
-                return;
-            }
-
-            //check web applications
-            foreach (SPWebApplication webApp in SPWebService.ContentService.WebApplications)
-            {
-                if (findFaultyFeatureInCollection(webApp.Features, SPFeatureScope.WebApplication))
+                if (findFaultyFeatureInCollection(SPWebService.ContentService.Features, SPFeatureScope.Farm))
                 {
                     return;
                 }
+            }
+            catch (Exception exc)
+            {
+                logException(exc, "Error finding faulty features in farm");
+            }
 
-                // then check all site collections
-                foreach (SPSite site in webApp.Sites)
+            //check web applications
+            try
+            {
+                foreach (SPWebApplication webApp in SPWebService.ContentService.WebApplications)
                 {
-                    // check sites
-                    if (findFaultyFeatureInCollection(site.Features, SPFeatureScope.Site))
+                    try
                     {
-                        return;
-                    }
-
-
-                    foreach (SPWeb web in site.AllWebs)
-                    {
-                        // check webs
-                        if (findFaultyFeatureInCollection(web.Features, SPFeatureScope.Web))
+                        if (findFaultyFeatureInCollection(webApp.Features, SPFeatureScope.WebApplication))
                         {
                             return;
                         }
+                    }
+                    catch (Exception exc)
+                    {
+                        logException(exc, "Enumerating features in web app " + webApp.Name);
+                    }
 
-                        if (web != null)
+                    try
+                    {
+                        // then check all site collections
+                        foreach (SPSite site in webApp.Sites)
                         {
-                            web.Dispose();
+                            try
+                            {
+                                // check sites
+                                if (findFaultyFeatureInCollection(site.Features, SPFeatureScope.Site))
+                                {
+                                    return;
+                                }
+                            }
+                            catch (Exception exc)
+                            {
+                                logException(exc, "Exception checking features in site " + site.Url);
+                            }
+
+
+                            try
+                            {
+                                foreach (SPWeb web in site.AllWebs)
+                                {
+                                    try
+                                    {
+                                        // check webs
+                                        if (findFaultyFeatureInCollection(web.Features, SPFeatureScope.Web))
+                                        {
+                                            return;
+                                        }
+                                    }
+                                    catch (Exception exc)
+                                    {
+                                        logException(exc, "Exception checking features in web " + web.Url);
+                                    }
+
+                                    if (web != null)
+                                    {
+                                        web.Dispose();
+                                    }
+                                }
+                            }
+                            catch (Exception exc)
+                            {
+                                logException(exc, "Exception enumerating subwebs in site "
+                                    + site.ServerRelativeUrl
+                                    + " (ContentDb: " + site.ContentDatabase.Name + ")"
+                                    );
+                            }
+                            if (site != null)
+                            {
+                                site.Dispose();
+                            }
                         }
                     }
-                    if (site != null)
+                    catch (Exception exc)
                     {
-                        site.Dispose();
+                        logException(exc, "Exception enumerating sites in web app " + webApp.Name);
                     }
                 }
+            }
+            catch (Exception exc)
+            {
+                logException(exc, "Enumerating web applications");
             }
             msgString = "No Faulty Feature was found in the farm!";
             MessageBox.Show(msgString);
             txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
 
         }
-
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
