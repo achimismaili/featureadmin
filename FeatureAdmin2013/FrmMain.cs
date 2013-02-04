@@ -1509,78 +1509,99 @@ namespace FeatureAdmin
 
 
             //first, Look in Farm
-            if (findFaultyFeatureInCollection(SPWebService.ContentService.Features, SPFeatureScope.Farm))
+            try
             {
-                return;
-            }
-
-            //check web applications
-            foreach (SPWebApplication webApp in SPWebService.ContentService.WebApplications)
-            {
-                if (findFaultyFeatureInCollection(webApp.Features, SPFeatureScope.WebApplication))
+                if (findFaultyFeatureInCollection(SPWebService.ContentService.Features, SPFeatureScope.Farm))
                 {
                     return;
                 }
+            }
+            catch (Exception exc)
+            {
+                logException(exc, "Error finding faulty features in farm");
+            }
 
-                // then check all site collections
-                foreach (SPSite site in webApp.Sites)
+            //check web applications
+            try
+            {
+                foreach (SPWebApplication webApp in SPWebService.ContentService.WebApplications)
                 {
-                    // check sites
-                    if (findFaultyFeatureInCollection(site.Features, SPFeatureScope.Site))
+                    try
                     {
-                        return;
+                        if (findFaultyFeatureInCollection(webApp.Features, SPFeatureScope.WebApplication))
+                        {
+                            return;
+                        }
                     }
-
-                    string SiteCollectionDBName = site.ContentDatabase.Name.ToString();
-                    string SiteCollectionUrl = site.ServerRelativeUrl.ToString();
+                    catch (Exception exc)
+                    {
+                        logException(exc, "Enumerating features in web app " + webApp.Name);
+                    }
 
                     try
                     {
-                        foreach (SPWeb web in site.AllWebs)
+                        // then check all site collections
+                        foreach (SPSite site in webApp.Sites)
                         {
-                            // check webs
-                            if (findFaultyFeatureInCollection(web.Features, SPFeatureScope.Web))
+                            try
                             {
-                                return;
+                                // check sites
+                                if (findFaultyFeatureInCollection(site.Features, SPFeatureScope.Site))
+                                {
+                                    return;
+                                }
+                            }
+                            catch (Exception exc)
+                            {
+                                logException(exc, "Exception checking features in site " + site.Url);
                             }
 
-                            if (web != null)
+
+                            try
                             {
-                                web.Dispose();
+                                foreach (SPWeb web in site.AllWebs)
+                                {
+                                    try
+                                    {
+                                        // check webs
+                                        if (findFaultyFeatureInCollection(web.Features, SPFeatureScope.Web))
+                                        {
+                                            return;
+                                        }
+                                    }
+                                    catch (Exception exc)
+                                    {
+                                        logException(exc, "Exception checking features in web " + web.Url);
+                                    }
+
+                                    if (web != null)
+                                    {
+                                        web.Dispose();
+                                    }
+                                }
+                            }
+                            catch (Exception exc)
+                            {
+                                logException(exc, "Exception enumerating subwebs in site "
+                                    + site.ServerRelativeUrl
+                                    + " (ContentDb: " + site.ContentDatabase.Name + ")"
+                                    );
+                            }
+                            if (site != null)
+                            {
+                                site.Dispose();
                             }
                         }
-
                     }
-                    catch (Exception ex)
+                    catch (Exception exc)
                     {
-                        if (ex is SqlException)
-                        {
-                            string msgstring = string.Format("Cannot list Web sites of SiteCollection '{0}'!\n\n Not enough access rights for content DB '{1}' on SQL Server!\n\n dbOwner rights are recommended.", SiteCollectionUrl, SiteCollectionDBName);
-                            string MessageCaption = string.Format("Sites of SiteCollection '{1}' in Content DB '{0}' not accessible", SiteCollectionDBName, SiteCollectionUrl);
-
-                            if (MessageBox.Show(msgstring, MessageCaption, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                            {
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            if (MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                            {
-                                return;
-                            }
-                        }
+                        logException(exc, "Exception enumerating sites in web app " + webApp.Name);
                     }
-                    finally
-                    {
-                        if (site != null)
-                        {
-                            site.Dispose();
-                        }
-                    }
-
-
                 }
+            }
+            catch (Exception exc)
+            {
+                logException(exc, "Enumerating web applications");
             }
             msgString = "No Faulty Feature was found in the farm!";
             MessageBox.Show(msgString);
