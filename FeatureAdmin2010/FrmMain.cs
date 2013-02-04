@@ -1591,10 +1591,8 @@ namespace FeatureAdmin
                             }
                             catch (Exception exc)
                             {
-                                logException(exc, "Exception enumerating subwebs in site "
-                                    + site.ServerRelativeUrl
-                                    + " (ContentDb: " + site.ContentDatabase.Name + ")"
-                                    );
+                                string msg = FormatSiteException(site, exc, "Error enumerating webs");
+                                logException(exc, msg);
                             }
                             if (site != null)
                             {
