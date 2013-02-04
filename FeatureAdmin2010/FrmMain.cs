@@ -1446,39 +1446,47 @@ namespace FeatureAdmin
                         return;
                     }
 
-                    foreach (SPSite site in webApp.Sites)
+                    try
                     {
-                        // check sites
-                        if (site.Features[feature.Id] is SPFeature)
+                        foreach (SPSite site in webApp.Sites)
                         {
-                            msgString = "Site Feature is activated in SiteCollection '" + site.Url.ToString() + "'!";
-                            MessageBox.Show(msgString);
-                            txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
-                            site.Dispose();
-                            return;
-                        }
-
-
-                        foreach (SPWeb web in site.AllWebs)
-                        {
-                            // check webs
-                            if (web.Features[feature.Id] is SPFeature)
+                            // check sites
+                            if (site.Features[feature.Id] is SPFeature)
                             {
-                                msgString = "Web scoped Feature is activated in Site '" + web.Url.ToString() + "'!";
+                                msgString = "Site Feature is activated in SiteCollection '" + site.Url.ToString() + "'!";
                                 MessageBox.Show(msgString);
                                 txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
-                                web.Dispose();
+                                site.Dispose();
                                 return;
                             }
-                            if (web != null)
+
+
+                            foreach (SPWeb web in site.AllWebs)
                             {
-                                web.Dispose();
+                                // check webs
+                                if (web.Features[feature.Id] is SPFeature)
+                                {
+                                    msgString = "Web scoped Feature is activated in Site '" + web.Url.ToString() + "'!";
+                                    MessageBox.Show(msgString);
+                                    txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                                    web.Dispose();
+                                    return;
+                                }
+                                if (web != null)
+                                {
+                                    web.Dispose();
+                                }
+                            }
+                            if (site != null)
+                            {
+                                site.Dispose();
                             }
                         }
-                        if (site != null)
-                        {
-                            site.Dispose();
-                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        msgString = "Exception attempting to enumerate sites of WebApp: " + webApp.Name;
+                        logException(exc, msgString);
                     }
                 }
                 msgString = "Feature was not found activated in the farm.";
