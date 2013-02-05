@@ -174,7 +174,7 @@ namespace FeatureAdmin
             else
             {
                 MessageBox.Show(NOFEATURESELECTED);
-                txtResult.AppendText(Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) + " - " + NOFEATURESELECTED);
+                logDateMsg(NOFEATURESELECTED);
             }
         }
 
@@ -257,7 +257,7 @@ namespace FeatureAdmin
             else
             {
                 MessageBox.Show(NOFEATURESELECTED);
-                txtResult.AppendText(Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) + " - " + NOFEATURESELECTED);
+                logDateMsg(NOFEATURESELECTED);
             }
 
         }
@@ -294,10 +294,8 @@ namespace FeatureAdmin
             else
             {
                 MessageBox.Show(NOFEATURESELECTED);
-                txtResult.AppendText(Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) + " - " + NOFEATURESELECTED);
+                logDateMsg(NOFEATURESELECTED);
             }
-
-
         }
 
         /// <summary>Removes selected features from the whole Farm</summary>
@@ -333,11 +331,9 @@ namespace FeatureAdmin
             else
             {
                 MessageBox.Show(NOFEATURESELECTED);
-                txtResult.AppendText(Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) + " - " + NOFEATURESELECTED);
+                logDateMsg(NOFEATURESELECTED);
             }
         }
-
-
 
 
         #endregion
@@ -855,8 +851,7 @@ namespace FeatureAdmin
                         break;
 
                     default:
-                        txtResult.AppendText(Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) +
-                            " - no features removed, deletion scope defined wrong!");
+                        logDateMsg("no features removed, deletion scope defined wrong!");
                         break;
                 }
 
@@ -918,7 +913,7 @@ namespace FeatureAdmin
             string msgString;
 
             msgString = "Removing Feature '" + featureID.ToString() + "' from Web Application: '" + webApp.Name.ToString() + "'.";
-            txtResult.AppendText(Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) + " -  WebApp - " + msgString + Environment.NewLine);
+            logDateMsg(" WebApp - " + msgString);
 
             SPSecurity.RunWithElevatedPrivileges(delegate()
                 {
@@ -958,7 +953,7 @@ namespace FeatureAdmin
 
                 });
             msgString = removedFeatures + " Features removed in the Web Application. " + scannedThrough + " SiteCollections were scanned.";
-            txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " -  WebApp - " + msgString + Environment.NewLine);
+            logDateMsg(" WebApp - " + msgString);
 
             return removedFeatures;
         }
@@ -976,20 +971,18 @@ namespace FeatureAdmin
             SPSecurity.RunWithElevatedPrivileges(delegate()
             {
                 msgString = "Removing Feature '" + featureID.ToString() + ", Scope: " + featureScope.ToString() + "' from the Farm.";
-                txtResult.AppendText(Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) + " - Farm - " + msgString + Environment.NewLine);
+                logDateMsg("Farm - " + msgString);
                 if (featureScope == SPFeatureScope.Farm)
                 {
                     try
                     {
                         SPWebService.ContentService.Features.Remove(featureID, true);
                         removedFeatures++;
-                        txtResult.AppendText(Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) + " - Farm - Feature successfully removed. " + Environment.NewLine);
-
+                        logDateMsg("Farm - Feature successfully removed. ");
                     }
                     catch
                     {
-                        txtResult.AppendText(Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) + " - Farm - The Farm Scoped feature '" + featureID.ToString() + "' was not found. " + Environment.NewLine);
-
+                        logDateMsg("Farm - The Farm Scoped feature '" + featureID.ToString() + "' was not found. ");
                     }
                 }
                 else
@@ -1009,8 +1002,7 @@ namespace FeatureAdmin
                     }
                 }
                 msgString = removedFeatures + " Features removed in the Farm. " + scannedThrough + " Web Applications were scanned.";
-                txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - Farm - " + msgString + Environment.NewLine);
-
+               logDateMsg("Farm - " + msgString);
             });
             return removedFeatures;
         }
@@ -1135,7 +1127,7 @@ namespace FeatureAdmin
             }
             else
             {
-                txtResult.AppendText(DateTime.Now.ToString(DATETIMEFORMAT) + " - ERROR: Feature Collection was empty!" + Environment.NewLine);
+                logDateMsg("ERROR: Feature Collection was empty!");
             }
             faultyID = Guid.Empty;
             return false;
