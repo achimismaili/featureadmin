@@ -64,7 +64,8 @@ namespace FeatureAdmin
 
             //clbFeatureDefinitions.
             this.clbFeatureDefinitions.Items.AddRange(farmFeatureDefinitionsManager.Features.ToArray());
-            this.txtResult.Text += BuildFeatureLog(farmFeatureDefinitionsManager.Url, farmFeatureDefinitionsManager.Features);
+            string featlist = BuildFeatureLog(farmFeatureDefinitionsManager.Url, farmFeatureDefinitionsManager.Features);
+            logTxt(featlist);
 
 
 
@@ -671,7 +672,7 @@ namespace FeatureAdmin
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            txtResult.Clear();
+            ClearLog();
             clbSPSiteFeatures.Items.Clear();
             clbSPWebFeatures.Items.Clear();
 
@@ -692,12 +693,14 @@ namespace FeatureAdmin
             // sort the features list
             siteFeatureManager.Features.Sort();
             clbSPSiteFeatures.Items.AddRange(siteFeatureManager.Features.ToArray());
-            txtResult.Text += BuildFeatureLog(siteFeatureManager.Url, siteFeatureManager.Features);
+            string featlist = BuildFeatureLog(siteFeatureManager.Url, siteFeatureManager.Features);
+            logTxt(featlist);
 
             // sort the features list
             webFeatureManager.Features.Sort();
             clbSPWebFeatures.Items.AddRange(webFeatureManager.Features.ToArray());
-            txtResult.Text += BuildFeatureLog(webFeatureManager.Url, webFeatureManager.Features);
+            featlist = BuildFeatureLog(webFeatureManager.Url, webFeatureManager.Features);
+            logTxt(featlist);
 
             // enables the removal buttons
             // removeBtnEnabled(true);
@@ -743,7 +746,7 @@ namespace FeatureAdmin
                 {
                     foreach (Feature checkedFeature in clbSPSiteFeatures.CheckedItems)
                     {
-                        txtResult.AppendText(checkedFeature.ToString() + ", Scope: Site" + Environment.NewLine);
+                        logMsg(checkedFeature.ToString() + ", Scope: Site");
                     }
                 }
 
@@ -751,7 +754,7 @@ namespace FeatureAdmin
                 {
                     foreach (Feature checkedFeature in clbSPWebFeatures.CheckedItems)
                     {
-                        txtResult.AppendText(checkedFeature.ToString() + ", Scope: Web" + Environment.NewLine);
+                        logMsg(checkedFeature.ToString() + ", Scope: Web");
                     }
                 }
             }
@@ -775,7 +778,7 @@ namespace FeatureAdmin
 
                 foreach (Feature checkedFeature in clbFeatureDefinitions.CheckedItems)
                 {
-                    txtResult.AppendText(checkedFeature.ToString() + Environment.NewLine);
+                    logMsg(checkedFeature.ToString());
                 }
             }
             else
@@ -1133,7 +1136,11 @@ namespace FeatureAdmin
 
         protected void logDateMsg(string msg)
         {
-            logTxt(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msg + Environment.NewLine);
+            logMsg(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msg);
+        }
+        protected void logMsg(string msg)
+        {
+            logTxt(msg + Environment.NewLine);
         }
 
         /// <summary>adds log string to the logfile</summary>
@@ -1142,6 +1149,11 @@ namespace FeatureAdmin
         {
             this.txtResult.AppendText(logtext);
         }
+        protected void ClearLog()
+        {
+            this.txtResult.Clear();
+        }
+
 
         #endregion
 
@@ -1315,7 +1327,7 @@ namespace FeatureAdmin
 
         private void btnClearLog_Click(object sender, EventArgs e)
         {
-            txtResult.Clear();
+            ClearLog();
         }
 
 
