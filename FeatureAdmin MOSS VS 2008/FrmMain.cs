@@ -1356,81 +1356,30 @@ namespace FeatureAdmin
             featureActivater(SPFeatureScope.Farm);
         }
 
-  
-
         private void btnFindActivatedFeature_Click(object sender, EventArgs e)
         {
-            string msgString = string.Empty;
-
             if (clbFeatureDefinitions.CheckedItems.Count == 1)
             {
                 Feature feature = (Feature)clbFeatureDefinitions.CheckedItems[0];
 
-                //first, Look in Farm
-                if ((SPWebService.ContentService.Features[feature.Id] is SPFeature))
+                ActivationFinder finder = new ActivationFinder();
+                finder.FoundListeners += delegate(string msgtext)
                 {
-                    msgString = "Farm Feature is activated in the Farm on farm level!";
+                    MessageBox.Show(msgtext);
+                    logDateMsg(msgtext);
+                };
+                finder.ExceptionListeners += delegate(Exception exc, string msgtext)
+                {
+                    logException(exc, msgtext);
+                };
+                // Call routine to actually find & report activations
+                bool found = finder.FindFeatureActivations(feature);
+                if (!found)
+                {
+                    string msgString = "Feature was not found activated in the farm.";
                     MessageBox.Show(msgString);
                     logDateMsg(msgString);
-                    return;
                 }
-
-                // iterate through web apps
-                SPWebApplicationCollection webApplicationCollection = SPWebService.ContentService.WebApplications;
-
-                foreach (SPWebApplication webApp in webApplicationCollection)
-                {
-                    // check web apps
-                    if (webApp.Features[feature.Id] is SPFeature)
-                    {
-                        msgString = "Web App scoped Feature is activated in WebApp '" + webApp.Name.ToString() + "'!";
-                        MessageBox.Show(msgString);
-                        logDateMsg(msgString);
-                        return;
-                    }
-
-                    try
-                    {
-                        foreach (SPSite site in webApp.Sites)
-                        {
-                            using (site)
-                            {
-                                // check sites
-                                if (site.Features[feature.Id] is SPFeature)
-                                {
-                                    msgString = "Site Feature is activated in SiteCollection '" + site.Url.ToString() + "'!";
-                                    MessageBox.Show(msgString);
-                                    logDateMsg(msgString);
-                                    return;
-                                }
-                                // check subwebs
-                                foreach (SPWeb web in site.AllWebs)
-                                {
-                                    using (web)
-                                    {
-                                        // check webs
-                                        if (web.Features[feature.Id] is SPFeature)
-                                        {
-                                            msgString = "Web scoped Feature is activated in Site '" + web.Url.ToString() + "'!";
-                                            MessageBox.Show(msgString);
-                                            logDateMsg(msgString);
-                                            return;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception exc)
-                    {
-                        msgString = "Exception attempting to enumerate sites of WebApp: " + webApp.Name;
-                        logException(exc, msgString);
-                    }
-                }
-                msgString = "Feature was not found activated in the farm.";
-                MessageBox.Show(msgString);
-                logDateMsg(msgString);
-
             }
             else
             {

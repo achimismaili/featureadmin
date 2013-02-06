@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivationFinder.cs" />
     <Compile Include="Feature.cs" />
     <Compile Include="FeatureManager.cs" />
     <Compile Include="FrmMain.cs">
