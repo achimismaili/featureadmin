@@ -1,0 +1,12 @@
+Release Notes FeatureAdmin_2007 version 1.0.2.0 - NOT YET RELEASED
+
+Fixed VS2008 source to compile
+
+Trapped & logged Access Denied exceptoins in Find Faulty Feature (so it doesn't crash)
+
+Fix Find Activated Feature to correctly find web application scoped features
+
+Fix control anchoring so main form can be enlarged
+
+
+
