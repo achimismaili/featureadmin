@@ -80,6 +80,7 @@
     <Compile Include="RemoveInvalidFeature.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="spver.cs" />
     <Compile Include="RemoveInvalidFeature.Designer.cs">
       <DependentUpon>RemoveInvalidFeature.cs</DependentUpon>
     </Compile>
