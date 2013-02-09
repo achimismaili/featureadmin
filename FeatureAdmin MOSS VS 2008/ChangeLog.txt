@@ -1,4 +1,5 @@
 FeatureAdmin 2007 ChangeLog
+  - this file is intended for developers
 
 ** Feb, 2013 - Perry
 Fixed VS2008 source to compile

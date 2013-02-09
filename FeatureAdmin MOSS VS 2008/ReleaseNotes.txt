@@ -1,4 +1,8 @@
-Release Notes FeatureAdmin_2007 version 1.0.2.0 - NOT YET RELEASED
+FeatureAdmin 2007 Release Notes by version
+  - this file is intended for end users
+
+
+*** FeatureAdmin 2007 version 1.0.2.0 - NOT YET RELEASED
 
 Fixed VS2008 source to compile
 

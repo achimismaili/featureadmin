@@ -1,6 +1,10 @@
-Release Notes FeatureAdmin_2010 version 1.0.2.0 - NOT YET RELEASED
+FeatureAdmin 2010 Release Notes by version
+  - this file is intended for end users
 
-Trapped & logged Access Denied exceptoins in Find Faulty Feature (so it doesn't crash)
+
+*** FeatureAdmin 2010 version 1.0.2.0 - NOT YET RELEASED
+
+Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
 
 Fix Find Activated Feature to correctly find web application scoped features
 

@@ -1,4 +1,5 @@
 FeatureAdmin 2013 ChangeLog
+  - this file is intended for developers
 
 ** Feb, 2013 - Perry
 Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
