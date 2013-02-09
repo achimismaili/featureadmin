@@ -1,0 +1,10 @@
+FeatureAdmin 2007 ChangeLog
+
+** Feb, 2013 - Perry
+Fixed VS2008 source to compile
+Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
+Fix Find Activated Feature to correctly find web application scoped features
+Fix control anchoring so main form can be enlarged
+Add spver class to encapsulate SharePoint version
+Backported check in Program.cs that SPFarm.Local exists
+Factored code to find activated features into new ActivationFinder class

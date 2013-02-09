@@ -1,0 +1,6 @@
+FeatureAdmin 2010 ChangeLog
+
+** Feb, 2013 - Perry
+Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
+Fix Find Activated Feature to correctly find web application scoped features
+Factored code to find activated features into new ActivationFinder class
