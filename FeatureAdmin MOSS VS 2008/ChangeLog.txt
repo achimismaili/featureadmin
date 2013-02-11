@@ -9,3 +9,4 @@ Fix control anchoring so main form can be enlarged
 Add spver class to encapsulate SharePoint version
 Backported check in Program.cs that SPFarm.Local exists
 Factored code to find activated features into new ActivationFinder class
+Add reference to Microsoft.SharePoint.Search in order to set CopyLocal to false (so it doesn't copy it to bin folder)
