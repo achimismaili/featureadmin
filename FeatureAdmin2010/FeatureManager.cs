@@ -49,7 +49,10 @@ namespace FeatureAdmin
                 {
                     feature.Name = spfeature.Definition.DisplayName;
                 }
-                catch { }
+                catch (Exception exc)
+                {
+                    feature.AppendExceptionMsg(exc);
+                }
 
                 this._features.Add(feature);
             }
@@ -70,7 +73,10 @@ namespace FeatureAdmin
                     feature.Scope = spfeatureDef.Scope;
                     feature.Name  = spfeatureDef.GetTitle(System.Threading.Thread.CurrentThread.CurrentCulture);
                 }
-                catch { }
+                catch (Exception exc)
+                {
+                    feature.AppendExceptionMsg(exc);
+                }
 
                 this._features.Add(feature);
             }
