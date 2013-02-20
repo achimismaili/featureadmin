@@ -130,6 +130,7 @@
     <Compile Include="RemoveInvalidFeature.Designer.cs">
       <DependentUpon>RemoveInvalidFeature.cs</DependentUpon>
     </Compile>
+    <Compile Include="spver.cs" />
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
