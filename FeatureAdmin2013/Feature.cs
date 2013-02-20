@@ -33,6 +33,13 @@ namespace FeatureAdmin
             set { _scope = value; }
         }
 
+        String _exceptionMsg = "";
+        public String ExceptionMsg
+        {
+            get { return _exceptionMsg; }
+            set { _exceptionMsg = value; }
+        }
+
 
         public Feature(Guid id)
         {
@@ -64,6 +71,12 @@ namespace FeatureAdmin
             return result;
         }
 
+        // Record any exceptions experienced reading feature or feature definitions
+        public void AppendExceptionMsg(Exception exc)
+        {
+            if (ExceptionMsg != "") ExceptionMsg += "; ";
+            ExceptionMsg += ExceptionSerializer.ToString(exc);
+        }
 
         // sort the features: first Farm, Web App, Site then Web, after this, alphabetically after the name
         public int CompareTo(object obj)

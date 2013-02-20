@@ -5,3 +5,4 @@ FeatureAdmin 2013 ChangeLog
 Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
 Fix Find Activated Feature to correctly find web application scoped features
 Factored code to find activated features into new ActivationFinder class
+Record & log exception messages when FeatureManager enumerates exceptions
