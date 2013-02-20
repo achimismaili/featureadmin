@@ -6,6 +6,6 @@ namespace FeatureAdmin
 {
     class spver
     {
-        public static string SharePointVersion = "2007";
+        public static string SharePointVersion = "2010";
     }
 }
