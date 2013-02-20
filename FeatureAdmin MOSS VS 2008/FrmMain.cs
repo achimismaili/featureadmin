@@ -62,6 +62,15 @@ namespace FeatureAdmin
             farmFeatureDefinitionsManager.AddFeatures(SPFarm.Local.FeatureDefinitions);
             farmFeatureDefinitionsManager.Features.Sort();
 
+            // Display any errors enumerating exceptions
+            foreach (Feature feature in farmFeatureDefinitionsManager.Features)
+            {
+                if (!string.IsNullOrEmpty(feature.ExceptionMsg))
+                {
+                    logDateMsg("Exception reading feature " + feature.Id + ": " + feature.ExceptionMsg);
+                }
+            }
+
             //clbFeatureDefinitions.
             this.clbFeatureDefinitions.Items.AddRange(farmFeatureDefinitionsManager.Features.ToArray());
             string featlist = BuildFeatureLog(farmFeatureDefinitionsManager.Url, farmFeatureDefinitionsManager.Features);
