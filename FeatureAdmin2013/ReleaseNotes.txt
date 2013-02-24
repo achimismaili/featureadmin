@@ -2,9 +2,11 @@ FeatureAdmin 2013 Release Notes by version
   - this file is intended for end users
 
 
-*** FeatureAdmin 2013 version 1.0.2.0 - NOT YET RELEASED
+version 2.3 (Feb 2013)
+New Features
+- Show Feature Compatibility Level as prefix of the Guid
 
-Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
-
-Fix Find Activated Feature to correctly find web application scoped features
+BugFixes:
+- Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
+- Fix Find Activated Feature to correctly find web application scoped features
 

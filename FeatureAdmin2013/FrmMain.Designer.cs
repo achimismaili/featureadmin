@@ -603,7 +603,7 @@ namespace FeatureAdmin
             this.ClientSize = new System.Drawing.Size(892, 730);
             this.Controls.Add(this.splitContainerCompleteMainframe);
             this.Name = "FrmMain";
-            this.Text = "Feature Admin Tool SharePoint 2013";
+            this.Text = "FeatureAdmin for SharePoint 2013 - v2.3";
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.tabControl1.ResumeLayout(false);
             this.FarmFeatures.ResumeLayout(false);
