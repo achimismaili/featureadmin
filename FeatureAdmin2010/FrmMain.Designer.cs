@@ -86,9 +86,9 @@ namespace FeatureAdmin
             // 
             // txtResult
             // 
-            this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtResult.Location = new System.Drawing.Point(0, 16);
             this.txtResult.Multiline = true;
             this.txtResult.Name = "txtResult";
@@ -109,9 +109,9 @@ namespace FeatureAdmin
             // 
             // clbSPSiteFeatures
             // 
-            this.clbSPSiteFeatures.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.clbSPSiteFeatures.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.clbSPSiteFeatures.BackColor = System.Drawing.Color.Moccasin;
             this.clbSPSiteFeatures.CheckOnClick = true;
             this.clbSPSiteFeatures.FormattingEnabled = true;
@@ -133,9 +133,9 @@ namespace FeatureAdmin
             // 
             // clbSPWebFeatures
             // 
-            this.clbSPWebFeatures.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.clbSPWebFeatures.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.clbSPWebFeatures.BackColor = System.Drawing.Color.Moccasin;
             this.clbSPWebFeatures.CheckOnClick = true;
             this.clbSPWebFeatures.FormattingEnabled = true;
@@ -168,9 +168,9 @@ namespace FeatureAdmin
             // 
             // listWebApplications
             // 
-            this.listWebApplications.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listWebApplications.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listWebApplications.BackColor = System.Drawing.SystemColors.Window;
             this.listWebApplications.FormattingEnabled = true;
             this.listWebApplications.Location = new System.Drawing.Point(0, 32);
@@ -202,9 +202,9 @@ namespace FeatureAdmin
             // 
             // listSiteCollections
             // 
-            this.listSiteCollections.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listSiteCollections.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listSiteCollections.BackColor = System.Drawing.SystemColors.Window;
             this.listSiteCollections.Enabled = false;
             this.listSiteCollections.FormattingEnabled = true;
@@ -227,9 +227,9 @@ namespace FeatureAdmin
             // 
             // listSites
             // 
-            this.listSites.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listSites.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listSites.BackColor = System.Drawing.SystemColors.Window;
             this.listSites.FormattingEnabled = true;
             this.listSites.Location = new System.Drawing.Point(0, 16);
@@ -250,9 +250,9 @@ namespace FeatureAdmin
             // 
             // clbFeatureDefinitions
             // 
-            this.clbFeatureDefinitions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.clbFeatureDefinitions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.clbFeatureDefinitions.BackColor = System.Drawing.Color.LightSteelBlue;
             this.clbFeatureDefinitions.CheckOnClick = true;
             this.clbFeatureDefinitions.ForeColor = System.Drawing.Color.MidnightBlue;
@@ -353,9 +353,9 @@ namespace FeatureAdmin
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.FarmFeatures);
             this.tabControl1.Controls.Add(this.RemoveFeatures);
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
@@ -463,9 +463,9 @@ namespace FeatureAdmin
             // 
             // splitContainerRightSiteCollFeaturesWebFeatures
             // 
-            this.splitContainerRightSiteCollFeaturesWebFeatures.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainerRightSiteCollFeaturesWebFeatures.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainerRightSiteCollFeaturesWebFeatures.Location = new System.Drawing.Point(-4, 0);
             this.splitContainerRightSiteCollFeaturesWebFeatures.Name = "splitContainerRightSiteCollFeaturesWebFeatures";
             this.splitContainerRightSiteCollFeaturesWebFeatures.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -507,9 +507,9 @@ namespace FeatureAdmin
             // 
             // splitContainerCompleteMainframe
             // 
-            this.splitContainerCompleteMainframe.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainerCompleteMainframe.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainerCompleteMainframe.Location = new System.Drawing.Point(2, 2);
             this.splitContainerCompleteMainframe.Name = "splitContainerCompleteMainframe";
             // 
@@ -528,9 +528,9 @@ namespace FeatureAdmin
             // 
             // splitContainerLeftWindow
             // 
-            this.splitContainerLeftWindow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainerLeftWindow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainerLeftWindow.Location = new System.Drawing.Point(0, 0);
             this.splitContainerLeftWindow.Name = "splitContainerLeftWindow";
             this.splitContainerLeftWindow.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -548,9 +548,9 @@ namespace FeatureAdmin
             // 
             // splitContainerLeftUpperWebAppAndSiteColl
             // 
-            this.splitContainerLeftUpperWebAppAndSiteColl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainerLeftUpperWebAppAndSiteColl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainerLeftUpperWebAppAndSiteColl.Location = new System.Drawing.Point(4, 3);
             this.splitContainerLeftUpperWebAppAndSiteColl.Name = "splitContainerLeftUpperWebAppAndSiteColl";
             this.splitContainerLeftUpperWebAppAndSiteColl.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -571,9 +571,9 @@ namespace FeatureAdmin
             // 
             // splitContainerLeftDownWebsAndLogs
             // 
-            this.splitContainerLeftDownWebsAndLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainerLeftDownWebsAndLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainerLeftDownWebsAndLogs.Location = new System.Drawing.Point(4, 4);
             this.splitContainerLeftDownWebsAndLogs.Name = "splitContainerLeftDownWebsAndLogs";
             this.splitContainerLeftDownWebsAndLogs.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -598,7 +598,7 @@ namespace FeatureAdmin
             this.ClientSize = new System.Drawing.Size(892, 730);
             this.Controls.Add(this.splitContainerCompleteMainframe);
             this.Name = "FrmMain";
-            this.Text = "Feature Admin Tool for SP2010 and SP Foundation   v2.2";
+            this.Text = "FeatureAdmin for SharePoint 2010 - v2.3";
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.tabControl1.ResumeLayout(false);
             this.FarmFeatures.ResumeLayout(false);

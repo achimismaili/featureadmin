@@ -1163,7 +1163,7 @@ namespace FeatureAdmin
             msg += " on site " + site.ServerRelativeUrl + " (ContentDB: " + site.ContentDatabase.Name + ")";
             if (IsSimpleAccessDenied(exc))
             {
-                msg += " (dbOwner rights recommended on contentdb)";
+                msg += " (web application user policy with Full Control and dbOwner rights on contentdb recommended for this account)";
             }
             return msg;
         }
