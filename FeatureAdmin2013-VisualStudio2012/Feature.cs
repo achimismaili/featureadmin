@@ -69,7 +69,7 @@ namespace FeatureAdmin
 
             if (String.IsNullOrEmpty(_name))
             {
-                result = String.Format("ERROR READING FEATURE [{0}], Scope: {1}, CompatibilityLevel: {2}", this._id, this._scope.ToString(), this._compatibilityLevel);
+                result = String.Format("ERROR READING FEATURE [{2}/{0}], Scope: {1}", this._id, this._scope.ToString(), this._compatibilityLevel);
             }
             else
             {

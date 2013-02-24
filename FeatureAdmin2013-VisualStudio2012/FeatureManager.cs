@@ -100,9 +100,9 @@ namespace FeatureAdmin
 
         /// <summary>forcefully removes a feature definition from the farm feature definition collection</summary>
         /// <param name="id">Feature Definition ID</param>
-        public void ForceUninstallFeatureDefinition(Guid id)
+        public void ForceUninstallFeatureDefinition(Guid id, int compatibilityLevel)
         {
-            _spfeatureDefinitions.Remove(id, true);
+            _spfeatureDefinitions.Remove(id, compatibilityLevel, true);
         }
     }
 }

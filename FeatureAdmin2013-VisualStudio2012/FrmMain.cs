@@ -1027,7 +1027,7 @@ namespace FeatureAdmin
         {
             foreach (Feature checkedFeature in checkedListItems)
             {
-                manager.ForceUninstallFeatureDefinition(checkedFeature.Id);
+                manager.ForceUninstallFeatureDefinition(checkedFeature.Id, checkedFeature.CompatibilityLevel);
             }
         }
 
@@ -1071,6 +1071,7 @@ namespace FeatureAdmin
         {
             string dummy;
             Guid faultyID = Guid.Empty;
+            int faultyCompatibilityLevel = 0;
             string msgString = string.Empty;
 
             // string DBName = string.Empty; // tbd: retrieve the database name of the featureCollection
@@ -1090,6 +1091,7 @@ namespace FeatureAdmin
                             // an error when asking for the DisplayName
                             // If this happens, we found a faulty feature
                             faultyID = feature.DefinitionId;
+                            faultyCompatibilityLevel = feature.Definition.CompatibilityLevel;
                             dummy = feature.Definition.DisplayName;
                         }
                         catch
@@ -1103,7 +1105,7 @@ namespace FeatureAdmin
                                 parentString = features[faultyID].Parent.ToString();
                             }
 
-                            msgString = "Faulty Feature found! Id: '" + faultyID.ToString() + Environment.NewLine +
+                            msgString = "Faulty Feature found! Id: '" + faultyID.ToString() + " CompatibilityLevel:" + faultyCompatibilityLevel + "(0=Error)" + Environment.NewLine +
                                 "Found in " + parentString + ". Should it be removed from the farm?";
                             logDateMsg(msgString);
                             if (MessageBox.Show(msgString, "Success! Please Decide",

@@ -7,6 +7,7 @@ New Features
 - Show Feature Compatibility Level as prefix of the Guid
 
 BugFixes:
+- issue 8513 - fixed SP2013 feature definition uninstall, that compatibility level is recognized
 - Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
 - Fix Find Activated Feature to correctly find web application scoped features
 

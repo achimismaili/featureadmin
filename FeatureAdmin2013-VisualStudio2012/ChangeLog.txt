@@ -4,6 +4,7 @@ FeatureAdmin 2010 ChangeLog
 ** Feb 24th 2013 - Achim
 added CompatibilityLevel property to Feature class, that renders the compatibility level as prefix of the guid (e.g. [15/...)
 
+Issue 8513 - fixed SP2013 feature definition uninstall, that compatibility level is recognized
 Updated error text for access denied on level SPWeb to recommend also full control via web application user policy
 changed window title of feature admin to be the same for 2007, 2010 and 2013 version
 changed assembly name to contain the year name
