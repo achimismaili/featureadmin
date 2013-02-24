@@ -48,6 +48,7 @@ namespace FeatureAdmin
                 try
                 {
                     feature.Name = spfeature.Definition.DisplayName;
+                    feature.CompatibilityLevel = spfeature.Definition.CompatibilityLevel;
                 }
                 catch (Exception exc)
                 {
@@ -72,6 +73,7 @@ namespace FeatureAdmin
                 {
                     feature.Scope = spfeatureDef.Scope;
                     feature.Name  = spfeatureDef.GetTitle(System.Threading.Thread.CurrentThread.CurrentCulture);
+                    feature.CompatibilityLevel = spfeatureDef.CompatibilityLevel;
                 }
                 catch (Exception exc)
                 {
