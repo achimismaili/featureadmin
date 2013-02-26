@@ -1,6 +1,8 @@
 FeatureAdmin 2010 ChangeLog
   - this file is intended for developers
 
+** Feb 24th 2013 - RELEASE v 2.3: "FeatureAdmin for SharePoint 2013 - v2.3" **
+
 ** Feb 24th 2013 - Achim
 added CompatibilityLevel property to Feature class, that renders the compatibility level as prefix of the guid (e.g. [15/...)
 

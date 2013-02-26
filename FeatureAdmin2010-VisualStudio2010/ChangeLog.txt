@@ -1,6 +1,8 @@
 FeatureAdmin 2010 ChangeLog
   - this file is intended for developers
 
+** Feb 24th 2013 - RELEASE v 2.3: "FeatureAdmin for SharePoint 2010 - v2.3" **
+
 ** Feb 24th 2013 - Achim
 Updated error text for access denied on level SPWeb to recommend also full control via web application user policy
 changed window title of feature admin to be the same for 2007, 2010 and 2013 version

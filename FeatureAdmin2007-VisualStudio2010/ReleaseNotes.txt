@@ -1,8 +1,8 @@
-FeatureAdmin 2013 Release Notes by version
+FeatureAdmin 2007 Release Notes by version
   - this file is intended for end users
 
 
-version 2.3 (Feb 2013)
+version 2.3 (Feb 24th 2013): "FeatureAdmin for MOSS 2007 - v2.3"
 BugFixes:
 - Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
 - Fix Find Activated Feature to correctly find web application scoped features

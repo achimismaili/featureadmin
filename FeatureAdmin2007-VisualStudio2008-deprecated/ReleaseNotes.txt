@@ -2,6 +2,9 @@ FeatureAdmin 2007 Release Notes by version
   - this file is intended for end users
 
 
+WARNING - This is not the active branch for FeatureAdmin 2007
+The active branch for FeatureAdmin 2007 is the peer branch "FeatureAdmin2007-VisualStudio2010"
+
 *** FeatureAdmin 2007 version 1.0.2.0 - NOT YET RELEASED
 
 Fixed VS2008 source to compile
