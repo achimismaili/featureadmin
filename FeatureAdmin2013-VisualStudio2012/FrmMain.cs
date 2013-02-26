@@ -44,7 +44,7 @@ namespace FeatureAdmin
 
             removeBtnEnabled(false);
 
-            featDefBtnEnabled(false); ;
+            featDefBtnEnabled(false);
 
         }
 
