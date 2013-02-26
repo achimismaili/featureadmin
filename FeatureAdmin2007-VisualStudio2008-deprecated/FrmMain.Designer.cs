@@ -66,8 +66,8 @@ namespace FeatureAdmin
             // 
             // txtResult
             // 
-            this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtResult.Location = new System.Drawing.Point(12, 484);
             this.txtResult.Multiline = true;
             this.txtResult.Name = "txtResult";
@@ -88,9 +88,9 @@ namespace FeatureAdmin
             // 
             // clbSPSiteFeatures
             // 
-            this.clbSPSiteFeatures.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.clbSPSiteFeatures.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.clbSPSiteFeatures.BackColor = System.Drawing.Color.Moccasin;
             this.clbSPSiteFeatures.CheckOnClick = true;
             this.clbSPSiteFeatures.FormattingEnabled = true;
@@ -112,9 +112,9 @@ namespace FeatureAdmin
             // 
             // clbSPWebFeatures
             // 
-            this.clbSPWebFeatures.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.clbSPWebFeatures.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.clbSPWebFeatures.BackColor = System.Drawing.Color.Moccasin;
             this.clbSPWebFeatures.CheckOnClick = true;
             this.clbSPWebFeatures.FormattingEnabled = true;
@@ -126,8 +126,8 @@ namespace FeatureAdmin
             // 
             // btnRemoveFromList
             // 
-            this.btnRemoveFromList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRemoveFromList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRemoveFromList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.btnRemoveFromList.Location = new System.Drawing.Point(6, 447);
             this.btnRemoveFromList.Name = "btnRemoveFromList";
@@ -149,8 +149,8 @@ namespace FeatureAdmin
             // 
             // listWebApplications
             // 
-            this.listWebApplications.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listWebApplications.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listWebApplications.BackColor = System.Drawing.SystemColors.Window;
             this.listWebApplications.FormattingEnabled = true;
             this.listWebApplications.Location = new System.Drawing.Point(12, 40);
@@ -181,8 +181,8 @@ namespace FeatureAdmin
             // 
             // listSiteCollections
             // 
-            this.listSiteCollections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listSiteCollections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listSiteCollections.BackColor = System.Drawing.SystemColors.Window;
             this.listSiteCollections.Enabled = false;
             this.listSiteCollections.FormattingEnabled = true;
@@ -225,9 +225,9 @@ namespace FeatureAdmin
             // 
             // clbFeatureDefinitions
             // 
-            this.clbFeatureDefinitions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.clbFeatureDefinitions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.clbFeatureDefinitions.BackColor = System.Drawing.Color.LightSteelBlue;
             this.clbFeatureDefinitions.CheckOnClick = true;
             this.clbFeatureDefinitions.ForeColor = System.Drawing.Color.MidnightBlue;
@@ -259,8 +259,8 @@ namespace FeatureAdmin
             // 
             // btnReloadFDefs
             // 
-            this.btnReloadFDefs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnReloadFDefs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnReloadFDefs.ForeColor = System.Drawing.Color.MidnightBlue;
             this.btnReloadFDefs.Location = new System.Drawing.Point(222, 6);
             this.btnReloadFDefs.Name = "btnReloadFDefs";
@@ -272,8 +272,8 @@ namespace FeatureAdmin
             // 
             // btnUninstFDef
             // 
-            this.btnUninstFDef.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUninstFDef.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnUninstFDef.ForeColor = System.Drawing.Color.MidnightBlue;
             this.btnUninstFDef.Location = new System.Drawing.Point(9, 423);
             this.btnUninstFDef.Name = "btnUninstFDef";
@@ -294,8 +294,8 @@ namespace FeatureAdmin
             // 
             // btnRemoveFromSiteCollection
             // 
-            this.btnRemoveFromSiteCollection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRemoveFromSiteCollection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRemoveFromSiteCollection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.btnRemoveFromSiteCollection.Location = new System.Drawing.Point(6, 476);
             this.btnRemoveFromSiteCollection.Name = "btnRemoveFromSiteCollection";
@@ -307,8 +307,8 @@ namespace FeatureAdmin
             // 
             // btnRemoveFromWebApp
             // 
-            this.btnRemoveFromWebApp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRemoveFromWebApp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRemoveFromWebApp.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.btnRemoveFromWebApp.Location = new System.Drawing.Point(6, 505);
             this.btnRemoveFromWebApp.Name = "btnRemoveFromWebApp";
@@ -320,8 +320,8 @@ namespace FeatureAdmin
             // 
             // btnRemoveFromFarm
             // 
-            this.btnRemoveFromFarm.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRemoveFromFarm.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRemoveFromFarm.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.btnRemoveFromFarm.Location = new System.Drawing.Point(6, 534);
             this.btnRemoveFromFarm.Name = "btnRemoveFromFarm";
@@ -365,8 +365,8 @@ namespace FeatureAdmin
             // 
             // btnActivateSPWeb
             // 
-            this.btnActivateSPWeb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnActivateSPWeb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnActivateSPWeb.ForeColor = System.Drawing.Color.MidnightBlue;
             this.btnActivateSPWeb.Location = new System.Drawing.Point(9, 452);
             this.btnActivateSPWeb.Name = "btnActivateSPWeb";
@@ -378,8 +378,8 @@ namespace FeatureAdmin
             // 
             // btnActivateSPSite
             // 
-            this.btnActivateSPSite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnActivateSPSite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnActivateSPSite.ForeColor = System.Drawing.Color.MidnightBlue;
             this.btnActivateSPSite.Location = new System.Drawing.Point(9, 481);
             this.btnActivateSPSite.Name = "btnActivateSPSite";
@@ -391,8 +391,8 @@ namespace FeatureAdmin
             // 
             // btnActivateSPWebApp
             // 
-            this.btnActivateSPWebApp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnActivateSPWebApp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnActivateSPWebApp.ForeColor = System.Drawing.Color.MidnightBlue;
             this.btnActivateSPWebApp.Location = new System.Drawing.Point(9, 510);
             this.btnActivateSPWebApp.Name = "btnActivateSPWebApp";
@@ -404,8 +404,8 @@ namespace FeatureAdmin
             // 
             // btnFindActivatedFeature
             // 
-            this.btnFindActivatedFeature.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFindActivatedFeature.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnFindActivatedFeature.ForeColor = System.Drawing.Color.MidnightBlue;
             this.btnFindActivatedFeature.Location = new System.Drawing.Point(255, 452);
             this.btnFindActivatedFeature.Name = "btnFindActivatedFeature";
@@ -417,8 +417,8 @@ namespace FeatureAdmin
             // 
             // btnActivateSPFarm
             // 
-            this.btnActivateSPFarm.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnActivateSPFarm.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnActivateSPFarm.ForeColor = System.Drawing.Color.MidnightBlue;
             this.btnActivateSPFarm.Location = new System.Drawing.Point(9, 539);
             this.btnActivateSPFarm.Name = "btnActivateSPFarm";
@@ -487,7 +487,7 @@ namespace FeatureAdmin
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.txtResult);
             this.Name = "FrmMain";
-            this.Text = "Feature Admin Tool v2.0";
+            this.Text = "Feature Admin Tool MOSS 2007 - v2.3";
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.tabControl1.ResumeLayout(false);
             this.FarmFeatures.ResumeLayout(false);
