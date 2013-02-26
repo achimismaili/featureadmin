@@ -1,4 +1,4 @@
-FeatureAdmin 2010 ChangeLog
+FeatureAdmin 2007 ChangeLog
   - this file is intended for developers
 
 ** Feb 24th 2013 - RELEASE v 2.3: "FeatureAdmin for MOSS 2007 - v2.3" **
