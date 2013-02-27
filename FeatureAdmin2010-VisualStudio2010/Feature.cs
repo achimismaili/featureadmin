@@ -62,11 +62,13 @@ namespace FeatureAdmin
 
             if (String.IsNullOrEmpty(_name))
             {
-                result = String.Format("ERROR READING FEATURE [{0}], Scope: {1}", this._id, this._scope.ToString());
+                string idstr = string.Format("{0}", this._id);
+                result = String.Format("ERROR READING FEATURE [{0}], Scope: {1}", idstr, this._scope.ToString());
             }
             else
             {
-                result = String.Format("{2}: '{1}' [{0}]", this._id, this._name, this._scope.ToString());
+                string idstr = String.Format("{0}", this._id);
+                result = String.Format("{2}: '{1}' [{0}]", idstr, this._name, this._scope.ToString());
             }
             return result;
         }
@@ -115,8 +117,10 @@ namespace FeatureAdmin
 
                 }
 
-
-                iVal += this.Name.CompareTo(((Feature)obj).Name);
+                if (this.Name != null)
+                {
+                    iVal += this.Name.CompareTo(((Feature)obj).Name);
+                }
 
                 // if iVal is higher than oVal in value, it will be far down in the list ...
                 return (iVal - oVal);

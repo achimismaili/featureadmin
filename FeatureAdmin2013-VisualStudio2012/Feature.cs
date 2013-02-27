@@ -69,11 +69,13 @@ namespace FeatureAdmin
 
             if (String.IsNullOrEmpty(_name))
             {
-                result = String.Format("ERROR READING FEATURE [{2}/{0}], Scope: {1}", this._id, this._scope.ToString(), this._compatibilityLevel);
+                string idstr = String.Format("{1}/{0}", this._id, this._compatibilityLevel);
+                result = String.Format("ERROR READING FEATURE [{0}], Scope: {1}", idstr, this._scope.ToString());
             }
             else
             {
-                result = String.Format("{2}: '{1}' [{3}/{0}]", this._id, this._name, this._scope.ToString(), this._compatibilityLevel);
+                string idstr = String.Format("{1}/{0}", this._id, this._compatibilityLevel);
+                result = String.Format("{2}: '{1}' [{0}]", idstr, this._name, this._scope.ToString());
             }
             return result;
         }
@@ -122,7 +124,7 @@ namespace FeatureAdmin
 
                 }
 
-                if (this != null && this.Name != null)
+                if (this.Name != null)
                 {
                     iVal += this.Name.CompareTo(((Feature)obj).Name);
                 }
