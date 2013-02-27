@@ -965,7 +965,6 @@ namespace FeatureAdmin
                         SPWebService.ContentService.Features.Remove(featureID, true);
                         removedFeatures++;
                         logDateMsg("Farm - Feature successfully removed. ");
-
                     }
                     catch
                     {
@@ -1143,17 +1142,22 @@ namespace FeatureAdmin
             return txt.ToString();
         }
 
+        /// <summary>
+        /// Log current date+time, plus message, plus line return
+        /// </summary>
         protected void logDateMsg(string msg)
         {
             logMsg(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msg);
         }
+        /// <summary>
+        /// Log message plus line return
+        /// </summary>
         protected void logMsg(string msg)
         {
             logTxt(msg + Environment.NewLine);
         }
 
         /// <summary>adds log string to the logfile</summary>
-        /// <param name="logtext"></param>
         public void logTxt(string logtext)
         {
             this.txtResult.AppendText(logtext);
@@ -1162,7 +1166,6 @@ namespace FeatureAdmin
         {
             this.txtResult.Clear();
         }
-
 
         #endregion
 

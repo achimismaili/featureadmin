@@ -1014,7 +1014,7 @@ namespace FeatureAdmin
                     }
                 }
                 msgString = removedFeatures + " Features removed in the Farm. " + scannedThrough + " Web Applications were scanned.";
-               logDateMsg("Farm - " + msgString);
+                logDateMsg("Farm - " + msgString);
             });
             return removedFeatures;
         }
@@ -1148,7 +1148,7 @@ namespace FeatureAdmin
         }
 
         #endregion
-        #region Logging Methods
+        #region Error & Logging Methods
 
         protected void ReportError(string msg)
         {
@@ -1350,7 +1350,6 @@ namespace FeatureAdmin
                     //List the features for the site.
                     //FillFeatureList();
                 }
-                
                 Cursor.Current = Cursors.Default;
             }
             else
