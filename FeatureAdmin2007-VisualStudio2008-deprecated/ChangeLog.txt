@@ -13,3 +13,6 @@ Backported check in Program.cs that SPFarm.Local exists
 Factored code to find activated features into new ActivationFinder class
 Add reference to Microsoft.SharePoint.Search in order to set CopyLocal to false (so it doesn't copy it to bin folder)
 Record & log exception messages when FeatureManager enumerates exceptions
+
+** Nov, 2014 - Perry
+Fix resizing anchoring on main form
