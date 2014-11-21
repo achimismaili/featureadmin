@@ -3,20 +3,17 @@ FeatureAdmin 2007 ChangeLog
 
 ** Feb 24th 2013 - RELEASE v 2.3: "FeatureAdmin for MOSS 2007 - v2.3" **
 
-** Feb 24th 2013 - Achim
-Updated solution to Visual Studio 2010
-Updated error text for access denied on level SPWeb to recommend also full control via web application user policy
-changed window title of feature admin to be the same for 2007, 2010 and 2013 version
-changed assembly name to contain the year name
-
 ** Feb, 2013 - Perry
+Fixed VS2008 source to compile
 Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
 Fix Find Activated Feature to correctly find web application scoped features
 Fix control anchoring so main form can be enlarged
 Add spver class to encapsulate SharePoint version
 Backported check in Program.cs that SPFarm.Local exists
 Factored code to find activated features into new ActivationFinder class
+Add reference to Microsoft.SharePoint.Search in order to set CopyLocal to false (so it doesn't copy it to bin folder)
 Record & log exception messages when FeatureManager enumerates exceptions
 
 ** Nov, 2014 - Perry
 Fix resizing anchoring on main form
+New "Find All Activations" and "Load All Activation Data" buttons

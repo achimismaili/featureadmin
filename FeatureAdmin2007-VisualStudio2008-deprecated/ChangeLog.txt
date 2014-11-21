@@ -16,3 +16,4 @@ Record & log exception messages when FeatureManager enumerates exceptions
 
 ** Nov, 2014 - Perry
 Fix resizing anchoring on main form
+New "Find All Activations" and "Load All Activation Data" buttons

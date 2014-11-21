@@ -1442,7 +1442,7 @@ namespace FeatureAdmin
                     logException(exc, msgtext);
                 };
                 // Call routine to actually find & report activations
-                bool found = finder.FindFeatureActivations(feature);
+                bool found = finder.FindFirstFeatureActivation(feature.Id);
                 if (!found)
                 {
                     string msgString = "Feature was not found activated in the farm.";
