@@ -152,12 +152,11 @@ namespace FeatureAdmin
             removeSPWebFeaturesFromCurrentWeb();
         }
 
-        /// <summary>Removes selected features from the current list only</summary>
+        /// <summary>Removes selected features from the current web only</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void removeSPWebFeaturesFromCurrentWeb()
         {
-
             if (clbSPWebFeatures.CheckedItems.Count > 0)
             {
                 int featuresRemoved = 0;
@@ -1052,80 +1051,84 @@ namespace FeatureAdmin
         /// <returns></returns>
         private bool findFaultyFeatureInCollection(SPFeatureCollection features, SPFeatureScope scope)
         {
-            string dummy;
-            Guid faultyID = Guid.Empty;
+            if (features == null)
+            {
+                logDateMsg("ERROR: Feature Collection was null!");
+                return false;
+            }
+            if (features.Count == 0)
+            {
+                logDateMsg("ERROR: Feature Collection was empty!");
+                return false;
+            }
             int faultyCompatibilityLevel = 0;
-            string msgString = string.Empty;
 
             // string DBName = string.Empty; // tbd: retrieve the database name of the featureCollection
             string featuresName = features.ToString();
 
-            if (features != null)
+            Guid faultyID = Guid.Empty;
+            try
             {
-
-                try
+                foreach (SPFeature feature in features)
                 {
-                    foreach (SPFeature feature in features)
+                    string parentString;
+                    try
                     {
-                        string parentString;
-                        try
-                        {
-                            // a feature activated somewhere with no manifest file available causes
-                            // an error when asking for the DisplayName
-                            // If this happens, we found a faulty feature
-                            faultyID = feature.DefinitionId;
-                            faultyCompatibilityLevel = feature.Definition.CompatibilityLevel;
-                            dummy = feature.Definition.DisplayName;
-                        }
-                        catch
-                        {
-                            if (features[faultyID].Parent is SPWeb)
-                            {
-                                parentString = "Scope:Web, " + ((SPWeb)features[faultyID].Parent).Url.ToString();
-                            }
-                            else
-                            {
-                                parentString = features[faultyID].Parent.ToString();
-                            }
-
-                            msgString = "Faulty Feature found! Id: '" + faultyID.ToString() + " CompatibilityLevel:" + faultyCompatibilityLevel + "(0=Error)" + Environment.NewLine +
-                                "Found in " + parentString + ". Should it be removed from the farm?";
-                            logDateMsg(msgString);
-                            if (MessageBox.Show(msgString, "Success! Please Decide",
-                                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                            {
-                                removeFeaturesWithinFarm(faultyID, scope);
-                            }
-
-                            return true;
-                        }
+                        // a feature activated somewhere with no manifest file available causes
+                        // an error when asking for the DisplayName
+                        // If this happens, we found a faulty feature
+                        faultyID = feature.DefinitionId;
+                        faultyCompatibilityLevel = FeatureManager.GetFeatureCompatibilityLevel(feature.Definition);
+                        string dummy = feature.Definition.DisplayName;
                     }
-
-                }
-                catch (Exception ex)
-                {
-                    if (ex is SqlException)
+                    catch
                     {
-                        string msgstring = string.Format("Cannot access a feature collection of scope '{0}'! Not enough access rights for a content DB on SQL Server! dbOwner rights are recommended. Please read the following error message:\n\n'{1}'", scope.ToString(), ex.ToString());
-                        string MessageCaption = string.Format("FeatureCollection in a Content DB not accessible");
-                        if(MessageBox.Show(msgstring, MessageCaption,MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                        if (features[faultyID].Parent is SPWeb)
                         {
-                            return true;
+                            parentString = "Scope:Web, " + ((SPWeb)features[faultyID].Parent).Url.ToString();
                         }
+                        else
+                        {
+                            parentString = features[faultyID].Parent.ToString();
+                        }
+
+                        string msgString = "Faulty Feature found! Id: '" + faultyID.ToString();
+                        if (faultyCompatibilityLevel != FeatureManager.COMPATINAPPLICABLE)
+                        {
+                            msgString += " CompatibilityLevel:" + faultyCompatibilityLevel + " (0=Error)";
+                        }
+                        msgString += Environment.NewLine
+                            + "Found in " + parentString + "." + Environment.NewLine
+                            + " Should it be removed from the farm?";
+                        logDateMsg(msgString);
+                        if (MessageBox.Show(msgString, "Success! Please Decide",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                        {
+                            removeFeaturesWithinFarm(faultyID, scope);
+                        }
+
+                        return true;
                     }
-                    else
-                    {
-                        MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OK);
-                    }
-                    return false;
                 }
 
             }
-            else
+            catch (Exception ex)
             {
-                logDateMsg("ERROR: Feature Collection was empty!");
+                if (ex is SqlException)
+                {
+                    string msgstring = string.Format("Cannot access a feature collection of scope '{0}'! Not enough access rights for a content DB on SQL Server! dbOwner rights are recommended. Please read the following error message:\n\n'{1}'", scope.ToString(), ex.ToString());
+                    string MessageCaption = string.Format("FeatureCollection in a Content DB not accessible");
+                    if(MessageBox.Show(msgstring, MessageCaption,MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OK);
+                }
+                return false;
             }
-            faultyID = Guid.Empty;
             return false;
         }
 

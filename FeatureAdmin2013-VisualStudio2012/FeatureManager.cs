@@ -48,7 +48,7 @@ namespace FeatureAdmin
                 try
                 {
                     feature.Name = spfeature.Definition.DisplayName;
-                    feature.CompatibilityLevel = spfeature.Definition.CompatibilityLevel;
+                    feature.CompatibilityLevel = GetFeatureCompatibilityLevel(spfeature.Definition);
                 }
                 catch (Exception exc)
                 {
@@ -73,7 +73,7 @@ namespace FeatureAdmin
                 {
                     feature.Scope = spfeatureDef.Scope;
                     feature.Name  = spfeatureDef.GetTitle(System.Threading.Thread.CurrentThread.CurrentCulture);
-                    feature.CompatibilityLevel = spfeatureDef.CompatibilityLevel;
+                    feature.CompatibilityLevel = GetFeatureCompatibilityLevel(spfeatureDef);
                 }
                 catch (Exception exc)
                 {
@@ -97,12 +97,31 @@ namespace FeatureAdmin
             {
             }
         }
-
+        public const int COMPATINAPPLICABLE = -8;
         /// <summary>forcefully removes a feature definition from the farm feature definition collection</summary>
         /// <param name="id">Feature Definition ID</param>
         public void ForceUninstallFeatureDefinition(Guid id, int compatibilityLevel)
         {
             _spfeatureDefinitions.Remove(id, compatibilityLevel, true);
         }
-    }
+        public static int GetFeatureCompatibilityLevel(SPFeatureDefinition definition)
+        {
+            #if (SP2013)
+            {
+                return definition.CompatibilityLevel;
+            }
+            #endif
+            #if (SP2010)
+            {
+                return COMPATINAPPLICABLE; // inapplicable
+            }
+            #endif
+            #if (SP2007)
+            {
+                return COMPATINAPPLICABLE; // inapplicable
+            }
+            #endif
+            throw new Exception("Unspecified SharePoint Version");
+        }
+   }
 }
