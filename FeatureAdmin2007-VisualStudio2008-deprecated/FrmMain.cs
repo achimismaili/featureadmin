@@ -81,13 +81,11 @@ namespace FeatureAdmin
 
                 logDateMsg("Feature Definition list updated.");
             }
-
             // tabControl1.Enabled = false;
             // tabControl1.Visible = false;
             // listFeatures.Items.Clear();
             // listDetails.Items.Clear();
         }
-
 
         /// <summary>Uninstall the selected Feature definition</summary>
         /// <param name="sender"></param>
@@ -123,13 +121,10 @@ namespace FeatureAdmin
                         }
 
                     }
-
                     using (WaitCursor wait = new WaitCursor())
                     {
                         UninstallSelectedFeatureDefinitions(farmFeatureDefinitionsManager, clbFeatureDefinitions.CheckedItems);
                     }
-
-
                 }
             }
             else
@@ -142,18 +137,10 @@ namespace FeatureAdmin
 
         #region Feature removal (SiteCollection and SPWeb)
 
-        /// <summary>triggers removeFeaturesFromCurrentLists</summary>
+        /// <summary>triggers removeSPWebFeaturesFromCurrentWeb</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnRemoveFromWeb_Click(object sender, EventArgs e)
-        {
-            removeSPWebFeaturesFromCurrentWeb();
-        }
-
-        /// <summary>Removes selected features from the current list only</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void removeSPWebFeaturesFromCurrentWeb()
         {
             if (clbSPSiteFeatures.CheckedItems.Count > 0)
             {
@@ -161,11 +148,19 @@ namespace FeatureAdmin
                     "No SiteCollection scoped Features must be checked");
                 return;
             }
+            removeSPWebFeaturesFromCurrentWeb();
+        }
+
+        /// <summary>Removes selected features from the current web only</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void removeSPWebFeaturesFromCurrentWeb()
+        {
             if (clbSPWebFeatures.CheckedItems.Count > 0)
             {
                 int featuresRemoved = 0;
                 string msgString;
-                msgString = "This will force remove/deactivate the selected Web scoped Feature(s) from the selected Site(SPWeb) only. Continue ?";
+                msgString = "This will force remove/deactivate the selected Feature(s) from the selected Site(SPWeb) only. Continue ?";
 
                 if (MessageBox.Show(msgString, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {

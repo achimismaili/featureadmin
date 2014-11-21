@@ -157,7 +157,6 @@ namespace FeatureAdmin
         /// <param name="e"></param>
         private void removeSPWebFeaturesFromCurrentWeb()
         {
-
             if (clbSPWebFeatures.CheckedItems.Count > 0)
             {
                 int featuresRemoved = 0;
