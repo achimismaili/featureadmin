@@ -138,10 +138,10 @@ namespace FeatureAdmin
 
         #region Feature removal (SiteCollection and SPWeb)
 
-        /// <summary>triggers removeFeaturesFromCurrentLists</summary>
+        /// <summary>triggers removeSPWebFeaturesFromCurrentWeb</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnRemoveFromSPWeb_Click(object sender, EventArgs e)
+        private void btnRemoveFromWeb_Click(object sender, EventArgs e)
         {
             if (clbSPSiteFeatures.CheckedItems.Count > 0)
             {
@@ -149,13 +149,13 @@ namespace FeatureAdmin
                     "No SiteCollection scoped Features must be checked");
                 return;
             }
-            removeSPWebFeaturesFromCurrentList();
+            removeSPWebFeaturesFromCurrentWeb();
         }
 
         /// <summary>Removes selected features from the current list only</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void removeSPWebFeaturesFromCurrentList()
+        private void removeSPWebFeaturesFromCurrentWeb()
         {
 
             if (clbSPWebFeatures.CheckedItems.Count > 0)
@@ -1017,7 +1017,7 @@ namespace FeatureAdmin
         /// <param name="enabled">true = enabled, false = disabled</param>
         private void removeBtnEnabled(bool enabled)
         {
-            btnRemoveFromSPweb.Enabled = enabled;
+            btnRemoveFromWeb.Enabled = enabled;
             btnRemoveFromSiteCollection.Enabled = enabled;
             btnRemoveFromWebApp.Enabled = enabled;
             btnRemoveFromFarm.Enabled = enabled;

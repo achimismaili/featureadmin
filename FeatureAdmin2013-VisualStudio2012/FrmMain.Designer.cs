@@ -31,7 +31,7 @@ namespace FeatureAdmin
             this.clbSPSiteFeatures = new System.Windows.Forms.CheckedListBox();
             this.lblSPWebFeatures = new System.Windows.Forms.Label();
             this.clbSPWebFeatures = new System.Windows.Forms.CheckedListBox();
-            this.btnRemoveFromSPweb = new System.Windows.Forms.Button();
+            this.btnRemoveFromWeb = new System.Windows.Forms.Button();
             this.lblLog = new System.Windows.Forms.Label();
             this.listWebApplications = new System.Windows.Forms.ListBox();
             this.btnListWebApplications = new System.Windows.Forms.Button();
@@ -152,17 +152,17 @@ namespace FeatureAdmin
             this.clbSPWebFeatures.TabIndex = 7;
             this.clbSPWebFeatures.SelectedIndexChanged += new System.EventHandler(this.clbSPWebFeatures_SelectedIndexChanged);
             // 
-            // btnRemoveFromSPweb
+            // btnRemoveFromWeb
             // 
-            this.btnRemoveFromSPweb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRemoveFromSPweb.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.btnRemoveFromSPweb.Location = new System.Drawing.Point(6, 490);
-            this.btnRemoveFromSPweb.Name = "btnRemoveFromSPweb";
-            this.btnRemoveFromSPweb.Size = new System.Drawing.Size(200, 23);
-            this.btnRemoveFromSPweb.TabIndex = 8;
-            this.btnRemoveFromSPweb.Text = "Remove from selected Site (SPweb)";
-            this.btnRemoveFromSPweb.UseVisualStyleBackColor = true;
-            this.btnRemoveFromSPweb.Click += new System.EventHandler(this.btnRemoveFromSPWeb_Click);
+            this.btnRemoveFromWeb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnRemoveFromWeb.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.btnRemoveFromWeb.Location = new System.Drawing.Point(6, 490);
+            this.btnRemoveFromWeb.Name = "btnRemoveFromWeb";
+            this.btnRemoveFromWeb.Size = new System.Drawing.Size(200, 23);
+            this.btnRemoveFromWeb.TabIndex = 8;
+            this.btnRemoveFromWeb.Text = "Remove from selected Site (SPweb)";
+            this.btnRemoveFromWeb.UseVisualStyleBackColor = true;
+            this.btnRemoveFromWeb.Click += new System.EventHandler(this.btnRemoveFromWeb_Click);
             // 
             // lblLog
             // 
@@ -480,7 +480,7 @@ namespace FeatureAdmin
             // 
             // RemoveFeatures
             // 
-            this.RemoveFeatures.Controls.Add(this.btnRemoveFromSPweb);
+            this.RemoveFeatures.Controls.Add(this.btnRemoveFromWeb);
             this.RemoveFeatures.Controls.Add(this.btnRemoveFromSiteCollection);
             this.RemoveFeatures.Controls.Add(this.btnRemoveFromWebApp);
             this.RemoveFeatures.Controls.Add(this.btnRemoveFromFarm);
@@ -674,7 +674,7 @@ namespace FeatureAdmin
         private System.Windows.Forms.CheckedListBox clbSPSiteFeatures;
         private System.Windows.Forms.Label lblSPWebFeatures;
         private System.Windows.Forms.CheckedListBox clbSPWebFeatures;
-        private System.Windows.Forms.Button btnRemoveFromSPweb;
+        private System.Windows.Forms.Button btnRemoveFromWeb;
         private System.Windows.Forms.Label lblLog;
         private System.Windows.Forms.ListBox listWebApplications;
         private System.Windows.Forms.Button btnListWebApplications;
