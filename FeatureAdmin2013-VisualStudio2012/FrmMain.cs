@@ -222,21 +222,24 @@ namespace FeatureAdmin
                 #region remove features
                 try
                 {
-                    using (WaitCursor wait = new WaitCursor())
+                    // remove the SPSite scoped Feature(s)
+                    if (clbSPSiteFeatures.CheckedItems.Count > 0)
                     {
-                        // remove the SPSite scoped Feature(s)
-                        if (clbSPSiteFeatures.CheckedItems.Count > 0)
+                        using (WaitCursor wait = new WaitCursor())
                         {
                             // the site collection features can be easily removed same as before
                             featuresRemoved += DeleteSelectedFeatures(siteFeatureManager, clbSPSiteFeatures.CheckedItems);
                         }
+                    }
 
-                        // remove the SPWeb scoped Feature(s)
-                        if (clbSPWebFeatures.CheckedItems.Count > 0)
+                    // remove the SPWeb scoped Feature(s)
+                    if (clbSPWebFeatures.CheckedItems.Count > 0)
+                    {
+                        continueRemoval = MessageBox.Show(msgString, "Warning - Multi Site Deactivation!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                        if (continueRemoval == System.Windows.Forms.DialogResult.Yes)
                         {
-                            continueRemoval = MessageBox.Show(msgString, "Warning - Multi Site Deactivation!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                            if (continueRemoval == System.Windows.Forms.DialogResult.Yes)
+                            using (WaitCursor wait = new WaitCursor())
                             {
                                 // remove web features from SiteCollection
                                 foreach (Feature checkedFeature in clbSPWebFeatures.CheckedItems)
@@ -1480,12 +1483,15 @@ namespace FeatureAdmin
             }
             else
             {
-                ActivationFinder finder = new ActivationFinder();
-                // No Found callback b/c we process final list
-                finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
+                using (WaitCursor wait = new WaitCursor())
+                {
+                    ActivationFinder finder = new ActivationFinder();
+                    // No Found callback b/c we process final list
+                    finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
 
-                // Call routine to actually find & report activations
-                dict = finder.FindAllActivations(featureId);
+                    // Call routine to actually find & report activations
+                    dict = finder.FindAllActivations(featureId);
+                }
             }
             if (dict.ContainsKey(featureId))
             {

@@ -230,7 +230,6 @@ namespace FeatureAdmin
                             // the site collection features can be easily removed same as before
                             featuresRemoved += DeleteSelectedFeatures(siteFeatureManager, clbSPSiteFeatures.CheckedItems);
                         }
-
                     }
 
                     // remove the SPWeb scoped Feature(s)
@@ -1288,9 +1287,9 @@ namespace FeatureAdmin
                     // listFeatures.Items.Clear();
                     // listDetails.Items.Clear();
                 }
-                catch (Exception)
+                catch (Exception exc)
                 {
-
+                    logException(exc, "Exception enumerating site collections");
                 }
             }
         }
