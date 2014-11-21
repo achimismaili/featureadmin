@@ -1120,7 +1120,6 @@ namespace FeatureAdmin
                     return false;
                 }
 
-
             }
             else
             {
@@ -1622,7 +1621,6 @@ namespace FeatureAdmin
             logDateMsg(msgString);
 
         }
-
 
         private void FrmMain_Load(object sender, EventArgs e)
         {

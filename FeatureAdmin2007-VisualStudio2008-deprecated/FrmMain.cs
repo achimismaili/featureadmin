@@ -245,7 +245,6 @@ namespace FeatureAdmin
                 MessageBox.Show(NOFEATURESELECTED);
                 logDateMsg(NOFEATURESELECTED);
             }
-
         }
         /// <summary>Removes selected features from the current Web Application only</summary>
         /// <param name="sender"></param>
@@ -271,7 +270,6 @@ namespace FeatureAdmin
                         // remove SiteCollection scoped features from web application
                         featuresRemoved += removeAllSelectedFeatures(clbSPWebFeatures.CheckedItems, SPFeatureScope.WebApplication, SPFeatureScope.Web);
                     }
-
                     removeReady(featuresRemoved);
                 }
             }
@@ -306,7 +304,6 @@ namespace FeatureAdmin
                         // remove SiteCollection scoped features from web application
                         featuresRemoved += removeAllSelectedFeatures(clbSPWebFeatures.CheckedItems, SPFeatureScope.Farm, SPFeatureScope.Web);
                     }
-
                     removeReady(featuresRemoved);
                 }
             }
@@ -709,9 +706,7 @@ namespace FeatureAdmin
 
                 // enables the removal buttons
                 // removeBtnEnabled(true);
-
             }
-
             // commented out, was too annoying
             // MessageBox.Show("Done.");
             logDateMsg("Feature list updated.");
@@ -877,8 +872,7 @@ namespace FeatureAdmin
                     }
                 }
                 string msgString = removedFeatures + " Web Scoped Features removed in the SiteCollection " + site.Url.ToString() + ". " + scannedThrough + " sites/subsites were scanned.";
-                logDateMsg(" SiteColl - " + msgString);
-
+                logDateMsg("  SiteColl - " + msgString);
             });
             return removedFeatures;
         }
@@ -895,7 +889,7 @@ namespace FeatureAdmin
             string msgString;
 
             msgString = "Removing Feature '" + featureID.ToString() + "' from Web Application: '" + webApp.Name.ToString() + "'.";
-            logDateMsg("WebApp - " + msgString);
+            logDateMsg(" WebApp - " + msgString);
 
             SPSecurity.RunWithElevatedPrivileges(delegate()
                 {
@@ -935,7 +929,7 @@ namespace FeatureAdmin
 
                 });
             msgString = removedFeatures + " Features removed in the Web Application. " + scannedThrough + " SiteCollections were scanned.";
-            logDateMsg("WebApp - " + msgString);
+            logDateMsg(" WebApp - " + msgString);
 
             return removedFeatures;
         }
@@ -1249,9 +1243,9 @@ namespace FeatureAdmin
                     // listFeatures.Items.Clear();
                     // listDetails.Items.Clear();
                 }
-                catch (Exception)
+                catch (Exception exc)
                 {
-
+                    logException(exc, "Exception enumerating site collections");
                 }
             }
         }
@@ -1303,7 +1297,6 @@ namespace FeatureAdmin
                 // tabControl1.Enabled = false;
                 // tabControl1.Visible = false;
             }
-
         }
 
         /// <summary>UI method to load the SiteCollection Features and Site Features
