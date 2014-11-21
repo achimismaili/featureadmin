@@ -131,6 +131,7 @@
       <DependentUpon>RemoveInvalidFeature.cs</DependentUpon>
     </Compile>
     <Compile Include="spver.cs" />
+    <Compile Include="WaitCursor.cs" />
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
