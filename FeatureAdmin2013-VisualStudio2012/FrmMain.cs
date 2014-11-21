@@ -122,7 +122,6 @@ namespace FeatureAdmin
                         }
 
                     }
-
                     using (WaitCursor wait = new WaitCursor())
                     {
                         UninstallSelectedFeatureDefinitions(farmFeatureDefinitionsManager, clbFeatureDefinitions.CheckedItems);
@@ -254,16 +253,12 @@ namespace FeatureAdmin
                     removeReady(featuresRemoved);
                 }
                 #endregion remove features
-
-
             }
-
             else
             {
                 MessageBox.Show(NOFEATURESELECTED);
                 logDateMsg(NOFEATURESELECTED);
             }
-
         }
         /// <summary>Removes selected features from the current Web Application only</summary>
         /// <param name="sender"></param>
@@ -892,7 +887,6 @@ namespace FeatureAdmin
                 }
                 string msgString = removedFeatures + " Web Scoped Features removed in the SiteCollection " + site.Url.ToString() + ". " + scannedThrough + " sites/subsites were scanned.";
                 logDateMsg("  SiteColl - " + msgString);
-
             });
             return removedFeatures;
         }
@@ -1346,7 +1340,6 @@ namespace FeatureAdmin
                 // tabControl1.Enabled = false;
                 // tabControl1.Visible = false;
             }
-
         }
 
         /// <summary>UI method to load the SiteCollection Features and Site Features

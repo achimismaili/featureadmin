@@ -88,7 +88,6 @@ namespace FeatureAdmin
             // listDetails.Items.Clear();
         }
 
-
         /// <summary>Uninstall the selected Feature definition</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -127,7 +126,6 @@ namespace FeatureAdmin
                     {
                         UninstallSelectedFeatureDefinitions(farmFeatureDefinitionsManager, clbFeatureDefinitions.CheckedItems);
                     }
-
                 }
             }
             else
@@ -170,7 +168,6 @@ namespace FeatureAdmin
                 {
                     using (WaitCursor wait = new WaitCursor())
                     {
-
                         featuresRemoved = DeleteSelectedFeatures(siteFeatureManager, clbSPSiteFeatures.CheckedItems);
                         featuresRemoved = DeleteSelectedFeatures(webFeatureManager, clbSPWebFeatures.CheckedItems);
                     }
@@ -795,7 +792,6 @@ namespace FeatureAdmin
                 // enable all FeatureDef buttons
                 featDefBtnEnabled(true);
 
-
                 logDateMsg("Feature Definition selection changed:");
 
                 foreach (Feature checkedFeature in clbFeatureDefinitions.CheckedItems)
@@ -895,8 +891,6 @@ namespace FeatureAdmin
                 }
                 string msgString = removedFeatures + " Web Scoped Features removed in the SiteCollection " + site.Url.ToString() + ". " + scannedThrough + " sites/subsites were scanned.";
                 logDateMsg("  SiteColl - " + msgString);
-
-
             });
             return removedFeatures;
         }
