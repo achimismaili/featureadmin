@@ -1,6 +1,9 @@
 FeatureAdmin 2010 ChangeLog
   - this file is intended for developers
 
+** Nov, 2014 - Perry
+New "Find All Activations" and "Load All Activation Data" buttons
+
 ** Feb 24th 2013 - RELEASE v 2.3: "FeatureAdmin for SharePoint 2010 - v2.3" **
 
 ** Feb 24th 2013 - Achim

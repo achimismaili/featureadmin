@@ -8,13 +8,27 @@ namespace FeatureAdmin
 {
     class ActivationFinder
     {
+        public class Location
+        {
+            public Guid FeatureId;
+            public SPFeatureScope Scope;
+            public string Url;
+            public string Name;
+        }
+
         /// <summary>
         /// Delegate to report when feature found
         /// </summary>
         /// <param name="location"></param>
-        public delegate void FeatureFoundHandler(string location);
+        public delegate void FeatureFoundHandler(Guid featureId, string url, string name);
         public event FeatureFoundHandler FoundListeners;
-        protected void OnFound(string msg) { if (FoundListeners != null) FoundListeners(msg); }
+        protected void OnFoundFeature(Guid featureId, string url, string name)
+        {
+            if (FoundListeners != null)
+            {
+                FoundListeners(featureId, url, name);
+            }
+        }
 
         /// <summary>
         /// Delegate to report exception
@@ -24,73 +38,288 @@ namespace FeatureAdmin
         public event ExceptionHandler ExceptionListeners;
         protected void OnException(Exception exc, string msg) { if (ExceptionListeners != null) ExceptionListeners(exc, msg); }
 
+        private Guid desiredFeature; //Empty if enumerating all
+        private bool stopAtFirstHit;
+        private int activationsFound = 0;
+        private Dictionary<Guid, List<Location>> featureLocations = new Dictionary<Guid, List<Location>>();
+
         /// <summary>
         /// Find and report first place where feature activated, or return false if none found
         /// </summary>
-        /// <param name="feature"></param>
-        /// <returns></returns>
-        public bool FindFeatureActivations(Feature feature)
+        /// <returns>true if a location found</returns>
+        public bool FindFirstFeatureActivation(Guid featureId)
         {
-            string msgString = string.Empty;
-
+            desiredFeature = featureId;
+            stopAtFirstHit = true;
+            FindFeatureActivations();
+            return (activationsFound > 0);
+        }
+        /// <summary>
+        /// Find and return all activated locations of specified feature
+        /// </summary>
+        /// <returns>list of locations (dictionary only lists specified feature)</returns>
+        public Dictionary<Guid, List<Location>> FindAllActivations(Guid featureId)
+        {
+            desiredFeature = featureId;
+            stopAtFirstHit = false;
+            FindFeatureActivations();
+            return featureLocations;
+        }
+        /// <summary>
+        /// Find and return all activated locations of all features
+        /// </summary>
+        /// <returns>dictionary of all locations of all features</returns>
+        public Dictionary<Guid, List<Location>> FindAllActivationsOfAllFeatures()
+        {
+            desiredFeature = Guid.Empty;
+            stopAtFirstHit = false;
+            FindFeatureActivations();
+            return featureLocations;
+        }
+        private void FindFeatureActivations()
+        {
             //first, Look in Farm
-            if ((SPWebService.ContentService.Features[feature.Id] is SPFeature))
+            try
             {
-                msgString = "Farm Feature is activated in the Farm on farm level!";
-                OnFound(msgString);
-                return true;
+                CheckFarm();
+            }
+            catch (Exception exc)
+            {
+                OnException(exc,
+                    "Exception checking farm"
+                    );
             }
 
-            // iterate through web apps
+            // check all web apps and everything under
             SPWebApplicationCollection webApplicationCollection = SPWebService.ContentService.WebApplications;
-
             foreach (SPWebApplication webApp in webApplicationCollection)
             {
-                // check web apps
-                if (webApp.Features[feature.Id] is SPFeature)
+                try
                 {
-                    msgString = "Web App scoped Feature is activated in WebApp '" + webApp.Name.ToString() + "'!";
-                    OnFound(msgString);
-                    return true;
+                    CheckWebApp(webApp);
+                    if (stopAtFirstHit && activationsFound > 0) { return; }
+                }
+                catch (Exception exc)
+                {
+                    OnException(exc,
+                        "Exception checking webapp: " + SafeGetWebAppUrl(webApp)
+                        );
                 }
 
                 try
                 {
-                    foreach (SPSite site in webApp.Sites)
-                    {
-                        using (site)
-                        {
-                            // check sites
-                            if (site.Features[feature.Id] is SPFeature)
-                            {
-                                msgString = "Site Feature is activated in SiteCollection '" + site.Url.ToString() + "'!";
-                                OnFound(msgString);
-                                return true;
-                            }
-                            // check subwebs
-                            foreach (SPWeb web in site.AllWebs)
-                            {
-                                using (web)
-                                {
-                                    // check webs
-                                    if (web.Features[feature.Id] is SPFeature)
-                                    {
-                                        msgString = "Web scoped Feature is activated in Site '" + web.Url.ToString() + "'!";
-                                        OnFound(msgString);
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    // check all sites and everything under
+                    EnumerateWebAppSites(webApp);
+                    if (stopAtFirstHit && activationsFound > 0) { return; }
                 }
                 catch (Exception exc)
                 {
-                    msgString = "Exception attempting to enumerate sites of WebApp: " + webApp.Name;
-                    OnException(exc, msgString);
+                    OnException(exc,
+                        "Exception enumerating sites of webapp: " + SafeGetWebAppUrl(webApp)
+                        );
                 }
             }
-            return false;
+            return;
+        }
+        private void CheckFarm()
+        {
+            if (desiredFeature != Guid.Empty)
+            {
+                if ((SPWebService.ContentService.Features[desiredFeature] is SPFeature))
+                {
+                    ReportFarmFeature(desiredFeature);
+                }
+            }
+            else
+            {
+                foreach (SPFeature feature in SPWebService.ContentService.Features)
+                {
+                    ReportFarmFeature(feature.DefinitionId);
+                }
+            }
+        }
+        private void ReportFarmFeature(Guid featureId)
+        {
+            ++activationsFound;
+            ReportFeature(SPFeatureScope.Farm, featureId, "farm", "farm");
+        }
+        private void CheckWebApp(SPWebApplication webApp)
+        {
+            if (desiredFeature != Guid.Empty)
+            {
+                if (webApp.Features[desiredFeature] is SPFeature)
+                {
+                    ReportWebAppFeature(desiredFeature, webApp);
+                    return;
+                }
+            }
+            else
+            {
+                foreach (SPFeature feature in webApp.Features)
+                {
+                    ReportWebAppFeature(desiredFeature, webApp);
+                }
+            }
+        }
+        private void ReportWebAppFeature(Guid featureId, SPWebApplication webApp)
+        {
+            ++activationsFound;
+            ReportFeature(SPFeatureScope.WebApplication, featureId, GetWebAppUrl(webApp), webApp.Name);
+        }
+        private void EnumerateWebAppSites(SPWebApplication webApp)
+        {
+            foreach (SPSite site in webApp.Sites)
+            {
+                using (site)
+                {
+                    // check site
+                    try
+                    {
+                        CheckSite(site);
+                        if (stopAtFirstHit && activationsFound > 0) { return; }
+                    }
+                    catch (Exception exc)
+                    {
+                        OnException(exc,
+                            "Exception checking site: " + SafeGetSiteUrl(site)
+                            );
+                    }
+                    // check subwebs
+                    try
+                    {
+                        EnumerateSiteWebs(site);
+                        if (stopAtFirstHit && activationsFound > 0) { return; }
+                    }
+                    catch (Exception exc)
+                    {
+                        OnException(exc,
+                            "Exception enumerating webs of site: " + SafeGetSiteUrl(site)
+                            );
+                    }
+                }
+            }
+        }
+        private void CheckSite(SPSite site)
+        {
+            if (desiredFeature != Guid.Empty)
+            {
+                if (site.Features[desiredFeature] is SPFeature)
+                {
+                    ReportSiteFeature(desiredFeature, site);
+                }
+            }
+            else
+            {
+                foreach (SPFeature feature in site.Features)
+                {
+                    ReportSiteFeature(feature.DefinitionId, site);
+                }
+            }
+        }
+        private void ReportSiteFeature(Guid featureId, SPSite site)
+        {
+            ++activationsFound;
+            ReportFeature(SPFeatureScope.Site, featureId, site.Url, site.RootWeb.Title);
+        }
+        private void EnumerateSiteWebs(SPSite site)
+        {
+            foreach (SPWeb web in site.AllWebs)
+            {
+                using (web)
+                {
+                    try
+                    {
+                        // check web
+                        CheckWeb(web);
+                        if (stopAtFirstHit && activationsFound > 0) { return; }
+                    }
+                    catch (Exception exc)
+                    {
+                        OnException(exc,
+                            "Exception checking web: " + SafeGetWebUrl(web)
+                            );
+                    }
+                }
+            }
+        }
+        private void CheckWeb(SPWeb web)
+        {
+            if (desiredFeature != Guid.Empty)
+            {
+                if (web.Features[desiredFeature] is SPFeature)
+                {
+                    ReportWebFeature(desiredFeature, web);
+                }
+            }
+            else
+            {
+                foreach (SPFeature feature in web.Features)
+                {
+                    ReportWebFeature(feature.DefinitionId, web);
+                }
+            }
+        }
+        private void ReportWebFeature(Guid featureId, SPWeb web)
+        {
+            ++activationsFound;
+            ReportFeature(SPFeatureScope.Web, featureId, web.Url, web.Title);
+        }
+        private void ReportFeature(SPFeatureScope scope, Guid featureId, string url, string name)
+        {
+            OnFoundFeature(featureId, url, name);
+            Location location = new Location();
+            location.Scope = scope;
+            location.FeatureId = featureId;
+            location.Url = url;
+            location.Name = name;
+            List<Location> locs = null;
+            if (featureLocations.ContainsKey(featureId))
+            {
+                locs = featureLocations[featureId];
+            }
+            else
+            {
+                locs = new List<Location>();
+            }
+            locs.Add(location);
+            featureLocations[featureId] = locs;
+        }
+        private static string SafeGetWebAppUrl(SPWebApplication webApp)
+        {
+            try
+            {
+                return GetWebAppUrl(webApp);
+            }
+            catch
+            {
+                return "?";
+            }
+        }
+        private static string GetWebAppUrl(SPWebApplication webApp)
+        {
+            return webApp.GetResponseUri(SPUrlZone.Default).AbsoluteUri;
+        }
+        private static string SafeGetSiteUrl(SPSite site)
+        {
+            try
+            {
+                return site.Url;
+            }
+            catch
+            {
+                return "?";
+            }
+        }
+        private static string SafeGetWebUrl(SPWeb web)
+        {
+            try
+            {
+                return web.Url;
+            }
+            catch
+            {
+                return "?";
+            }
         }
     }
 }
