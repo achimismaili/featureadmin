@@ -56,7 +56,7 @@ namespace FeatureAdmin
         /// <param name="e"></param>
         private void btnLoadFDefs_Click(object sender, EventArgs e)
         {
-            using (WaitingCursor wait = new WaitingCursor())
+            using (WaitCursor wait = new WaitCursor())
             {
                 this.clbFeatureDefinitions.Items.Clear();
 
@@ -124,7 +124,7 @@ namespace FeatureAdmin
 
                     }
 
-                    using (WaitingCursor wait = new WaitingCursor())
+                    using (WaitCursor wait = new WaitCursor())
                     {
                         UninstallSelectedFeatureDefinitions(farmFeatureDefinitionsManager, clbFeatureDefinitions.CheckedItems);
                     }
@@ -169,7 +169,7 @@ namespace FeatureAdmin
 
                 if (MessageBox.Show(msgString, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
-                    using (WaitingCursor wait = new WaitingCursor())
+                    using (WaitCursor wait = new WaitCursor())
                     {
                         featuresRemoved = DeleteSelectedFeatures(siteFeatureManager, clbSPSiteFeatures.CheckedItems);
                         featuresRemoved = DeleteSelectedFeatures(webFeatureManager, clbSPWebFeatures.CheckedItems);
@@ -221,7 +221,7 @@ namespace FeatureAdmin
                     }
                     if (MessageBox.Show(msgString, "Warning - Multi Site Deletion!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
-                        using (WaitingCursor wait = new WaitingCursor())
+                        using (WaitCursor wait = new WaitCursor())
                         {
 
                             // the site collection features can be easily removed same as before
@@ -263,7 +263,7 @@ namespace FeatureAdmin
 
                 if (MessageBox.Show(msgString, "Warning - Multi Site Deletion!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
-                    using (WaitingCursor wait = new WaitingCursor())
+                    using (WaitCursor wait = new WaitCursor())
                     {
                         // remove web scoped features from web application
                         featuresRemoved += removeAllSelectedFeatures(clbSPSiteFeatures.CheckedItems, SPFeatureScope.WebApplication, SPFeatureScope.Site);
@@ -298,7 +298,7 @@ namespace FeatureAdmin
 
                 if (MessageBox.Show(msgString, "Warning - Multi Site Deletion!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
-                    using (WaitingCursor wait = new WaitingCursor())
+                    using (WaitCursor wait = new WaitCursor())
                     {
                         // remove web scoped features from web application
                         featuresRemoved += removeAllSelectedFeatures(clbSPSiteFeatures.CheckedItems, SPFeatureScope.Farm, SPFeatureScope.Site);
@@ -675,7 +675,7 @@ namespace FeatureAdmin
         /// <summary>gets all the features from the selected Web Site and Site Collection</summary>
         private void getFeatures()
         {
-            using (WaitingCursor wait = new WaitingCursor())
+            using (WaitCursor wait = new WaitCursor())
             {
                 ClearLog();
                 clbSPSiteFeatures.Items.Clear();
@@ -1180,7 +1180,7 @@ namespace FeatureAdmin
         /// <summary>populate the web application list</summary>
         private void loadWebAppList()
         {
-            using (WaitingCursor wait = new WaitingCursor())
+            using (WaitCursor wait = new WaitCursor())
             {
                 listWebApplications.Items.Clear();
                 listSiteCollections.Items.Clear();
@@ -1218,7 +1218,7 @@ namespace FeatureAdmin
         /// <param name="e"></param>
         private void listWebApplications_SelectedIndexChanged(object sender, EventArgs e)
         {
-            using (WaitingCursor wait = new WaitingCursor())
+            using (WaitCursor wait = new WaitCursor())
             {
                 try
                 {
@@ -1264,7 +1264,7 @@ namespace FeatureAdmin
         {
             if (listSiteCollections.SelectedIndex > -1)
             {
-                using (WaitingCursor wait = new WaitingCursor())
+                using (WaitCursor wait = new WaitCursor())
                 {
                     //Clear the lists
                     listSites.Items.Clear();
@@ -1444,7 +1444,7 @@ namespace FeatureAdmin
             }
             else
             {
-                using (WaitingCursor wait = new WaitingCursor())
+                using (WaitCursor wait = new WaitCursor())
                 {
                     ActivationFinder finder = new ActivationFinder();
                     // No Found callback b/c we process final list
@@ -1466,7 +1466,7 @@ namespace FeatureAdmin
 
         private void btnLoadAllFeatureActivations_Click(object sender, EventArgs e)
         {
-            using (WaitingCursor wait = new WaitingCursor())
+            using (WaitCursor wait = new WaitCursor())
             {
                 allFeatureLocations = null;
                 ActivationFinder finder = new ActivationFinder();
@@ -1486,7 +1486,7 @@ namespace FeatureAdmin
 
         private void btnFindFaultyFeature_Click(object sender, EventArgs e)
         {
-            using (WaitingCursor wait = new WaitingCursor())
+            using (WaitCursor wait = new WaitCursor())
             {
                 //first, Look in Farm
                 try
