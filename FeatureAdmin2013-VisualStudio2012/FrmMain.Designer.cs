@@ -51,6 +51,8 @@ namespace FeatureAdmin
             this.btnRemoveFromFarm = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FarmFeatures = new System.Windows.Forms.TabPage();
+            this.btnLoadAllFeatureActivations = new System.Windows.Forms.Button();
+            this.btnFindAllActivationsFeature = new System.Windows.Forms.Button();
             this.btnActivateSPWeb = new System.Windows.Forms.Button();
             this.btnActivateSPSite = new System.Windows.Forms.Button();
             this.btnActivateSPWebApp = new System.Windows.Forms.Button();
@@ -371,6 +373,8 @@ namespace FeatureAdmin
             // 
             // FarmFeatures
             // 
+            this.FarmFeatures.Controls.Add(this.btnLoadAllFeatureActivations);
+            this.FarmFeatures.Controls.Add(this.btnFindAllActivationsFeature);
             this.FarmFeatures.Controls.Add(this.btnActivateSPWeb);
             this.FarmFeatures.Controls.Add(this.btnActivateSPSite);
             this.FarmFeatures.Controls.Add(this.btnActivateSPWebApp);
@@ -389,6 +393,30 @@ namespace FeatureAdmin
             this.FarmFeatures.TabIndex = 1;
             this.FarmFeatures.Text = "Farm Feature Administration";
             this.FarmFeatures.UseVisualStyleBackColor = true;
+            // 
+            // btnLoadAllFeatureActivations
+            // 
+            this.btnLoadAllFeatureActivations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnLoadAllFeatureActivations.ForeColor = System.Drawing.Color.MidnightBlue;
+            this.btnLoadAllFeatureActivations.Location = new System.Drawing.Point(255, 553);
+            this.btnLoadAllFeatureActivations.Name = "btnLoadAllFeatureActivations";
+            this.btnLoadAllFeatureActivations.Size = new System.Drawing.Size(187, 23);
+            this.btnLoadAllFeatureActivations.TabIndex = 23;
+            this.btnLoadAllFeatureActivations.Text = "Load all activation data";
+            this.btnLoadAllFeatureActivations.UseVisualStyleBackColor = true;
+            this.btnLoadAllFeatureActivations.Click += new System.EventHandler(this.btnLoadAllFeatureActivations_Click);
+            // 
+            // btnFindAllActivationsFeature
+            // 
+            this.btnFindAllActivationsFeature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnFindAllActivationsFeature.ForeColor = System.Drawing.Color.MidnightBlue;
+            this.btnFindAllActivationsFeature.Location = new System.Drawing.Point(255, 524);
+            this.btnFindAllActivationsFeature.Name = "btnFindAllActivationsFeature";
+            this.btnFindAllActivationsFeature.Size = new System.Drawing.Size(187, 23);
+            this.btnFindAllActivationsFeature.TabIndex = 22;
+            this.btnFindAllActivationsFeature.Text = "Find all activations";
+            this.btnFindAllActivationsFeature.UseVisualStyleBackColor = true;
+            this.btnFindAllActivationsFeature.Click += new System.EventHandler(this.btnFindAllActivationsFeature_Click);
             // 
             // btnActivateSPWeb
             // 
@@ -432,9 +460,9 @@ namespace FeatureAdmin
             this.btnFindActivatedFeature.ForeColor = System.Drawing.Color.MidnightBlue;
             this.btnFindActivatedFeature.Location = new System.Drawing.Point(255, 495);
             this.btnFindActivatedFeature.Name = "btnFindActivatedFeature";
-            this.btnFindActivatedFeature.Size = new System.Drawing.Size(200, 23);
+            this.btnFindActivatedFeature.Size = new System.Drawing.Size(187, 23);
             this.btnFindActivatedFeature.TabIndex = 19;
-            this.btnFindActivatedFeature.Text = "Find where activated in Farm";
+            this.btnFindActivatedFeature.Text = "Find one activation";
             this.btnFindActivatedFeature.UseVisualStyleBackColor = true;
             this.btnFindActivatedFeature.Click += new System.EventHandler(this.btnFindActivatedFeature_Click);
             // 
@@ -682,6 +710,8 @@ namespace FeatureAdmin
         private System.Windows.Forms.SplitContainer splitContainerLeftWindow;
         private System.Windows.Forms.SplitContainer splitContainerLeftUpperWebAppAndSiteColl;
         private System.Windows.Forms.SplitContainer splitContainerLeftDownWebsAndLogs;
+        private System.Windows.Forms.Button btnLoadAllFeatureActivations;
+        private System.Windows.Forms.Button btnFindAllActivationsFeature;
     
     }
 }

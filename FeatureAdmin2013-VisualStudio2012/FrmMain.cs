@@ -30,6 +30,7 @@ namespace FeatureAdmin
         private static SPSite m_CurrentSite;
         private static SPWeb m_CurrentWeb;
         // private SPList m_CurrentList;
+        private Dictionary<Guid, List<ActivationFinder.Location>> allFeatureLocations = null;
 
         #endregion
 
@@ -1427,35 +1428,112 @@ namespace FeatureAdmin
 
         private void btnFindActivatedFeature_Click(object sender, EventArgs e)
         {
-            if (clbFeatureDefinitions.CheckedItems.Count == 1)
+            if (clbFeatureDefinitions.CheckedItems.Count != 1)
             {
-                Feature feature = (Feature)clbFeatureDefinitions.CheckedItems[0];
+                MessageBox.Show("Please select exactly 1 feature.");
+                return;
+            }
+            Feature feature = (Feature)clbFeatureDefinitions.CheckedItems[0];
 
-                ActivationFinder finder = new ActivationFinder();
-                finder.FoundListeners += delegate(string msgtext)
-                {
-                    MessageBox.Show(msgtext);
-                    logDateMsg(msgtext);
-                };
-                finder.ExceptionListeners += delegate(Exception exc, string msgtext)
-                {
-                    logException(exc, msgtext);
-                };
-                // Call routine to actually find & report activations
-                bool found = finder.FindFirstFeatureActivation(feature.Id);
-                if (!found)
-                {
-                    string msgString = "Feature was not found activated in the farm.";
-                    MessageBox.Show(msgString);
-                    logDateMsg(msgString);
-                }
+            ActivationFinder finder = new ActivationFinder();
+            finder.FoundListeners += delegate(Guid featureId, string url, string name)
+            {
+                string msgtext = url + " = " + name;
+                if (url == name) { msgtext = url; } // farm, farm
+                logDateMsg(msgtext);
+            };
+            finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
+
+            // Call routine to actually find & report activations
+            bool found = finder.FindFirstFeatureActivation(feature.Id);
+            if (!found)
+            {
+                string msgString = "Feature was not found activated in the farm.";
+                MessageBox.Show(msgString);
+                logDateMsg(msgString);
+            }
+        }
+        private void btnFindAllActivationsFeature_Click(object sender, EventArgs e)
+        {
+            if (clbFeatureDefinitions.CheckedItems.Count != 1)
+            {
+                MessageBox.Show("Please select exactly 1 feature.");
+                return;
+            }
+            Feature feature = (Feature)clbFeatureDefinitions.CheckedItems[0];
+
+            List<ActivationFinder.Location> featlocs = GetFeatureLocations(feature.Id);
+            if (featlocs.Count == 0)
+            {
+                MessageBox.Show("No activations found");
             }
             else
             {
-                MessageBox.Show("Please select exactly 1 feature.");
+                string msgString = string.Format(
+                    "Activations found: {0}. See log for locations",
+                    featlocs.Count);
+                MessageBox.Show(msgString, "Feature Activations");
+                logDateMsg(string.Format(
+                    "{0} Activations of feature: {1} [{2}]",
+                    featlocs.Count,
+                    feature.Name,
+                    feature.Id
+                    ));
+                foreach (ActivationFinder.Location loc in featlocs)
+                {
+                    string msgtext = "    " + loc.Url;
+                    if (loc.Url != loc.Name)
+                    {
+                        msgtext += " = " + loc.Name;
+                    }
+                    logDateMsg(msgtext);
+                }
+            }
+        }
+        private List<ActivationFinder.Location> GetFeatureLocations(Guid featureId)
+        {
+            Dictionary<Guid, List<ActivationFinder.Location>> dict = null;
+
+            if (allFeatureLocations != null)
+            {
+                // use preloaded data
+                dict = allFeatureLocations;
+            }
+            else
+            {
+                ActivationFinder finder = new ActivationFinder();
+                // No Found callback b/c we process final list
+                finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
+
+                // Call routine to actually find & report activations
+                dict = finder.FindAllActivations(featureId);
+            }
+            if (dict.ContainsKey(featureId))
+            {
+                return dict[featureId];
+            }
+            else
+            {
+                return new List<ActivationFinder.Location>(); // empty list
             }
         }
 
+        private void btnLoadAllFeatureActivations_Click(object sender, EventArgs e)
+        {
+            allFeatureLocations = null;
+            ActivationFinder finder = new ActivationFinder();
+            // No Found callback b/c we process final list
+            finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
+
+            // Call routine to actually find & report activations
+            allFeatureLocations
+                = finder.FindAllActivationsOfAllFeatures();
+            string msgtext = string.Format(
+                "Locations of {0} features loaded",
+                allFeatureLocations.Count
+                );
+            MessageBox.Show(msgtext);
+        }
 
         private void btnFindFaultyFeature_Click(object sender, EventArgs e)
         {
