@@ -145,15 +145,15 @@ namespace FeatureAdmin
         /// <summary>triggers removeFeaturesFromCurrentLists</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnRemoveFromList_Click(object sender, EventArgs e)
+        private void btnRemoveFromWeb_Click(object sender, EventArgs e)
         {
-            removeSPWebFeaturesFromCurrentList();
+            removeSPWebFeaturesFromCurrentWeb();
         }
 
         /// <summary>Removes selected features from the current list only</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void removeSPWebFeaturesFromCurrentList()
+        private void removeSPWebFeaturesFromCurrentWeb()
         {
             if (clbSPSiteFeatures.CheckedItems.Count > 0)
             {
@@ -200,7 +200,7 @@ namespace FeatureAdmin
                 if (clbSPSiteFeatures.CheckedItems.Count == 0)
                 {
                     // normal removal of SiteColl Features from one site collection
-                    removeSPWebFeaturesFromCurrentList();
+                    removeSPWebFeaturesFromCurrentWeb();
                     return;
                 }
                 else
@@ -1000,7 +1000,7 @@ namespace FeatureAdmin
         /// <param name="enabled">true = enabled, false = disabled</param>
         private void removeBtnEnabled(bool enabled)
         {
-            btnRemoveFromList.Enabled = enabled;
+            btnRemoveFromWeb.Enabled = enabled;
             btnRemoveFromSiteCollection.Enabled = enabled;
             btnRemoveFromWebApp.Enabled = enabled;
             btnRemoveFromFarm.Enabled = enabled;
