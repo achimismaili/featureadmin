@@ -102,7 +102,22 @@ namespace FeatureAdmin
         /// <param name="id">Feature Definition ID</param>
         public void ForceUninstallFeatureDefinition(Guid id, int compatibilityLevel)
         {
-            _spfeatureDefinitions.Remove(id, compatibilityLevel, true);
+            #if (SP2013)
+            {
+                _spfeatureDefinitions.Remove(id, compatibilityLevel, true);
+            }
+            #endif
+            #if (SP2010)
+            {
+                _spfeatureDefinitions.Remove(id, true);
+            }
+            #endif
+            #if (SP2007)
+            {
+                _spfeatureDefinitions.Remove(id, true);
+            }
+            #endif
+            throw new Exception("Unspecified SharePoint Version");
         }
         public static int GetFeatureCompatibilityLevel(SPFeatureDefinition definition)
         {
@@ -123,5 +138,5 @@ namespace FeatureAdmin
             #endif
             throw new Exception("Unspecified SharePoint Version");
         }
-   }
+    }
 }
