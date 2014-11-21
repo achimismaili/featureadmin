@@ -1028,6 +1028,8 @@ namespace FeatureAdmin
             btnActivateSPWebApp.Enabled = enabled;
             btnActivateSPFarm.Enabled = enabled;
             btnFindActivatedFeature.Enabled = enabled;
+            btnFindAllActivationsFeature.Enabled = enabled;
+            btnLoadAllFeatureActivations.Enabled = enabled;
         }
 
         private void removeReady(int featuresRemoved)
