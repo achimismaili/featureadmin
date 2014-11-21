@@ -87,6 +87,7 @@
     <Compile Include="RemoveInvalidFeature.Designer.cs">
       <DependentUpon>RemoveInvalidFeature.cs</DependentUpon>
     </Compile>
+    <Compile Include="WaitingCursor.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
