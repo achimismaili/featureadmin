@@ -1504,14 +1504,17 @@ namespace FeatureAdmin
 
         private void btnLoadAllFeatureActivations_Click(object sender, EventArgs e)
         {
-            allFeatureLocations = null;
-            ActivationFinder finder = new ActivationFinder();
-            // No Found callback b/c we process final list
-            finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
+            using (WaitCursor wait = new WaitCursor())
+            {
+                allFeatureLocations = null;
+                ActivationFinder finder = new ActivationFinder();
+                // No Found callback b/c we process final list
+                finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
 
-            // Call routine to actually find & report activations
-            allFeatureLocations
-                = finder.FindAllActivationsOfAllFeatures();
+                // Call routine to actually find & report activations
+                allFeatureLocations
+                    = finder.FindAllActivationsOfAllFeatures();
+            }
             string msgtext = string.Format(
                 "Locations of {0} features loaded",
                 allFeatureLocations.Count
