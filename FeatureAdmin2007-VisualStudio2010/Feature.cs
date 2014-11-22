@@ -26,6 +26,13 @@ namespace FeatureAdmin
             set { _name = value; }
         }
 
+        int _compatibilityLevel;
+        public int CompatibilityLevel
+        {
+            get { return _compatibilityLevel; }
+            set { _compatibilityLevel = value; }
+        }
+
         SPFeatureScope _scope = SPFeatureScope.ScopeInvalid;
         public SPFeatureScope Scope
         {
@@ -60,14 +67,17 @@ namespace FeatureAdmin
         {
             String result = string.Empty;
 
+            string idstr = String.Format("{1}/{0}", this._id, this._compatibilityLevel);
+            if (this._compatibilityLevel == FeatureManager.COMPATINAPPLICABLE)
+            {
+                idstr = String.Format("{0}", this._id);
+            }
             if (String.IsNullOrEmpty(_name))
             {
-                string idstr = string.Format("{0}", this._id);
                 result = String.Format("ERROR READING FEATURE [{0}], Scope: {1}", idstr, this._scope.ToString());
             }
             else
             {
-                string idstr = String.Format("{0}", this._id);
                 result = String.Format("{2}: '{1}' [{0}]", idstr, this._name, this._scope.ToString());
             }
             return result;
