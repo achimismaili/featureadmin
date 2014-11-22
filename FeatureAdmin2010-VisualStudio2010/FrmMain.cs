@@ -1066,7 +1066,6 @@ namespace FeatureAdmin
             // string DBName = string.Empty; // tbd: retrieve the database name of the featureCollection
             string featuresName = features.ToString();
 
-            Guid faultyID = Guid.Empty;
             try
             {
                 foreach (SPFeature feature in features)
@@ -1077,7 +1076,7 @@ namespace FeatureAdmin
                     {
                         string location = LocationInfo.SafeDescribeObject(feature.Parent);
 
-                        string msgString = "Faulty Feature found! Id: '" + faultyID.ToString();
+                        string msgString = "Faulty Feature found! Id: '" + feature.DefinitionId.ToString();
                         if (faultyCompatibilityLevel != FeatureManager.COMPATINAPPLICABLE)
                         {
                             msgString += " CompatibilityLevel:" + faultyCompatibilityLevel + " (0=Error)";
@@ -1089,7 +1088,7 @@ namespace FeatureAdmin
                         if (MessageBox.Show(msgString, "Success! Please Decide",
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                         {
-                            removeFeaturesWithinFarm(faultyID, scope);
+                            removeFeaturesWithinFarm(feature.DefinitionId, scope);
                         }
 
                         return true;
