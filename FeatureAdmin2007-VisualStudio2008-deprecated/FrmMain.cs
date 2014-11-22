@@ -986,7 +986,7 @@ namespace FeatureAdmin
         {
             foreach (Feature checkedFeature in checkedListItems)
             {
-                manager.ForceUninstallFeatureDefinition(checkedFeature.Id);
+                manager.ForceUninstallFeatureDefinition(checkedFeature.Id, checkedFeature.CompatibilityLevel);
             }
         }
 
@@ -1030,53 +1030,55 @@ namespace FeatureAdmin
         /// <returns></returns>
         private bool findFaultyFeatureInCollection(SPFeatureCollection features, SPFeatureScope scope)
         {
-            string dummy;
-            Guid faultyID = Guid.Empty;
-            string msgString = string.Empty;
+            if (features == null)
+            {
+                logDateMsg("ERROR: Feature Collection was null!");
+                return false;
+            }
+            if (features.Count == 0)
+            {
+                logDateMsg("ERROR: Feature Collection was empty!");
+                return false;
+            }
+            int faultyCompatibilityLevel = 0;
 
-            if (features != null)
+            // string DBName = string.Empty; // tbd: retrieve the database name of the featureCollection
+            string featuresName = features.ToString();
+
+            try
             {
                 foreach (SPFeature feature in features)
                 {
-                    string parentString;
-                    try
+                    FeatureChecker checker = new FeatureChecker();
+                    FeatureChecker.Status status = checker.CheckFeature(feature);
+                    if (status.Faulty)
                     {
-                        // a feature activated somewhere with no manifest file available causes
-                        // an error when asking for the DisplayName
-                        // If this happens, we found a faulty feature
-                        faultyID = feature.DefinitionId;
-                        dummy = feature.Definition.DisplayName;
-                    }
-                    catch
-                    {
-                        if (features[faultyID].Parent is SPWeb)
-                        {
-                            parentString = "Scope:Web, " + ((SPWeb)features[faultyID].Parent).Url.ToString();
-                        }
-                        else
-                        {
-                            parentString = features[faultyID].Parent.ToString();
-                        }
+                        string location = LocationInfo.SafeDescribeObject(feature.Parent);
 
-                        msgString = "Faulty Feature found! Id: '" + faultyID.ToString() + Environment.NewLine +
-                            "Found in " + parentString + ". Should it be removed from the farm?";
+                        string msgString = "Faulty Feature found! Id: '" + feature.DefinitionId.ToString();
+                        if (faultyCompatibilityLevel != FeatureManager.COMPATINAPPLICABLE)
+                        {
+                            msgString += " CompatibilityLevel:" + faultyCompatibilityLevel + " (0=Error)";
+                        }
+                        msgString += Environment.NewLine
+                            + "Found in " + location + "." + Environment.NewLine
+                            + " Should it be removed from the farm?";
                         logDateMsg(msgString);
                         if (MessageBox.Show(msgString, "Success! Please Decide",
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                         {
-                            removeFeaturesWithinFarm(faultyID, scope);
+                            removeFeaturesWithinFarm(feature.DefinitionId, scope);
                         }
 
                         return true;
                     }
                 }
-
             }
-            else
+            catch (Exception ex)
             {
-                logDateMsg("ERROR: Feature Collection was empty!");
+                MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OK);
+                return false;
             }
-            faultyID = Guid.Empty;
             return false;
         }
 
