@@ -1066,51 +1066,34 @@ namespace FeatureAdmin
             // string DBName = string.Empty; // tbd: retrieve the database name of the featureCollection
             string featuresName = features.ToString();
 
-            Guid faultyID = Guid.Empty;
             try
             {
                 foreach (SPFeature feature in features)
                 {
-                    string parentString;
-                    try
+                    FeatureChecker checker = new FeatureChecker();
+                    FeatureChecker.Status status = checker.CheckFeature(feature);
+                    if (status.Faulty)
                     {
-                        // a feature activated somewhere with no manifest file available causes
-                        // an error when asking for the DisplayName
-                        // If this happens, we found a faulty feature
-                        faultyID = feature.DefinitionId;
-                        faultyCompatibilityLevel = FeatureManager.GetFeatureCompatibilityLevel(feature.Definition);
-                        string dummy = feature.Definition.DisplayName;
-                    }
-                    catch
-                    {
-                        if (features[faultyID].Parent is SPWeb)
-                        {
-                            parentString = "Scope:Web, " + ((SPWeb)features[faultyID].Parent).Url.ToString();
-                        }
-                        else
-                        {
-                            parentString = features[faultyID].Parent.ToString();
-                        }
+                        string location = LocationInfo.SafeDescribeObject(feature.Parent);
 
-                        string msgString = "Faulty Feature found! Id: '" + faultyID.ToString();
+                        string msgString = "Faulty Feature found! Id: '" + feature.DefinitionId.ToString();
                         if (faultyCompatibilityLevel != FeatureManager.COMPATINAPPLICABLE)
                         {
                             msgString += " CompatibilityLevel:" + faultyCompatibilityLevel + " (0=Error)";
                         }
                         msgString += Environment.NewLine
-                            + "Found in " + parentString + "." + Environment.NewLine
+                            + "Found in " + location + "." + Environment.NewLine
                             + " Should it be removed from the farm?";
                         logDateMsg(msgString);
                         if (MessageBox.Show(msgString, "Success! Please Decide",
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                         {
-                            removeFeaturesWithinFarm(faultyID, scope);
+                            removeFeaturesWithinFarm(feature.DefinitionId, scope);
                         }
 
                         return true;
                     }
                 }
-
             }
             catch (Exception ex)
             {
