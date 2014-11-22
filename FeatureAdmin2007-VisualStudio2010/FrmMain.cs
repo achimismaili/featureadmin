@@ -1216,6 +1216,7 @@ namespace FeatureAdmin
                 else
                 {
                     listWebApplications.Items.Add("SPWebService.ContentService == null");
+                    MessageBox.Show("No Content web application found. Are you Farm-Administrator? Is the database accessible?");
                 }
 
                 if (listWebApplications.Items.Count > 0)
