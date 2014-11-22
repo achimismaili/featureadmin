@@ -3,11 +3,11 @@ using System.Windows.Forms;
 
 namespace CursorUtil
 {
-    public class WaitingCursor : IDisposable
+    public class WaitCursor : IDisposable
     {
         private Cursor _previousCursor;
         bool _disposed = false;
-        public WaitingCursor()
+        public WaitCursor()
         {
             _previousCursor = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;

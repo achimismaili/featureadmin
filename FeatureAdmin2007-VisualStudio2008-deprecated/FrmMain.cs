@@ -850,12 +850,22 @@ namespace FeatureAdmin
                         //forcefully remove the feature
                         if (web.Features[featureID].DefinitionId != null)
                         {
-                            web.Features.Remove(featureID, true);
+                            bool force = true;
+                            web.Features.Remove(featureID, force);
                             removedFeatures++;
+                            logDateMsg(
+                                string.Format("Success removing feature {0} from {1}",
+                                featureID,
+                                LocationInfo.SafeDescribeObject(web)));
+
                         }
                     }
-                    catch
+                    catch (Exception exc)
                     {
+                        logException(exc,
+                            string.Format("Exception removing feature {0} from {1}",
+                            featureID,
+                            LocationInfo.SafeDescribeObject(web)));
                     }
                     finally
                     {
@@ -894,9 +904,17 @@ namespace FeatureAdmin
                         {
                             webApp.Features.Remove(featureID, true);
                             removedFeatures++;
+                            logDateMsg(
+                                string.Format("Success removing feature {0} from {1}",
+                                featureID,
+                                LocationInfo.SafeDescribeObject(webApp)));
                         }
-                        catch
+                        catch (Exception exc)
                         {
+                            logException(exc,
+                                string.Format("Exception removing feature {0} from {1}",
+                                featureID,
+                                LocationInfo.SafeDescribeObject(webApp)));
                         }
                     }
                     else
@@ -949,10 +967,18 @@ namespace FeatureAdmin
                     {
                         SPWebService.ContentService.Features.Remove(featureID, true);
                         removedFeatures++;
-                        logDateMsg("Farm - Feature successfully removed. ");
+                        logDateMsg(
+                            string.Format("Success removing feature {0} from {1}",
+                            featureID,
+                            LocationInfo.SafeDescribeObject(SPFarm.Local)));
                     }
-                    catch
+                    catch (Exception exc)
                     {
+                        logException(exc,
+                            string.Format("Exception removing feature {0} from farm",
+                            featureID,
+                            LocationInfo.SafeDescribeObject(SPFarm.Local)));
+
                         logDateMsg("Farm - The Farm Scoped feature '" + featureID.ToString() + "' was not found. ");
                     }
                 }
