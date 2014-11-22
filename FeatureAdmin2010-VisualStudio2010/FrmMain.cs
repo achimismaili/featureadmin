@@ -1007,7 +1007,7 @@ namespace FeatureAdmin
         {
             foreach (Feature checkedFeature in checkedListItems)
             {
-                manager.ForceUninstallFeatureDefinition(checkedFeature.Id);
+                manager.ForceUninstallFeatureDefinition(checkedFeature.Id, checkedFeature.CompatibilityLevel);
             }
         }
 
@@ -1051,78 +1051,68 @@ namespace FeatureAdmin
         /// <returns></returns>
         private bool findFaultyFeatureInCollection(SPFeatureCollection features, SPFeatureScope scope)
         {
-            string dummy;
-            Guid faultyID = Guid.Empty;
-            string msgString = string.Empty;
+            if (features == null)
+            {
+                logDateMsg("ERROR: Feature Collection was null!");
+                return false;
+            }
+            if (features.Count == 0)
+            {
+                logDateMsg("ERROR: Feature Collection was empty!");
+                return false;
+            }
+            int faultyCompatibilityLevel = 0;
 
             // string DBName = string.Empty; // tbd: retrieve the database name of the featureCollection
             string featuresName = features.ToString();
 
-            if (features != null)
+            Guid faultyID = Guid.Empty;
+            try
             {
-
-                try
+                foreach (SPFeature feature in features)
                 {
-                    foreach (SPFeature feature in features)
+                    FeatureChecker checker = new FeatureChecker();
+                    FeatureChecker.Status status = checker.CheckFeature(feature);
+                    if (status.Faulty)
                     {
-                        string parentString;
-                        try
-                        {
-                            // a feature activated somewhere with no manifest file available causes
-                            // an error when asking for the DisplayName
-                            // If this happens, we found a faulty feature
-                            faultyID = feature.DefinitionId;
-                            dummy = feature.Definition.DisplayName;
-                        }
-                        catch
-                        {
-                            if (features[faultyID].Parent is SPWeb)
-                            {
-                                parentString = "Scope:Web, " + ((SPWeb)features[faultyID].Parent).Url.ToString();
-                            }
-                            else
-                            {
-                                parentString = features[faultyID].Parent.ToString();
-                            }
+                        string location = LocationInfo.SafeDescribeObject(feature.Parent);
 
-                            msgString = "Faulty Feature found! Id: '" + faultyID.ToString() + Environment.NewLine +
-                                "Found in " + parentString + ". Should it be removed from the farm?";
-                            logDateMsg(msgString);
-                            if (MessageBox.Show(msgString, "Success! Please Decide",
-                                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                            {
-                                removeFeaturesWithinFarm(faultyID, scope);
-                            }
-
-                            return true;
+                        string msgString = "Faulty Feature found! Id: '" + faultyID.ToString();
+                        if (faultyCompatibilityLevel != FeatureManager.COMPATINAPPLICABLE)
+                        {
+                            msgString += " CompatibilityLevel:" + faultyCompatibilityLevel + " (0=Error)";
                         }
+                        msgString += Environment.NewLine
+                            + "Found in " + location + "." + Environment.NewLine
+                            + " Should it be removed from the farm?";
+                        logDateMsg(msgString);
+                        if (MessageBox.Show(msgString, "Success! Please Decide",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                        {
+                            removeFeaturesWithinFarm(faultyID, scope);
+                        }
+
+                        return true;
                     }
-
                 }
-                catch (Exception ex)
-                {
-                    if (ex is SqlException)
-                    {
-                        string msgstring = string.Format("Cannot access a feature collection of scope '{0}'! Not enough access rights for a content DB on SQL Server! dbOwner rights are recommended. Please read the following error message:\n\n'{1}'", scope.ToString(), ex.ToString());
-                        string MessageCaption = string.Format("FeatureCollection in a Content DB not accessible");
-                        if(MessageBox.Show(msgstring, MessageCaption,MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                        {
-                            return true;
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OK);
-                    }
-                    return false;
-                }
-
             }
-            else
+            catch (Exception ex)
             {
-                logDateMsg("ERROR: Feature Collection was empty!");
+                if (ex is SqlException)
+                {
+                    string msgstring = string.Format("Cannot access a feature collection of scope '{0}'! Not enough access rights for a content DB on SQL Server! dbOwner rights are recommended. Please read the following error message:\n\n'{1}'", scope.ToString(), ex.ToString());
+                    string MessageCaption = string.Format("FeatureCollection in a Content DB not accessible");
+                    if(MessageBox.Show(msgstring, MessageCaption,MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OK);
+                }
+                return false;
             }
-            faultyID = Guid.Empty;
             return false;
         }
 

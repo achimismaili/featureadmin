@@ -102,7 +102,7 @@ namespace FeatureAdmin
                 catch (Exception exc)
                 {
                     OnException(exc,
-                        "Exception checking webapp: " + SafeGetWebAppUrl(webApp)
+                        "Exception checking webapp: " + LocationInfo.SafeGetWebAppUrl(webApp)
                         );
                 }
 
@@ -115,7 +115,7 @@ namespace FeatureAdmin
                 catch (Exception exc)
                 {
                     OnException(exc,
-                        "Exception enumerating sites of webapp: " + SafeGetWebAppUrl(webApp)
+                        "Exception enumerating sites of webapp: " + LocationInfo.SafeGetWebAppUrl(webApp)
                         );
                 }
             }
@@ -164,7 +164,7 @@ namespace FeatureAdmin
         private void ReportWebAppFeature(Guid featureId, SPWebApplication webApp)
         {
             ++activationsFound;
-            ReportFeature(SPFeatureScope.WebApplication, featureId, GetWebAppUrl(webApp), webApp.Name);
+            ReportFeature(SPFeatureScope.WebApplication, featureId, LocationInfo.GetWebAppUrl(webApp), webApp.Name);
         }
         private void EnumerateWebAppSites(SPWebApplication webApp)
         {
@@ -181,7 +181,7 @@ namespace FeatureAdmin
                     catch (Exception exc)
                     {
                         OnException(exc,
-                            "Exception checking site: " + SafeGetSiteUrl(site)
+                            "Exception checking site: " + LocationInfo.SafeGetSiteUrl(site)
                             );
                     }
                     // check subwebs
@@ -193,7 +193,7 @@ namespace FeatureAdmin
                     catch (Exception exc)
                     {
                         OnException(exc,
-                            "Exception enumerating webs of site: " + SafeGetSiteUrl(site)
+                            "Exception enumerating webs of site: " + LocationInfo.SafeGetSiteUrl(site)
                             );
                     }
                 }
@@ -236,7 +236,7 @@ namespace FeatureAdmin
                     catch (Exception exc)
                     {
                         OnException(exc,
-                            "Exception checking web: " + SafeGetWebUrl(web)
+                            "Exception checking web: " + LocationInfo.SafeGetWebUrl(web)
                             );
                     }
                 }
@@ -283,43 +283,6 @@ namespace FeatureAdmin
             }
             locs.Add(location);
             featureLocations[featureId] = locs;
-        }
-        private static string SafeGetWebAppUrl(SPWebApplication webApp)
-        {
-            try
-            {
-                return GetWebAppUrl(webApp);
-            }
-            catch
-            {
-                return "?";
-            }
-        }
-        private static string GetWebAppUrl(SPWebApplication webApp)
-        {
-            return webApp.GetResponseUri(SPUrlZone.Default).AbsoluteUri;
-        }
-        private static string SafeGetSiteUrl(SPSite site)
-        {
-            try
-            {
-                return site.Url;
-            }
-            catch
-            {
-                return "?";
-            }
-        }
-        private static string SafeGetWebUrl(SPWeb web)
-        {
-            try
-            {
-                return web.Url;
-            }
-            catch
-            {
-                return "?";
-            }
         }
     }
 }
