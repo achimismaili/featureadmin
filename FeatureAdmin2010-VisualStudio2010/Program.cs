@@ -18,7 +18,6 @@ namespace FeatureAdmin
         [STAThread]
         static void Main()
         {
-            
             if (SPFarm.Local == null)
             {
                 string msg = "Cannot find local SharePoint Farm. "
@@ -28,8 +27,10 @@ namespace FeatureAdmin
                     + " is not installed on this machine. "
                     + " FeatureAdmin will close now.";
                 MessageBox.Show(msg);
-                    return;
-                }
+                return;
+            }
+            // We could also check SPFarm.Local.CurrentUserIsAdministrator(true)
+            // but it seems that non-farm admins are already trapped by SPFarm.Local == null
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
