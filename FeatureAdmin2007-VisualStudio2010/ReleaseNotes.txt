@@ -13,3 +13,4 @@ BugFixes:
 
 version 2.4 (Not yet released)
 New "Find All Activations" and "Load All Activation Data" buttons
+Allow user to resize areas of windows (backported from FeatureAdmin2010&2013)
