@@ -6,11 +6,11 @@ namespace FeatureAdmin
 {
     public class Location
     {
-        public Guid Id = Guid.Empty;
+        public Guid Id { get; set; }
         public Guid ContentDatabaseId = Guid.Empty;
         public SPFeatureScope Scope = SPFeatureScope.ScopeInvalid;
-        public string Url = null; // server relative for site collections
-        public string Name = null;
+        public string Url { get; set; } // server relative for site collections
+        public string Name { get; set; }
 
         public void Clear()
         {

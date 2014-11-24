@@ -55,18 +55,19 @@ namespace FeatureAdmin
 
         private void ConfigureFeatureDefGrid()
         {
-            gridFeatureDefinitions.AutoGenerateColumns = false;
-            AddTextColumn(gridFeatureDefinitions, "Scope");
-            AddTextColumn(gridFeatureDefinitions, "Name");
+            DataGridView grid = gridFeatureDefinitions;
+            grid.AutoGenerateColumns = false;
+            AddTextColumn(grid, "Scope");
+            AddTextColumn(grid, "Name");
             #if (SP2013)
-            AddTextColumn(gridFeatureDefinitions, "CompatibilityLevel", "Compat");
+            AddTextColumn(grid, "CompatibilityLevel", "Compat");
             #endif
-            AddTextColumn(gridFeatureDefinitions, "Id");
-            AddTextColumn(gridFeatureDefinitions, "Activations");
-            AddTextColumn(gridFeatureDefinitions, "Faulty");
+            AddTextColumn(grid, "Id");
+            AddTextColumn(grid, "Activations");
+            AddTextColumn(grid, "Faulty");
 
             // Set most columns sortable
-            foreach (DataGridViewColumn column in gridFeatureDefinitions.Columns)
+            foreach (DataGridViewColumn column in grid.Columns)
             {
                 if (column.DataPropertyName != "Activations")
                 {
@@ -1361,25 +1362,8 @@ namespace FeatureAdmin
             }
             else
             {
-                string msgString = string.Format(
-                    "Activations found: {0}. See log for locations",
-                    featlocs.Count);
-                MessageBox.Show(msgString, "Feature Activations");
-                logDateMsg(string.Format(
-                    "{0} Activations of feature: {1} [{2}]",
-                    featlocs.Count,
-                    feature.Name,
-                    feature.Id
-                    ));
-                foreach (Location loc in featlocs)
-                {
-                    string msgtext = "    " + loc.Url;
-                    if (loc.Url != loc.Name)
-                    {
-                        msgtext += " = " + loc.Name;
-                    }
-                    logDateMsg(msgtext);
-                }
+                LocationForm form = new LocationForm(feature, featlocs);
+                form.ShowDialog();
             }
         }
         private List<Location> GetFeatureLocations(Guid featureId)
