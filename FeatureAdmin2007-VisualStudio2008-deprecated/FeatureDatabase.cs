@@ -110,6 +110,7 @@ namespace FeatureAdmin
                 }
                 // Add to FeatureLocations, which can be done as a lump
                 _FeatureLocations[featureId] = locations;
+                feature.Activations = locations.Count;
                 // Add to LocationFeatures, which has to be done one location at a time
                 foreach (Location location in locations)
                 {
