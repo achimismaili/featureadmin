@@ -81,48 +81,34 @@ namespace FeatureAdmin
         {
             if (obj is Feature)
             {
+                Feature other = (Feature)obj;
+
                 int iVal = 0;
                 int oVal = 0;
 
-                switch (this.Scope)
+                int cmp = this.Scope.CompareTo(other.Scope);
+                if (cmp != 0)
                 {
-                    case SPFeatureScope.Farm:
-                        iVal += 100; break;
-                    case SPFeatureScope.WebApplication:
-                        iVal += 200; break;
-                    case SPFeatureScope.Site:
-                        iVal += 300; break;
-                    case SPFeatureScope.Web:
-                        iVal += 400; break;
-                    default:
-                        iVal += 500; break;
+                    return cmp;
                 }
 
-                switch (((Feature)obj).Scope)
+                cmp = string.Compare(this.Name, other.Name);
+                if (cmp != 0)
                 {
-                    case SPFeatureScope.Farm:
-                        oVal += 100; break;
-                    case SPFeatureScope.WebApplication:
-                        oVal += 200; break;
-                    case SPFeatureScope.Site:
-                        oVal += 300; break;
-                    case SPFeatureScope.Web:
-                        oVal += 400; break;
-                    default:
-                        oVal += 500; break;
-
+                    return cmp;
                 }
-
-                if (this.Name != null)
+                cmp = this.Id.CompareTo(other.Id);
+                if (cmp != 0)
                 {
-                    iVal += this.Name.CompareTo(((Feature)obj).Name);
+                    return cmp;
                 }
-
-                // if iVal is higher than oVal in value, it will be far down in the list ...
-                return (iVal - oVal);
+                cmp = this.CompatibilityLevel.CompareTo(other.CompatibilityLevel);
+                return cmp;
             }
             else
+            {
                 throw (new System.ArgumentException("Object is not a Feature like the instance"));
+            }
 
         }
     }
