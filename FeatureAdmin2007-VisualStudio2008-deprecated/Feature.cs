@@ -20,7 +20,8 @@ namespace FeatureAdmin
         public SPFeatureScope Scope { get; set; }
         public int CompatibilityLevel { get; set; }
         public String Name { get; set; }
-        public bool Faulty { get; set; }
+        public bool IsFaulty { get; set; }
+        public string Faulty { get { return (IsFaulty ? "Faulty" : ""); } }
         public String ExceptionMsg { get; set; }
         public int? Activations { get; set; }
 
@@ -73,7 +74,7 @@ namespace FeatureAdmin
         {
             if (ExceptionMsg != "") ExceptionMsg += "; ";
             ExceptionMsg += ExceptionSerializer.ToString(exc);
-            Faulty = true;
+            IsFaulty = true;
         }
 
         // sort the features: first Farm, Web App, Site then Web, after this, alphabetically after the name

@@ -65,6 +65,23 @@ namespace FeatureAdmin
             LoadAllFeatureDefinitions();
             LoadAllFeatureActivations(activatedFeatureLocations);
         }
+        public void MarkFaulty(List<Guid> featureIds)
+        {
+            foreach (Guid featureId in featureIds)
+            {
+                Feature feature = null;
+                if (_AllFeatureDefinitions.ContainsKey(featureId))
+                {
+                    feature = _AllFeatureDefinitions[featureId];
+                }
+                else
+                {
+                    feature = new Feature(featureId);
+                }
+                feature.IsFaulty = true;
+                _AllFeatureDefinitions[featureId] = feature;
+            }
+        }
         private void LoadAllFeatureDefinitions()
         {
             foreach (SPFeatureDefinition spfeatureDef in SPFarm.Local.FeatureDefinitions)
@@ -84,7 +101,7 @@ namespace FeatureAdmin
                 catch (Exception exc)
                 {
                     feature.AppendExceptionMsg(exc);
-                    feature.Faulty = true;
+                    feature.IsFaulty = true;
                 }
                 _AllFeatureDefinitions[feature.Id] = feature;
             }

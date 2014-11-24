@@ -42,6 +42,9 @@ namespace FeatureAdmin
         private bool stopAtFirstHit;
         private int activationsFound = 0;
         private Dictionary<Guid, List<Location>> featureLocations = new Dictionary<Guid, List<Location>>();
+        private Dictionary<Guid, int> faultyFeatures = new Dictionary<Guid, int>();
+
+        public List<Guid> GetFaultyFeatureIdList() { return new List<Guid>(faultyFeatures.Keys); }
 
         /// <summary>
         /// Find and report first place where feature activated, or return false if none found
@@ -126,21 +129,23 @@ namespace FeatureAdmin
             {
                 if ((SPWebService.ContentService.Features[desiredFeature] is SPFeature))
                 {
-                    ReportFarmFeature(desiredFeature);
+                    bool faulty = false; // ?
+                    ReportFarmFeature(desiredFeature, faulty);
                 }
             }
             else
             {
                 foreach (SPFeature feature in SPWebService.ContentService.Features)
                 {
-                    ReportFarmFeature(feature.DefinitionId);
+                    bool faulty = IsFeatureFaulty(feature);
+                    ReportFarmFeature(feature.DefinitionId, faulty);
                 }
             }
         }
-        private void ReportFarmFeature(Guid featureId)
+        private void ReportFarmFeature(Guid featureId, bool faulty)
         {
             ++activationsFound;
-            ReportFeature(SPFarm.Local, SPFeatureScope.Farm, featureId, "farm", "farm");
+            ReportFeature(SPFarm.Local, faulty, SPFeatureScope.Farm, featureId, "farm", "farm");
         }
         private void CheckWebApp(SPWebApplication webApp)
         {
@@ -148,7 +153,8 @@ namespace FeatureAdmin
             {
                 if (webApp.Features[desiredFeature] is SPFeature)
                 {
-                    ReportWebAppFeature(desiredFeature, webApp);
+                    bool faulty = false; // ?
+                    ReportWebAppFeature(desiredFeature, faulty, webApp);
                     return;
                 }
             }
@@ -156,14 +162,36 @@ namespace FeatureAdmin
             {
                 foreach (SPFeature feature in webApp.Features)
                 {
-                    ReportWebAppFeature(desiredFeature, webApp);
+                    bool faulty = IsFeatureFaulty(feature);
+                    ReportWebAppFeature(desiredFeature, faulty, webApp);
                 }
             }
         }
-        private void ReportWebAppFeature(Guid featureId, SPWebApplication webApp)
+        private bool IsFeatureFaulty(SPFeature feature)
+        {
+            if (feature.Definition == null)
+            {
+                return true;
+            }
+            FeatureChecker checker = new FeatureChecker();
+            if (checker.CheckFeature(feature).Faulty)
+            {
+                return true;
+            }
+            return false;
+        }
+        private void CheckFeature(SPFeature feature)
+        {
+            FeatureChecker checker = new FeatureChecker();
+            if (checker.CheckFeature(feature).Faulty)
+            {
+                bool debug = true;
+            }
+        }
+        private void ReportWebAppFeature(Guid featureId, bool faulty, SPWebApplication webApp)
         {
             ++activationsFound;
-            ReportFeature(webApp, SPFeatureScope.WebApplication, featureId, LocationManager.GetWebAppUrl(webApp), webApp.Name);
+            ReportFeature(webApp, faulty, SPFeatureScope.WebApplication, featureId, LocationManager.GetWebAppUrl(webApp), webApp.Name);
         }
         private void EnumerateWebAppSites(SPWebApplication webApp)
         {
@@ -204,21 +232,23 @@ namespace FeatureAdmin
             {
                 if (site.Features[desiredFeature] is SPFeature)
                 {
-                    ReportSiteFeature(desiredFeature, site);
+                    bool faulty = false; // ?
+                    ReportSiteFeature(desiredFeature, faulty, site);
                 }
             }
             else
             {
                 foreach (SPFeature feature in site.Features)
                 {
-                    ReportSiteFeature(feature.DefinitionId, site);
+                    bool faulty = IsFeatureFaulty(feature);
+                    ReportSiteFeature(feature.DefinitionId, faulty, site);
                 }
             }
         }
-        private void ReportSiteFeature(Guid featureId, SPSite site)
+        private void ReportSiteFeature(Guid featureId, bool faulty, SPSite site)
         {
             ++activationsFound;
-            ReportFeature(site, SPFeatureScope.Site, featureId, site.Url, site.RootWeb.Title);
+            ReportFeature(site, faulty, SPFeatureScope.Site, featureId, site.Url, site.RootWeb.Title);
         }
         private void EnumerateSiteWebs(SPSite site)
         {
@@ -247,23 +277,26 @@ namespace FeatureAdmin
             {
                 if (web.Features[desiredFeature] is SPFeature)
                 {
-                    ReportWebFeature(desiredFeature, web);
+                    bool faulty = false; // ?
+                    ReportWebFeature(desiredFeature, faulty, web);
                 }
             }
             else
             {
                 foreach (SPFeature feature in web.Features)
                 {
-                    ReportWebFeature(feature.DefinitionId, web);
+                    CheckFeature(feature);
+                    bool faulty = IsFeatureFaulty(feature);
+                    ReportWebFeature(feature.DefinitionId, faulty, web);
                 }
             }
         }
-        private void ReportWebFeature(Guid featureId, SPWeb web)
+        private void ReportWebFeature(Guid featureId, bool faulty, SPWeb web)
         {
             ++activationsFound;
-            ReportFeature(web, SPFeatureScope.Web, featureId, web.Url, web.Title);
+            ReportFeature(web, faulty, SPFeatureScope.Web, featureId, web.Url, web.Title);
         }
-        private void ReportFeature(object obj, SPFeatureScope scope, Guid featureId, string url, string name)
+        private void ReportFeature(object obj, bool faulty, SPFeatureScope scope, Guid featureId, string url, string name)
         {
             OnFoundFeature(featureId, url, name);
             Location location = LocationManager.GetLocation(obj);
@@ -278,6 +311,16 @@ namespace FeatureAdmin
             }
             locs.Add(location);
             featureLocations[featureId] = locs;
+            if (faulty)
+            {
+                int faults = 0;
+                if (faultyFeatures.ContainsKey(featureId))
+                {
+                    faults = faultyFeatures[featureId];
+                }
+                ++faults;
+                faultyFeatures[featureId] = faults;
+            }
         }
     }
 }

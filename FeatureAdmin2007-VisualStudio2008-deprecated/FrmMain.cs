@@ -63,6 +63,8 @@ namespace FeatureAdmin
             #endif
             AddTextColumn(gridFeatureDefinitions, "Id");
             AddTextColumn(gridFeatureDefinitions, "Activations");
+            AddTextColumn(gridFeatureDefinitions, "Faulty");
+
             // Set most columns sortable
             foreach (DataGridViewColumn column in gridFeatureDefinitions.Columns)
             {
@@ -122,7 +124,7 @@ namespace FeatureAdmin
             foreach (DataGridViewRow row in gridFeatureDefinitions.Rows)
             {
                 Feature feature = row.DataBoundItem as Feature;
-                if (feature.Faulty)
+                if (feature.IsFaulty)
                 {
                     row.DefaultCellStyle.ForeColor = Color.DarkRed;
                 }
@@ -1408,6 +1410,7 @@ namespace FeatureAdmin
 
                 // Call routine to actually find & report activations
                 m_featureDb.LoadAllData(finder.FindAllActivationsOfAllFeatures());
+                m_featureDb.MarkFaulty(finder.GetFaultyFeatureIdList());
             }
         }
 
