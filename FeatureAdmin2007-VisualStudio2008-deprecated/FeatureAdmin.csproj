@@ -63,15 +63,19 @@
     <Compile Include="ActivationFinder.cs" />
     <Compile Include="ExceptionSerializer.cs" />
     <Compile Include="Feature.cs" />
+    <Compile Include="FeatureActivator.cs" />
     <Compile Include="FeatureChecker.cs" />
+    <Compile Include="FeatureDatabase.cs" />
     <Compile Include="FeatureManager.cs" />
+    <Compile Include="FeatureUninstaller.cs" />
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="LocationInfo.cs" />
+    <Compile Include="Location.cs" />
+    <Compile Include="LocationManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmMain.resx">
@@ -82,14 +86,17 @@
       <DependentUpon>RemoveInvalidFeature.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <Compile Include="PropertyComparer.cs" />
     <Compile Include="RemoveInvalidFeature.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SortableBindingList.cs" />
     <Compile Include="spver.cs" />
     <Compile Include="RemoveInvalidFeature.Designer.cs">
       <DependentUpon>RemoveInvalidFeature.cs</DependentUpon>
     </Compile>
     <Compile Include="WaitCursor.cs" />
+    <Compile Include="WebAppEnumerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

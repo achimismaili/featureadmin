@@ -11,74 +11,59 @@ namespace FeatureAdmin
 {
     public class Feature : IComparable
     {
+        public const int COMPATINAPPLICABLE = -8;
+        public const int COMPATUNKNOWN = -6;
+
         #region class variables
 
-        Guid _id = Guid.Empty;
-        public Guid Id
-        {
-            get { return _id; }
-        }
+        public Guid Id { get; private set; }
+        public SPFeatureScope Scope { get; set; }
+        public int CompatibilityLevel { get; set; }
+        public String Name { get; set; }
+        public bool Faulty { get; set; }
+        public String ExceptionMsg { get; set; }
+        public int? Activations { get; set; }
 
-        String _name = string.Empty;
-        public String Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-
-        int _compatibilityLevel;
-        public int CompatibilityLevel
-        {
-            get { return _compatibilityLevel; }
-            set { _compatibilityLevel = value; }
-        }
-
-        SPFeatureScope _scope = SPFeatureScope.ScopeInvalid;
-        public SPFeatureScope Scope
-        {
-            get { return _scope; }
-            set { _scope = value; }
-        }
-
-        String _exceptionMsg = "";
-        public String ExceptionMsg
-        {
-            get { return _exceptionMsg; }
-            set { _exceptionMsg = value; }
-        }
-
+        #endregion
 
         public Feature(Guid id)
         {
-            this._id = id;
+            this.Id = id;
+            this.Scope = SPFeatureScope.ScopeInvalid;
+            this.CompatibilityLevel = COMPATUNKNOWN;
         }
 
         public Feature(Guid id, SPFeatureScope scope)
         {
-            this._id = id;
-            this._scope = scope;
+            this.Id = id;
+            this.Scope = scope;
+            this.CompatibilityLevel = COMPATUNKNOWN;
         }
 
-#endregion
 
         /// <summary>overwrite method for ToString - defines, what is shown of a Feature Class as string</summary>
         /// <returns>Feature Information string with scope, name and Guid</returns>
         public override string ToString()
         {
-            String result = string.Empty;
-
-            string idstr = String.Format("{1}/{0}", this._id, this._compatibilityLevel);
-            if (this._compatibilityLevel == FeatureManager.COMPATINAPPLICABLE)
+            string idstr = "";
+            // ID (with compatibility level if available for this SharePoint version)
+            if (this.CompatibilityLevel == COMPATINAPPLICABLE)
             {
-                idstr = String.Format("{0}", this._id);
-            }
-            if (String.IsNullOrEmpty(_name))
-            {
-                result = String.Format("ERROR READING FEATURE [{0}], Scope: {1}", idstr, this._scope.ToString());
+                idstr = String.Format("{0}", this.Id);
             }
             else
             {
-                result = String.Format("{2}: '{1}' [{0}]", idstr, this._name, this._scope.ToString());
+                idstr = String.Format("{1}/{0}", this.Id, this.CompatibilityLevel);
+            }
+            // Combine name & Id
+            String result = string.Empty;
+            if (String.IsNullOrEmpty(this.Name))
+            {
+                result = String.Format("ERROR READING FEATURE [{0}], Scope: {1}", idstr, this.Scope.ToString());
+            }
+            else
+            {
+                result = String.Format("{2}: '{1}' [{0}]", idstr, this.Name, this.Scope.ToString());
             }
             return result;
         }
@@ -88,6 +73,7 @@ namespace FeatureAdmin
         {
             if (ExceptionMsg != "") ExceptionMsg += "; ";
             ExceptionMsg += ExceptionSerializer.ToString(exc);
+            Faulty = true;
         }
 
         // sort the features: first Farm, Web App, Site then Web, after this, alphabetically after the name

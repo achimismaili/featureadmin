@@ -8,7 +8,7 @@ namespace FeatureAdmin
 {
     class ActivationFinder
     {
-        public class Location
+        public class LocationUnused
         {
             public Guid FeatureId;
             public SPFeatureScope Scope;
@@ -91,8 +91,7 @@ namespace FeatureAdmin
             }
 
             // check all web apps and everything under
-            SPWebApplicationCollection webApplicationCollection = SPWebService.ContentService.WebApplications;
-            foreach (SPWebApplication webApp in webApplicationCollection)
+            foreach (SPWebApplication webApp in WebAppEnumerator.GetAllWebApps())
             {
                 try
                 {
@@ -102,7 +101,7 @@ namespace FeatureAdmin
                 catch (Exception exc)
                 {
                     OnException(exc,
-                        "Exception checking webapp: " + LocationInfo.SafeGetWebAppUrl(webApp)
+                        "Exception checking webapp: " + LocationManager.SafeGetWebAppUrl(webApp)
                         );
                 }
 
@@ -115,7 +114,7 @@ namespace FeatureAdmin
                 catch (Exception exc)
                 {
                     OnException(exc,
-                        "Exception enumerating sites of webapp: " + LocationInfo.SafeGetWebAppUrl(webApp)
+                        "Exception enumerating sites of webapp: " + LocationManager.SafeGetWebAppUrl(webApp)
                         );
                 }
             }
@@ -141,7 +140,7 @@ namespace FeatureAdmin
         private void ReportFarmFeature(Guid featureId)
         {
             ++activationsFound;
-            ReportFeature(SPFeatureScope.Farm, featureId, "farm", "farm");
+            ReportFeature(SPFarm.Local, SPFeatureScope.Farm, featureId, "farm", "farm");
         }
         private void CheckWebApp(SPWebApplication webApp)
         {
@@ -164,7 +163,7 @@ namespace FeatureAdmin
         private void ReportWebAppFeature(Guid featureId, SPWebApplication webApp)
         {
             ++activationsFound;
-            ReportFeature(SPFeatureScope.WebApplication, featureId, LocationInfo.GetWebAppUrl(webApp), webApp.Name);
+            ReportFeature(webApp, SPFeatureScope.WebApplication, featureId, LocationManager.GetWebAppUrl(webApp), webApp.Name);
         }
         private void EnumerateWebAppSites(SPWebApplication webApp)
         {
@@ -181,7 +180,7 @@ namespace FeatureAdmin
                     catch (Exception exc)
                     {
                         OnException(exc,
-                            "Exception checking site: " + LocationInfo.SafeGetSiteUrl(site)
+                            "Exception checking site: " + LocationManager.SafeGetSiteAbsoluteUrl(site)
                             );
                     }
                     // check subwebs
@@ -193,7 +192,7 @@ namespace FeatureAdmin
                     catch (Exception exc)
                     {
                         OnException(exc,
-                            "Exception enumerating webs of site: " + LocationInfo.SafeGetSiteUrl(site)
+                            "Exception enumerating webs of site: " + LocationManager.SafeGetSiteAbsoluteUrl(site)
                             );
                     }
                 }
@@ -219,7 +218,7 @@ namespace FeatureAdmin
         private void ReportSiteFeature(Guid featureId, SPSite site)
         {
             ++activationsFound;
-            ReportFeature(SPFeatureScope.Site, featureId, site.Url, site.RootWeb.Title);
+            ReportFeature(site, SPFeatureScope.Site, featureId, site.Url, site.RootWeb.Title);
         }
         private void EnumerateSiteWebs(SPSite site)
         {
@@ -236,7 +235,7 @@ namespace FeatureAdmin
                     catch (Exception exc)
                     {
                         OnException(exc,
-                            "Exception checking web: " + LocationInfo.SafeGetWebUrl(web)
+                            "Exception checking web: " + LocationManager.SafeGetWebUrl(web)
                             );
                     }
                 }
@@ -262,16 +261,12 @@ namespace FeatureAdmin
         private void ReportWebFeature(Guid featureId, SPWeb web)
         {
             ++activationsFound;
-            ReportFeature(SPFeatureScope.Web, featureId, web.Url, web.Title);
+            ReportFeature(web, SPFeatureScope.Web, featureId, web.Url, web.Title);
         }
-        private void ReportFeature(SPFeatureScope scope, Guid featureId, string url, string name)
+        private void ReportFeature(object obj, SPFeatureScope scope, Guid featureId, string url, string name)
         {
             OnFoundFeature(featureId, url, name);
-            Location location = new Location();
-            location.Scope = scope;
-            location.FeatureId = featureId;
-            location.Url = url;
-            location.Name = name;
+            Location location = LocationManager.GetLocation(obj);
             List<Location> locs = null;
             if (featureLocations.ContainsKey(featureId))
             {

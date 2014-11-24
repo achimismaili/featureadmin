@@ -4,68 +4,86 @@ using Microsoft.SharePoint.Administration;
 
 namespace FeatureAdmin
 {
-    public static class LocationInfo
+    public static class LocationManager
     {
-        private class LocationDetails
+        public static Location GetLocation(object obj)
         {
-            public string Url = null;
-            public string Name = null;
-            public Guid Id = Guid.Empty;
-        }
-        private static LocationDetails GetLocation(object obj)
-        {
-            LocationDetails details = new LocationDetails();
+            Location loct = new Location();
+            if (obj is SPFarm)
+            {
+                SPFarm farm = obj as SPFarm;
+                loct.Id = farm.Id;
+                // loct.ContentDatabaseId
+                loct.Scope = SPFeatureScope.Farm;
+                loct.Url = "Farm";
+                loct.Name = "Farm";
+            }
             if (obj is SPWebApplication)
             {
                 SPWebApplication webapp = obj as SPWebApplication;
-                details.Url = SafeGetWebAppUrl(webapp);
-                details.Name = SafeGetWebAppTitle(webapp);
-                details.Id = webapp.Id;
+                loct.Id = webapp.Id;
+                // loct.ContentDatabaseId
+                loct.Scope = SPFeatureScope.WebApplication;
+                loct.Url = SafeGetWebAppUrl(webapp);
+                loct.Name = SafeGetWebAppTitle(webapp);
             }
             else if (obj is SPSite)
             {
                 SPSite site = obj as SPSite;
-                details.Url = SafeGetSiteUrl(site);
-                details.Name = SafeGetSiteTitle(site);
-                details.Id = site.ID;
+                loct.Id = site.ID;
+                loct.ContentDatabaseId = site.ContentDatabase.Id;
+                loct.Scope = SPFeatureScope.Site;
+                loct.Url = SafeGetSiteRelativeUrl(site);
+                loct.Name = SafeGetSiteTitle(site);
             }
             else if (obj is SPWeb)
             {
                 SPWeb web = obj as SPWeb;
-                details.Url = SafeGetWebUrl(web);
-                details.Name = SafeGetWebTitle(web);
-                details.Id = web.ID;
+                loct.Id = web.ID;
+                loct.ContentDatabaseId = web.Site.ContentDatabase.Id;
+                loct.Scope = SPFeatureScope.Web;
+                loct.Url = SafeGetWebUrl(web);
+                loct.Name = SafeGetWebTitle(web);
             }
-            return details;
+            else
+            {
+                loct.Name = "?";
+                loct.Url = "?";
+            }
+            return loct;
         }
         public static string SafeDescribeObject(object obj)
         {
-            if (obj is SPFarm)
+            Location loct = GetLocation(obj);
+            return SafeDescribeLocation(loct);
+        }
+        public static string SafeDescribeLocation(Location loct)
+        {
+            if (loct.Scope == SPFeatureScope.Farm)
             {
                 return "Farm";
             }
-            LocationDetails details = GetLocation(obj);
-            if (!string.IsNullOrEmpty(details.Url))
+            if (!string.IsNullOrEmpty(loct.Url))
             {
-                if (!string.IsNullOrEmpty(details.Name))
+                if (!string.IsNullOrEmpty(loct.Name))
                 { // have url and name
-                    return string.Format("{0} - {1}", details.Url, details.Name);
+                    return string.Format("{0} - {1}", loct.Url, loct.Name);
                 }
                 else
                 {
                     // have url
-                    return details.Url;
+                    return loct.Url;
                 }
             }
             else
             {
-                if (!string.IsNullOrEmpty(details.Name))
+                if (!string.IsNullOrEmpty(loct.Name))
                 { // have name
-                    return details.Name;
+                    return loct.Name;
                 }
                 else
                 { // have neither url nor name
-                    return details.Id.ToString();
+                    return loct.Id.ToString();
                 }
             }
         }
@@ -106,11 +124,22 @@ namespace FeatureAdmin
                 return null;
             }
         }
-        public static string SafeGetSiteUrl(SPSite site)
+        public static string SafeGetSiteAbsoluteUrl(SPSite site)
         {
             try
             {
                 return site.Url;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public static string SafeGetSiteRelativeUrl(SPSite site)
+        {
+            try
+            {
+                return site.ServerRelativeUrl;
             }
             catch
             {

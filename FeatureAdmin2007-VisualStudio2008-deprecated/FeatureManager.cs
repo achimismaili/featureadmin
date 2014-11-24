@@ -12,12 +12,6 @@ namespace FeatureAdmin
 
         #region class variables
 
-        String _url = null;
-        public String Url
-        {
-            get { return _url; }
-        }
-
         List<Feature> _features = null;
         public List<Feature> Features
         {
@@ -28,9 +22,8 @@ namespace FeatureAdmin
 
         SPFeatureDefinitionCollection _spfeatureDefinitions = null;
 
-        public FeatureManager(string url)
+        public FeatureManager()
         {
-            this._url = url;
             this._features = new List<Feature>();
         }
 
@@ -62,7 +55,7 @@ namespace FeatureAdmin
 
         /// <summary>Adds feature definitions to the custom Feature class</summary>
         /// <param name="spFeatureDefinitions"></param>
-        public void AddFeatures(SPFeatureDefinitionCollection spFeatureDefinitions)
+        public void AddFeatures1(SPFeatureDefinitionCollection spFeatureDefinitions)
         {
             this._spfeatureDefinitions = spFeatureDefinitions;
 
@@ -97,28 +90,6 @@ namespace FeatureAdmin
             {
             }
         }
-        public const int COMPATINAPPLICABLE = -8;
-        /// <summary>forcefully removes a feature definition from the farm feature definition collection</summary>
-        /// <param name="id">Feature Definition ID</param>
-        public void ForceUninstallFeatureDefinition(Guid id, int compatibilityLevel)
-        {
-            #if (SP2013)
-            {
-                _spfeatureDefinitions.Remove(id, compatibilityLevel, true);
-            }
-            #endif
-            #if (SP2010)
-            {
-                _spfeatureDefinitions.Remove(id, true);
-            }
-            #endif
-            #if (SP2007)
-            {
-                _spfeatureDefinitions.Remove(id, true);
-            }
-            #endif
-            throw new Exception("Unspecified SharePoint Version");
-        }
         public static int GetFeatureCompatibilityLevel(SPFeatureDefinition definition)
         {
             #if (SP2013)
@@ -133,7 +104,7 @@ namespace FeatureAdmin
             #endif
             #if (SP2007)
             {
-                return COMPATINAPPLICABLE; // inapplicable
+                return Feature.COMPATINAPPLICABLE; // inapplicable
             }
             #endif
             throw new Exception("Unspecified SharePoint Version");
