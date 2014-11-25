@@ -967,8 +967,6 @@ namespace FeatureAdmin
             btnActivateSPSite.Enabled = bDb && bSite;
             btnActivateSPWebApp.Enabled = bDb && bWebApp;
             btnActivateSPFarm.Enabled = bDb;
-            btnFindActivatedFeature.Enabled = true;
-            btnFindAllActivationsFeature.Enabled = true;
         }
 
         private SPFeatureScope GetLowestSelectedScope()
@@ -1409,55 +1407,6 @@ namespace FeatureAdmin
                 FeatureActivator.Action.Activating);
         }
 
-        private void btnFindActivatedFeature_Click(object sender, EventArgs e)
-        {
-            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
-            if (selectedFeatures.Count != 1)
-            {
-                MessageBox.Show("Please select exactly 1 feature.");
-                return;
-            }
-            Feature feature = (Feature)selectedFeatures[0];
-
-            ActivationFinder finder = new ActivationFinder();
-            finder.FoundListeners += delegate(Guid featureId, string url, string name)
-            {
-                string msgtext = url + " = " + name;
-                if (url == name) { msgtext = url; } // farm, farm
-                logDateMsg(msgtext);
-            };
-            finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
-
-            // Call routine to actually find & report activations
-            bool found = finder.FindFirstFeatureActivation(feature.Id);
-            if (!found)
-            {
-                string msgString = "Feature was not found activated in the farm.";
-                MessageBox.Show(msgString);
-                logDateMsg(msgString);
-            }
-        }
-        private void btnFindAllActivationsFeature_Click(object sender, EventArgs e)
-        {
-            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
-            if (selectedFeatures.Count != 1)
-            {
-                MessageBox.Show("Please select exactly 1 feature.");
-                return;
-            }
-            Feature feature = selectedFeatures[0];
-
-            List<Location> featlocs = GetFeatureLocations(feature.Id);
-            if (featlocs.Count == 0)
-            {
-                MessageBox.Show("No activations found");
-            }
-            else
-            {
-                LocationForm form = new LocationForm(feature, featlocs);
-                form.ShowDialog();
-            }
-        }
         private List<Location> GetFeatureLocations(Guid featureId)
         {
             if (!m_featureDb.IsLoaded())
@@ -1517,5 +1466,25 @@ namespace FeatureAdmin
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         #endregion
+
+        private void gridFeatureDefinitions_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView grid = sender as DataGridView;
+            if (grid.Columns[e.ColumnIndex].DataPropertyName == "Activations")
+            {
+                Feature feature = grid.Rows[e.RowIndex].DataBoundItem as Feature;
+
+                List<Location> featlocs = GetFeatureLocations(feature.Id);
+                if (featlocs.Count == 0)
+                {
+                    MessageBox.Show("No activations found");
+                }
+                else
+                {
+                    LocationForm form = new LocationForm(feature, featlocs);
+                    form.ShowDialog();
+                }
+            }
+        }
     }
 }

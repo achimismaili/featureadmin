@@ -51,11 +51,9 @@ namespace FeatureAdmin
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FarmFeatures = new System.Windows.Forms.TabPage();
             this.gridFeatureDefinitions = new System.Windows.Forms.DataGridView();
-            this.btnFindAllActivationsFeature = new System.Windows.Forms.Button();
             this.btnActivateSPWeb = new System.Windows.Forms.Button();
             this.btnActivateSPSite = new System.Windows.Forms.Button();
             this.btnActivateSPWebApp = new System.Windows.Forms.Button();
-            this.btnFindActivatedFeature = new System.Windows.Forms.Button();
             this.btnActivateSPFarm = new System.Windows.Forms.Button();
             this.RemoveFeatures = new System.Windows.Forms.TabPage();
             this.splitContainerRightSiteCollFeaturesWebFeatures = new System.Windows.Forms.SplitContainer();
@@ -353,11 +351,9 @@ namespace FeatureAdmin
             // FarmFeatures
             // 
             this.FarmFeatures.Controls.Add(this.gridFeatureDefinitions);
-            this.FarmFeatures.Controls.Add(this.btnFindAllActivationsFeature);
             this.FarmFeatures.Controls.Add(this.btnActivateSPWeb);
             this.FarmFeatures.Controls.Add(this.btnActivateSPSite);
             this.FarmFeatures.Controls.Add(this.btnActivateSPWebApp);
-            this.FarmFeatures.Controls.Add(this.btnFindActivatedFeature);
             this.FarmFeatures.Controls.Add(this.btnActivateSPFarm);
             this.FarmFeatures.Controls.Add(this.btnUninstFDef);
             this.FarmFeatures.Controls.Add(this.label4);
@@ -387,20 +383,9 @@ namespace FeatureAdmin
             this.gridFeatureDefinitions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridFeatureDefinitions.Size = new System.Drawing.Size(436, 491);
             this.gridFeatureDefinitions.TabIndex = 24;
+            this.gridFeatureDefinitions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridFeatureDefinitions_CellDoubleClick);
             this.gridFeatureDefinitions.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridFeatureDefinitions_DataBindingComplete);
             this.gridFeatureDefinitions.SelectionChanged += new System.EventHandler(this.gridFeatureDefinitions_SelectionChanged);
-            // 
-            // btnFindAllActivationsFeature
-            // 
-            this.btnFindAllActivationsFeature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFindAllActivationsFeature.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnFindAllActivationsFeature.Location = new System.Drawing.Point(247, 606);
-            this.btnFindAllActivationsFeature.Name = "btnFindAllActivationsFeature";
-            this.btnFindAllActivationsFeature.Size = new System.Drawing.Size(195, 23);
-            this.btnFindAllActivationsFeature.TabIndex = 22;
-            this.btnFindAllActivationsFeature.Text = "Find all activations";
-            this.btnFindAllActivationsFeature.UseVisualStyleBackColor = true;
-            this.btnFindAllActivationsFeature.Click += new System.EventHandler(this.btnFindAllActivationsFeature_Click);
             // 
             // btnActivateSPWeb
             // 
@@ -438,18 +423,6 @@ namespace FeatureAdmin
             this.btnActivateSPWebApp.UseVisualStyleBackColor = true;
             this.btnActivateSPWebApp.Click += new System.EventHandler(this.btnActivateSPWebApp_Click);
             // 
-            // btnFindActivatedFeature
-            // 
-            this.btnFindActivatedFeature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFindActivatedFeature.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnFindActivatedFeature.Location = new System.Drawing.Point(247, 577);
-            this.btnFindActivatedFeature.Name = "btnFindActivatedFeature";
-            this.btnFindActivatedFeature.Size = new System.Drawing.Size(195, 23);
-            this.btnFindActivatedFeature.TabIndex = 19;
-            this.btnFindActivatedFeature.Text = "Find one activation";
-            this.btnFindActivatedFeature.UseVisualStyleBackColor = true;
-            this.btnFindActivatedFeature.Click += new System.EventHandler(this.btnFindActivatedFeature_Click);
-            // 
             // btnActivateSPFarm
             // 
             this.btnActivateSPFarm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -473,7 +446,7 @@ namespace FeatureAdmin
             this.RemoveFeatures.Location = new System.Drawing.Point(4, 22);
             this.RemoveFeatures.Name = "RemoveFeatures";
             this.RemoveFeatures.Padding = new System.Windows.Forms.Padding(3);
-            this.RemoveFeatures.Size = new System.Drawing.Size(450, 611);
+            this.RemoveFeatures.Size = new System.Drawing.Size(450, 693);
             this.RemoveFeatures.TabIndex = 0;
             this.RemoveFeatures.Text = "Remove / deactivate features in selected sites";
             this.RemoveFeatures.UseVisualStyleBackColor = true;
@@ -668,7 +641,6 @@ namespace FeatureAdmin
         private System.Windows.Forms.Button btnActivateSPSite;
         private System.Windows.Forms.Button btnActivateSPWebApp;
         private System.Windows.Forms.Button btnActivateSPFarm;
-        private System.Windows.Forms.Button btnFindActivatedFeature;
     
         #endregion    
         private System.Windows.Forms.SplitContainer splitContainerRightSiteCollFeaturesWebFeatures;
@@ -676,7 +648,6 @@ namespace FeatureAdmin
         private System.Windows.Forms.SplitContainer splitContainerLeftWindow;
         private System.Windows.Forms.SplitContainer splitContainerLeftUpperWebAppAndSiteColl;
         private System.Windows.Forms.SplitContainer splitContainerLeftDownWebsAndLogs;
-        private System.Windows.Forms.Button btnFindAllActivationsFeature;
         private System.Windows.Forms.DataGridView gridFeatureDefinitions;
     
     }
