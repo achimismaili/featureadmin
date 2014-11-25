@@ -29,18 +29,18 @@
         private void InitializeComponent()
         {
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.LocationGrid = new System.Windows.Forms.DataGridView();
             this.FeatureTitlePanel = new System.Windows.Forms.Panel();
-            this.FeatureNameLabel = new System.Windows.Forms.Label();
-            this.FeaturePanelCaption = new System.Windows.Forms.Label();
-            this.FeatureIdLabel = new System.Windows.Forms.Label();
-            this.LocationDetailsView = new System.Windows.Forms.ListView();
             this.FeatureScopeLabel = new System.Windows.Forms.Label();
+            this.FeatureIdLabel = new System.Windows.Forms.Label();
+            this.FeaturePanelCaption = new System.Windows.Forms.Label();
+            this.FeatureNameLabel = new System.Windows.Forms.Label();
+            this.LocationGrid = new System.Windows.Forms.DataGridView();
+            this.LocationDetailsView = new System.Windows.Forms.ListView();
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
             this.MainSplitContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.LocationGrid)).BeginInit();
             this.FeatureTitlePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LocationGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // MainSplitContainer
@@ -63,18 +63,6 @@
             this.MainSplitContainer.SplitterDistance = 321;
             this.MainSplitContainer.TabIndex = 0;
             // 
-            // LocationGrid
-            // 
-            this.LocationGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.LocationGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.LocationGrid.Location = new System.Drawing.Point(0, 39);
-            this.LocationGrid.Name = "LocationGrid";
-            this.LocationGrid.ReadOnly = true;
-            this.LocationGrid.Size = new System.Drawing.Size(536, 279);
-            this.LocationGrid.TabIndex = 0;
-            // 
             // FeatureTitlePanel
             // 
             this.FeatureTitlePanel.Controls.Add(this.FeatureScopeLabel);
@@ -86,23 +74,14 @@
             this.FeatureTitlePanel.Size = new System.Drawing.Size(524, 30);
             this.FeatureTitlePanel.TabIndex = 3;
             // 
-            // FeatureNameLabel
+            // FeatureScopeLabel
             // 
-            this.FeatureNameLabel.AutoSize = true;
-            this.FeatureNameLabel.Location = new System.Drawing.Point(192, 6);
-            this.FeatureNameLabel.Name = "FeatureNameLabel";
-            this.FeatureNameLabel.Size = new System.Drawing.Size(80, 13);
-            this.FeatureNameLabel.TabIndex = 2;
-            this.FeatureNameLabel.Text = "(Feature Name)";
-            // 
-            // FeaturePanelCaption
-            // 
-            this.FeaturePanelCaption.AutoSize = true;
-            this.FeaturePanelCaption.Location = new System.Drawing.Point(9, 6);
-            this.FeaturePanelCaption.Name = "FeaturePanelCaption";
-            this.FeaturePanelCaption.Size = new System.Drawing.Size(43, 13);
-            this.FeaturePanelCaption.TabIndex = 3;
-            this.FeaturePanelCaption.Text = "Feature";
+            this.FeatureScopeLabel.AutoSize = true;
+            this.FeatureScopeLabel.Location = new System.Drawing.Point(90, 6);
+            this.FeatureScopeLabel.Name = "FeatureScopeLabel";
+            this.FeatureScopeLabel.Size = new System.Drawing.Size(83, 13);
+            this.FeatureScopeLabel.TabIndex = 5;
+            this.FeatureScopeLabel.Text = "(Feature Scope)";
             // 
             // FeatureIdLabel
             // 
@@ -115,6 +94,37 @@
             this.FeatureIdLabel.TabIndex = 4;
             this.FeatureIdLabel.Text = "(Feature Id)";
             // 
+            // FeaturePanelCaption
+            // 
+            this.FeaturePanelCaption.AutoSize = true;
+            this.FeaturePanelCaption.Location = new System.Drawing.Point(9, 6);
+            this.FeaturePanelCaption.Name = "FeaturePanelCaption";
+            this.FeaturePanelCaption.Size = new System.Drawing.Size(43, 13);
+            this.FeaturePanelCaption.TabIndex = 3;
+            this.FeaturePanelCaption.Text = "Feature";
+            // 
+            // FeatureNameLabel
+            // 
+            this.FeatureNameLabel.AutoSize = true;
+            this.FeatureNameLabel.Location = new System.Drawing.Point(192, 6);
+            this.FeatureNameLabel.Name = "FeatureNameLabel";
+            this.FeatureNameLabel.Size = new System.Drawing.Size(80, 13);
+            this.FeatureNameLabel.TabIndex = 2;
+            this.FeatureNameLabel.Text = "(Feature Name)";
+            // 
+            // LocationGrid
+            // 
+            this.LocationGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.LocationGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.LocationGrid.Location = new System.Drawing.Point(0, 39);
+            this.LocationGrid.Name = "LocationGrid";
+            this.LocationGrid.ReadOnly = true;
+            this.LocationGrid.Size = new System.Drawing.Size(536, 279);
+            this.LocationGrid.TabIndex = 0;
+            this.LocationGrid.SelectionChanged += new System.EventHandler(this.LocationGrid_SelectionChanged);
+            // 
             // LocationDetailsView
             // 
             this.LocationDetailsView.Location = new System.Drawing.Point(4, 4);
@@ -122,15 +132,7 @@
             this.LocationDetailsView.Size = new System.Drawing.Size(532, 171);
             this.LocationDetailsView.TabIndex = 0;
             this.LocationDetailsView.UseCompatibleStateImageBehavior = false;
-            // 
-            // FeatureScopeLabel
-            // 
-            this.FeatureScopeLabel.AutoSize = true;
-            this.FeatureScopeLabel.Location = new System.Drawing.Point(90, 6);
-            this.FeatureScopeLabel.Name = "FeatureScopeLabel";
-            this.FeatureScopeLabel.Size = new System.Drawing.Size(83, 13);
-            this.FeatureScopeLabel.TabIndex = 5;
-            this.FeatureScopeLabel.Text = "(Feature Scope)";
+            this.LocationDetailsView.View = System.Windows.Forms.View.Details;
             // 
             // LocationForm
             // 
@@ -143,9 +145,9 @@
             this.MainSplitContainer.Panel1.ResumeLayout(false);
             this.MainSplitContainer.Panel2.ResumeLayout(false);
             this.MainSplitContainer.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.LocationGrid)).EndInit();
             this.FeatureTitlePanel.ResumeLayout(false);
             this.FeatureTitlePanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LocationGrid)).EndInit();
             this.ResumeLayout(false);
 
         }

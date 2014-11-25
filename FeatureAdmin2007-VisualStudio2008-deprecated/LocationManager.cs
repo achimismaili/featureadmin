@@ -26,6 +26,7 @@ namespace FeatureAdmin
                 loct.Scope = SPFeatureScope.WebApplication;
                 loct.Url = SafeGetWebAppUrl(webapp);
                 loct.Name = SafeGetWebAppTitle(webapp);
+                loct.Access = SafeGetWebAppAccess(webapp);
             }
             else if (obj is SPSite)
             {
@@ -35,6 +36,10 @@ namespace FeatureAdmin
                 loct.Scope = SPFeatureScope.Site;
                 loct.Url = SafeGetSiteRelativeUrl(site);
                 loct.Name = SafeGetSiteTitle(site);
+                loct.Access = SafeGetSiteAccess(site);
+                //site.LastContentModifiedDate
+                //site.ReadLocked
+                //site.ReadOnly
             }
             else if (obj is SPWeb)
             {
@@ -44,6 +49,7 @@ namespace FeatureAdmin
                 loct.Scope = SPFeatureScope.Web;
                 loct.Url = SafeGetWebUrl(web);
                 loct.Name = SafeGetWebTitle(web);
+                loct.Access = SafeGetWebAccess(web);
             }
             else
             {
@@ -166,6 +172,41 @@ namespace FeatureAdmin
             catch
             {
                 return null;
+            }
+        }
+        public static string SafeGetWebAppAccess(SPWebApplication webapp)
+        {
+            try
+            {
+                string name = webapp.Name;
+                return "";
+            }
+            catch
+            {
+                return "?";
+            }
+        }
+        public static string SafeGetSiteAccess(SPSite site)
+        {
+            try
+            {
+                return (site.ReadOnly ? "RO" : "");
+            }
+            catch
+            {
+                return "?";
+            }
+        }
+        public static string SafeGetWebAccess(SPWeb web)
+        {
+            try
+            {
+                string name = web.Name;
+                return "";
+            }
+            catch
+            {
+                return "?";
             }
         }
     }

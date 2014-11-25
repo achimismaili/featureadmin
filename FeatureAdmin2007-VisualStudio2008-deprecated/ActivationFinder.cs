@@ -180,14 +180,6 @@ namespace FeatureAdmin
             }
             return false;
         }
-        private void CheckFeature(SPFeature feature)
-        {
-            FeatureChecker checker = new FeatureChecker();
-            if (checker.CheckFeature(feature).Faulty)
-            {
-                bool debug = true;
-            }
-        }
         private void ReportWebAppFeature(Guid featureId, bool faulty, SPWebApplication webApp)
         {
             ++activationsFound;
@@ -285,7 +277,6 @@ namespace FeatureAdmin
             {
                 foreach (SPFeature feature in web.Features)
                 {
-                    CheckFeature(feature);
                     bool faulty = IsFeatureFaulty(feature);
                     ReportWebFeature(feature.DefinitionId, faulty, web);
                 }

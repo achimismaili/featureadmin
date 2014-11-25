@@ -390,6 +390,7 @@ namespace FeatureAdmin
             this.gridFeatureDefinitions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridFeatureDefinitions.Size = new System.Drawing.Size(436, 409);
             this.gridFeatureDefinitions.TabIndex = 24;
+            this.gridFeatureDefinitions.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridFeatureDefinitions_DataBindingComplete);
             this.gridFeatureDefinitions.SelectionChanged += new System.EventHandler(this.gridFeatureDefinitions_SelectionChanged);
             // 
             // btnLoadAllFeatureActivations

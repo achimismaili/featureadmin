@@ -74,6 +74,13 @@ namespace FeatureAdmin
                     column.SortMode = DataGridViewColumnSortMode.Automatic;
                 }
             }
+            // Color faulty rows
+            gridFeatureDefinitions.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(gridFeatureDefinitions_DataBindingComplete);
+        }
+
+        void gridFeatureDefinitions_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            MarkFaultyFeatureDefs();
         }
 
         private void AddTextColumn(DataGridView grid, string name)
@@ -114,7 +121,6 @@ namespace FeatureAdmin
                 //clbFeatureDefinitions.
                 this.gridFeatureDefinitions.DataSource =
                     new SortableBindingList<Feature>(features);
-                MarkFaultyFeatureDefs();
 
                 logDateMsg("Feature Definition list updated.");
             }
@@ -1259,7 +1265,7 @@ namespace FeatureAdmin
             }
             catch (Exception exc)
             {
-                logException(exc, "Exception enumerating site collections");
+                logException(exc, "Exception enumerating subwebs");
             }
         }
 
@@ -1506,6 +1512,5 @@ namespace FeatureAdmin
         }
 
         #endregion
-
     }
 }

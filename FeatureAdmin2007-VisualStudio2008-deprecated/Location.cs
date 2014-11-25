@@ -11,6 +11,7 @@ namespace FeatureAdmin
         public SPFeatureScope Scope = SPFeatureScope.ScopeInvalid;
         public string Url { get; set; } // server relative for site collections
         public string Name { get; set; }
+        public string Access { get; set; } // for ReadOnly or ReadLocked sites
 
         public void Clear()
         {

@@ -1,10 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.SharePoint;
-
-
-using System.Windows.Forms;
 
 
 namespace FeatureAdmin
@@ -110,7 +105,6 @@ namespace FeatureAdmin
             {
                 throw (new System.ArgumentException("Object is not a Feature like the instance"));
             }
-
         }
     }
 }

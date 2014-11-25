@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.SharePoint;
 using Be.Timvw.Framework.Collections.Generic;
 using Be.Timvw.Framework.ComponentModel;
 
@@ -21,6 +22,7 @@ namespace FeatureAdmin
 
             PopulateFeatureHeader();
             ConfigureLocationGrid();
+            ConfigureLocationDetails();
             PopulateLocationGrid();
         }
         private void PopulateFeatureHeader()
@@ -43,6 +45,13 @@ namespace FeatureAdmin
                 column.SortMode = DataGridViewColumnSortMode.Automatic;
             }
         }
+        private void ConfigureLocationDetails()
+        {
+            // Width of -2 indicates auto-size.
+            LocationDetailsView.Columns.Add("Property", -2, HorizontalAlignment.Left); 
+            LocationDetailsView.Columns.Add("Property2", 100);
+            LocationDetailsView.Columns.Add("Value", 200);
+        }
         private void AddTextColumn(DataGridView grid, string name)
         {
             AddTextColumn(grid, name, name);
@@ -60,6 +69,53 @@ namespace FeatureAdmin
         private void PopulateLocationGrid()
         {
             this.LocationGrid.DataSource = new SortableBindingList<Location>(_Locations);
+        }
+        private void LocationGrid_SelectionChanged(object sender, EventArgs e)
+        {
+            Location location = LocationGrid.CurrentRow.DataBoundItem as Location;
+            DisplayLocationDetails(location);
+        }
+        private void DisplayLocationDetails(Location location)
+        {
+            LocationDetailsView.Items.Clear();
+            if (location == null) { return; }
+            AddLocationProperty("Name", location.Name);
+            AddLocationProperty("URL", location.Url);
+            AddLocationProperty("Id", location.Id.ToString());
+            switch (location.Scope)
+            {
+                case SPFeatureScope.Farm:
+                    AddFarmDetails(location);
+                    break;
+                case SPFeatureScope.WebApplication:
+                    AddWebApplicationDetails(location);
+                    break;
+                case SPFeatureScope.Site:
+                    AddSiteDetails(location);
+                    break;
+                case SPFeatureScope.Web:
+                    AddWebDetails(location);
+                    break;
+            }
+        }
+        private void AddFarmDetails(Location location)
+        {
+        }
+        private void AddWebApplicationDetails(Location location)
+        {
+        }
+        private void AddSiteDetails(Location location)
+        {
+        }
+        private void AddWebDetails(Location location)
+        {
+        }
+        private void AddLocationProperty(string name, string value)
+        {
+            ListViewItem item = new ListViewItem();
+            item.Text = name;
+            item.SubItems.Add(value);
+            LocationDetailsView.Items.Add(item);
         }
     }
 }
