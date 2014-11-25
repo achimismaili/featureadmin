@@ -67,6 +67,7 @@
     <Compile Include="FeatureChecker.cs" />
     <Compile Include="FeatureDatabase.cs" />
     <Compile Include="FeatureManager.cs" />
+    <Compile Include="FeatureSet.cs" />
     <Compile Include="FeatureUninstaller.cs" />
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>

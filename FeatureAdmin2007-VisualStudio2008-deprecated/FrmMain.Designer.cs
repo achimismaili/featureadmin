@@ -51,7 +51,6 @@ namespace FeatureAdmin
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FarmFeatures = new System.Windows.Forms.TabPage();
             this.gridFeatureDefinitions = new System.Windows.Forms.DataGridView();
-            this.btnLoadAllFeatureActivations = new System.Windows.Forms.Button();
             this.btnFindAllActivationsFeature = new System.Windows.Forms.Button();
             this.btnActivateSPWeb = new System.Windows.Forms.Button();
             this.btnActivateSPSite = new System.Windows.Forms.Button();
@@ -61,7 +60,6 @@ namespace FeatureAdmin
             this.RemoveFeatures = new System.Windows.Forms.TabPage();
             this.splitContainerRightSiteCollFeaturesWebFeatures = new System.Windows.Forms.SplitContainer();
             this.btnClearLog = new System.Windows.Forms.Button();
-            this.btnFindFaultyFeature = new System.Windows.Forms.Button();
             this.splitContainerCompleteMainframe = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftWindow = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftUpperWebAppAndSiteColl = new System.Windows.Forms.SplitContainer();
@@ -92,11 +90,11 @@ namespace FeatureAdmin
             this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtResult.Location = new System.Drawing.Point(0, 16);
+            this.txtResult.Location = new System.Drawing.Point(0, 31);
             this.txtResult.Multiline = true;
             this.txtResult.Name = "txtResult";
             this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtResult.Size = new System.Drawing.Size(412, 328);
+            this.txtResult.Size = new System.Drawing.Size(412, 313);
             this.txtResult.TabIndex = 2;
             this.txtResult.WordWrap = false;
             // 
@@ -285,7 +283,7 @@ namespace FeatureAdmin
             // 
             this.btnUninstFDef.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnUninstFDef.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnUninstFDef.Location = new System.Drawing.Point(9, 466);
+            this.btnUninstFDef.Location = new System.Drawing.Point(9, 548);
             this.btnUninstFDef.Name = "btnUninstFDef";
             this.btnUninstFDef.Size = new System.Drawing.Size(62, 23);
             this.btnUninstFDef.TabIndex = 8;
@@ -297,7 +295,7 @@ namespace FeatureAdmin
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(77, 471);
+            this.label1.Location = new System.Drawing.Point(77, 553);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(230, 13);
             this.label1.TabIndex = 16;
@@ -349,13 +347,12 @@ namespace FeatureAdmin
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(458, 637);
+            this.tabControl1.Size = new System.Drawing.Size(458, 719);
             this.tabControl1.TabIndex = 17;
             // 
             // FarmFeatures
             // 
             this.FarmFeatures.Controls.Add(this.gridFeatureDefinitions);
-            this.FarmFeatures.Controls.Add(this.btnLoadAllFeatureActivations);
             this.FarmFeatures.Controls.Add(this.btnFindAllActivationsFeature);
             this.FarmFeatures.Controls.Add(this.btnActivateSPWeb);
             this.FarmFeatures.Controls.Add(this.btnActivateSPSite);
@@ -370,7 +367,7 @@ namespace FeatureAdmin
             this.FarmFeatures.Location = new System.Drawing.Point(4, 22);
             this.FarmFeatures.Name = "FarmFeatures";
             this.FarmFeatures.Padding = new System.Windows.Forms.Padding(3);
-            this.FarmFeatures.Size = new System.Drawing.Size(450, 611);
+            this.FarmFeatures.Size = new System.Drawing.Size(450, 693);
             this.FarmFeatures.TabIndex = 1;
             this.FarmFeatures.Text = "Farm Feature Administration";
             this.FarmFeatures.UseVisualStyleBackColor = true;
@@ -388,28 +385,16 @@ namespace FeatureAdmin
             this.gridFeatureDefinitions.Name = "gridFeatureDefinitions";
             this.gridFeatureDefinitions.ReadOnly = true;
             this.gridFeatureDefinitions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridFeatureDefinitions.Size = new System.Drawing.Size(436, 409);
+            this.gridFeatureDefinitions.Size = new System.Drawing.Size(436, 491);
             this.gridFeatureDefinitions.TabIndex = 24;
             this.gridFeatureDefinitions.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridFeatureDefinitions_DataBindingComplete);
             this.gridFeatureDefinitions.SelectionChanged += new System.EventHandler(this.gridFeatureDefinitions_SelectionChanged);
-            // 
-            // btnLoadAllFeatureActivations
-            // 
-            this.btnLoadAllFeatureActivations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnLoadAllFeatureActivations.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnLoadAllFeatureActivations.Location = new System.Drawing.Point(247, 553);
-            this.btnLoadAllFeatureActivations.Name = "btnLoadAllFeatureActivations";
-            this.btnLoadAllFeatureActivations.Size = new System.Drawing.Size(195, 23);
-            this.btnLoadAllFeatureActivations.TabIndex = 23;
-            this.btnLoadAllFeatureActivations.Text = "Load all activation data";
-            this.btnLoadAllFeatureActivations.UseVisualStyleBackColor = true;
-            this.btnLoadAllFeatureActivations.Click += new System.EventHandler(this.btnLoadAllFeatureActivations_Click);
             // 
             // btnFindAllActivationsFeature
             // 
             this.btnFindAllActivationsFeature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnFindAllActivationsFeature.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnFindAllActivationsFeature.Location = new System.Drawing.Point(247, 524);
+            this.btnFindAllActivationsFeature.Location = new System.Drawing.Point(247, 606);
             this.btnFindAllActivationsFeature.Name = "btnFindAllActivationsFeature";
             this.btnFindAllActivationsFeature.Size = new System.Drawing.Size(195, 23);
             this.btnFindAllActivationsFeature.TabIndex = 22;
@@ -421,7 +406,7 @@ namespace FeatureAdmin
             // 
             this.btnActivateSPWeb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnActivateSPWeb.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnActivateSPWeb.Location = new System.Drawing.Point(9, 495);
+            this.btnActivateSPWeb.Location = new System.Drawing.Point(9, 577);
             this.btnActivateSPWeb.Name = "btnActivateSPWeb";
             this.btnActivateSPWeb.Size = new System.Drawing.Size(200, 23);
             this.btnActivateSPWeb.TabIndex = 20;
@@ -433,7 +418,7 @@ namespace FeatureAdmin
             // 
             this.btnActivateSPSite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnActivateSPSite.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnActivateSPSite.Location = new System.Drawing.Point(9, 524);
+            this.btnActivateSPSite.Location = new System.Drawing.Point(9, 606);
             this.btnActivateSPSite.Name = "btnActivateSPSite";
             this.btnActivateSPSite.Size = new System.Drawing.Size(200, 23);
             this.btnActivateSPSite.TabIndex = 21;
@@ -445,7 +430,7 @@ namespace FeatureAdmin
             // 
             this.btnActivateSPWebApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnActivateSPWebApp.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnActivateSPWebApp.Location = new System.Drawing.Point(9, 553);
+            this.btnActivateSPWebApp.Location = new System.Drawing.Point(9, 635);
             this.btnActivateSPWebApp.Name = "btnActivateSPWebApp";
             this.btnActivateSPWebApp.Size = new System.Drawing.Size(200, 23);
             this.btnActivateSPWebApp.TabIndex = 18;
@@ -457,7 +442,7 @@ namespace FeatureAdmin
             // 
             this.btnFindActivatedFeature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnFindActivatedFeature.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnFindActivatedFeature.Location = new System.Drawing.Point(247, 495);
+            this.btnFindActivatedFeature.Location = new System.Drawing.Point(247, 577);
             this.btnFindActivatedFeature.Name = "btnFindActivatedFeature";
             this.btnFindActivatedFeature.Size = new System.Drawing.Size(195, 23);
             this.btnFindActivatedFeature.TabIndex = 19;
@@ -469,7 +454,7 @@ namespace FeatureAdmin
             // 
             this.btnActivateSPFarm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnActivateSPFarm.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnActivateSPFarm.Location = new System.Drawing.Point(9, 582);
+            this.btnActivateSPFarm.Location = new System.Drawing.Point(9, 664);
             this.btnActivateSPFarm.Name = "btnActivateSPFarm";
             this.btnActivateSPFarm.Size = new System.Drawing.Size(200, 23);
             this.btnActivateSPFarm.TabIndex = 19;
@@ -517,25 +502,14 @@ namespace FeatureAdmin
             // 
             // btnClearLog
             // 
-            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClearLog.Location = new System.Drawing.Point(7, 646);
+            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearLog.Location = new System.Drawing.Point(319, 3);
             this.btnClearLog.Name = "btnClearLog";
             this.btnClearLog.Size = new System.Drawing.Size(90, 23);
             this.btnClearLog.TabIndex = 18;
             this.btnClearLog.Text = "Clear Log";
             this.btnClearLog.UseVisualStyleBackColor = true;
             this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
-            // 
-            // btnFindFaultyFeature
-            // 
-            this.btnFindFaultyFeature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFindFaultyFeature.Location = new System.Drawing.Point(7, 675);
-            this.btnFindFaultyFeature.Name = "btnFindFaultyFeature";
-            this.btnFindFaultyFeature.Size = new System.Drawing.Size(200, 23);
-            this.btnFindFaultyFeature.TabIndex = 18;
-            this.btnFindFaultyFeature.Text = "Find Faulty Feature in Farm";
-            this.btnFindFaultyFeature.UseVisualStyleBackColor = true;
-            this.btnFindFaultyFeature.Click += new System.EventHandler(this.btnFindFaultyFeature_Click);
             // 
             // splitContainerCompleteMainframe
             // 
@@ -551,8 +525,6 @@ namespace FeatureAdmin
             // 
             // splitContainerCompleteMainframe.Panel2
             // 
-            this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.btnClearLog);
-            this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.btnFindFaultyFeature);
             this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.tabControl1);
             this.splitContainerCompleteMainframe.Size = new System.Drawing.Size(890, 728);
             this.splitContainerCompleteMainframe.SplitterDistance = 422;
@@ -617,6 +589,7 @@ namespace FeatureAdmin
             // 
             // splitContainerLeftDownWebsAndLogs.Panel2
             // 
+            this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.btnClearLog);
             this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.lblLog);
             this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.txtResult);
             this.splitContainerLeftDownWebsAndLogs.Size = new System.Drawing.Size(412, 494);
@@ -695,7 +668,6 @@ namespace FeatureAdmin
         private System.Windows.Forms.Button btnActivateSPSite;
         private System.Windows.Forms.Button btnActivateSPWebApp;
         private System.Windows.Forms.Button btnActivateSPFarm;
-        private System.Windows.Forms.Button btnFindFaultyFeature;
         private System.Windows.Forms.Button btnFindActivatedFeature;
     
         #endregion    
@@ -704,7 +676,6 @@ namespace FeatureAdmin
         private System.Windows.Forms.SplitContainer splitContainerLeftWindow;
         private System.Windows.Forms.SplitContainer splitContainerLeftUpperWebAppAndSiteColl;
         private System.Windows.Forms.SplitContainer splitContainerLeftDownWebsAndLogs;
-        private System.Windows.Forms.Button btnLoadAllFeatureActivations;
         private System.Windows.Forms.Button btnFindAllActivationsFeature;
         private System.Windows.Forms.DataGridView gridFeatureDefinitions;
     
