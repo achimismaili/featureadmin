@@ -21,6 +21,10 @@ namespace FeatureAdmin
         {
             return new List<Feature>(_AllFeatureDefinitions.Values);
         }
+        public int GetAllFeaturesCount()
+        {
+            return _AllFeatureDefinitions.Count;
+        }
 
         public List<Feature> GetFeaturesOfLocation(Location location)
         {

@@ -1427,6 +1427,9 @@ namespace FeatureAdmin
                 // Call routine to actually find & report activations
                 m_featureDb.LoadAllData(finder.FindAllActivationsOfAllFeatures());
                 m_featureDb.MarkFaulty(finder.GetFaultyFeatureIdList());
+                lblFeatureDefinitions.Text = string.Format(
+                    "All {0} Features installed in the Farm",
+                    m_featureDb.GetAllFeaturesCount());
             }
         }
 
