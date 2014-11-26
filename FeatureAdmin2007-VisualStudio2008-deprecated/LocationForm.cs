@@ -35,9 +35,9 @@ namespace FeatureAdmin
         {
             DataGridView grid = this.LocationGrid;
             grid.AutoGenerateColumns = false;
-            AddTextColumn(grid, "Url");
-            AddTextColumn(grid, "Name");
-            AddTextColumn(grid, "Id");
+            GridColMgr.AddTextColumn(grid, "Url");
+            GridColMgr.AddTextColumn(grid, "Name");
+            GridColMgr.AddTextColumn(grid, "Id");
 
             // Set all columns sortable
             foreach (DataGridViewColumn column in grid.Columns)
@@ -51,20 +51,6 @@ namespace FeatureAdmin
             LocationDetailsView.Columns.Add("Property", -2, HorizontalAlignment.Left); 
             LocationDetailsView.Columns.Add("Property2", 100);
             LocationDetailsView.Columns.Add("Value", 200);
-        }
-        private void AddTextColumn(DataGridView grid, string name)
-        {
-            AddTextColumn(grid, name, name);
-        }
-        private void AddTextColumn(DataGridView grid, string name, string title)
-        {
-            DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn()
-            {
-                Name = name,
-                DataPropertyName = name,
-                HeaderText = title
-            };
-            grid.Columns.Add(column);
         }
         private void PopulateLocationGrid()
         {

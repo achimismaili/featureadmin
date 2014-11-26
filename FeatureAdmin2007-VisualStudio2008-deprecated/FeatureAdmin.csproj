@@ -75,6 +75,7 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="GridColMgr.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="LocationForm.cs">
       <SubType>Form</SubType>

@@ -58,14 +58,14 @@ namespace FeatureAdmin
         {
             DataGridView grid = gridFeatureDefinitions;
             grid.AutoGenerateColumns = false;
-            AddTextColumn(grid, "ScopeAbbrev", "Scope");
-            AddTextColumn(grid, "Name");
+            GridColMgr.AddTextColumn(grid, "ScopeAbbrev", "Scope", 60);
+            GridColMgr.AddTextColumn(grid, "Name");
             #if (SP2013)
-            AddTextColumn(grid, "CompatibilityLevel", "Compat");
+            GridColMgr.AddTextColumn(grid, "CompatibilityLevel", "Compat", 60);
             #endif
-            AddTextColumn(grid, "Id");
-            AddTextColumn(grid, "Activations");
-            AddTextColumn(grid, "Faulty");
+            GridColMgr.AddTextColumn(grid, "Id", 50);
+            GridColMgr.AddTextColumn(grid, "Activations", 60);
+            GridColMgr.AddTextColumn(grid, "Faulty", 60);
 
             // Set most columns sortable
             foreach (DataGridViewColumn column in grid.Columns)
@@ -82,22 +82,6 @@ namespace FeatureAdmin
         void gridFeatureDefinitions_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             MarkFaultyFeatureDefs();
-        }
-
-        private void AddTextColumn(DataGridView grid, string name)
-        {
-            AddTextColumn(grid, name, name);
-        }
-
-        private void AddTextColumn(DataGridView grid, string name, string title)
-        {
-            DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn()
-            {
-                Name = name,
-                DataPropertyName = name,
-                HeaderText = title
-            };
-            grid.Columns.Add(column);
         }
 
         /// <summary>Used to populate the list of Farm Feature Definitions</summary>
