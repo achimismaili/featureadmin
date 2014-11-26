@@ -12,7 +12,17 @@ namespace FeatureAdmin
         #region class variables
 
         public Guid Id { get; private set; }
-        public SPFeatureScope Scope { get; set; }
+        private SPFeatureScope _Scope = SPFeatureScope.ScopeInvalid;
+        public SPFeatureScope Scope
+        {
+            get { return _Scope; }
+            set
+            {
+                _Scope = value;
+                ScopeAbbrev = ScopeAbbrevConverter.ScopeToAbbrev(value);
+            }
+        }
+        public string ScopeAbbrev { get; private set; } // more legible scope names -- see ScopeAbbrevConverter
         public int CompatibilityLevel { get; set; }
         public String Name { get; set; }
         public bool IsFaulty { get; set; }

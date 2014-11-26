@@ -58,7 +58,7 @@ namespace FeatureAdmin
         {
             DataGridView grid = gridFeatureDefinitions;
             grid.AutoGenerateColumns = false;
-            AddTextColumn(grid, "Scope");
+            AddTextColumn(grid, "ScopeAbbrev", "Scope");
             AddTextColumn(grid, "Name");
             #if (SP2013)
             AddTextColumn(grid, "CompatibilityLevel", "Compat");
