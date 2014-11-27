@@ -30,6 +30,8 @@ namespace FeatureAdmin
         private Location m_CurrentWebAppLocation;
         private Location m_CurrentSiteLocation;
         private Location m_CurrentWebLocation;
+        private ContextMenuStrip m_featureDefGridContextMenu;
+        private Feature m_featureDefGridContextFeature;
 
         #endregion
 
@@ -75,8 +77,11 @@ namespace FeatureAdmin
                     column.SortMode = DataGridViewColumnSortMode.Automatic;
                 }
             }
+
+            CreateFeatureDefContextMenu();
+
             // Color faulty rows
-            gridFeatureDefinitions.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(gridFeatureDefinitions_DataBindingComplete);
+            grid.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(gridFeatureDefinitions_DataBindingComplete);
         }
 
         void gridFeatureDefinitions_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -1460,18 +1465,114 @@ namespace FeatureAdmin
             if (grid.Columns[e.ColumnIndex].DataPropertyName == "Activations")
             {
                 Feature feature = grid.Rows[e.RowIndex].DataBoundItem as Feature;
-
-                List<Location> featlocs = GetFeatureLocations(feature.Id);
-                if (featlocs.Count == 0)
-                {
-                    MessageBox.Show("No activations found");
-                }
-                else
-                {
-                    LocationForm form = new LocationForm(feature, featlocs);
-                    form.ShowDialog();
-                }
+                ReviewActivations(feature);
             }
+        }
+
+        private void ReviewActivations(Feature feature)
+        {
+            List<Location> featlocs = GetFeatureLocations(feature.Id);
+            if (featlocs.Count == 0)
+            {
+                MessageBox.Show("No activations found");
+            }
+            else
+            {
+                LocationForm form = new LocationForm(feature, featlocs);
+                form.ShowDialog();
+            }
+        }
+
+        private void gridFeatureDefinitions_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            m_featureDefGridContextFeature = null;
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) { return; } // Ignore if out of data area
+            if (e.Button == MouseButtons.Right)
+            {
+                // Find feature def on which user right-clicked
+                DataGridView grid = sender as DataGridView;
+                DataGridViewRow row = grid.Rows[e.RowIndex];
+                m_featureDefGridContextFeature = row.DataBoundItem as Feature;
+                if (GetIntValue(m_featureDefGridContextFeature.Activations, 0) == 0)
+                {
+                    // no context menu if feature has no activations
+                    // because the context menu gets stuck up if the no activations
+                    // message box appears
+                    return;
+                }
+                if (m_featureDefGridContextFeature.Id == Guid.Empty)
+                {
+                    // no context menu if no valid id
+                    return;
+                }
+                gridFeatureDefinitions.ContextMenuStrip = m_featureDefGridContextMenu;
+                UpdateGridContextMenu();
+            }
+        }
+
+        private void CreateFeatureDefContextMenu()
+        {
+            // Construct context menu
+            ContextMenuStrip ctxtmenu = new ContextMenuStrip();
+            ToolStripMenuItem header = new ToolStripMenuItem("Feature: ?");
+            header.Name = "Header";
+            header.ForeColor = Color.DarkBlue;
+            ctxtmenu.Items.Add(header);
+            ToolStripMenuItem menuViewActivations = new ToolStripMenuItem("View activations");
+            menuViewActivations.Name = "Activations";
+            menuViewActivations.MouseDown += gridFeatureDefinitions_ViewActivationsClick;
+            ctxtmenu.Items.AddRange(new ToolStripItem[] { menuViewActivations });
+            m_featureDefGridContextMenu = ctxtmenu;
+        }
+
+        private void UpdateGridContextMenu()
+        {
+            Feature feature = m_featureDefGridContextFeature;
+            ContextMenuStrip ctxtmenu = m_featureDefGridContextMenu;
+            ToolStripItem header = ctxtmenu.Items.Find("Header", true)[0];
+            header.Text = string.Format("Feature: {0}", GetFeatureNameOrId(feature));
+            ToolStripItem activations = ctxtmenu.Items.Find("Activations", true)[0];
+            activations.Text = string.Format("View {0} activations", GetIntValue(feature.Activations, 0));
+        }
+
+        private static string GetFeatureNameOrId(Feature feature)
+        {
+            if (!string.IsNullOrEmpty(feature.Name))
+            {
+                return feature.Name;
+            }
+            else
+            {
+                return feature.Id.ToString();
+            }
+        }
+
+        private void gridFeatureDefinitions_ViewActivationsClick(object sender, EventArgs e)
+        {
+            ReviewActivations(m_featureDefGridContextFeature);
+        }
+
+        private static int GetIntValue(int? value, int defval)
+        {
+            return value.HasValue ? value.Value : defval;
+        }
+
+        private void btnViewActivations_Click(object sender, EventArgs e)
+        {
+            if (gridFeatureDefinitions.SelectedRows.Count != 1)
+            {
+                InfoBox("Must select one feature to review activations");
+                return;
+            }
+            DataGridViewRow row = gridFeatureDefinitions.SelectedRows[0];
+            Feature feature = row.DataBoundItem as Feature;
+            ReviewActivations(feature);
+        }
+
+        private void gridFeatureDefinitions_MouseDown(object sender, MouseEventArgs e)
+        {
+            gridFeatureDefinitions.ContextMenuStrip = null;
+            m_featureDefGridContextFeature = null;
         }
     }
 }
