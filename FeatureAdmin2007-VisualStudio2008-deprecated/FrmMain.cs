@@ -129,6 +129,10 @@ namespace FeatureAdmin
             }
         }
 
+        /// <summary>
+        /// Get list of all feature definitions currently selected in the
+        ///  Feature Definition list
+        /// </summary>
         private List<Feature> GetSelectedFeatureDefinitions()
         {
             List<Feature> features = new List<Feature>();
@@ -1465,20 +1469,26 @@ namespace FeatureAdmin
             if (grid.Columns[e.ColumnIndex].DataPropertyName == "Activations")
             {
                 Feature feature = grid.Rows[e.RowIndex].DataBoundItem as Feature;
-                ReviewActivations(feature);
+                FeatureLocationSet set = new FeatureLocationSet();
+                ReviewActivationsOfFeature(feature);
             }
         }
 
-        private void ReviewActivations(Feature feature)
+        private void ReviewActivationsOfFeature(Feature feature)
         {
-            List<Location> featlocs = GetFeatureLocations(feature.Id);
-            if (featlocs.Count == 0)
+            FeatureLocationSet set = new FeatureLocationSet();
+            set[feature] = GetFeatureLocations(feature.Id);
+            ReviewActivationsOfFeatures(set);
+        }
+        private void ReviewActivationsOfFeatures(FeatureLocationSet featLocs)
+        {
+            if (featLocs.Count == 0 || featLocs.GetTotalLocationCount() == 0)
             {
                 MessageBox.Show("No activations found");
             }
             else
             {
-                LocationForm form = new LocationForm(feature, featlocs);
+                LocationForm form = new LocationForm(featLocs);
                 form.ShowDialog();
             }
         }
@@ -1549,7 +1559,7 @@ namespace FeatureAdmin
 
         private void gridFeatureDefinitions_ViewActivationsClick(object sender, EventArgs e)
         {
-            ReviewActivations(m_featureDefGridContextFeature);
+            ReviewActivationsOfFeature(m_featureDefGridContextFeature);
         }
 
         private static int GetIntValue(int? value, int defval)
@@ -1559,14 +1569,17 @@ namespace FeatureAdmin
 
         private void btnViewActivations_Click(object sender, EventArgs e)
         {
-            if (gridFeatureDefinitions.SelectedRows.Count != 1)
+            if (gridFeatureDefinitions.SelectedRows.Count < 1)
             {
-                InfoBox("Must select one feature to review activations");
+                InfoBox("No features selected to review activations");
                 return;
             }
-            DataGridViewRow row = gridFeatureDefinitions.SelectedRows[0];
-            Feature feature = row.DataBoundItem as Feature;
-            ReviewActivations(feature);
+            FeatureLocationSet set = new FeatureLocationSet();
+            foreach (Feature feature in GetSelectedFeatureDefinitions())
+            {
+                set.Add(feature, GetFeatureLocations(feature.Id));
+            }
+            ReviewActivationsOfFeatures(set);
         }
 
         private void gridFeatureDefinitions_MouseDown(object sender, MouseEventArgs e)
@@ -1574,5 +1587,6 @@ namespace FeatureAdmin
             gridFeatureDefinitions.ContextMenuStrip = null;
             m_featureDefGridContextFeature = null;
         }
+
     }
 }

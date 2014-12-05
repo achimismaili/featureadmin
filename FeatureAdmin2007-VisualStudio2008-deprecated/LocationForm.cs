@@ -11,14 +11,44 @@ namespace FeatureAdmin
 {
     public partial class LocationForm : Form
     {
-        private List<Location> _Locations = null;
-        private Feature _Feature = null;
-        public LocationForm(Feature feature, List<Location> locations)
+        private class FeatureLocation
+        {
+            public Feature Feature;
+            public Location Location;
+            public string FeatureName
+            {
+                get
+                {
+                    return Feature.Name;
+                }
+            }
+            public string LocationUrl
+            {
+                get
+                {
+                    if (Location == null)
+                        return "";
+                    else
+                        return Location.Url;
+                }
+            }
+            public string LocationName
+            {
+                get
+                {
+                    if (Location == null)
+                        return "";
+                    else
+                        return Location.Name;
+                }
+            }
+        }
+        private FeatureLocationSet _FeatureLocations = null;
+        public LocationForm(FeatureLocationSet featLocs)
         {
             InitializeComponent();
 
-            this._Locations = locations;
-            this._Feature = feature;
+            this._FeatureLocations = featLocs;
 
             PopulateFeatureHeader();
             ConfigureLocationGrid();
@@ -27,17 +57,23 @@ namespace FeatureAdmin
         }
         private void PopulateFeatureHeader()
         {
-            FeatureNameLabel.Text = _Feature.Name;
-            FeatureIdLabel.Text = _Feature.Id.ToString();
-            FeatureScopeLabel.Text = _Feature.Scope.ToString();
+            FeaturePanelCaption.Text = string.Format(
+                "{0} Activation(s) of {1} Feature(s)",
+                _FeatureLocations.GetTotalLocationCount(),
+                _FeatureLocations.Count
+                );
+
         }
         private void ConfigureLocationGrid()
         {
             DataGridView grid = this.LocationGrid;
             grid.AutoGenerateColumns = false;
-            GridColMgr.AddTextColumn(grid, "Url");
-            GridColMgr.AddTextColumn(grid, "Name");
-            GridColMgr.AddTextColumn(grid, "Id");
+            if (_FeatureLocations.Count > 1)
+            {
+                GridColMgr.AddTextColumn(grid, "FeatureName");
+            }
+            GridColMgr.AddTextColumn(grid, "LocationUrl");
+            GridColMgr.AddTextColumn(grid, "LocationName");
 
             // Set all columns sortable
             foreach (DataGridViewColumn column in grid.Columns)
@@ -54,41 +90,46 @@ namespace FeatureAdmin
         }
         private void PopulateLocationGrid()
         {
-            this.LocationGrid.DataSource = new SortableBindingList<Location>(_Locations);
+            // Create list of FeatureLocations
+            List<FeatureLocation> list = new List<FeatureLocation>();
+            foreach (KeyValuePair<Feature, List<Location>> pair in _FeatureLocations)
+            {
+                Feature feature = pair.Key;
+                List<Location> locations = pair.Value;
+                foreach (Location location in locations)
+                {
+                    FeatureLocation floc = new FeatureLocation();
+                    floc.Feature = feature;
+                    floc.Location = location;
+                    list.Add(floc);
+                }
+            }
+            this.LocationGrid.DataSource = new SortableBindingList<FeatureLocation>(list);
         }
         private void LocationGrid_SelectionChanged(object sender, EventArgs e)
         {
-            Location location = LocationGrid.CurrentRow.DataBoundItem as Location;
-            DisplayLocationDetails(location);
+            FeatureLocation floc = LocationGrid.CurrentRow.DataBoundItem as FeatureLocation;
+            DisplayLocationDetails(floc);
         }
-        private void DisplayLocationDetails(Location location)
+        private void DisplayLocationDetails(FeatureLocation floc)
         {
             LocationDetailsView.Items.Clear();
-            if (location == null) { return; }
-            AddLocationProperty("Name", location.Name);
-            AddLocationProperty("URL", location.Url);
-            AddLocationProperty("Id", location.Id.ToString());
-            switch (location.Scope)
+            if (floc == null) { return; }
+            AddLocationProperty("Feature Name", "?");
+            AddLocationProperty("Feature Id", "?");
+            AddLocationProperty("Scope", floc.Location.ScopeAbbrev);
+            AddLocationProperty("Location Name", floc.Location.Name);
+            AddLocationProperty("Location URL", floc.Location.Url);
+            AddLocationProperty("Location Id", floc.Location.Id.ToString());
+            switch (floc.Location.Scope)
             {
-                case SPFeatureScope.Farm:
-                    AddFarmDetails(location);
-                    break;
-                case SPFeatureScope.WebApplication:
-                    AddWebApplicationDetails(location);
-                    break;
                 case SPFeatureScope.Site:
-                    AddSiteDetails(location);
+                    AddSiteDetails(floc.Location);
                     break;
                 case SPFeatureScope.Web:
-                    AddWebDetails(location);
+                    AddWebDetails(floc.Location);
                     break;
             }
-        }
-        private void AddFarmDetails(Location location)
-        {
-        }
-        private void AddWebApplicationDetails(Location location)
-        {
         }
         private void AddSiteDetails(Location location)
         {
