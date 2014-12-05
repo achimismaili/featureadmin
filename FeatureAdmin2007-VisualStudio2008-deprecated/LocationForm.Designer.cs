@@ -33,6 +33,7 @@
             this.FeaturePanelCaption = new System.Windows.Forms.Label();
             this.LocationGrid = new System.Windows.Forms.DataGridView();
             this.LocationDetailsView = new System.Windows.Forms.ListView();
+            this.DeactivateButton = new System.Windows.Forms.Button();
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
             this.MainSplitContainer.SuspendLayout();
@@ -55,6 +56,7 @@
             // 
             // MainSplitContainer.Panel2
             // 
+            this.MainSplitContainer.Panel2.Controls.Add(this.DeactivateButton);
             this.MainSplitContainer.Panel2.Controls.Add(this.LocationDetailsView);
             this.MainSplitContainer.Size = new System.Drawing.Size(539, 503);
             this.MainSplitContainer.SplitterDistance = 321;
@@ -92,12 +94,21 @@
             // 
             // LocationDetailsView
             // 
-            this.LocationDetailsView.Location = new System.Drawing.Point(4, 4);
+            this.LocationDetailsView.Location = new System.Drawing.Point(4, 32);
             this.LocationDetailsView.Name = "LocationDetailsView";
-            this.LocationDetailsView.Size = new System.Drawing.Size(532, 171);
+            this.LocationDetailsView.Size = new System.Drawing.Size(532, 143);
             this.LocationDetailsView.TabIndex = 0;
             this.LocationDetailsView.UseCompatibleStateImageBehavior = false;
             this.LocationDetailsView.View = System.Windows.Forms.View.Details;
+            // 
+            // DeactivateButton
+            // 
+            this.DeactivateButton.Location = new System.Drawing.Point(184, 3);
+            this.DeactivateButton.Name = "DeactivateButton";
+            this.DeactivateButton.Size = new System.Drawing.Size(200, 23);
+            this.DeactivateButton.TabIndex = 1;
+            this.DeactivateButton.Text = "Deactivate Selected Activations";
+            this.DeactivateButton.UseVisualStyleBackColor = true;
             // 
             // LocationForm
             // 
@@ -124,5 +135,6 @@
         private System.Windows.Forms.Panel FeatureTitlePanel;
         private System.Windows.Forms.Label FeaturePanelCaption;
         private System.Windows.Forms.ListView LocationDetailsView;
+        private System.Windows.Forms.Button DeactivateButton;
     }
 }

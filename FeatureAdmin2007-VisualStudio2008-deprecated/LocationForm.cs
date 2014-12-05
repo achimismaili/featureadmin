@@ -113,6 +113,9 @@ namespace FeatureAdmin
         }
         private void DisplayLocationDetails(FeatureLocation floc)
         {
+            DeactivateButton.Text = string.Format(
+                "Deactivate {0} selected activation(s)",
+                LocationGrid.SelectedRows.Count);
             LocationDetailsView.Items.Clear();
             if (floc == null) { return; }
             AddLocationProperty("Feature Name", "?");
