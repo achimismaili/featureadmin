@@ -85,7 +85,6 @@ namespace FeatureAdmin
         {
             // Width of -2 indicates auto-size.
             LocationDetailsView.Columns.Add("Property", -2, HorizontalAlignment.Left); 
-            LocationDetailsView.Columns.Add("Property2", 100);
             LocationDetailsView.Columns.Add("Value", 200);
         }
         private void PopulateLocationGrid()
