@@ -118,8 +118,8 @@ namespace FeatureAdmin
                 LocationGrid.SelectedRows.Count);
             LocationDetailsView.Items.Clear();
             if (floc == null) { return; }
-            AddLocationProperty("Feature Name", "?");
-            AddLocationProperty("Feature Id", "?");
+            AddLocationProperty("Feature Name", floc.Feature.Name);
+            AddLocationProperty("Feature Id", floc.Feature.Id.ToString());
             AddLocationProperty("Scope", floc.Location.ScopeAbbrev);
             AddLocationProperty("Location Name", floc.Location.Name);
             AddLocationProperty("Location URL", floc.Location.Url);
