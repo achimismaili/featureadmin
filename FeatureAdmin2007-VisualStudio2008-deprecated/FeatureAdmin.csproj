@@ -108,6 +108,7 @@
     <Compile Include="RemoveInvalidFeature.Designer.cs">
       <DependentUpon>RemoveInvalidFeature.cs</DependentUpon>
     </Compile>
+    <Compile Include="TemplateInfo.cs" />
     <Compile Include="WaitCursor.cs" />
     <Compile Include="WebAppEnumerator.cs" />
   </ItemGroup>

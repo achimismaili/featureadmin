@@ -123,6 +123,11 @@ namespace FeatureAdmin
             AddLocationProperty("Location Name", floc.Location.Name);
             AddLocationProperty("Location URL", floc.Location.Url);
             AddLocationProperty("Location Id", floc.Location.Id.ToString());
+            if (!string.IsNullOrEmpty(floc.Location.Template.Name))
+            {
+                AddLocationProperty("Template Name", floc.Location.Template.Name);
+                AddLocationProperty("Template Title", floc.Location.Template.Title);
+            }
             switch (floc.Location.Scope)
             {
                 case SPFeatureScope.Site:

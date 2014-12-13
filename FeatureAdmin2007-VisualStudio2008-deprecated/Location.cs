@@ -6,6 +6,11 @@ namespace FeatureAdmin
 {
     public class Location
     {
+        public Location()
+        {
+            this.Template = new TemplateInfo();
+        }
+
         public Guid Id { get; set; }
         public Guid ContentDatabaseId = Guid.Empty;
         private SPFeatureScope _Scope = SPFeatureScope.ScopeInvalid;
@@ -22,6 +27,7 @@ namespace FeatureAdmin
         public string Url { get; set; } // server relative for site collections
         public string Name { get; set; }
         public string Access { get; set; } // for ReadOnly or ReadLocked sites
+        public TemplateInfo Template { get; set; }
 
         public void Clear()
         {

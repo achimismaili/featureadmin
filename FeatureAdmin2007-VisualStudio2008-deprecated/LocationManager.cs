@@ -37,6 +37,7 @@ namespace FeatureAdmin
                 loct.Url = SafeGetSiteRelativeUrl(site);
                 loct.Name = SafeGetSiteTitle(site);
                 loct.Access = SafeGetSiteAccess(site);
+                PopulateTemplate(loct, site.RootWeb);
                 //site.LastContentModifiedDate
                 //site.ReadLocked
                 //site.ReadOnly
@@ -50,6 +51,7 @@ namespace FeatureAdmin
                 loct.Url = SafeGetWebUrl(web);
                 loct.Name = SafeGetWebTitle(web);
                 loct.Access = SafeGetWebAccess(web);
+                PopulateTemplate(loct, web);
             }
             else
             {
@@ -208,6 +210,35 @@ namespace FeatureAdmin
             {
                 return "?";
             }
+        }
+        private static void PopulateTemplate(Location loc, SPWeb web)
+        {
+            loc.Template.Name = "?";
+            loc.Template.Title = "?";
+            try
+            {
+                SPWebTemplateCollection templateCollection = web.Site.GetWebTemplates(web.Site.RootWeb.RegionalSettings.LocaleId);
+                string templateName = web.WebTemplate + "#" + web.Configuration.ToString();
+                loc.Template.Name = templateName;
+                SPWebTemplate template = FindWebTemplate(templateCollection, templateName);
+                loc.Template.Title = template.Title;
+            }
+            catch
+            {
+            }
+        }
+        /// <summary>
+        /// Return the web template description based on the name
+        /// </summary>
+        private static SPWebTemplate FindWebTemplate(SPWebTemplateCollection templateCollection, string templateName)
+        {
+            foreach (SPWebTemplate webTemplate in templateCollection)
+            {
+                // NB: Must use case-insentive here
+                if (webTemplate.Name.Equals(templateName, StringComparison.InvariantCultureIgnoreCase))
+                    return webTemplate;
+            }
+            return null;
         }
     }
 }
