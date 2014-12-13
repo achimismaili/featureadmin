@@ -72,7 +72,7 @@ namespace FeatureAdmin
             {
                 GridColMgr.AddTextColumn(grid, "FeatureName");
             }
-            GridColMgr.AddTextColumn(grid, "LocationUrl");
+            GridColMgr.AddTextColumn(grid, "LocationUrl", 300);
             GridColMgr.AddTextColumn(grid, "LocationName");
 
             // Set all columns sortable
@@ -85,7 +85,7 @@ namespace FeatureAdmin
         {
             // Width of -2 indicates auto-size.
             LocationDetailsView.Columns.Add("Property", -2, HorizontalAlignment.Left); 
-            LocationDetailsView.Columns.Add("Value", 200);
+            LocationDetailsView.Columns.Add("Value", 300);
         }
         private void PopulateLocationGrid()
         {
