@@ -957,8 +957,11 @@ namespace FeatureAdmin
             btnUninstFDef.Enabled = bDb && (gridFeatureDefinitions.SelectedRows.Count <= 10);
 
             btnActivateSPWeb.Enabled = bDb && bWeb;
+            btnDeactivateSPWeb.Enabled = bDb && bWeb;
             btnActivateSPSite.Enabled = bDb && bSite;
+            btnDeactivateSPSite.Enabled = bDb && bSite;
             btnActivateSPWebApp.Enabled = bDb && bWebApp;
+            btnDeactivateSPWebApp.Enabled = bDb && bWebApp;
             btnActivateSPFarm.Enabled = bDb;
         }
 
@@ -1366,6 +1369,19 @@ namespace FeatureAdmin
                 FeatureActivator.Action.Activating);
         }
 
+        private void btnDeactivateSPWeb_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentWebLocation))
+            {
+                InfoBox("No site (SPWeb) selected");
+                return;
+            }
+            activateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Web,
+                m_CurrentWebLocation,
+                FeatureActivator.Action.Deactivating);
+        }
+
         private void btnActivateSPSite_Click(object sender, EventArgs e)
         {
             if (IsEmpty(m_CurrentSiteLocation))
@@ -1377,6 +1393,19 @@ namespace FeatureAdmin
                 SPFeatureScope.Site,
                 m_CurrentSiteLocation,
                 FeatureActivator.Action.Activating);
+        }
+
+        private void btnDeactivateSPSite_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentSiteLocation))
+            {
+                InfoBox("No site collection selected");
+                return;
+            }
+            activateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Site,
+                m_CurrentSiteLocation,
+                FeatureActivator.Action.Deactivating);
         }
 
         private void btnActivateSPWebApp_Click(object sender, EventArgs e)
@@ -1392,12 +1421,33 @@ namespace FeatureAdmin
                 FeatureActivator.Action.Activating);
         }
 
+        private void btnDeactivateSPWebApp_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentWebAppLocation))
+            {
+                InfoBox("No web application selected");
+                return;
+            }
+            activateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.WebApplication,
+                m_CurrentWebAppLocation,
+                FeatureActivator.Action.Deactivating);
+        }
+
         private void btnActivateSPFarm_Click(object sender, EventArgs e)
         {
             activateSelectedFeaturesAcrossSpecifiedScope(
                 SPFeatureScope.Farm,
                 null, // Location
                 FeatureActivator.Action.Activating);
+        }
+
+        private void btnDeactivateSPFarm_Click(object sender, EventArgs e)
+        {
+            activateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Farm,
+                null, // Location
+                FeatureActivator.Action.Deactivating);
         }
 
         private List<Location> GetFeatureLocations(Guid featureId)

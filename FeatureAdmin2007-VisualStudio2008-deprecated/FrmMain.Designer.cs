@@ -49,16 +49,21 @@ namespace FeatureAdmin
             this.btnRemoveFromFarm = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FarmFeatures = new System.Windows.Forms.TabPage();
+            this.btnViewActivations = new System.Windows.Forms.Button();
             this.FarmActionPanel = new System.Windows.Forms.GroupBox();
+            this.btnDeactivateSPFarm = new System.Windows.Forms.Button();
             this.ActionFarmCaption = new System.Windows.Forms.Label();
             this.btnActivateSPFarm = new System.Windows.Forms.Button();
             this.WebAppActionPanel = new System.Windows.Forms.GroupBox();
+            this.btnDeactivateSPWebApp = new System.Windows.Forms.Button();
             this.ActionWebAppCaption = new System.Windows.Forms.Label();
             this.btnActivateSPWebApp = new System.Windows.Forms.Button();
             this.SiteCollectionActionPanel = new System.Windows.Forms.GroupBox();
+            this.btnDeactivateSPSite = new System.Windows.Forms.Button();
             this.ActionSiteCaption = new System.Windows.Forms.Label();
             this.btnActivateSPSite = new System.Windows.Forms.Button();
             this.WebActionPanel = new System.Windows.Forms.GroupBox();
+            this.btnDeactivateSPWeb = new System.Windows.Forms.Button();
             this.ActionWebCaption = new System.Windows.Forms.Label();
             this.btnActivateSPWeb = new System.Windows.Forms.Button();
             this.gridFeatureDefinitions = new System.Windows.Forms.DataGridView();
@@ -69,7 +74,6 @@ namespace FeatureAdmin
             this.splitContainerLeftWindow = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftUpperWebAppAndSiteColl = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftDownWebsAndLogs = new System.Windows.Forms.SplitContainer();
-            this.btnViewActivations = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.FarmFeatures.SuspendLayout();
             this.FarmActionPanel.SuspendLayout();
@@ -293,9 +297,9 @@ namespace FeatureAdmin
             // 
             this.btnUninstFDef.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnUninstFDef.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnUninstFDef.Location = new System.Drawing.Point(365, 6);
+            this.btnUninstFDef.Location = new System.Drawing.Point(360, 8);
             this.btnUninstFDef.Name = "btnUninstFDef";
-            this.btnUninstFDef.Size = new System.Drawing.Size(62, 23);
+            this.btnUninstFDef.Size = new System.Drawing.Size(70, 20);
             this.btnUninstFDef.TabIndex = 8;
             this.btnUninstFDef.Text = "Uninstall";
             this.btnUninstFDef.UseVisualStyleBackColor = true;
@@ -369,8 +373,19 @@ namespace FeatureAdmin
             this.FarmFeatures.Text = "Farm Feature Administration";
             this.FarmFeatures.UseVisualStyleBackColor = true;
             // 
+            // btnViewActivations
+            // 
+            this.btnViewActivations.Location = new System.Drawing.Point(111, 501);
+            this.btnViewActivations.Name = "btnViewActivations";
+            this.btnViewActivations.Size = new System.Drawing.Size(228, 23);
+            this.btnViewActivations.TabIndex = 29;
+            this.btnViewActivations.Text = "Review Activations of Selected Feature";
+            this.btnViewActivations.UseVisualStyleBackColor = true;
+            this.btnViewActivations.Click += new System.EventHandler(this.btnViewActivations_Click);
+            // 
             // FarmActionPanel
             // 
+            this.FarmActionPanel.Controls.Add(this.btnDeactivateSPFarm);
             this.FarmActionPanel.Controls.Add(this.ActionFarmCaption);
             this.FarmActionPanel.Controls.Add(this.btnActivateSPFarm);
             this.FarmActionPanel.Controls.Add(this.btnUninstFDef);
@@ -380,10 +395,21 @@ namespace FeatureAdmin
             this.FarmActionPanel.TabIndex = 28;
             this.FarmActionPanel.TabStop = false;
             // 
+            // btnDeactivateSPFarm
+            // 
+            this.btnDeactivateSPFarm.ForeColor = System.Drawing.Color.MidnightBlue;
+            this.btnDeactivateSPFarm.Location = new System.Drawing.Point(277, 8);
+            this.btnDeactivateSPFarm.Name = "btnDeactivateSPFarm";
+            this.btnDeactivateSPFarm.Size = new System.Drawing.Size(76, 20);
+            this.btnDeactivateSPFarm.TabIndex = 20;
+            this.btnDeactivateSPFarm.Text = "Deactivate";
+            this.btnDeactivateSPFarm.UseVisualStyleBackColor = true;
+            this.btnDeactivateSPFarm.Click += new System.EventHandler(this.btnDeactivateSPFarm_Click);
+            // 
             // ActionFarmCaption
             // 
             this.ActionFarmCaption.AutoSize = true;
-            this.ActionFarmCaption.Location = new System.Drawing.Point(146, 10);
+            this.ActionFarmCaption.Location = new System.Drawing.Point(106, 10);
             this.ActionFarmCaption.Name = "ActionFarmCaption";
             this.ActionFarmCaption.Size = new System.Drawing.Size(95, 13);
             this.ActionFarmCaption.TabIndex = 0;
@@ -402,6 +428,7 @@ namespace FeatureAdmin
             // 
             // WebAppActionPanel
             // 
+            this.WebAppActionPanel.Controls.Add(this.btnDeactivateSPWebApp);
             this.WebAppActionPanel.Controls.Add(this.ActionWebAppCaption);
             this.WebAppActionPanel.Controls.Add(this.btnActivateSPWebApp);
             this.WebAppActionPanel.Location = new System.Drawing.Point(9, 610);
@@ -410,10 +437,21 @@ namespace FeatureAdmin
             this.WebAppActionPanel.TabIndex = 27;
             this.WebAppActionPanel.TabStop = false;
             // 
+            // btnDeactivateSPWebApp
+            // 
+            this.btnDeactivateSPWebApp.ForeColor = System.Drawing.Color.MidnightBlue;
+            this.btnDeactivateSPWebApp.Location = new System.Drawing.Point(277, 8);
+            this.btnDeactivateSPWebApp.Name = "btnDeactivateSPWebApp";
+            this.btnDeactivateSPWebApp.Size = new System.Drawing.Size(76, 20);
+            this.btnDeactivateSPWebApp.TabIndex = 19;
+            this.btnDeactivateSPWebApp.Text = "Deactivate";
+            this.btnDeactivateSPWebApp.UseVisualStyleBackColor = true;
+            this.btnDeactivateSPWebApp.Click += new System.EventHandler(this.btnDeactivateSPWebApp_Click);
+            // 
             // ActionWebAppCaption
             // 
             this.ActionWebAppCaption.AutoSize = true;
-            this.ActionWebAppCaption.Location = new System.Drawing.Point(146, 10);
+            this.ActionWebAppCaption.Location = new System.Drawing.Point(106, 10);
             this.ActionWebAppCaption.Name = "ActionWebAppCaption";
             this.ActionWebAppCaption.Size = new System.Drawing.Size(165, 13);
             this.ActionWebAppCaption.TabIndex = 0;
@@ -432,6 +470,7 @@ namespace FeatureAdmin
             // 
             // SiteCollectionActionPanel
             // 
+            this.SiteCollectionActionPanel.Controls.Add(this.btnDeactivateSPSite);
             this.SiteCollectionActionPanel.Controls.Add(this.ActionSiteCaption);
             this.SiteCollectionActionPanel.Controls.Add(this.btnActivateSPSite);
             this.SiteCollectionActionPanel.Location = new System.Drawing.Point(9, 570);
@@ -440,10 +479,21 @@ namespace FeatureAdmin
             this.SiteCollectionActionPanel.TabIndex = 26;
             this.SiteCollectionActionPanel.TabStop = false;
             // 
+            // btnDeactivateSPSite
+            // 
+            this.btnDeactivateSPSite.ForeColor = System.Drawing.Color.MidnightBlue;
+            this.btnDeactivateSPSite.Location = new System.Drawing.Point(277, 8);
+            this.btnDeactivateSPSite.Name = "btnDeactivateSPSite";
+            this.btnDeactivateSPSite.Size = new System.Drawing.Size(76, 20);
+            this.btnDeactivateSPSite.TabIndex = 22;
+            this.btnDeactivateSPSite.Text = "Deactivate";
+            this.btnDeactivateSPSite.UseVisualStyleBackColor = true;
+            this.btnDeactivateSPSite.Click += new System.EventHandler(this.btnDeactivateSPSite_Click);
+            // 
             // ActionSiteCaption
             // 
             this.ActionSiteCaption.AutoSize = true;
-            this.ActionSiteCaption.Location = new System.Drawing.Point(146, 10);
+            this.ActionSiteCaption.Location = new System.Drawing.Point(106, 10);
             this.ActionSiteCaption.Name = "ActionSiteCaption";
             this.ActionSiteCaption.Size = new System.Drawing.Size(154, 13);
             this.ActionSiteCaption.TabIndex = 0;
@@ -462,6 +512,7 @@ namespace FeatureAdmin
             // 
             // WebActionPanel
             // 
+            this.WebActionPanel.Controls.Add(this.btnDeactivateSPWeb);
             this.WebActionPanel.Controls.Add(this.ActionWebCaption);
             this.WebActionPanel.Controls.Add(this.btnActivateSPWeb);
             this.WebActionPanel.Location = new System.Drawing.Point(9, 530);
@@ -470,10 +521,21 @@ namespace FeatureAdmin
             this.WebActionPanel.TabIndex = 25;
             this.WebActionPanel.TabStop = false;
             // 
+            // btnDeactivateSPWeb
+            // 
+            this.btnDeactivateSPWeb.ForeColor = System.Drawing.Color.MidnightBlue;
+            this.btnDeactivateSPWeb.Location = new System.Drawing.Point(277, 8);
+            this.btnDeactivateSPWeb.Name = "btnDeactivateSPWeb";
+            this.btnDeactivateSPWeb.Size = new System.Drawing.Size(76, 20);
+            this.btnDeactivateSPWeb.TabIndex = 21;
+            this.btnDeactivateSPWeb.Text = "Deactivate";
+            this.btnDeactivateSPWeb.UseVisualStyleBackColor = true;
+            this.btnDeactivateSPWeb.Click += new System.EventHandler(this.btnDeactivateSPWeb_Click);
+            // 
             // ActionWebCaption
             // 
             this.ActionWebCaption.AutoSize = true;
-            this.ActionWebCaption.Location = new System.Drawing.Point(146, 10);
+            this.ActionWebCaption.Location = new System.Drawing.Point(106, 10);
             this.ActionWebCaption.Name = "ActionWebCaption";
             this.ActionWebCaption.Size = new System.Drawing.Size(87, 13);
             this.ActionWebCaption.TabIndex = 0;
@@ -645,16 +707,6 @@ namespace FeatureAdmin
             this.splitContainerLeftDownWebsAndLogs.SplitterDistance = 146;
             this.splitContainerLeftDownWebsAndLogs.TabIndex = 0;
             // 
-            // btnViewActivations
-            // 
-            this.btnViewActivations.Location = new System.Drawing.Point(111, 501);
-            this.btnViewActivations.Name = "btnViewActivations";
-            this.btnViewActivations.Size = new System.Drawing.Size(228, 23);
-            this.btnViewActivations.TabIndex = 29;
-            this.btnViewActivations.Text = "Review Activations of Selected Feature";
-            this.btnViewActivations.UseVisualStyleBackColor = true;
-            this.btnViewActivations.Click += new System.EventHandler(this.btnViewActivations_Click);
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -751,6 +803,10 @@ namespace FeatureAdmin
         private System.Windows.Forms.GroupBox WebAppActionPanel;
         private System.Windows.Forms.Label ActionWebAppCaption;
         private System.Windows.Forms.Button btnViewActivations;
+        private System.Windows.Forms.Button btnDeactivateSPFarm;
+        private System.Windows.Forms.Button btnDeactivateSPWebApp;
+        private System.Windows.Forms.Button btnDeactivateSPSite;
+        private System.Windows.Forms.Button btnDeactivateSPWeb;
     
     }
 }
