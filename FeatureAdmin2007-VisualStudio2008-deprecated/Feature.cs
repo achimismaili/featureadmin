@@ -1,16 +1,17 @@
 using System;
+using System.ComponentModel;
 using Microsoft.SharePoint;
 
 
 namespace FeatureAdmin
 {
-    public class Feature : IComparable
+    public class Feature : IComparable, INotifyPropertyChanged
     {
         public const int COMPATINAPPLICABLE = -8;
         public const int COMPATUNKNOWN = -6;
 
         #region class variables
-
+        public event PropertyChangedEventHandler PropertyChanged;
         public Guid Id { get; private set; }
         private SPFeatureScope _Scope = SPFeatureScope.ScopeInvalid;
         public SPFeatureScope Scope
@@ -28,8 +29,27 @@ namespace FeatureAdmin
         public bool IsFaulty { get; set; }
         public string Faulty { get { return (IsFaulty ? "Faulty" : ""); } }
         public String ExceptionMsg { get; set; }
-        public int? Activations { get; set; }
-
+        private int? _activations = 0;
+        public int? Activations
+        {
+            get
+            {
+                return _activations;
+            }
+            set
+            {
+                _activations = value;
+                OnPropertyChanged("Activations");
+            }
+        }
+          protected void OnPropertyChanged(string name)
+          {
+              PropertyChangedEventHandler handler = PropertyChanged;
+              if (handler != null)
+              {
+                  handler(this, new PropertyChangedEventArgs(name));
+              }
+          }
         #endregion
 
         public Feature(Guid id)

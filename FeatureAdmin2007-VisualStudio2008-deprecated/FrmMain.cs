@@ -106,12 +106,12 @@ namespace FeatureAdmin
 
                 ReloadAllActivationData(); // reloads defintions & activation data
 
-                List<Feature> features = m_featureDb.GetAllFeatures();
-                features.Sort();
+                SortableBindingList<Feature> features = m_featureDb.GetAllFeatures();
+                //features.Sort();
 
                 //clbFeatureDefinitions.
-                this.gridFeatureDefinitions.DataSource =
-                    new SortableBindingList<Feature>(features);
+                this.gridFeatureDefinitions.DataSource = features;
+                    //new SortableBindingList<Feature>(features);
 
                 logDateMsg("Feature Definition list updated.");
             }

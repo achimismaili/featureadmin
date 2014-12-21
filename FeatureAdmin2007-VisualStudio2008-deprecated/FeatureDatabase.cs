@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
+using Be.Timvw.Framework.ComponentModel;
 
 namespace FeatureAdmin
 {
@@ -17,9 +18,9 @@ namespace FeatureAdmin
 
         public bool IsLoaded() { return _AllFeatureDefinitions.Count > 0; }
 
-        public List<Feature> GetAllFeatures()
+        public SortableBindingList<Feature> GetAllFeatures()
         {
-            return new List<Feature>(_AllFeatureDefinitions.Values);
+            return new SortableBindingList<Feature>(_AllFeatureDefinitions.Values);
         }
         public int GetAllFeaturesCount()
         {
@@ -201,6 +202,7 @@ namespace FeatureAdmin
             if (!locations.Contains(location))
             {
                 locations.Add(location);
+                UpdateFeatureLocationCount(feature.Id);
             }
         }
         /// <summary>
@@ -230,7 +232,18 @@ namespace FeatureAdmin
                 {
                     locations.Remove(location);
                 }
+                UpdateFeatureLocationCount(feature.Id);
             }
+        }
+        private void UpdateFeatureLocationCount(Guid featureId)
+        {
+            Feature feature = _AllFeatureDefinitions[featureId];
+            int count = 0;
+            if (_FeatureLocations.ContainsKey(featureId))
+            {
+                count = _FeatureLocations[featureId].Count;
+            }
+            feature.Activations = count;
         }
     }
 }
