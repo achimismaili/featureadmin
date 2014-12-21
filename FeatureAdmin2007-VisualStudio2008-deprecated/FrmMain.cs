@@ -506,7 +506,7 @@ namespace FeatureAdmin
 
         #endregion
 
-        #region Feature Activation
+        #region Feature Activation + Deactivation
 
         private void activateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope activationScope, Location currentLocation, FeatureActivator.Action action)
         {
@@ -570,7 +570,7 @@ namespace FeatureAdmin
             {
                 return;
             }
-            FeatureActivator activator = new FeatureActivator(action, featureSet);
+            FeatureActivator activator = new FeatureActivator(m_featureDb, action, featureSet);
             activator.ExceptionLoggingListeners += new FeatureActivator.ExceptionLoggerHandler(activator_ExceptionLoggingListeners);
 
             switch (activationScope)

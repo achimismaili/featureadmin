@@ -69,6 +69,10 @@ namespace FeatureAdmin
             LoadAllFeatureDefinitions();
             LoadAllFeatureActivations(activatedFeatureLocations);
         }
+        /// <summary>
+        /// Flag all specified features as faulty
+        /// (& add to our master definition list any that are missing)
+        /// </summary>
         public void MarkFaulty(List<Guid> featureIds)
         {
             foreach (Guid featureId in featureIds)
@@ -85,6 +89,26 @@ namespace FeatureAdmin
                 feature.IsFaulty = true;
                 _AllFeatureDefinitions[featureId] = feature;
             }
+        }
+        /// <summary>
+        /// Record that a feature has been activated
+        /// </summary>
+        public void RecordFeatureActivation(object locobj, Guid featureId)
+        {
+            Location location = LocationManager.CreateLocation(locobj);
+            Feature feature = GetOrAddFeatureFromDefinitions(featureId, location.Scope);
+            AddToFeatureLocations(feature, location);
+            AddToLocationFeatures(location, feature);
+        }
+        /// <summary>
+        /// Record that a feature has been deactivated
+        /// </summary>
+        public void RecordFeatureDeactivation(object locobj, Guid featureId)
+        {
+            Location location = LocationManager.CreateLocation(locobj);
+            Feature feature = GetOrAddFeatureFromDefinitions(featureId, location.Scope);
+            RemoveFromFeatureLocations(feature, location);
+            RemoveFromLocationFeatures(location, feature);
         }
         private void LoadAllFeatureDefinitions()
         {
@@ -116,37 +140,95 @@ namespace FeatureAdmin
             {
                 Guid featureId = activation.Key;
                 List<Location> locations = activation.Value;
-                Feature feature = null;
-                if (!_AllFeatureDefinitions.ContainsKey(featureId))
-                {
-                    // Not sure if this can happen (an undefined feature is activated)
-                    // but in case, manufacture an empty definition for it in our list
-                    SPFeatureScope scope = locations[0].Scope;
-                    feature = new Feature(featureId, scope);
-                    _AllFeatureDefinitions.Add(featureId, feature);
-                }
-                else
-                {
-                    feature = _AllFeatureDefinitions[featureId];
-                }
+                SPFeatureScope scope = locations[0].Scope;
+                Feature feature = GetOrAddFeatureFromDefinitions(featureId, scope);
                 // Add to FeatureLocations, which can be done as a lump
                 _FeatureLocations[featureId] = locations;
                 feature.Activations = locations.Count;
                 // Add to LocationFeatures, which has to be done one location at a time
                 foreach (Location location in locations)
                 {
-                    List<Feature> features = null;
-                    string lkey = location.Key;
-                    if (_LocationFeatures.ContainsKey(lkey))
-                    {
-                        features = _LocationFeatures[lkey];
-                    }
-                    else
-                    {
-                        features = new List<Feature>();
-                    }
-                    features.Add(feature);
-                    _LocationFeatures[lkey] = features;
+                    AddToLocationFeatures(location, feature);
+                }
+            }
+        }
+        /// <summary>
+        /// Look up & return feature from our master definition list
+        /// (Create a placeholder entry if we're lacking it)
+        /// </summary>
+        private Feature GetOrAddFeatureFromDefinitions(Guid featureId, SPFeatureScope scope)
+        {
+            Feature feature = null;
+            if (!_AllFeatureDefinitions.ContainsKey(featureId))
+            {
+                // Not sure if this can happen (an undefined feature is activated)
+                // but in case, manufacture an empty definition for it in our list
+                feature = new Feature(featureId, scope);
+                _AllFeatureDefinitions.Add(featureId, feature);
+            }
+            else
+            {
+                feature = _AllFeatureDefinitions[featureId];
+            }
+            return feature;
+        }
+        /// <summary>
+        /// Add record to our _LocationFeatures
+        /// </summary>
+        private void AddToLocationFeatures(Location location, Feature feature)
+        {
+            string lkey = location.Key;
+            if (!_LocationFeatures.ContainsKey(lkey))
+            {
+                _LocationFeatures.Add(lkey, new List<Feature>());
+            }
+            List<Feature> features = _LocationFeatures[lkey];
+            if (!features.Contains(feature))
+            {
+                features.Add(feature);
+            }
+        }
+        /// <summary>
+        /// Add record to our _FeaturesLocation
+        /// </summary>
+        private void AddToFeatureLocations(Feature feature, Location location)
+        {
+            if (!_FeatureLocations.ContainsKey(feature.Id))
+            {
+                _FeatureLocations.Add(feature.Id, new List<Location>());
+            }
+            List<Location> locations = _FeatureLocations[feature.Id];
+            if (!locations.Contains(location))
+            {
+                locations.Add(location);
+            }
+        }
+        /// <summary>
+        /// Remove record from our _LocationFeatures
+        /// </summary>
+        private void RemoveFromLocationFeatures(Location location, Feature feature)
+        {
+            string lkey = location.Key;
+            if (_LocationFeatures.ContainsKey(lkey))
+            {
+                List<Feature> features = _LocationFeatures[lkey];
+                if (features.Contains(feature))
+                {
+                    features.Remove(feature);
+                }
+            }
+        }
+        /// <summary>
+        /// Remove record from our _FeaturesLocation
+        /// </summary>
+        private void RemoveFromFeatureLocations(Feature feature, Location location)
+        {
+            if (_FeatureLocations.ContainsKey(feature.Id))
+            {
+                List<Location> locations = _FeatureLocations[feature.Id];
+                if (locations.Contains(location))
+                {
+                    locations.Remove(location);
                 }
             }
         }

@@ -4,7 +4,7 @@ using Microsoft.SharePoint.Administration;
 
 namespace FeatureAdmin
 {
-    public class Location
+    public class Location : IEquatable<Location>
     {
         public Location()
         {
@@ -75,6 +75,19 @@ namespace FeatureAdmin
                 return Name;
             }
             return Name + ": " + Url;
+        }
+        public bool Equals(Location other)
+        {
+            return null != other && Id == other.Id
+                && ContentDatabaseId == other.ContentDatabaseId;
+        }
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Location);
+        }
+        public override int GetHashCode()
+        {
+            return ContentDatabaseId.GetHashCode() ^ Id.GetHashCode();
         }
     }
 }

@@ -89,9 +89,6 @@ namespace FeatureAdmin
             {
                 Feature other = (Feature)obj;
 
-                int iVal = 0;
-                int oVal = 0;
-
                 int cmp = this.Scope.CompareTo(other.Scope);
                 if (cmp != 0)
                 {

@@ -28,11 +28,14 @@ namespace FeatureAdmin
         }
 
         public int Activations { get; private set; }
+        public int ActivationAttempts { get; private set; }
+        private FeatureDatabase _featureDb;
         private Action _action;
         private FeatureSet _featureset = null;
 
-        public FeatureActivator(Action action, FeatureSet featureSet)
+        public FeatureActivator(FeatureDatabase featureDb, Action action, FeatureSet featureSet)
         {
+            _featureDb = featureDb;
             _action = action;
             _featureset = featureSet;
         }
@@ -134,16 +137,26 @@ namespace FeatureAdmin
                 {
                     if (!(spFeatureCollection[feature.Id] is SPFeature))
                     {
+                        ++ActivationAttempts;
                         spFeatureCollection.Add(feature.Id);
-                        ++Activations;
+                        if ((spFeatureCollection[feature.Id] is SPFeature))
+                        {
+                            _featureDb.RecordFeatureActivation(locobj, feature.Id);
+                            ++Activations;
+                        }
                     }
                 }
                 else
                 {
                     if ((spFeatureCollection[feature.Id] is SPFeature))
                     {
+                        ++ActivationAttempts;
                         spFeatureCollection.Remove(feature.Id);
-                        ++Activations;
+                        if (!(spFeatureCollection[feature.Id] is SPFeature))
+                        {
+                            _featureDb.RecordFeatureDeactivation(locobj, feature.Id);
+                            ++Activations;
+                        }
                     }
                 }
             }
