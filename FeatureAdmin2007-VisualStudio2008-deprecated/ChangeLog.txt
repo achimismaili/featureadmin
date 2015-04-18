@@ -1,6 +1,12 @@
 FeatureAdmin 2007 ChangeLog
   - this file is intended for developers
 
+** Apr, 2015 -- Perry
+Populate main title version numbers dynamically
+
+** Dec, 2014 -- Perry
+A bunch of work on activation
+
 ** Nov, 2014 - Perry
 Fix resizing anchoring on main form
 New "Find All Activations" and "Load All Activation Data" buttons

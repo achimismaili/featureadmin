@@ -41,6 +41,7 @@ namespace FeatureAdmin
         {
             InitializeComponent();
 
+            SetTitle();
             // web app list is prefilled
             loadWebAppList();
 
@@ -55,6 +56,13 @@ namespace FeatureAdmin
         }
 
         #region FeatureDefinition Methods
+
+        private void SetTitle()
+        {
+            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            this.Text = string.Format("FeatureAdmin for SharePoint {0} - v{1}",
+                spver.SharePointVersion, version);
+        }
 
         private void ConfigureFeatureDefGrid()
         {
