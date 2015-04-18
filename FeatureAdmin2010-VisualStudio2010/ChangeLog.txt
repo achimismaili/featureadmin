@@ -1,6 +1,9 @@
 FeatureAdmin 2010 ChangeLog
   - this file is intended for developers
 
+** Apr, 2015 -- Perry
+Populate main title version numbers dynamically
+
 ** Nov, 2014 - Perry
 New "Find All Activations" and "Load All Activation Data" buttons
 
