@@ -17,3 +17,7 @@ Backported check in Program.cs that SPFarm.Local exists
 Factored code to find activated features into new ActivationFinder class
 Add reference to Microsoft.SharePoint.Search in order to set CopyLocal to false (so it doesn't copy it to bin folder)
 Record & log exception messages when FeatureManager enumerates exceptions
+
+** Aug, 2015 - Perry
+Display more info in the faulty feature removal prompt. Add activation time, 
+and solution info (if available). Remove unpopulated compatibility level.
