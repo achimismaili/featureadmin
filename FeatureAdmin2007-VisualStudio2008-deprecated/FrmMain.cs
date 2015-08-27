@@ -1026,12 +1026,16 @@ namespace FeatureAdmin
                     FeatureChecker.Status status = checker.CheckFeature(feature);
                     if (status.Faulty)
                     {
-                        string location = LocationManager.SafeDescribeObject(feature.Parent);
+                        string location = LocationInfo.SafeDescribeObject(feature.Parent);
 
-                        string msgString = "Faulty Feature found! Id: '" + feature.DefinitionId.ToString();
-                        if (faultyCompatibilityLevel != Feature.COMPATINAPPLICABLE)
+                        string msgString = "Faulty Feature found! Id=" + feature.DefinitionId.ToString();
+#if SP2013
+                        msgString += " Activation=" + feature.TimeActivated.ToString("yyyy-MM-dd");
+#endif
+                        string solutionInfo = GetFeatureSolutionInfo(feature);
+                        if (!string.IsNullOrEmpty(solutionInfo))
                         {
-                            msgString += " CompatibilityLevel:" + faultyCompatibilityLevel + " (0=Error)";
+                            msgString += solutionInfo;
                         }
                         msgString += Environment.NewLine
                             + "Found in " + location + "." + Environment.NewLine
@@ -1049,11 +1053,52 @@ namespace FeatureAdmin
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OK);
+                if (ex is SqlException)
+                {
+                    string msgstring = string.Format("Cannot access a feature collection of scope '{0}'! Not enough access rights for a content DB on SQL Server! dbOwner rights are recommended. Please read the following error message:\n\n'{1}'", scope.ToString(), ex.ToString());
+                    string MessageCaption = string.Format("FeatureCollection in a Content DB not accessible");
+                    if(MessageBox.Show(msgstring, MessageCaption,MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OK);
+                }
                 return false;
             }
             return false;
              * */
+        }
+        private string GetFeatureSolutionInfo(SPFeature feature)
+        {
+            string text = "";
+            try
+            {
+                if (feature.Definition != null
+                    && feature.Definition.SolutionId != Guid.Empty)
+                {
+                    text = string.Format("SolutionId={0}", feature.Definition.SolutionId);
+                    SPSolution solution = SPFarm.Local.Solutions[feature.Definition.SolutionId];
+                    if (solution != null)
+                    {
+                        try {
+                            text += string.Format(", SolutionName='{0}'", solution.Name);
+                        } catch { }
+                        try {
+                            text += string.Format(", SolutionDisplayName='{0}'", solution.DisplayName);
+                        } catch { }
+                        try {
+                            text += string.Format(", SolutionDeploymentState='{0}'", solution.DeploymentState);
+                        } catch { }
+                    }
+                }
+            }
+            catch
+            {
+            }
+                return text;
         }
 
         #endregion
