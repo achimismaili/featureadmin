@@ -1086,6 +1086,7 @@ namespace FeatureAdmin
         /// <returns></returns>
         private bool findFaultyFeatureInCollection(SPFeatureCollection features, SPFeatureScope scope)
         {
+            bool faultyFound = false;
             if (features == null)
             {
                 logDateMsg("ERROR: Feature Collection was null!");
@@ -1108,6 +1109,7 @@ namespace FeatureAdmin
                     FeatureChecker.Status status = checker.CheckFeature(feature);
                     if (status.Faulty)
                     {
+                        faultyFound = true;
                         string location = LocationInfo.SafeDescribeObject(feature.Parent);
 
                         string msgString = "Faulty Feature found! Id=" + feature.DefinitionId.ToString();
@@ -1132,7 +1134,7 @@ namespace FeatureAdmin
                         }
                         if (response == DialogResult.Cancel)
                         {
-                            return true;
+                            return faultyFound;
                         }
                     }
                 }
@@ -1145,16 +1147,16 @@ namespace FeatureAdmin
                     string MessageCaption = string.Format("FeatureCollection in a Content DB not accessible");
                     if(MessageBox.Show(msgstring, MessageCaption,MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                     {
-                        return true;
+                        return faultyFound;
                     }
                 }
                 else
                 {
                     MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OK);
                 }
-                return false;
+                return faultyFound;
             }
-            return false;
+            return faultyFound;
         }
         private string GetFeatureSolutionInfo(SPFeature feature)
         {
@@ -1168,21 +1170,15 @@ namespace FeatureAdmin
                     SPSolution solution = SPFarm.Local.Solutions[feature.Definition.SolutionId];
                     if (solution != null)
                     {
-                        try
-                        {
+                        try {
                             text += string.Format(", SolutionName='{0}'", solution.Name);
-                        }
-                        catch { }
-                        try
-                        {
+                        } catch { }
+                        try {
                             text += string.Format(", SolutionDisplayName='{0}'", solution.DisplayName);
-                        }
-                        catch { }
-                        try
-                        {
+                        } catch { }
+                        try {
                             text += string.Format(", SolutionDeploymentState='{0}'", solution.DeploymentState);
-                        }
-                        catch { }
+                        } catch { }
                     }
                 }
             }
