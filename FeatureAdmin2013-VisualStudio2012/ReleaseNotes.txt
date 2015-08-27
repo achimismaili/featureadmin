@@ -11,3 +11,6 @@ BugFixes:
 - Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
 - Fix Find Activated Feature to correctly find web application scoped features
 
+version 2.4 (Aug 27, 2015): "FeatureAdmin for SharePoint 2013 - v2.4"
+ - Better exception handling when removing faulty features, and allow skipping individual
+    faulty features
