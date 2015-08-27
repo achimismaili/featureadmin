@@ -41,6 +41,7 @@ namespace FeatureAdmin
         {
             InitializeComponent();
 
+            SetTitle();
             // web app list is prefilled
             loadWebAppList();
 
@@ -51,6 +52,14 @@ namespace FeatureAdmin
         }
 
         #region FeatureDefinition Methods
+
+        private void SetTitle()
+        {
+            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            this.Text = string.Format("FeatureAdmin for SharePoint {0} - v{1}",
+                spver.SharePointVersion, version);
+        }
+
 
         /// <summary>Used to populate the list of Farm Feature Definitions</summary>
         /// <param name="sender"></param>
@@ -1176,7 +1185,7 @@ namespace FeatureAdmin
             catch
             {
             }
-                return text;
+            return text;
         }
 
         #endregion
