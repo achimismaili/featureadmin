@@ -22,4 +22,4 @@ Display more info in the faulty feature removal prompt. Add activation time,
 and solution info (if available). Remove unpopulated compatibility level.
 Fix faulty feature finder to continue, and allow skipping
 
-** Aug 27, 2013 - RELEASE v 2.3: "FeatureAdmin for SharePoint 2013 - v2.3" **
+** Aug 27, 2013 - RELEASE v 2.3: "FeatureAdmin for SharePoint 2013 - v2.4" **
