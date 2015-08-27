@@ -1087,7 +1087,6 @@ namespace FeatureAdmin
                 logDateMsg("ERROR: Feature Collection was empty!");
                 return false;
             }
-            int faultyCompatibilityLevel = 0;
 
             // string DBName = string.Empty; // tbd: retrieve the database name of the featureCollection
             string featuresName = features.ToString();
@@ -1102,10 +1101,12 @@ namespace FeatureAdmin
                     {
                         string location = LocationInfo.SafeDescribeObject(feature.Parent);
 
-                        string msgString = "Faulty Feature found! Id: '" + feature.DefinitionId.ToString();
-                        if (faultyCompatibilityLevel != FeatureManager.COMPATINAPPLICABLE)
+                        string msgString = "Faulty Feature found! Id=" + feature.DefinitionId.ToString();
+                        msgString += " Activation=" + feature.TimeActivated.ToString("yyyy-MM-dd");
+                        string solutionInfo = GetFeatureSolutionInfo(feature);
+                        if (!string.IsNullOrEmpty(solutionInfo))
                         {
-                            msgString += " CompatibilityLevel:" + faultyCompatibilityLevel + " (0=Error)";
+                            msgString += solutionInfo;
                         }
                         msgString += Environment.NewLine
                             + "Found in " + location + "." + Environment.NewLine
@@ -1139,6 +1140,35 @@ namespace FeatureAdmin
                 return false;
             }
             return false;
+        }
+        private string GetFeatureSolutionInfo(SPFeature feature)
+        {
+            string text = "";
+            try
+            {
+                if (feature.Definition != null
+                    && feature.Definition.SolutionId != Guid.Empty)
+                {
+                    text = string.Format("SolutionId={0}", feature.Definition.SolutionId);
+                    SPSolution solution = SPFarm.Local.Solutions[feature.Definition.SolutionId];
+                    if (solution != null)
+                    {
+                        try {
+                            text += string.Format(", SolutionName='{0}'", solution.Name);
+                        } catch { }
+                        try {
+                            text += string.Format(", SolutionDisplayName='{0}'", solution.DisplayName);
+                        } catch { }
+                        try {
+                            text += string.Format(", SolutionDeploymentState='{0}'", solution.DeploymentState);
+                        } catch { }
+                    }
+                }
+            }
+            catch
+            {
+            }
+                return text;
         }
 
         #endregion
