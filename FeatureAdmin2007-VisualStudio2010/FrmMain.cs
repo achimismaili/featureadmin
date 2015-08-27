@@ -1093,13 +1093,17 @@ namespace FeatureAdmin
                             + "Found in " + location + "." + Environment.NewLine
                             + " Should it be removed from the farm?";
                         logDateMsg(msgString);
-                        if (MessageBox.Show(msgString, "Success! Please Decide",
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                        string caption = "Found Faulty Feature";
+                        DialogResult response = MessageBox.Show(msgString, caption, 
+                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                        if (response == DialogResult.Yes)
                         {
                             removeFeaturesWithinFarm(feature.DefinitionId, scope);
                         }
-
-                        return true;
+                        if (response == DialogResult.Cancel)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
