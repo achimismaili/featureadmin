@@ -1102,7 +1102,9 @@ namespace FeatureAdmin
                         string location = LocationInfo.SafeDescribeObject(feature.Parent);
 
                         string msgString = "Faulty Feature found! Id=" + feature.DefinitionId.ToString();
+#if SP2013
                         msgString += " Activation=" + feature.TimeActivated.ToString("yyyy-MM-dd");
+#endif
                         string solutionInfo = GetFeatureSolutionInfo(feature);
                         if (!string.IsNullOrEmpty(solutionInfo))
                         {
