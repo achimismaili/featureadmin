@@ -20,3 +20,4 @@ Record & log exception messages when FeatureManager enumerates exceptions
 ** Aug, 2015 - Perry
 Display more info in the faulty feature removal prompt. Add activation time, 
 and solution info (if available). Remove unpopulated compatibility level.
+Fix faulty feature finder to continue, and allow skipping
