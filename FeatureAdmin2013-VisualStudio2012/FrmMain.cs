@@ -597,8 +597,8 @@ namespace FeatureAdmin
             string msgString;
             int featuresActivated = 0;
 
-            // all the content WebApplications 
-            SPWebApplicationCollection webApplicationCollection = SPWebService.ContentService.WebApplications;
+            // all the content & admin WebApplications 
+            SPWebApplicationCollection webApplicationCollection = GetAllWebApps();
 
             switch (featureScope)
             {
@@ -1015,11 +1015,8 @@ namespace FeatureAdmin
                 else
                 {
 
-                    // all the content WebApplications 
-                    SPWebApplicationCollection webApplicationCollection = SPWebService.ContentService.WebApplications;
-
-                    //  administrative WebApplications 
-                    // SPWebApplicationCollection webApplicationCollection = SPWebService.AdministrationService.WebApplications;
+                    // all the content & admin WebApplications 
+                    SPWebApplicationCollection webApplicationCollection = GetAllWebApps();
 
                     foreach (SPWebApplication webApplication in webApplicationCollection)
                     {
@@ -1286,17 +1283,18 @@ namespace FeatureAdmin
                 clbSPWebFeatures.Items.Clear();
                 removeBtnEnabled(false);
 
-                if (SPWebService.ContentService != null)
+                if (SPWebService.ContentService == null)
                 {
-                    foreach (SPWebApplication webApp in SPWebService.ContentService.WebApplications)
-                    {
-                        listWebApplications.Items.Add(webApp.Name);
-                    }
+                    listWebApplications.Items.Add("SPWebService.ContentService == null! Access error?");
                 }
-                else
+                if (SPWebService.AdministrationService == null)
                 {
-                    listWebApplications.Items.Add("SPWebService.ContentService == null");
-                    MessageBox.Show("No Content web application found. Are you Farm-Administrator? Is the database accessible?");
+                    listWebApplications.Items.Add("SPWebService.AdministrationService == null! Access error?");
+                }
+
+                foreach (SPWebApplication webApp in GetAllWebApps())
+                {
+                    listWebApplications.Items.Add(webApp.Name);
                 }
 
                 if (listWebApplications.Items.Count > 0)
@@ -1328,7 +1326,7 @@ namespace FeatureAdmin
 
                     if (listWebApplications.SelectedItem.ToString() != String.Empty)
                     {
-                        foreach (SPWebApplication webApp in SPWebService.ContentService.WebApplications)
+                        foreach (SPWebApplication webApp in GetAllWebApps())
                         {
                             if (webApp.Name == listWebApplications.SelectedItem.ToString())
                             {
@@ -1604,7 +1602,7 @@ namespace FeatureAdmin
             //check web applications
             try
             {
-                foreach (SPWebApplication webApp in SPWebService.ContentService.WebApplications)
+                foreach (SPWebApplication webApp in GetAllWebApps())
                 {
                     try
                     {
@@ -1682,6 +1680,15 @@ namespace FeatureAdmin
             MessageBox.Show(msgString);
             logDateMsg(msgString);
 
+        }
+        private SPWebApplicationCollection GetAllWebApps()
+        {
+            SPWebApplicationCollection webapps = SPWebService.ContentService.WebApplications;
+            foreach (SPWebApplication adminApp in SPWebService.AdministrationService.WebApplications)
+            {
+                webapps.Add(adminApp);
+            }
+            return webapps;
         }
 
         private void FrmMain_Load(object sender, EventArgs e)

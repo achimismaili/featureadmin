@@ -91,8 +91,7 @@ namespace FeatureAdmin
             }
 
             // check all web apps and everything under
-            SPWebApplicationCollection webApplicationCollection = SPWebService.ContentService.WebApplications;
-            foreach (SPWebApplication webApp in webApplicationCollection)
+            foreach (SPWebApplication webApp in GetAllWebApps())
             {
                 try
                 {
@@ -120,6 +119,15 @@ namespace FeatureAdmin
                 }
             }
             return;
+        }
+        private SPWebApplicationCollection GetAllWebApps()
+        {
+            SPWebApplicationCollection webapps = SPWebService.ContentService.WebApplications;
+            foreach (SPWebApplication adminApp in SPWebService.AdministrationService.WebApplications)
+            {
+                webapps.Add(adminApp);
+            }
+            return webapps;
         }
         private void CheckFarm()
         {
