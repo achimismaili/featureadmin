@@ -17,3 +17,6 @@ version 2.4 (Aug 27, 2015): "FeatureAdmin for SharePoint 2013 - v2.4"
 
 version 2.4.2 (Aug 27, 2015): "FeatureAdmin for SharePoint 2013 - v2.4.2"
  - Include CentralAdmin
+
+version 2.4.4 (Sep 23, 2015): "FeatureAdmin for SharePoint 2013 - v2.4.4"
+ - Exception wrapper when removing faulty site collection feature
