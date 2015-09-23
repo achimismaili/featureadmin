@@ -34,3 +34,8 @@ Check AdminService webapps also
 
 ** Sep, 2015 - Perry
 Add exception wrapper around removing fault site collection feature
+
+** Sep 23, 2015 - RELEASE v 2.4.4: "FeatureAdmin for SharePoint 2010 - v2.4.4" **
+
+** Sep, 2015 - Perry
+Add more detail to faulty feature msgbox
