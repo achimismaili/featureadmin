@@ -25,4 +25,12 @@ Display more info in the faulty feature removal prompt. Add activation time,
 and solution info (if available). Remove unpopulated compatibility level.
 Fix faulty feature finder to continue, and allow skipping
 
-** Aug 27, 2013 - RELEASE v 2.3: "FeatureAdmin for SharePoint 2010 - v2.4" **
+** Aug 27, 2013 - RELEASE v 2.4: "FeatureAdmin for SharePoint 2010 - v2.4" **
+
+** Aug, 2015 - Perry
+Check AdminService webapps also
+
+** Aug 27, 2013 - RELEASE v 2.4.2: "FeatureAdmin for SharePoint 2010 - v2.4.2" **
+
+** Sep, 2015 - Perry
+Add exception wrapper around removing fault site collection feature
