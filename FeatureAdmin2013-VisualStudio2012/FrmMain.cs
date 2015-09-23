@@ -960,9 +960,23 @@ namespace FeatureAdmin
                                 }
                                 else
                                 {
-                                    //forcefully remove the feature
-                                    site.Features.Remove(featureID, true);
-                                    removedFeatures += 1;
+                                    try
+                                    {
+                                        //forcefully remove the feature
+                                        site.Features.Remove(featureID, true);
+                                        removedFeatures += 1;
+                                        logDateMsg(
+                                            string.Format("Success removing feature {0} from {1}",
+                                            featureID,
+                                            LocationInfo.SafeDescribeObject(site)));
+                                    }
+                                    catch (Exception exc)
+                                    {
+                                        logException(exc,
+                                            string.Format("Exception removing feature {0} from {1}",
+                                            featureID,
+                                            LocationInfo.SafeDescribeObject(site)));
+                                    }
 
                                 }
                                 scannedThrough++;

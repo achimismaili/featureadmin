@@ -28,3 +28,6 @@ Fix faulty feature finder to continue, and allow skipping
 Check AdminService webapps also
 
 ** Aug 27, 2013 - RELEASE v 2.4.2: "FeatureAdmin for SharePoint 2013 - v2.4.2" **
+
+** Sep, 2015 - Perry
+Add exception wrapper around removing fault site collection feature
