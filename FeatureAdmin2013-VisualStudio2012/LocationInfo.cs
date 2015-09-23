@@ -40,7 +40,7 @@ namespace FeatureAdmin
         }
         public static string SafeDescribeObject(object obj)
         {
-            if (obj is SPFarm)
+            if (obj is SPFarm || obj is SPWebService)
             {
                 return "Farm";
             }

@@ -1121,22 +1121,10 @@ namespace FeatureAdmin
                     if (status.Faulty)
                     {
                         faultyFound = true;
-                        string location = LocationInfo.SafeDescribeObject(feature.Parent);
 
-                        string msgString = "Faulty Feature found! Id=" + feature.DefinitionId.ToString();
-#if SP2013
-                        msgString += " Activation=" + feature.TimeActivated.ToString("yyyy-MM-dd");
-#endif
-                        string solutionInfo = GetFeatureSolutionInfo(feature);
-                        if (!string.IsNullOrEmpty(solutionInfo))
-                        {
-                            msgString += solutionInfo;
-                        }
-                        msgString += Environment.NewLine
-                            + "Found in " + location + "." + Environment.NewLine
-                            + " Should it be removed from the farm?";
+                        string msgString = DescribeFeatureAndLocation(feature);
                         logDateMsg(msgString);
-                        string caption = "Found Faulty Feature";
+                        string caption = string.Format("Found Faulty {0} Feature", scope);
                         DialogResult response = MessageBox.Show(msgString, caption, 
                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                         if (response == DialogResult.Yes)
@@ -1168,6 +1156,27 @@ namespace FeatureAdmin
                 return faultyFound;
             }
             return faultyFound;
+        }
+        private string DescribeFeatureAndLocation(SPFeature feature)
+        {
+            string location = LocationInfo.SafeDescribeObject(feature.Parent);
+
+            string msgString = "Faulty Feature found!\n"
+                + string.Format("Id: {0}", feature.DefinitionId);
+#if SP2013
+            msgString += " Activation=" + feature.TimeActivated.ToString("yyyy-MM-dd");
+#endif
+            string solutionInfo = GetFeatureSolutionInfo(feature);
+            if (!string.IsNullOrEmpty(solutionInfo))
+            {
+                msgString += solutionInfo;
+            }
+            msgString += Environment.NewLine
+                + string.Format(" Location: {0}\n", location)
+                + string.Format(" Scope: {0}\n", feature.FeatureDefinitionScope)
+                + string.Format(" Version: {0}\n", feature.Version)
+                + " Should it be removed from the farm?";
+            return msgString;
         }
         private string GetFeatureSolutionInfo(SPFeature feature)
         {
