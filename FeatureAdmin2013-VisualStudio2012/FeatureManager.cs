@@ -106,18 +106,19 @@ namespace FeatureAdmin
             {
                 _spfeatureDefinitions.Remove(id, compatibilityLevel, true);
             }
-            #endif
-            #if (SP2010)
+            #elif (SP2010)
             {
                 _spfeatureDefinitions.Remove(id, true);
             }
-            #endif
-            #if (SP2007)
+            #elif (SP2007)
             {
                 _spfeatureDefinitions.Remove(id, true);
             }
+            #else
+            {
+                throw new Exception("Unspecified SharePoint Version");
+            }
             #endif
-            throw new Exception("Unspecified SharePoint Version");
         }
         public static int GetFeatureCompatibilityLevel(SPFeatureDefinition definition)
         {
@@ -125,18 +126,19 @@ namespace FeatureAdmin
             {
                 return definition.CompatibilityLevel;
             }
-            #endif
-            #if (SP2010)
+            #elif (SP2010)
             {
                 return COMPATINAPPLICABLE; // inapplicable
             }
-            #endif
-            #if (SP2007)
+            #elif (SP2007)
             {
                 return COMPATINAPPLICABLE; // inapplicable
             }
+            #else
+            {
+                throw new Exception("Unspecified SharePoint Version");
+            }
             #endif
-            throw new Exception("Unspecified SharePoint Version");
         }
     }
 }
