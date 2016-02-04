@@ -39,3 +39,6 @@ Add exception wrapper around removing fault site collection feature
 
 ** Sep, 2015 - Perry
 Add more detail to faulty feature msgbox
+
+** Feb, 2015 - Perry
+Fix FeatureManager.ForceUninstallFeatureDefinition (erroneously threw exception)
