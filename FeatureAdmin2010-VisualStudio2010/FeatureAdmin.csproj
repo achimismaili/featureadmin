@@ -134,6 +134,7 @@
   <ItemGroup>
     <Content Include="ChangeLog.txt" />
     <Content Include="ReleaseNotes.txt" />
+    <Content Include="todo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
