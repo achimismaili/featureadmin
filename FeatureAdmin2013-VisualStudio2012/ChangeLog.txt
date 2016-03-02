@@ -1,9 +1,27 @@
 FeatureAdmin 2010 ChangeLog
   - this file is intended for developers
 
-** Feb 24th 2013 - RELEASE v 2.3: "FeatureAdmin for SharePoint 2013 - v2.3" **
+** Feb 10, 2016: RELEASE 2.4.6: "FeatureAdmin for SharePoint 2013 - v2.4.6" **
 
-** Feb 24th 2013 - Achim
+** Feb, 2015 - Perry
+ Fix erroneous exception during ForceUninstallFeatureDefinition
+
+** Sep 23, 2015: RELEASE 2.4.4: "FeatureAdmin for SharePoint 2013 - v2.4.4" **
+
+** Aug 27, 2015 - RELEASE 2.4.2: "FeatureAdmin for SharePoint 2013 - v2.4.2" **
+
+** Aug 27, 2015 - Perry
+ Include CentralAdmin
+
+** Aug 27, 2015 - RELEASE 2.4: "FeatureAdmin for SharePoint 2013 - v2.4" **
+
+Aug 27, 2015 - Perry
+ Better exception handling when removing faulty features, and allow skipping individual
+    faulty features
+
+** Feb 24, 2013 - RELEASE v 2.3: "FeatureAdmin for SharePoint 2013 - v2.3" **
+
+** Feb 24, 2013 - Achim
 added CompatibilityLevel property to Feature class, that renders the compatibility level as prefix of the guid (e.g. [15/...)
 
 Issue 8513 - fixed SP2013 feature definition uninstall, that compatibility level is recognized
