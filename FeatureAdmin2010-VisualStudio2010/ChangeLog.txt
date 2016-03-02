@@ -1,15 +1,26 @@
 FeatureAdmin 2010 ChangeLog
   - this file is intended for developers
 
+** Feb 10, 2016 - RELEASE 2.4.6: "FeatureAdmin for SharePoint 2010 - v2.4.6" **
+
+** Feb, 2015 - Perry
+ Fix erroneous exception during ForceUninstallFeatureDefinition
+
+** Sep 23, 2015 - RELEASE 2.4.4: "FeatureAdmin for SharePoint 2010 - v2.4.4" **
+
+** Aug 27, 2015 - RELEASE 2.4.2: "FeatureAdmin for SharePoint 2010 - v2.4.2" **
+
+** Aug 27, 2015 - RELEASE 2.4: "FeatureAdmin for SharePoint 2010 - v2.4" **
+
 ** Apr, 2015 -- Perry
 Populate main title version numbers dynamically
 
 ** Nov, 2014 - Perry
 New "Find All Activations" and "Load All Activation Data" buttons
 
-** Feb 24th 2013 - RELEASE v 2.3: "FeatureAdmin for SharePoint 2010 - v2.3" **
+** Feb, 24 2013 - RELEASE v 2.3: "FeatureAdmin for SharePoint 2010 - v2.3" **
 
-** Feb 24th 2013 - Achim
+** Feb, 24 2013 - Achim
 Updated error text for access denied on level SPWeb to recommend also full control via web application user policy
 changed window title of feature admin to be the same for 2007, 2010 and 2013 version
 changed assembly name to contain the year name
