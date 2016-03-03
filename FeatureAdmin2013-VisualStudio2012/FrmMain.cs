@@ -7,7 +7,6 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
-using System.Data.SqlClient;
 using CursorUtil;
 using Be.Timvw.Framework.Collections.Generic;
 using Be.Timvw.Framework.ComponentModel;
@@ -46,14 +45,13 @@ namespace FeatureAdmin
             loadWebAppList();
 
             removeBtnEnabled(false);
-
-            featDefBtnEnabled(false);
+            EnableActionButtonsAsAppropriate();
 
             ConfigureFeatureDefGrid();
 
             this.Show();
             ReloadAllFeatureDefinitions();
-
+            EnableActionButtonsAsAppropriate();
         }
 
         #region FeatureDefinition Methods
@@ -681,7 +679,7 @@ namespace FeatureAdmin
             if (selectedFeatures.Count > 0)
             {
                 // enable all FeatureDef buttons
-                featDefBtnEnabled(true);
+                // featDefBtnEnabled(true); TODO - ?
 
                 logDateMsg("Feature Definition selection changed:");
 
@@ -693,7 +691,7 @@ namespace FeatureAdmin
             else
             {
                 // disable all FeatureDef buttons
-                featDefBtnEnabled(false);
+                // featDefBtnEnabled(false); TODO - ?
             }
         }
 
@@ -964,16 +962,38 @@ namespace FeatureAdmin
 
         /// <summary>enables or disables all buttons for feature definition administration</summary>
         /// <param name="enabled">true = enabled, false = disabled</param>
-        private void featDefBtnEnabled(bool enabled)
+        private void EnableActionButtonsAsAppropriate()
         {
-            btnUninstFDef.Enabled = enabled;
-            btnActivateSPWeb.Enabled = enabled;
-            btnActivateSPSite.Enabled = enabled;
-            btnActivateSPWebApp.Enabled = enabled;
-            btnActivateSPFarm.Enabled = enabled;
-            btnFindActivatedFeature.Enabled = enabled;
-            btnFindAllActivationsFeature.Enabled = enabled;
-            btnLoadAllFeatureActivations.Enabled = enabled;
+            bool bDb = m_featureDb.IsLoaded();
+            SPFeatureScope lowestScope = GetLowestSelectedScope();
+
+            bool bWeb = !IsEmpty(m_CurrentWebLocation) && lowestScope >= SPFeatureScope.Web;
+            bool bSite = !IsEmpty(m_CurrentSiteLocation) && lowestScope >= SPFeatureScope.Site;
+            bool bWebApp = !IsEmpty(m_CurrentWebAppLocation) && lowestScope >= SPFeatureScope.WebApplication;
+
+            btnUninstFDef.Enabled = bDb && (gridFeatureDefinitions.SelectedRows.Count <= 10);
+
+            btnActivateSPWeb.Enabled = bDb && bWeb;
+            btnDeactivateSPWeb.Enabled = bDb && bWeb;
+            btnActivateSPSite.Enabled = bDb && bSite;
+            btnDeactivateSPSite.Enabled = bDb && bSite;
+            btnActivateSPWebApp.Enabled = bDb && bWebApp;
+            btnDeactivateSPWebApp.Enabled = bDb && bWebApp;
+            btnActivateSPFarm.Enabled = bDb;
+        }
+
+        private SPFeatureScope GetLowestSelectedScope()
+        {
+            SPFeatureScope minScope = SPFeatureScope.ScopeInvalid;
+            foreach (DataGridViewRow row in gridFeatureDefinitions.SelectedRows)
+            {
+                Feature feature = row.DataBoundItem as Feature;
+                if (minScope == SPFeatureScope.ScopeInvalid || feature.Scope < minScope)
+                {
+                    minScope = feature.Scope;
+                }
+            }
+            return minScope;
         }
 
         private void removeReady(int featuresRemoved)
@@ -990,6 +1010,8 @@ namespace FeatureAdmin
         /// <returns></returns>
         private bool findFaultyFeatureInCollection(SPFeatureCollection features, SPFeatureScope scope)
         {
+            return false;
+            /*
             bool faultyFound = false;
             if (features == null)
             {
@@ -1049,8 +1071,9 @@ namespace FeatureAdmin
                 return faultyFound;
             }
             return faultyFound;
+             * */
         }
-        private string DescribeFeatureAndLocation(SPFeature feature)
+        private string DescribeFeatureAndLocation_Unused(SPFeature feature)
         {
             string location = LocationInfo.SafeDescribeObject(feature.Parent);
 

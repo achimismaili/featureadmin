@@ -60,12 +60,12 @@ namespace FeatureAdmin
             this.btnActivateSPFarm = new System.Windows.Forms.Button();
             this.RemoveFeatures = new System.Windows.Forms.TabPage();
             this.splitContainerRightSiteCollFeaturesWebFeatures = new System.Windows.Forms.SplitContainer();
-            this.btnClearLog = new System.Windows.Forms.Button();
             this.btnFindFaultyFeature = new System.Windows.Forms.Button();
             this.splitContainerCompleteMainframe = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftWindow = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftUpperWebAppAndSiteColl = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftDownWebsAndLogs = new System.Windows.Forms.SplitContainer();
+            this.btnClearLog = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.FarmFeatures.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridFeatureDefinitions)).BeginInit();
@@ -92,11 +92,11 @@ namespace FeatureAdmin
             this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtResult.Location = new System.Drawing.Point(0, 16);
+            this.txtResult.Location = new System.Drawing.Point(0, 31);
             this.txtResult.Multiline = true;
             this.txtResult.Name = "txtResult";
             this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtResult.Size = new System.Drawing.Size(412, 328);
+            this.txtResult.Size = new System.Drawing.Size(412, 313);
             this.txtResult.TabIndex = 2;
             this.txtResult.WordWrap = false;
             // 
@@ -515,17 +515,6 @@ namespace FeatureAdmin
             this.splitContainerRightSiteCollFeaturesWebFeatures.SplitterDistance = 236;
             this.splitContainerRightSiteCollFeaturesWebFeatures.TabIndex = 19;
             // 
-            // btnClearLog
-            // 
-            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClearLog.Location = new System.Drawing.Point(7, 646);
-            this.btnClearLog.Name = "btnClearLog";
-            this.btnClearLog.Size = new System.Drawing.Size(90, 23);
-            this.btnClearLog.TabIndex = 18;
-            this.btnClearLog.Text = "Clear Log";
-            this.btnClearLog.UseVisualStyleBackColor = true;
-            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
-            // 
             // btnFindFaultyFeature
             // 
             this.btnFindFaultyFeature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -551,7 +540,6 @@ namespace FeatureAdmin
             // 
             // splitContainerCompleteMainframe.Panel2
             // 
-            this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.btnClearLog);
             this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.btnFindFaultyFeature);
             this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.tabControl1);
             this.splitContainerCompleteMainframe.Size = new System.Drawing.Size(890, 728);
@@ -617,11 +605,23 @@ namespace FeatureAdmin
             // 
             // splitContainerLeftDownWebsAndLogs.Panel2
             // 
+            this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.btnClearLog);
             this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.lblLog);
             this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.txtResult);
             this.splitContainerLeftDownWebsAndLogs.Size = new System.Drawing.Size(412, 494);
             this.splitContainerLeftDownWebsAndLogs.SplitterDistance = 146;
             this.splitContainerLeftDownWebsAndLogs.TabIndex = 0;
+            // 
+            // btnClearLog
+            // 
+            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearLog.Location = new System.Drawing.Point(319, 3);
+            this.btnClearLog.Name = "btnClearLog";
+            this.btnClearLog.Size = new System.Drawing.Size(90, 23);
+            this.btnClearLog.TabIndex = 19;
+            this.btnClearLog.Text = "Clear Log";
+            this.btnClearLog.UseVisualStyleBackColor = true;
+            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
             // 
             // FrmMain
             // 
@@ -690,7 +690,6 @@ namespace FeatureAdmin
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage RemoveFeatures;
         private System.Windows.Forms.TabPage FarmFeatures;
-        private System.Windows.Forms.Button btnClearLog;
         private System.Windows.Forms.Button btnActivateSPWeb;
         private System.Windows.Forms.Button btnActivateSPSite;
         private System.Windows.Forms.Button btnActivateSPWebApp;
@@ -707,6 +706,7 @@ namespace FeatureAdmin
         private System.Windows.Forms.Button btnLoadAllFeatureActivations;
         private System.Windows.Forms.Button btnFindAllActivationsFeature;
         private System.Windows.Forms.DataGridView gridFeatureDefinitions;
+        private System.Windows.Forms.Button btnClearLog;
     
     }
 }
