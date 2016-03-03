@@ -105,36 +105,35 @@ namespace FeatureAdmin
         // sort the features: 
         // First scope (Farm, Web App, Site then Web)
         // Then name alphabetically
-        // Then Id (to guarantee a stable sort)
+        // Then Id
+        // Then CompatibilityLevel
+        // Note: Need to have a fixed stable sort, so compare everything including Ids & CompatLevel
         public int CompareTo(object obj)
         {
-            if (obj is Feature)
-            {
-                Feature other = (Feature)obj;
-
-                int cmp = this.Scope.CompareTo(other.Scope);
-                if (cmp != 0)
-                {
-                    return cmp;
-                }
-
-                cmp = string.Compare(this.Name, other.Name);
-                if (cmp != 0)
-                {
-                    return cmp;
-                }
-                cmp = this.Id.CompareTo(other.Id);
-                if (cmp != 0)
-                {
-                    return cmp;
-                }
-                cmp = this.CompatibilityLevel.CompareTo(other.CompatibilityLevel);
-                return cmp;
-            }
-            else
+            if (!(obj is Feature))
             {
                 throw (new System.ArgumentException("Object is not a Feature like the instance"));
             }
+            Feature other = (Feature)obj;
+
+            int cmp = this.Scope.CompareTo(other.Scope);
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+
+            cmp = string.Compare(this.Name, other.Name);
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+            cmp = this.Id.CompareTo(other.Id);
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+            cmp = this.CompatibilityLevel.CompareTo(other.CompatibilityLevel);
+            return cmp;
         }
     }
 }
