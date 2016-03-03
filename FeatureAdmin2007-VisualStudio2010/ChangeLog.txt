@@ -22,3 +22,5 @@ Record & log exception messages when FeatureManager enumerates exceptions
 Display more info in the faulty feature removal prompt. Add activation time, 
 and solution info (if available). Remove unpopulated compatibility level.
 Fix faulty feature finder to continue, and allow skipping
+
+WARNING - this project is outdated compared to FeatureAdmin2007-VisualStudio2008
