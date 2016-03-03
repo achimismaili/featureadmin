@@ -25,10 +25,10 @@ namespace FeatureAdmin
         }
         public string ScopeAbbrev { get; private set; } // more legible scope names -- see ScopeAbbrevConverter
         public int CompatibilityLevel { get; set; }
-        public String Name { get; set; }
+        public string Name { get; set; }
         public bool IsFaulty { get; set; }
         public string Faulty { get { return (IsFaulty ? "Faulty" : ""); } }
-        public String ExceptionMsg { get; set; }
+        public string ExceptionMsg { get; set; }
         private int? _activations = 0;
         public int? Activations
         {
@@ -42,14 +42,14 @@ namespace FeatureAdmin
                 OnPropertyChanged("Activations");
             }
         }
-          protected void OnPropertyChanged(string name)
-          {
-              PropertyChangedEventHandler handler = PropertyChanged;
-              if (handler != null)
-              {
-                  handler(this, new PropertyChangedEventArgs(name));
-              }
-          }
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
         #endregion
 
         public Feature(Guid id)
