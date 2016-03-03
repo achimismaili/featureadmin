@@ -50,3 +50,7 @@ Copy Location.cs, LocationManager.cs,
   from FeatureAdmin2010
 Copy code improvements from FeatureAdmin2010
 Copy WebAppEnumerator.cs from FeatureAdmin2010
+FrmMain: Replace feature list with feature grid (from FeatureAdmin2007)
+  Copy over classes FeatureDatabase.cs, GridColMgr.cs
+    FeatureLocationSet.cs, FeatureUninstaller.cs
+    FeatureActivator from old version of FeatureAdmin2007
