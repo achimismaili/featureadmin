@@ -119,9 +119,9 @@ namespace FeatureAdmin
                 try
                 {
                     // Id
-                    feature.Scope = spfeatureDef.Scope;
-                    feature.CompatibilityLevel = FeatureManager.GetFeatureCompatibilityLevel(spfeatureDef);
-                    feature.Name = spfeatureDef.GetTitle(System.Threading.Thread.CurrentThread.CurrentCulture);
+                    GetFeatureScopeFromDefinition(spfeatureDef, ref feature);
+                    GetFeatureCompatibilityFromDefinition(spfeatureDef, ref feature);
+                    GetFeatureNameFromDefinition(spfeatureDef, ref feature);
                     // Faulty
                     // ExceptionMessage
                     // Activations
@@ -133,6 +133,53 @@ namespace FeatureAdmin
                     feature.IsFaulty = true;
                 }
                 _AllFeatureDefinitions[feature.Id] = feature;
+            }
+        }
+        private void GetFeatureScopeFromDefinition(SPFeatureDefinition fdef, ref Feature feature)
+        {
+            try
+            {
+                feature.Scope = fdef.Scope;
+            }
+            catch (Exception exc)
+            {
+                feature.AppendExceptionMsg(exc);
+                feature.IsFaulty = true;
+            }
+        }
+        private void GetFeatureCompatibilityFromDefinition(SPFeatureDefinition fdef, ref Feature feature)
+        {
+            try
+            {
+                feature.CompatibilityLevel = FeatureManager.GetFeatureCompatibilityLevel(fdef);
+            }
+            catch (Exception exc)
+            {
+                feature.AppendExceptionMsg(exc);
+                feature.IsFaulty = true;
+            }
+        }
+        private void GetFeatureNameFromDefinition(SPFeatureDefinition fdef, ref Feature feature)
+        {
+            try
+            {
+                feature.Name = fdef.GetTitle(System.Threading.Thread.CurrentThread.CurrentCulture);
+                return;
+            }
+            catch (Exception exc)
+            {
+                feature.AppendExceptionMsg(exc);
+                feature.IsFaulty = true;
+            }
+            try
+            {
+                feature.Name = fdef.DisplayName;
+                return;
+            }
+            catch (Exception exc)
+            {
+                feature.AppendExceptionMsg(exc);
+                feature.IsFaulty = true;
             }
         }
         private void LoadAllFeatureActivations(Dictionary<Guid, List<Location>> activatedFeatureLocations)

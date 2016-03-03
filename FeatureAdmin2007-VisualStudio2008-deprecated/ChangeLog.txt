@@ -29,3 +29,6 @@ Populate main title version numbers dynamically
 
 Feb, 2016 -- Perry
 Fixed ChangeLog (this) to be chronological from top to bottom
+FeatureDatabase: (Backported from FeatureAdmin2013)
+  More careful exception handling
+  & use feature definition DisplayName when feature definition GetTitle throws exception
