@@ -44,3 +44,7 @@ Fix FeatureManager.ForceUninstallFeatureDefinition (erroneously threw exception)
 
 Feb, 2016 - Perry
 Fixed ChangeLog (this) to be chronological from top to bottom
+Copy Location.cs, LocationManager.cs,
+  PropertyComparer.cs, ScopeAbbrevConverter.cs
+  SortableBindingList.cs, TemplateInfo.cs
+  from FeatureAdmin2010
