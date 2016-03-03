@@ -285,7 +285,7 @@ namespace FeatureAdmin
                 using (SPSite site = OpenCurrentSite())
                 {
                     List<Feature> scFeatures = GetSelectedSiteCollectionFeatures();
-                    Location scLocation = LocationManager.CreateLocation(site);
+                    Location scLocation = LocationManager.GetLocation(site);
                     ForceRemoveFeaturesFromLocation(null, site.Features, scFeatures);
                 }
             }
@@ -432,7 +432,7 @@ namespace FeatureAdmin
         {
             if (scFeatures != null && scFeatures.Count > 0)
             {
-                Location scLoc = LocationManager.CreateLocation(site);
+                Location scLoc = LocationManager.GetLocation(site);
                 ForceRemoveFeaturesFromLocation(scLoc, site.Features, scFeatures);
             }
             if (webFeatures != null && webFeatures.Count > 0)
@@ -458,7 +458,7 @@ namespace FeatureAdmin
         {
             if (webFeatures != null && webFeatures.Count > 0)
             {
-                Location webLoc = LocationManager.CreateLocation(web);
+                Location webLoc = LocationManager.GetLocation(web);
                 ForceRemoveFeaturesFromLocation(webLoc, web.Features, webFeatures);
             }
         }
@@ -1204,7 +1204,7 @@ namespace FeatureAdmin
                 {
                     foreach (SPWebApplication webApp in SPWebService.ContentService.WebApplications)
                     {
-                        Location location = LocationManager.CreateLocation(webApp);
+                        Location location = LocationManager.GetLocation(webApp);
                         listWebApplications.Items.Add(location);
                     }
                 }
@@ -1269,7 +1269,7 @@ namespace FeatureAdmin
                     SPWebApplication webApp = GetCurrentWebApplication();
                     foreach (SPSite site in webApp.Sites)
                     {
-                        Location siteLocation = LocationManager.CreateLocation(site);
+                        Location siteLocation = LocationManager.GetLocation(site);
                         listSiteCollections.Items.Add(siteLocation);
                     }
                     // select first site collection if there is only one
@@ -1350,7 +1350,7 @@ namespace FeatureAdmin
                     {
                         try
                         {
-                            Location webLocation = LocationManager.CreateLocation(web);
+                            Location webLocation = LocationManager.GetLocation(web);
                             listSites.Items.Add(webLocation);
                         }
                         finally

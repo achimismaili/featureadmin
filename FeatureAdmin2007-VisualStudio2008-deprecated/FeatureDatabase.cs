@@ -96,7 +96,7 @@ namespace FeatureAdmin
         /// </summary>
         public void RecordFeatureActivation(object locobj, Guid featureId)
         {
-            Location location = LocationManager.CreateLocation(locobj);
+            Location location = LocationManager.GetLocation(locobj);
             Feature feature = GetOrAddFeatureFromDefinitions(featureId, location.Scope);
             AddToFeatureLocations(feature, location);
             AddToLocationFeatures(location, feature);
@@ -106,7 +106,7 @@ namespace FeatureAdmin
         /// </summary>
         public void RecordFeatureDeactivation(object locobj, Guid featureId)
         {
-            Location location = LocationManager.CreateLocation(locobj);
+            Location location = LocationManager.GetLocation(locobj);
             Feature feature = GetOrAddFeatureFromDefinitions(featureId, location.Scope);
             RemoveFromFeatureLocations(feature, location);
             RemoveFromLocationFeatures(location, feature);

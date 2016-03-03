@@ -6,7 +6,7 @@ namespace FeatureAdmin
 {
     public static class LocationManager
     {
-        public static Location CreateLocation(object obj)
+        public static Location GetLocation(object obj)
         {
             Location loct = new Location();
             if (obj is SPFarm)
@@ -62,7 +62,7 @@ namespace FeatureAdmin
         }
         public static string SafeDescribeObject(object obj)
         {
-            Location loct = CreateLocation(obj);
+            Location loct = GetLocation(obj);
             return SafeDescribeLocation(loct);
         }
         public static string SafeDescribeLocation(Location loct)
