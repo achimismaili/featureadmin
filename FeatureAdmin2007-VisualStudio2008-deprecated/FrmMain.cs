@@ -70,9 +70,9 @@ namespace FeatureAdmin
             grid.AutoGenerateColumns = false;
             GridColMgr.AddTextColumn(grid, "ScopeAbbrev", "Scope", 60);
             GridColMgr.AddTextColumn(grid, "Name");
-            #if (SP2013)
+#if (SP2013)
             GridColMgr.AddTextColumn(grid, "CompatibilityLevel", "Compat", 60);
-            #endif
+#endif
             GridColMgr.AddTextColumn(grid, "Id", 50);
             GridColMgr.AddTextColumn(grid, "Activations", 60);
             GridColMgr.AddTextColumn(grid, "Faulty", 60);
@@ -298,7 +298,7 @@ namespace FeatureAdmin
         {
             if (IsEmpty(m_CurrentSiteLocation)) { return null; }
             SPWebApplication webapp = GetCurrentWebApplication();
-            if (webapp == null) { return null;}
+            if (webapp == null) { return null; }
             try
             {
                 return webapp.Sites[m_CurrentSiteLocation.Url];
@@ -482,8 +482,6 @@ namespace FeatureAdmin
             return list;
         }
         /// <summary>Removes selected features from the whole Farm</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void btnRemoveFromFarm_Click(object sender, EventArgs e)
         {
             int featuresSelected = clbSPSiteFeatures.CheckedItems.Count + clbSPWebFeatures.CheckedItems.Count;
@@ -939,7 +937,6 @@ namespace FeatureAdmin
         {
         }
 
-
         /// <summary>enables or disables all buttons for feature removal</summary>
         /// <param name="enabled">true = enabled, false = disabled</param>
         private void removeBtnEnabled(bool enabled)
@@ -949,7 +946,6 @@ namespace FeatureAdmin
             btnRemoveFromWebApp.Enabled = enabled;
             btnRemoveFromFarm.Enabled = enabled;
         }
-
 
         /// <summary>enables or disables all buttons for feature definition administration</summary>
         /// <param name="enabled">true = enabled, false = disabled</param>
@@ -994,7 +990,7 @@ namespace FeatureAdmin
             MessageBox.Show(msgString);
             logDateMsg(msgString);
         }
-        
+
         /// <summary>searches for faulty features and provides the option to remove them</summary>
         /// <param name="features">SPFeatureCollection, the container for the features</param>
         /// <param name="scope">is needed, in case a feature is found, so that it can be deleted</param>
@@ -1103,7 +1099,7 @@ namespace FeatureAdmin
             catch
             {
             }
-                return text;
+            return text;
         }
 
         #endregion
@@ -1252,8 +1248,6 @@ namespace FeatureAdmin
 
         /// <summary>Update SiteCollections list when a user changes the selection in Web Application list
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void listWebApplications_SelectedIndexChanged(object sender, EventArgs e)
         {
             ReloadCurrentSiteCollections();
@@ -1293,8 +1287,6 @@ namespace FeatureAdmin
 
         /// <summary>UI method to update the SPWeb list when a user changes the selection in site collection list
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void listSiteCollections_SelectedIndexChanged(object sender, EventArgs e)
         {
             using (WaitCursor wait = new WaitCursor())
@@ -1382,8 +1374,6 @@ namespace FeatureAdmin
         /// <summary>UI method to load the SiteCollection Features and Site Features
         /// Handles the SelectedIndexChanged event of the listSites control.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void listSites_SelectedIndexChanged(object sender, EventArgs e)
         {
             using (WaitCursor wait = new WaitCursor())
