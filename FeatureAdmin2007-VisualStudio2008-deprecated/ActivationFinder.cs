@@ -8,14 +8,6 @@ namespace FeatureAdmin
 {
     class ActivationFinder
     {
-        public class LocationUnused
-        {
-            public Guid FeatureId;
-            public SPFeatureScope Scope;
-            public string Url;
-            public string Name;
-        }
-
         /// <summary>
         /// Delegate to report when feature found
         /// </summary>
