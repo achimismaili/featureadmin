@@ -48,3 +48,5 @@ Copy Location.cs, LocationManager.cs,
   PropertyComparer.cs, ScopeAbbrevConverter.cs
   SortableBindingList.cs, TemplateInfo.cs
   from FeatureAdmin2010
+Copy code improvements from FeatureAdmin2010
+Copy WebAppEnumerator.cs from FeatureAdmin2010
