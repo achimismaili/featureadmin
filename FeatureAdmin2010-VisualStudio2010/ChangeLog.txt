@@ -50,3 +50,4 @@ Copy Location.cs, LocationManager.cs,
   SortableBindingList.cs, TemplateInfo.cs
   from FeatureAdmin2007
 Copy code improvements from FeatureAdmin2007
+Copy WebAppEnumerator.cs from FeatureAdmin2007

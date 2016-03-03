@@ -127,6 +127,7 @@
     <Compile Include="spver.cs" />
     <Compile Include="TemplateInfo.cs" />
     <Compile Include="WaitCursor.cs" />
+    <Compile Include="WebAppEnumerator.cs" />
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
