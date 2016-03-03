@@ -25,20 +25,8 @@ namespace FeatureAdmin
             }
         }
         public string ScopeAbbrev { get; private set; } // more legible scope names -- see ScopeAbbrevConverter
-
-        String _name = string.Empty;
-        public String Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-
-        int _compatibilityLevel;
-        public int CompatibilityLevel
-        {
-            get { return _compatibilityLevel; }
-            set { _compatibilityLevel = value; }
-        }
+        public int CompatibilityLevel { get; set; }
+        public string Name { get; set; }
 
         String _exceptionMsg = "";
         public String ExceptionMsg
@@ -46,7 +34,7 @@ namespace FeatureAdmin
             get { return _exceptionMsg; }
             set { _exceptionMsg = value; }
         }
-
+        #endregion
 
         public Feature(Guid id)
         {
@@ -60,31 +48,29 @@ namespace FeatureAdmin
             this.Scope = scope;
         }
 
-#endregion
-
         /// <summary>overwrite method for ToString - defines, what is shown of a Feature Class as string</summary>
         /// <returns>Feature Information string with scope, name and Guid</returns>
         public override string ToString()
         {
             string idstr = "";
             // ID (with compatibility level if available for this SharePoint version)
-            if (this._compatibilityLevel == FeatureManager.COMPATINAPPLICABLE)
+            if (this.CompatibilityLevel == FeatureManager.COMPATINAPPLICABLE)
             {
                 idstr = String.Format("{0}", this.Id);
             }
             else
             {
-                idstr = String.Format("{1}/{0}", this.Id, this._compatibilityLevel);
+                idstr = String.Format("{1}/{0}", this.Id, this.CompatibilityLevel);
             }
             // Combine name & Id
             String result = string.Empty;
-            if (String.IsNullOrEmpty(_name))
+            if (String.IsNullOrEmpty(Name))
             {
                 result = String.Format("ERROR READING FEATURE [{0}], Scope: {1}", idstr, this.Scope.ToString());
             }
             else
             {
-                result = String.Format("{2}: '{1}' [{0}]", idstr, this._name, this.Scope.ToString());
+                result = String.Format("{2}: '{1}' [{0}]", idstr, this.Name, this.Scope.ToString());
             }
             return result;
         }
