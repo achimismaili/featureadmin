@@ -50,6 +50,7 @@ namespace FeatureAdmin
             this.btnRemoveFromFarm = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FarmFeatures = new System.Windows.Forms.TabPage();
+            this.gridFeatureDefinitions = new System.Windows.Forms.DataGridView();
             this.btnLoadAllFeatureActivations = new System.Windows.Forms.Button();
             this.btnFindAllActivationsFeature = new System.Windows.Forms.Button();
             this.btnActivateSPWeb = new System.Windows.Forms.Button();
@@ -59,15 +60,15 @@ namespace FeatureAdmin
             this.btnActivateSPFarm = new System.Windows.Forms.Button();
             this.RemoveFeatures = new System.Windows.Forms.TabPage();
             this.splitContainerRightSiteCollFeaturesWebFeatures = new System.Windows.Forms.SplitContainer();
-            this.btnClearLog = new System.Windows.Forms.Button();
             this.btnFindFaultyFeature = new System.Windows.Forms.Button();
             this.splitContainerCompleteMainframe = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftWindow = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftUpperWebAppAndSiteColl = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftDownWebsAndLogs = new System.Windows.Forms.SplitContainer();
-            this.gridFeatureDefinitions = new System.Windows.Forms.DataGridView();
+            this.btnClearLog = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.FarmFeatures.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridFeatureDefinitions)).BeginInit();
             this.RemoveFeatures.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerRightSiteCollFeaturesWebFeatures)).BeginInit();
             this.splitContainerRightSiteCollFeaturesWebFeatures.Panel1.SuspendLayout();
@@ -89,7 +90,6 @@ namespace FeatureAdmin
             this.splitContainerLeftDownWebsAndLogs.Panel1.SuspendLayout();
             this.splitContainerLeftDownWebsAndLogs.Panel2.SuspendLayout();
             this.splitContainerLeftDownWebsAndLogs.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridFeatureDefinitions)).BeginInit();
             this.SuspendLayout();
             // 
             // txtResult
@@ -97,11 +97,11 @@ namespace FeatureAdmin
             this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtResult.Location = new System.Drawing.Point(0, 16);
+            this.txtResult.Location = new System.Drawing.Point(0, 31);
             this.txtResult.Multiline = true;
             this.txtResult.Name = "txtResult";
             this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtResult.Size = new System.Drawing.Size(412, 328);
+            this.txtResult.Size = new System.Drawing.Size(412, 313);
             this.txtResult.TabIndex = 2;
             this.txtResult.WordWrap = false;
             // 
@@ -380,6 +380,24 @@ namespace FeatureAdmin
             this.FarmFeatures.Text = "Farm Feature Administration";
             this.FarmFeatures.UseVisualStyleBackColor = true;
             // 
+            // gridFeatureDefinitions
+            // 
+            this.gridFeatureDefinitions.AllowUserToAddRows = false;
+            this.gridFeatureDefinitions.AllowUserToDeleteRows = false;
+            this.gridFeatureDefinitions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridFeatureDefinitions.BackgroundColor = System.Drawing.Color.LightSteelBlue;
+            this.gridFeatureDefinitions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridFeatureDefinitions.Location = new System.Drawing.Point(6, 31);
+            this.gridFeatureDefinitions.Name = "gridFeatureDefinitions";
+            this.gridFeatureDefinitions.ReadOnly = true;
+            this.gridFeatureDefinitions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridFeatureDefinitions.Size = new System.Drawing.Size(436, 418);
+            this.gridFeatureDefinitions.TabIndex = 24;
+            this.gridFeatureDefinitions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridFeatureDefinitions_CellMouseDown);
+            this.gridFeatureDefinitions.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridFeatureDefinitions_DataBindingComplete);
+            // 
             // btnLoadAllFeatureActivations
             // 
             this.btnLoadAllFeatureActivations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -502,17 +520,6 @@ namespace FeatureAdmin
             this.splitContainerRightSiteCollFeaturesWebFeatures.SplitterDistance = 236;
             this.splitContainerRightSiteCollFeaturesWebFeatures.TabIndex = 19;
             // 
-            // btnClearLog
-            // 
-            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClearLog.Location = new System.Drawing.Point(7, 646);
-            this.btnClearLog.Name = "btnClearLog";
-            this.btnClearLog.Size = new System.Drawing.Size(90, 23);
-            this.btnClearLog.TabIndex = 18;
-            this.btnClearLog.Text = "Clear Log";
-            this.btnClearLog.UseVisualStyleBackColor = true;
-            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
-            // 
             // btnFindFaultyFeature
             // 
             this.btnFindFaultyFeature.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -538,7 +545,6 @@ namespace FeatureAdmin
             // 
             // splitContainerCompleteMainframe.Panel2
             // 
-            this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.btnClearLog);
             this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.btnFindFaultyFeature);
             this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.tabControl1);
             this.splitContainerCompleteMainframe.Size = new System.Drawing.Size(890, 728);
@@ -604,29 +610,23 @@ namespace FeatureAdmin
             // 
             // splitContainerLeftDownWebsAndLogs.Panel2
             // 
+            this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.btnClearLog);
             this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.lblLog);
             this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.txtResult);
             this.splitContainerLeftDownWebsAndLogs.Size = new System.Drawing.Size(412, 494);
             this.splitContainerLeftDownWebsAndLogs.SplitterDistance = 146;
             this.splitContainerLeftDownWebsAndLogs.TabIndex = 0;
             // 
-            // gridFeatureDefinitions
+            // btnClearLog
             // 
-            this.gridFeatureDefinitions.AllowUserToAddRows = false;
-            this.gridFeatureDefinitions.AllowUserToDeleteRows = false;
-            this.gridFeatureDefinitions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gridFeatureDefinitions.BackgroundColor = System.Drawing.Color.LightSteelBlue;
-            this.gridFeatureDefinitions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridFeatureDefinitions.Location = new System.Drawing.Point(6, 31);
-            this.gridFeatureDefinitions.Name = "gridFeatureDefinitions";
-            this.gridFeatureDefinitions.ReadOnly = true;
-            this.gridFeatureDefinitions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridFeatureDefinitions.Size = new System.Drawing.Size(436, 418);
-            this.gridFeatureDefinitions.TabIndex = 24;
-            this.gridFeatureDefinitions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridFeatureDefinitions_CellMouseDown);
-            this.gridFeatureDefinitions.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridFeatureDefinitions_DataBindingComplete);
+            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearLog.Location = new System.Drawing.Point(319, 3);
+            this.btnClearLog.Name = "btnClearLog";
+            this.btnClearLog.Size = new System.Drawing.Size(90, 23);
+            this.btnClearLog.TabIndex = 19;
+            this.btnClearLog.Text = "Clear Log";
+            this.btnClearLog.UseVisualStyleBackColor = true;
+            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
             // 
             // FrmMain
             // 
@@ -640,6 +640,7 @@ namespace FeatureAdmin
             this.tabControl1.ResumeLayout(false);
             this.FarmFeatures.ResumeLayout(false);
             this.FarmFeatures.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridFeatureDefinitions)).EndInit();
             this.RemoveFeatures.ResumeLayout(false);
             this.splitContainerRightSiteCollFeaturesWebFeatures.Panel1.ResumeLayout(false);
             this.splitContainerRightSiteCollFeaturesWebFeatures.Panel1.PerformLayout();
@@ -667,7 +668,6 @@ namespace FeatureAdmin
             this.splitContainerLeftDownWebsAndLogs.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerLeftDownWebsAndLogs)).EndInit();
             this.splitContainerLeftDownWebsAndLogs.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridFeatureDefinitions)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -700,7 +700,6 @@ namespace FeatureAdmin
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage RemoveFeatures;
         private System.Windows.Forms.TabPage FarmFeatures;
-        private System.Windows.Forms.Button btnClearLog;
         private System.Windows.Forms.Button btnActivateSPWeb;
         private System.Windows.Forms.Button btnActivateSPSite;
         private System.Windows.Forms.Button btnActivateSPWebApp;
@@ -717,6 +716,7 @@ namespace FeatureAdmin
         private System.Windows.Forms.Button btnLoadAllFeatureActivations;
         private System.Windows.Forms.Button btnFindAllActivationsFeature;
         private System.Windows.Forms.DataGridView gridFeatureDefinitions;
+        private System.Windows.Forms.Button btnClearLog;
     
     }
 }
