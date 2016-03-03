@@ -45,3 +45,7 @@ Fix erroneous exception during ForceUninstallFeatureDefinition
 Feb, 2016 - Perry
 Add todo.txt
 Fixed ChangeLog (this) to be chronological from top to bottom
+Copy Location.cs, LocationManager.cs,
+  PropertyComparer.cs, ScopeAbbrevConverter.cs
+  SortableBindingList.cs, TemplateInfo.cs
+  from FeatureAdmin2007
