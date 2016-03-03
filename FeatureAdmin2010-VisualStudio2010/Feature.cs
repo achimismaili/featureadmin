@@ -14,6 +14,17 @@ namespace FeatureAdmin
         #region class variables
 
         public Guid Id { get; private set; }
+        private SPFeatureScope _Scope = SPFeatureScope.ScopeInvalid;
+        public SPFeatureScope Scope
+        {
+            get { return _Scope; }
+            set
+            {
+                _Scope = value;
+                ScopeAbbrev = ScopeAbbrevConverter.ScopeToAbbrev(value);
+            }
+        }
+        public string ScopeAbbrev { get; private set; } // more legible scope names -- see ScopeAbbrevConverter
 
         String _name = string.Empty;
         public String Name
@@ -29,13 +40,6 @@ namespace FeatureAdmin
             set { _compatibilityLevel = value; }
         }
 
-        SPFeatureScope _scope = SPFeatureScope.ScopeInvalid;
-        public SPFeatureScope Scope
-        {
-            get { return _scope; }
-            set { _scope = value; }
-        }
-
         String _exceptionMsg = "";
         public String ExceptionMsg
         {
@@ -47,12 +51,13 @@ namespace FeatureAdmin
         public Feature(Guid id)
         {
             this.Id = id;
+            this.Scope = SPFeatureScope.ScopeInvalid;
         }
 
         public Feature(Guid id, SPFeatureScope scope)
         {
             this.Id = id;
-            this._scope = scope;
+            this.Scope = scope;
         }
 
 #endregion
@@ -75,11 +80,11 @@ namespace FeatureAdmin
             String result = string.Empty;
             if (String.IsNullOrEmpty(_name))
             {
-                result = String.Format("ERROR READING FEATURE [{0}], Scope: {1}", idstr, this._scope.ToString());
+                result = String.Format("ERROR READING FEATURE [{0}], Scope: {1}", idstr, this.Scope.ToString());
             }
             else
             {
-                result = String.Format("{2}: '{1}' [{0}]", idstr, this._name, this._scope.ToString());
+                result = String.Format("{2}: '{1}' [{0}]", idstr, this._name, this.Scope.ToString());
             }
             return result;
         }
