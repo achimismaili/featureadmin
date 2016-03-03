@@ -97,7 +97,6 @@ namespace FeatureAdmin
             {
             }
         }
-        public const int COMPATINAPPLICABLE = -8;
         /// <summary>forcefully removes a feature definition from the farm feature definition collection</summary>
         /// <param name="id">Feature Definition ID</param>
         public void ForceUninstallFeatureDefinition(Guid id, int compatibilityLevel)
@@ -128,11 +127,11 @@ namespace FeatureAdmin
             }
             #elif (SP2010)
             {
-                return COMPATINAPPLICABLE; // inapplicable
+                return Feature.COMPATINAPPLICABLE; // inapplicable
             }
             #elif (SP2007)
             {
-                return COMPATINAPPLICABLE; // inapplicable
+                return Feature.COMPATINAPPLICABLE; // inapplicable
             }
             #else
             {

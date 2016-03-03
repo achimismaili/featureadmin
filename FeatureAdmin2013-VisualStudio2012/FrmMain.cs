@@ -280,7 +280,7 @@ namespace FeatureAdmin
                 using (SPSite site = OpenCurrentSite())
                 {
                     List<Feature> scFeatures = GetSelectedSiteCollectionFeatures();
-                    Location scLocation = LocationManager.CreateLocation(site);
+                    Location scLocation = LocationManager.GetLocation(site);
                     ForceRemoveFeaturesFromLocation(null, site.Features, scFeatures);
                 }
             }

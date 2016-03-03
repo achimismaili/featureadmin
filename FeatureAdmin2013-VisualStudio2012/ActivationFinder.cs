@@ -282,7 +282,7 @@ namespace FeatureAdmin
         private void ReportFeature(object obj, bool faulty, SPFeatureScope scope, Guid featureId, string url, string name)
         {
             OnFoundFeature(featureId, url, name);
-            Location location = LocationManager.CreateLocation(obj);
+            Location location = LocationManager.GetLocation(obj);
             List<Location> locs = null;
             if (featureLocations.ContainsKey(featureId))
             {
