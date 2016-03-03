@@ -13,11 +13,7 @@ namespace FeatureAdmin
     {
         #region class variables
 
-        Guid _id = Guid.Empty;
-        public Guid Id
-        {
-            get { return _id; }
-        }
+        public Guid Id { get; private set; }
 
         String _name = string.Empty;
         public String Name
@@ -50,12 +46,12 @@ namespace FeatureAdmin
 
         public Feature(Guid id)
         {
-            this._id = id;
+            this.Id = id;
         }
 
         public Feature(Guid id, SPFeatureScope scope)
         {
-            this._id = id;
+            this.Id = id;
             this._scope = scope;
         }
 
@@ -65,13 +61,18 @@ namespace FeatureAdmin
         /// <returns>Feature Information string with scope, name and Guid</returns>
         public override string ToString()
         {
-            String result = string.Empty;
-
-            string idstr = String.Format("{1}/{0}", this._id, this._compatibilityLevel);
+            string idstr = "";
+            // ID (with compatibility level if available for this SharePoint version)
             if (this._compatibilityLevel == FeatureManager.COMPATINAPPLICABLE)
             {
-                idstr = String.Format("{0}", this._id);
+                idstr = String.Format("{0}", this.Id);
             }
+            else
+            {
+                idstr = String.Format("{1}/{0}", this.Id, this._compatibilityLevel);
+            }
+            // Combine name & Id
+            String result = string.Empty;
             if (String.IsNullOrEmpty(_name))
             {
                 result = String.Format("ERROR READING FEATURE [{0}], Scope: {1}", idstr, this._scope.ToString());
