@@ -90,54 +90,38 @@ namespace FeatureAdmin
             ExceptionMsg += ExceptionSerializer.ToString(exc);
         }
 
-        // sort the features: first Farm, Web App, Site then Web, after this, alphabetically after the name
+        // sort the features: 
+        // First scope (Farm, Web App, Site then Web)
+        // Then name alphabetically
+        // Then Id
+        // Then CompatibilityLevel
+        // Note: Need to have a fixed stable sort, so compare everything including Ids & CompatLevel
         public int CompareTo(object obj)
         {
-            if (obj is Feature)
+            if (!(obj is Feature))
             {
-                int iVal = 0;
-                int oVal = 0;
-
-                switch (this.Scope)
-                {
-                    case SPFeatureScope.Farm:
-                        iVal += 100; break;
-                    case SPFeatureScope.WebApplication:
-                        iVal += 200; break;
-                    case SPFeatureScope.Site:
-                        iVal += 300; break;
-                    case SPFeatureScope.Web:
-                        iVal += 400; break;
-                    default:
-                        iVal += 500; break;
-                }
-
-                switch (((Feature)obj).Scope)
-                {
-                    case SPFeatureScope.Farm:
-                        oVal += 100; break;
-                    case SPFeatureScope.WebApplication:
-                        oVal += 200; break;
-                    case SPFeatureScope.Site:
-                        oVal += 300; break;
-                    case SPFeatureScope.Web:
-                        oVal += 400; break;
-                    default:
-                        oVal += 500; break;
-
-                }
-
-                if (this.Name != null)
-                {
-                    iVal += this.Name.CompareTo(((Feature)obj).Name);
-                }
-
-                // if iVal is higher than oVal in value, it will be far down in the list ...
-                return (iVal - oVal);
-            }
-            else
                 throw (new System.ArgumentException("Object is not a Feature like the instance"));
+            }
+            Feature other = (Feature)obj;
 
+            int cmp = this.Scope.CompareTo(other.Scope);
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+
+            cmp = string.Compare(this.Name, other.Name);
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+            cmp = this.Id.CompareTo(other.Id);
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+            cmp = this.CompatibilityLevel.CompareTo(other.CompatibilityLevel);
+            return cmp;
         }
     }
 }

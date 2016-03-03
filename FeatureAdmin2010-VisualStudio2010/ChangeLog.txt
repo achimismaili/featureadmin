@@ -49,3 +49,4 @@ Copy Location.cs, LocationManager.cs,
   PropertyComparer.cs, ScopeAbbrevConverter.cs
   SortableBindingList.cs, TemplateInfo.cs
   from FeatureAdmin2007
+Copy code improvements from FeatureAdmin2007
