@@ -9,6 +9,8 @@ using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using System.Data.SqlClient;
 using CursorUtil;
+using Be.Timvw.Framework.Collections.Generic;
+using Be.Timvw.Framework.ComponentModel;
 
 namespace FeatureAdmin
 {
@@ -24,14 +26,12 @@ namespace FeatureAdmin
         public static string DATETIMEFORMAT = "yyyy/MM/dd HH:mm:ss";
         // prefix for log entries: Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) + " - "; 
 
-        private FeatureManager farmFeatureDefinitionsManager = null;
-        private FeatureManager siteFeatureManager = null;
-        private FeatureManager webFeatureManager = null;
-        private static SPWebApplication m_CurrentWebApp;
-        private static SPSite m_CurrentSite;
-        private static SPWeb m_CurrentWeb;
-        // private SPList m_CurrentList;
-        private Dictionary<Guid, List<ActivationFinder.Location>> allFeatureLocations = null;
+        private FeatureDatabase m_featureDb = new FeatureDatabase();
+        private Location m_CurrentWebAppLocation;
+        private Location m_CurrentSiteLocation;
+        private Location m_CurrentWebLocation;
+        private ContextMenuStrip m_featureDefGridContextMenu;
+        private Feature m_featureDefGridContextFeature;
 
         #endregion
 
@@ -49,6 +49,11 @@ namespace FeatureAdmin
 
             featDefBtnEnabled(false);
 
+            ConfigureFeatureDefGrid();
+
+            this.Show();
+            ReloadAllFeatureDefinitions();
+
         }
 
         #region FeatureDefinition Methods
@@ -60,41 +65,88 @@ namespace FeatureAdmin
                 spver.SharePointVersion, version);
         }
 
+        private void ConfigureFeatureDefGrid()
+        {
+            DataGridView grid = gridFeatureDefinitions;
+            grid.AutoGenerateColumns = false;
+            GridColMgr.AddTextColumn(grid, "ScopeAbbrev", "Scope", 60);
+            GridColMgr.AddTextColumn(grid, "Name");
+#if (SP2013)
+            GridColMgr.AddTextColumn(grid, "CompatibilityLevel", "Compat", 60);
+#endif
+            GridColMgr.AddTextColumn(grid, "Id", 50);
+            GridColMgr.AddTextColumn(grid, "Activations", 60);
+            GridColMgr.AddTextColumn(grid, "Faulty", 60);
+
+            // Set most columns sortable
+            foreach (DataGridViewColumn column in grid.Columns)
+            {
+                if (column.DataPropertyName != "Activations")
+                {
+                    column.SortMode = DataGridViewColumnSortMode.Automatic;
+                }
+            }
+
+            CreateFeatureDefContextMenu();
+
+            // Color faulty rows
+            grid.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(gridFeatureDefinitions_DataBindingComplete);
+        }
+
+        void gridFeatureDefinitions_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            MarkFaultyFeatureDefs();
+        }
 
         /// <summary>Used to populate the list of Farm Feature Definitions</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnLoadFDefs_Click(object sender, EventArgs e)
         {
+            ReloadAllFeatureDefinitions();
+        }
+
+        private void ReloadAllFeatureDefinitions()
+        {
             using (WaitCursor wait = new WaitCursor())
             {
-                this.clbFeatureDefinitions.Items.Clear();
+                this.gridFeatureDefinitions.DataSource = null;
 
-                farmFeatureDefinitionsManager = new FeatureManager("Farm FeatureDefinitions");
-                farmFeatureDefinitionsManager.AddFeatures(SPFarm.Local.FeatureDefinitions);
-                farmFeatureDefinitionsManager.Features.Sort();
+                ReloadAllActivationData(); // reloads defintions & activation data
 
-                // Display any errors enumerating exceptions
-                foreach (Feature feature in farmFeatureDefinitionsManager.Features)
-                {
-                    if (!string.IsNullOrEmpty(feature.ExceptionMsg))
-                    {
-                        logDateMsg("Exception reading feature " + feature.Id + ": " + feature.ExceptionMsg);
-                    }
-                }
+                SortableBindingList<Feature> features = m_featureDb.GetAllFeatures();
 
-                //clbFeatureDefinitions.
-                this.clbFeatureDefinitions.Items.AddRange(farmFeatureDefinitionsManager.Features.ToArray());
-                string featlist = BuildFeatureLog(farmFeatureDefinitionsManager.Url, farmFeatureDefinitionsManager.Features);
-                logTxt(featlist);
-
+                this.gridFeatureDefinitions.DataSource = features;
 
                 logDateMsg("Feature Definition list updated.");
             }
-            // tabControl1.Enabled = false;
-            // tabControl1.Visible = false;
-            // listFeatures.Items.Clear();
-            // listDetails.Items.Clear();
+        }
+
+        private void MarkFaultyFeatureDefs()
+        {
+            foreach (DataGridViewRow row in gridFeatureDefinitions.Rows)
+            {
+                Feature feature = row.DataBoundItem as Feature;
+                if (feature.IsFaulty)
+                {
+                    row.DefaultCellStyle.ForeColor = Color.DarkRed;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get list of all feature definitions currently selected in the
+        ///  Feature Definition list
+        /// </summary>
+        private List<Feature> GetSelectedFeatureDefinitions()
+        {
+            List<Feature> features = new List<Feature>();
+            foreach (DataGridViewRow row in this.gridFeatureDefinitions.SelectedRows)
+            {
+                Feature feature = row.DataBoundItem as Feature;
+                features.Add(feature);
+            }
+            return features;
         }
 
         /// <summary>Uninstall the selected Feature definition</summary>
@@ -102,12 +154,12 @@ namespace FeatureAdmin
         /// <param name="e"></param>
         private void btnUninstFeatureDef_Click(object sender, EventArgs e)
         {
-            string msgString = string.Empty;
-            if (clbFeatureDefinitions.CheckedItems.Count == 1)
+            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
+            if (selectedFeatures.Count == 1)
             {
-                Feature feature = (Feature)clbFeatureDefinitions.CheckedItems[0];
+                Feature feature = selectedFeatures[0];
 
-                if (MessageBox.Show("This will forcefully uninstall the " + clbFeatureDefinitions.CheckedItems.Count +
+                if (MessageBox.Show("This will forcefully uninstall the " + selectedFeatures.Count +
                     " selected feature definition(s) from the Farm. Continue ?",
                     "Warning",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
@@ -133,7 +185,7 @@ namespace FeatureAdmin
                     }
                     using (WaitCursor wait = new WaitCursor())
                     {
-                        UninstallSelectedFeatureDefinitions(farmFeatureDefinitionsManager, clbFeatureDefinitions.CheckedItems);
+                        UninstallSelectedFeatureDefinitions(selectedFeatures);
                     }
                 }
             }
@@ -148,8 +200,6 @@ namespace FeatureAdmin
         #region Feature removal (SiteCollection and SPWeb)
 
         /// <summary>triggers removeSPWebFeaturesFromCurrentWeb</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void btnRemoveFromWeb_Click(object sender, EventArgs e)
         {
             if (clbSPSiteFeatures.CheckedItems.Count > 0)
@@ -162,181 +212,301 @@ namespace FeatureAdmin
         }
 
         /// <summary>Removes selected features from the current web only</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void removeSPWebFeaturesFromCurrentWeb()
         {
-            if (clbSPWebFeatures.CheckedItems.Count > 0)
-            {
-                int featuresRemoved = 0;
-                string msgString;
-                msgString = "This will force remove/deactivate the selected Feature(s) from the selected Site(SPWeb) only. Continue ?";
-
-                if (MessageBox.Show(msgString, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                {
-                    using (WaitCursor wait = new WaitCursor())
-                    {
-                        featuresRemoved = DeleteSelectedFeatures(siteFeatureManager, clbSPSiteFeatures.CheckedItems);
-                        featuresRemoved = DeleteSelectedFeatures(webFeatureManager, clbSPWebFeatures.CheckedItems);
-                    }
-
-                    msgString = "Done. Please refresh the feature list, when all features are removed!";
-                    logDateMsg(msgString);
-                }
-            }
-            else
+            if (clbSPWebFeatures.CheckedItems.Count == 0)
             {
                 MessageBox.Show(NOFEATURESELECTED);
                 logDateMsg(NOFEATURESELECTED);
+                return;
+            }
+            if (IsEmpty(m_CurrentWebLocation))
+            {
+                MessageBox.Show("No web currently selected");
+                return;
+            }
+            if (clbSPSiteFeatures.CheckedItems.Count > 0) { throw new Exception("Mixed mode unsupported"); }
+
+            string msgString = string.Format(
+                "This will force deactivate the {0} selected feature(s) from the selected Site(SPWeb): {1}"
+                + "\n Continue ?",
+                clbSPWebFeatures.CheckedItems.Count,
+                LocationManager.SafeDescribeLocation(m_CurrentWebLocation)
+                );
+
+            if (MessageBox.Show(msgString, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            using (WaitCursor wait = new WaitCursor())
+            {
+                using (SPSite site = OpenCurrentSite())
+                {
+                    using (SPWeb web = OpenCurrentWeb(site))
+                    {
+                        List<Feature> webFeatures = GetSelectedWebFeatures();
+                        ForceRemoveFeaturesFromLocation(m_CurrentWebAppLocation, web.Features, webFeatures);
+                    }
+                }
+            }
+
+            msgString = "Done. Please refresh the feature list, when all features are removed!";
+            logDateMsg(msgString);
+        }
+
+        /// <summary>Removes selected features from the current site collection only</summary>
+        private void removeSPSiteFeaturesFromCurrentSite()
+        {
+            if (clbSPSiteFeatures.CheckedItems.Count == 0)
+            {
+                MessageBox.Show(NOFEATURESELECTED);
+                logDateMsg(NOFEATURESELECTED);
+                return;
+            }
+            if (clbSPWebFeatures.CheckedItems.Count > 0) { throw new Exception("Mixed mode unsupported"); }
+            if (IsEmpty(m_CurrentSiteLocation))
+            {
+                MessageBox.Show("No site collection currently selected");
+                return;
+            }
+
+            string msgString;
+            msgString = "This will force remove/deactivate the selected Feature(s) from the selected Site Collection only. Continue ?";
+            if (MessageBox.Show(msgString, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            using (WaitCursor wait = new WaitCursor())
+            {
+                using (SPSite site = OpenCurrentSite())
+                {
+                    List<Feature> scFeatures = GetSelectedSiteCollectionFeatures();
+                    Location scLocation = LocationManager.CreateLocation(site);
+                    ForceRemoveFeaturesFromLocation(null, site.Features, scFeatures);
+                }
+            }
+
+            msgString = "Done. Please refresh the feature list, when all features are removed!";
+            logDateMsg(msgString);
+        }
+
+        private SPSite OpenCurrentSite()
+        {
+            if (IsEmpty(m_CurrentSiteLocation)) { return null; }
+            SPWebApplication webapp = GetCurrentWebApplication();
+            if (webapp == null) { return null; }
+            try
+            {
+                return webapp.Sites[m_CurrentSiteLocation.Url];
+            }
+            catch (Exception exc)
+            {
+                logException(exc, "Exception accessing current site collection");
+                return null;
             }
         }
+
+        private SPWeb OpenCurrentWeb(SPSite site)
+        {
+            if (IsEmpty(m_CurrentWebLocation)) { return null; }
+            return site.OpenWeb(m_CurrentWebLocation.Id);
+        }
+
 
         /// <summary>Removes selected features from the current SiteCollection only</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnRemoveFromSiteCollection_Click(object sender, EventArgs e)
         {
-
-            string msgString = string.Empty;
-
-            if ((clbSPSiteFeatures.CheckedItems.Count > 0) || (clbSPWebFeatures.CheckedItems.Count > 0))
-            {
-                int featuresRemoved = 0;
-                DialogResult continueRemoval = DialogResult.No;
-
-                // only SPWeb AND SPSite Features selected
-                if ((clbSPSiteFeatures.CheckedItems.Count > 0) && (clbSPWebFeatures.CheckedItems.Count > 0))
-                {
-                    msgString = "This will force remove/deactivate all selected Features (Scoped SiteCollection AND Site (SPWeb)!) from " +
-                               "the complete SiteCollection. Please be aware, that the selected Web Scoped Features " +
-                               "will be removed from each Site within the currently selected Site Collection!! " +
-                               "It is recommended to select only one Feature for Multisite deactivation! Continue?";
-
-                }
-                // only SPSite Features selected
-                else if (clbSPSiteFeatures.CheckedItems.Count > 0)
-                {
-                    msgString = "This will force remove/deactivate the selected SiteCollection scoped Feature(s) from the selected SiteCollection(SPSite). Continue ?";
-                }
-
-                // only SPWeb Features selected
-                else
-                {
-                    msgString = "This will force remove/deactivate the selected Site(SPWeb) scoped Feature(s) from the selected SiteCollection(SPSite). Continue ?";
-
-                }
-
-
-                #region remove features
-                try
-                {
-                    // remove the SPSite scoped Feature(s)
-                    if (clbSPSiteFeatures.CheckedItems.Count > 0)
-                    {
-                        using (WaitCursor wait = new WaitCursor())
-                        {
-                            // the site collection features can be easily removed same as before
-                            featuresRemoved += DeleteSelectedFeatures(siteFeatureManager, clbSPSiteFeatures.CheckedItems);
-                        }
-                    }
-
-                    // remove the SPWeb scoped Feature(s)
-                    if (clbSPWebFeatures.CheckedItems.Count > 0)
-                    {
-                        continueRemoval = MessageBox.Show(msgString, "Warning - Multi Site Deactivation!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                        if (continueRemoval == System.Windows.Forms.DialogResult.Yes)
-                        {
-                            using (WaitCursor wait = new WaitCursor())
-                            {
-                                // remove web features from SiteCollection
-                                foreach (Feature checkedFeature in clbSPWebFeatures.CheckedItems)
-                                {
-                                    featuresRemoved += removeWebFeaturesWithinSiteCollection(m_CurrentSite, checkedFeature.Id);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                finally
-                {
-                    removeReady(featuresRemoved);
-                }
-                #endregion remove features
-            }
-            else
+            if ((clbSPSiteFeatures.CheckedItems.Count == 0) && (clbSPWebFeatures.CheckedItems.Count == 0))
             {
                 MessageBox.Show(NOFEATURESELECTED);
                 logDateMsg(NOFEATURESELECTED);
             }
+
+            string msgString = string.Empty;
+
+            if (clbSPWebFeatures.CheckedItems.Count == 0)
+            {
+                // Only site collection features
+                // normal removal of SiteColl Features from one site collection
+                removeSPSiteFeaturesFromCurrentSite();
+                return;
+            }
+
+            int featuresRemoved = 0;
+            if (clbSPSiteFeatures.CheckedItems.Count != 0)
+            {
+                string msg = "Cannot remove site features and web features simultaneously";
+                MessageBox.Show(msg);
+                return;
+            }
+
+            // only remove SPWeb features from a site collection
+            msgString = "This will force remove/deactivate the selected Site (SPWeb) scoped Feature(s) from all sites within the selected SiteCollections. Continue ?";
+            if (MessageBox.Show(msgString, "Warning - Multi Site Deletion!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            using (WaitCursor wait = new WaitCursor())
+            {
+                using (SPSite site = OpenCurrentSite())
+                {
+                    if (site == null) { return; }
+                    // the web features need a special treatment
+                    foreach (Feature checkedFeature in clbSPWebFeatures.CheckedItems)
+                    {
+                        featuresRemoved += removeWebFeaturesWithinSiteCollection(site, checkedFeature.Id);
+                    }
+                }
+            }
+            removeReady(featuresRemoved);
         }
         /// <summary>Removes selected features from the current Web Application only</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnRemoveFromWebApp_Click(object sender, EventArgs e)
         {
-            string msgString = string.Empty;
-            int featuresRemoved = 0;
             int featuresSelected = clbSPSiteFeatures.CheckedItems.Count + clbSPWebFeatures.CheckedItems.Count;
-
-            if (featuresSelected > 0)
-            {
-                msgString = "The " + featuresSelected + " selected Feature(s) " +
-                    "will be removed/deactivated from the complete web application: " + m_CurrentWebApp + ". Continue?";
-
-                if (MessageBox.Show(msgString, "Warning - Multi Site Deletion!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                {
-                    using (WaitCursor wait = new WaitCursor())
-                    {
-                        // remove web scoped features from web application
-                        featuresRemoved += removeAllSelectedFeatures(clbSPSiteFeatures.CheckedItems, SPFeatureScope.WebApplication, SPFeatureScope.Site);
-
-                        // remove SiteCollection scoped features from web application
-                        featuresRemoved += removeAllSelectedFeatures(clbSPWebFeatures.CheckedItems, SPFeatureScope.WebApplication, SPFeatureScope.Web);
-                    }
-                    removeReady(featuresRemoved);
-                }
-            }
-            else
+            if (featuresSelected == 0)
             {
                 MessageBox.Show(NOFEATURESELECTED);
                 logDateMsg(NOFEATURESELECTED);
+                return;
+            }
+
+            int featuresRemoved = 0;
+
+            string title = m_CurrentWebAppLocation.Name;
+            string msgString = string.Empty;
+            msgString = "The " + featuresSelected + " selected Feature(s) " +
+                "will be removed/deactivated from the complete web application: " + title + ". Continue?";
+            if (MessageBox.Show(msgString, "Warning - Multi Site Deletion!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            using (WaitCursor wait = new WaitCursor())
+            {
+                SPWebApplication webApp = GetCurrentWebApplication();
+                List<Feature> scFeatures = GetSelectedSiteCollectionFeatures();
+                List<Feature> webFeatures = GetSelectedWebFeatures();
+                TraverseForceRemoveFeaturesFromWebApplication(webApp, scFeatures, webFeatures);
+            }
+            removeReady(featuresRemoved);
+        }
+
+        // TODO: All this traverse remove code should be factored into its own class
+        private void TraverseForceRemoveFeaturesFromFarm(List<Feature> scFeatures, List<Feature> webFeatures)
+        {
+            foreach (SPWebApplication webapp in WebAppEnumerator.GetAllWebApps())
+            {
+                TraverseForceRemoveFeaturesFromWebApplication(webapp, scFeatures, webFeatures);
             }
         }
 
-        /// <summary>Removes selected features from the whole Farm</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnRemoveFromFarm_Click(object sender, EventArgs e)
+        // TODO: All this traverse remove code should be factored into its own class
+        private void TraverseForceRemoveFeaturesFromWebApplication(SPWebApplication webapp, List<Feature> scFeatures, List<Feature> webFeatures)
         {
-            string msgString = string.Empty;
-            int featuresRemoved = 0;
-            int featuresSelected = clbSPSiteFeatures.CheckedItems.Count + clbSPWebFeatures.CheckedItems.Count;
-
-            if (featuresSelected > 0)
+            foreach (SPSite site in webapp.Sites)
             {
-                msgString = "The " + featuresSelected + " selected Feature(s) " +
-                    "will be removed/deactivated in the complete Farm! Continue?";
-
-                if (MessageBox.Show(msgString, "Warning - Multi Site Deletion!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                try
                 {
-                    using (WaitCursor wait = new WaitCursor())
+                    TraverseForceRemoveFeaturesFromSiteCollection(site, scFeatures, webFeatures);
+                }
+                finally
+                {
+                    if (site != null)
                     {
-                        // remove web scoped features from web application
-                        featuresRemoved += removeAllSelectedFeatures(clbSPSiteFeatures.CheckedItems, SPFeatureScope.Farm, SPFeatureScope.Site);
-
-                        // remove SiteCollection scoped features from web application
-                        featuresRemoved += removeAllSelectedFeatures(clbSPWebFeatures.CheckedItems, SPFeatureScope.Farm, SPFeatureScope.Web);
+                        site.Dispose();
                     }
-                    removeReady(featuresRemoved);
                 }
             }
-            else
+        }
+
+        private void TraverseForceRemoveFeaturesFromSiteCollection(SPSite site, List<Feature> scFeatures, List<Feature> webFeatures)
+        {
+            if (scFeatures != null && scFeatures.Count > 0)
+            {
+                Location scLoc = LocationManager.GetLocation(site);
+                ForceRemoveFeaturesFromLocation(scLoc, site.Features, scFeatures);
+            }
+            if (webFeatures != null && webFeatures.Count > 0)
+            {
+                foreach (SPWeb web in site.AllWebs)
+                {
+                    try
+                    {
+                        ForceRemoveFeaturesFromWeb(web, webFeatures);
+                    }
+                    finally
+                    {
+                        if (web != null)
+                        {
+                            web.Dispose();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ForceRemoveFeaturesFromWeb(SPWeb web, List<Feature> webFeatures)
+        {
+            if (webFeatures != null && webFeatures.Count > 0)
+            {
+                Location webLoc = LocationManager.GetLocation(web);
+                ForceRemoveFeaturesFromLocation(webLoc, web.Features, webFeatures);
+            }
+        }
+
+        private List<Feature> GetSelectedSiteCollectionFeatures()
+        {
+            List<Feature> list = new List<Feature>();
+            foreach (Feature feature in clbSPSiteFeatures.CheckedItems)
+            {
+                list.Add(feature);
+            }
+            return list;
+        }
+        private List<Feature> GetSelectedWebFeatures()
+        {
+            List<Feature> list = new List<Feature>();
+            foreach (Feature feature in clbSPWebFeatures.CheckedItems)
+            {
+                list.Add(feature);
+            }
+            return list;
+        }
+        /// <summary>Removes selected features from the whole Farm</summary>
+        private void btnRemoveFromFarm_Click(object sender, EventArgs e)
+        {
+            int featuresSelected = clbSPSiteFeatures.CheckedItems.Count + clbSPWebFeatures.CheckedItems.Count;
+            if (featuresSelected == 0)
             {
                 MessageBox.Show(NOFEATURESELECTED);
                 logDateMsg(NOFEATURESELECTED);
+                return;
             }
+
+            int featuresRemoved = 0;
+
+            string msgString = string.Empty;
+            msgString = "The " + featuresSelected + " selected Feature(s) " +
+                "will be removed/deactivated in the complete Farm! Continue?";
+            if (MessageBox.Show(msgString, "Warning - Multi Site Deletion!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            {
+                return;
+            }
+            using (WaitCursor wait = new WaitCursor())
+            {
+                List<Feature> scFeatures = GetSelectedSiteCollectionFeatures();
+                List<Feature> webFeatures = GetSelectedWebFeatures();
+                TraverseForceRemoveFeaturesFromFarm(scFeatures, webFeatures);
+            }
+            removeReady(featuresRemoved);
         }
 
 
@@ -344,348 +514,105 @@ namespace FeatureAdmin
 
         #region Feature Activation
 
-        private void featureActivater(SPFeatureScope activationScope)
+        private void activateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope activationScope)
         {
-            int featuresActivated = 0;
             string msgString = string.Empty;
 
-            int checkedItems = clbFeatureDefinitions.CheckedItems.Count;
+            // TODO - if we checked whether there are any web level ones
+            // we could maybe save traversing all the webs
+            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
 
-            foreach (Feature checkedFeature in clbFeatureDefinitions.CheckedItems)
+            string msg;
+            msg = string.Format(
+                "Do you really want to activate the selected {0} feature(s) in the selected {1}",
+                selectedFeatures.Count,
+                activationScope
+                );
+            if (MessageBox.Show(msgString, "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
-                switch (activationScope)
-                {
-                    case SPFeatureScope.Farm:
-                        msgString = "Do you really want to activate the checked feature: '" + checkedFeature.ToString() + "' in the whole farm?";
-
-                        if (MessageBox.Show(msgString, "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                        {
-                            featuresActivated += featureActivateInSPFarm(checkedFeature.Id, checkedFeature.Scope);
-                        }
-                        break;
-
-                    case SPFeatureScope.WebApplication:
-                        if (m_CurrentWebApp == null)
-                        {
-                            MessageBox.Show("No Web Application selected.");
-                            return;
-                        }
-                        msgString = "Do you really want to activate the selected feature: '" + checkedFeature.ToString() + "' in the web app '" +
-                            m_CurrentWebApp.Name.ToString() + "'?";
-                        if (MessageBox.Show(msgString, "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                        {
-                            featuresActivated += featureActivateInSPWebApp(m_CurrentWebApp, checkedFeature.Id, checkedFeature.Scope);
-                        }
-                        break;
-
-                    case SPFeatureScope.Site:
-                        if (m_CurrentSite == null)
-                        {
-                            MessageBox.Show("No SiteCollection selected.");
-                            return;
-                        }
-                        msgString = "The feature: <" + checkedFeature.ToString() + "> will be activated everywhere in Site Collection <" +
-                            m_CurrentSite.Url.ToString() + ">?";
-                        if (MessageBox.Show(msgString, "Please Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-                        {
-                            featuresActivated += featureActivateInSPSite(m_CurrentSite, checkedFeature.Id, checkedFeature.Scope);
-                        }
-                        break;
-
-                    case SPFeatureScope.Web:
-                        if (m_CurrentWeb == null)
-                        {
-                            MessageBox.Show("No Site (SPWeb) selected.");
-                            return;
-                        }
-                        if (checkedFeature.Scope != SPFeatureScope.Web)
-                            goto default;
-                        msgString = "The feature: <" + checkedFeature.ToString() + "> will be activated in the Site <" +
-                             m_CurrentWeb.Url.ToString() + ">?";
-                        if (MessageBox.Show(msgString, "Please Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-                        {
-                            featuresActivated += featureActivateInSPWeb(m_CurrentWeb, checkedFeature.Id);
-                        }
-                        break;
-
-                    default:
-
-                        msgString = "Error, selected feature can't be activated - " + checkedFeature.ToString();
-                        MessageBox.Show(msgString, "Warning!");
-                        logDateMsg(msgString);
-                        break;
-
-                }
-
+                return;
             }
-            msgString = featuresActivated.ToString() + " Feature(s) were/was activated.";
-            MessageBox.Show(msgString);
-            logDateMsg(msgString);
+            FeatureActivator activator = new FeatureActivator();
+            activator.ExceptionLoggingListeners += new FeatureActivator.ExceptionLoggerHandler(activator_ExceptionLoggingListeners);
 
-        }
-
-        /// <summary>activates a SPWeb feature in a SPWeb site</summary>
-        /// <param name="web"></param>
-        /// <param name="featureID"></param>
-        /// <returns></returns>
-        public int featureActivateInSPWeb(SPWeb web, Guid featureID)
-        {
-            int featuresActivated = 0;
-
-            string msgString;
-            try
-            {
-                if (!(web.Features[featureID] is SPFeature))
-                {
-                    web.Features.Add(featureID);
-                    featuresActivated++;
-                }
-            }
-            catch
-            {
-                msgString = "Error, selected feature can't be activated - " + featureID.ToString() + " in Web: '" + web.Name.ToString() + " - " + web.Url.ToString() + "'.";
-                MessageBox.Show(msgString, "Warning!");
-                logDateMsg(msgString);
-                return 0;
-            }
-            msgString = featuresActivated + " Feature added in Site" + web.Url.ToString();
-            logDateMsg(msgString);
-            return featuresActivated;
-        }
-
-        /// <summary>activates features in a SiteCollection</summary>
-        /// <param name="site"></param>
-        /// <param name="featureID"></param>
-        /// <param name="featureScope"></param>
-        /// <returns></returns>
-        public int featureActivateInSPSite(SPSite site, Guid featureID, SPFeatureScope featureScope)
-        {
-            int featuresActivated = 0;
-            string msgString = string.Empty;
-
-            if (featureScope == SPFeatureScope.Web)
-            {
-                // activate web feature in every SPWeb in this SPSite
-                foreach (SPWeb web in site.AllWebs)
-                {
-                    using (web)
-                    {
-                        featuresActivated += featureActivateInSPWeb(web, featureID);
-                    }
-                }
-            }
-            else
-            {
-                if (featureScope == SPFeatureScope.Site)
-                {
-                    // activate Site scoped feature in this SPSite
-                    try
-                    {
-                        if (!(site.Features[featureID] is SPFeature))
-                        {
-                            site.Features.Add(featureID);
-                            featuresActivated += 1;
-                        }
-                    }
-                    catch
-                    {
-                        msgString = "Error, selected feature can't be activated - " + featureID.ToString() + " in SiteCollection: '" + site.Url.ToString() + "'.";
-                        MessageBox.Show(msgString, "Warning!");
-                        logDateMsg(msgString);
-                    }
-                }
-
-                else
-                {
-                    msgString = "Error, Scope " + featureScope + " not allowed for Activation in SiteCollection";
-                    MessageBox.Show(msgString, "Warning!");
-                    logDateMsg(msgString);
-                    return 0;
-                }
-            }
-            msgString = featuresActivated + " Features added in SiteCollection" + site.Url.ToString();
-            logDateMsg(msgString);
-
-            return featuresActivated;
-        }
-
-        /// <summary>activate all features in a web application</summary>
-        /// <param name="webApp"></param>
-        /// <param name="featureID"></param>
-        /// <param name="featureScope"></param>
-        /// <returns></returns>
-        public int featureActivateInSPWebApp(SPWebApplication webApp, Guid featureID, SPFeatureScope featureScope)
-        {
-            string msgString;
-            int featuresActivated = 0;
-
-            switch (featureScope)
-            {
-                // Web Application Scoped Feature Activation   
-                case SPFeatureScope.WebApplication:
-
-                    // activate web app scoped feature in the web application
-                    try
-                    {
-                        if (!(webApp.Features[featureID] is SPFeature))
-                        {
-
-                            webApp.Features.Add(featureID);
-                            featuresActivated += 1;
-                        }
-                    }
-                    catch
-                    {
-                        msgString = "Error, selected feature can't be activated - in WebApp: '" + webApp.Name.ToString() + "'.";
-                        MessageBox.Show(msgString, "Warning!");
-                        logDateMsg(msgString);
-                    }
-
-
-                    break;
-
-                #region Iterate through lower scopes
-                // Site Scoped Feature Activation   
-                case SPFeatureScope.Site:
-                    // activate site feature in every SPSit in this Web Application
-                    foreach (SPSite site in webApp.Sites)
-                    {
-                        using (site)
-                        {
-                            featuresActivated += featureActivateInSPSite(site, featureID, featureScope);
-                        }
-                    }
-
-                    break;
-
-                // Web Scoped Feature Activation   
-                case SPFeatureScope.Web:
-
-                    // activate web feature in every SPWeb in this Web Application
-                    foreach (SPSite site in webApp.Sites)
-                    {
-                        using (site)
-                        {
-                            foreach (SPWeb web in site.AllWebs)
-                            {
-                                using (web)
-                                {
-                                    featuresActivated += featureActivateInSPWeb(web, featureID);
-                                }
-                            }
-                        }
-                    }
-                    break;
-                #endregion
-
-                default:
-                    msgString = "Error, Scope " + featureScope + " not allowed for Activation in Web Application";
-                    MessageBox.Show(msgString, "Warning!");
-                    logDateMsg(msgString);
-                    break;
-            }
-            return featuresActivated;
-
-        }
-
-        /// <summary>activate features in the whole farm</summary>
-        /// <param name="featureID"></param>
-        /// <param name="featureScope"></param>
-        /// <returns></returns>
-        public int featureActivateInSPFarm(Guid featureID, SPFeatureScope featureScope)
-        {
-            string msgString;
-            int featuresActivated = 0;
-
-            // all the content & admin WebApplications 
-            SPWebApplicationCollection webApplicationCollection = GetAllWebApps();
-
-            switch (featureScope)
+            switch (activationScope)
             {
                 case SPFeatureScope.Farm:
-
-                    // activate farm scoped features to the farm
-                    try
                     {
-                        if (!(SPWebService.ContentService.Features[featureID] is SPFeature))
-                        {
-                            SPWebService.ContentService.Features.Add(featureID);
-                            featuresActivated += 1;
-                        }
-                    }
-                    catch
-                    {
-                        msgString = "Error, selected feature can't be activated - " + featureID.ToString() + " on Farm level.";
-                        MessageBox.Show(msgString, "Warning!");
-                        logDateMsg(msgString);
+                        activator.TraverseActivateFeaturesInFarm(selectedFeatures);
                     }
                     break;
 
-                #region Iterate through lower scopes
-                // Web Application Scoped Feature Activation            
                 case SPFeatureScope.WebApplication:
-
-
-                    // activate web app feature in every Web Application
-                    foreach (SPWebApplication webApp in webApplicationCollection)
                     {
-                        featuresActivated += featureActivateInSPWebApp(webApp, featureID, featureScope);
+                        SPWebApplication webapp = GetCurrentWebApplication();
+                        activator.TraverseActivateFeaturesInWebApplication(webapp, selectedFeatures);
                     }
-
-
                     break;
 
-
-
-                // SPSite Scoped Feature Activation
                 case SPFeatureScope.Site:
-                    foreach (SPWebApplication webApp in webApplicationCollection)
                     {
-
-                        // activate site feature in every SPSite in this Web Application
-                        foreach (SPSite site in webApp.Sites)
+                        using (SPSite site = OpenCurrentSite())
                         {
-                            using (site)
+                            if (site == null) { return; }
+                            try
                             {
-                                featuresActivated += featureActivateInSPSite(site, featureID, featureScope);
+                                activator.TraverseActivateFeaturesInSiteCollection(site, selectedFeatures);
+                            }
+                            finally
+                            {
+                                site.Dispose();
                             }
                         }
                     }
                     break;
 
-                // Web Scoped Feature Activation
                 case SPFeatureScope.Web:
-
-                    foreach (SPWebApplication webApp in webApplicationCollection)
                     {
-
-                        // activate web feature in every SPWeb in this Web Application
-                        foreach (SPSite site in webApp.Sites)
+                        using (SPSite site = OpenCurrentSite())
                         {
-                            using (site)
+                            if (site == null) { return; }
+                            try
                             {
-                                foreach (SPWeb web in site.AllWebs)
+                                using (SPWeb web = site.OpenWeb())
                                 {
-                                    using (web)
+                                    if (web == null) { return; }
+                                    try
                                     {
-                                        featuresActivated += featureActivateInSPWeb(web, featureID);
+                                        activator.ActivateFeaturesInWeb(web, selectedFeatures);
+                                    }
+                                    finally
+                                    {
+                                        site.Dispose();
                                     }
                                 }
                             }
+                            finally
+                            {
+                                site.Dispose();
+                            }
                         }
                     }
                     break;
-
-                #endregion
-
                 default:
-                    msgString = "Error, Scope " + featureScope + " not allowed for Activation in Web Application";
-                    MessageBox.Show(msgString, "Warning!");
-                    logDateMsg(msgString);
+                    {
+                        msg = "Unknown scope: " + activationScope.ToString();
+                        MessageBox.Show(msg, "Warning!");
+                        logDateMsg(msg);
+                    }
                     break;
             }
-            return featuresActivated;
+            int featuresActivated = activator.Activations;
+            msg = string.Format(
+                "{0} Feature(s) were/was activated.",
+                featuresActivated);
+            MessageBox.Show(msgString);
+            logDateMsg(msgString);
+        }
 
+        void activator_ExceptionLoggingListeners(Exception exc, string msg)
+        {
+            logException(exc, msg);
         }
 
 
@@ -693,49 +620,6 @@ namespace FeatureAdmin
 
         #region Helper Methods
 
-
-        /// <summary>gets all the features from the selected Web Site and Site Collection</summary>
-        private void getFeatures()
-        {
-            using (WaitCursor wait = new WaitCursor())
-            {
-                ClearLog();
-                clbSPSiteFeatures.Items.Clear();
-                clbSPWebFeatures.Items.Clear();
-
-                //using (SPSite site = new SPSite(txtUrl.Text))
-                using (SPSite site = m_CurrentSite)
-                {
-                    siteFeatureManager = new FeatureManager(site.Url);
-                    siteFeatureManager.AddFeatures(site.Features, SPFeatureScope.Site);
-
-                    //using (SPWeb web = site.OpenWeb())
-                    using (SPWeb web = m_CurrentWeb)
-                    {
-                        webFeatureManager = new FeatureManager(web.Url);
-                        webFeatureManager.AddFeatures(web.Features, SPFeatureScope.Web);
-                    }
-                }
-
-                // sort the features list
-                siteFeatureManager.Features.Sort();
-                clbSPSiteFeatures.Items.AddRange(siteFeatureManager.Features.ToArray());
-                string featlist = BuildFeatureLog(siteFeatureManager.Url, siteFeatureManager.Features);
-                logTxt(featlist);
-
-                // sort the features list
-                webFeatureManager.Features.Sort();
-                clbSPWebFeatures.Items.AddRange(webFeatureManager.Features.ToArray());
-                featlist = BuildFeatureLog(webFeatureManager.Url, webFeatureManager.Features);
-                logTxt(featlist);
-
-                // enables the removal buttons
-                // removeBtnEnabled(true);
-            }
-            // commented out, was too annoying
-            // MessageBox.Show("Done.");
-            logDateMsg("Feature list updated.");
-        }
 
         /// <summary>write the log in the form, when features are loaded</summary>
         /// <param name="location"></param>
@@ -793,24 +677,23 @@ namespace FeatureAdmin
 
         private void logFeatureDefinitionSelected()
         {
-            if (clbFeatureDefinitions.CheckedItems.Count > 0)
+            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
+            if (selectedFeatures.Count > 0)
             {
-
                 // enable all FeatureDef buttons
                 featDefBtnEnabled(true);
 
                 logDateMsg("Feature Definition selection changed:");
 
-                foreach (Feature checkedFeature in clbFeatureDefinitions.CheckedItems)
+                foreach (Feature feature in selectedFeatures)
                 {
-                    logMsg(checkedFeature.ToString());
+                    logMsg(feature.ToString());
                 }
             }
             else
             {
                 // disable all FeatureDef buttons
                 featDefBtnEnabled(false);
-
             }
         }
 
@@ -828,38 +711,35 @@ namespace FeatureAdmin
             return removedFeatures;
         }
 
-
-        /// <summary>Delete a collection of SiteCollection or Web Features forcefully in one site</summary>
-        /// <param name="manager"></param>
-        /// <param name="checkedListItems"></param>
-        private int removeAllSelectedFeatures(CheckedListBox.CheckedItemCollection checkedListItems, SPFeatureScope deletionScope, SPFeatureScope featureScope)
+        /// <summary>
+        /// Forcefully delete specified features from specified collection
+        /// (Could be SPFarm.Features, or SPWebApplication.Features, or etc.)
+        /// </summary>
+        private int ForceRemoveFeaturesFromLocation(Location location, SPFeatureCollection spfeatureSet, List<Feature> featuresToRemove)
         {
             int removedFeatures = 0;
-            foreach (Feature checkedFeature in checkedListItems)
+            foreach (Feature feature in featuresToRemove)
             {
-                switch (deletionScope)
-                {
-
-                    case SPFeatureScope.Farm:
-                        removedFeatures += removeFeaturesWithinFarm(checkedFeature.Id, featureScope);
-                        break;
-                    case SPFeatureScope.WebApplication:
-                        removedFeatures += removeFeaturesWithinWebApp(m_CurrentWebApp, checkedFeature.Id, featureScope);
-                        break;
-
-                    // only relevant for web scoped features
-                    case SPFeatureScope.Site:
-                        if (featureScope == SPFeatureScope.Site) goto default;
-                        removedFeatures += removeWebFeaturesWithinSiteCollection(m_CurrentSite, checkedFeature.Id);
-                        break;
-
-                    default:
-                        logDateMsg("no features removed, deletion scope defined wrong!");
-                        break;
-                }
-
+                ForceRemoveFeatureFromLocation(location, spfeatureSet, feature.Id);
+                removedFeatures++;
             }
             return removedFeatures;
+        }
+
+        /// <summary>forcefully removes a feature from a featurecollection</summary>
+        /// <param name="id">Feature ID</param>
+        public void ForceRemoveFeatureFromLocation(Location location, SPFeatureCollection spfeatureSet, Guid featureId)
+        {
+            try
+            {
+                spfeatureSet.Remove(featureId, true);
+            }
+            catch (Exception exc)
+            {
+                logException(exc, string.Format(
+                    "Trying to remove feature {0} from {1}",
+                    featureId, LocationManager.SafeDescribeLocation(location)));
+            }
         }
 
         /// <summary>remove all Web scoped features from a SiteCollection</summary>
@@ -1049,14 +929,27 @@ namespace FeatureAdmin
         /// <summary>Uninstall a collection of Farm Feature Definitions forcefully</summary>
         /// <param name="manager"></param>
         /// <param name="checkedListItems"></param>
-        private void UninstallSelectedFeatureDefinitions(FeatureManager manager, CheckedListBox.CheckedItemCollection checkedListItems)
+        private void UninstallSelectedFeatureDefinitions(List<Feature> features)
         {
-            foreach (Feature checkedFeature in checkedListItems)
+            foreach (Feature feature in features)
             {
-                manager.ForceUninstallFeatureDefinition(checkedFeature.Id, checkedFeature.CompatibilityLevel);
+                try
+                {
+                    FeatureUninstaller.ForceUninstallFeatureDefinition(
+                        feature.Id, feature.CompatibilityLevel);
+                }
+                catch (Exception exc)
+                {
+                    logException(exc, string.Format(
+                        "Exception uninstalling feature defintion {0}",
+                        feature.Id));
+                }
             }
         }
 
+        private void ForceUninstallFeatureDefinition(Feature feature)
+        {
+        }
 
         /// <summary>enables or disables all buttons for feature removal</summary>
         /// <param name="enabled">true = enabled, false = disabled</param>
@@ -1323,6 +1216,11 @@ namespace FeatureAdmin
                 if (listWebApplications.Items.Count > 0)
                 {
                     listSiteCollections.Enabled = true;
+                    // If there is only one, select it
+                    if (listWebApplications.Items.Count == 0)
+                    {
+                        listWebApplications.SelectedIndex = 0;
+                    }
                 }
                 else
                 {
@@ -1331,42 +1229,53 @@ namespace FeatureAdmin
             }
         }
 
+        private SPWebApplication GetCurrentWebApplication()
+        {
+            Guid id = m_CurrentWebAppLocation.Id;
+            if (id == Guid.Empty)
+            {
+                return null;
+            }
+            else if (id == SPAdministrationWebApplication.Local.Id)
+            {
+                return SPAdministrationWebApplication.Local;
+            }
+            else
+            {
+                return SPWebService.ContentService.WebApplications[id];
+            }
+        }
+
         /// <summary>Update SiteCollections list when a user changes the selection in Web Application list
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void listWebApplications_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ReloadCurrentSiteCollections();
+        }
+
+        private void ReloadCurrentSiteCollections()
         {
             using (WaitCursor wait = new WaitCursor())
             {
                 try
                 {
-                    listSiteCollections.Items.Clear();
-                    listSites.Items.Clear();
-                    clbSPSiteFeatures.Items.Clear();
-                    clbSPWebFeatures.Items.Clear();
+                    ClearCurrentSiteCollectionData();
+                    ClearCurrentWebData();
                     removeBtnEnabled(false);
 
-                    if (listWebApplications.SelectedItem.ToString() != String.Empty)
+                    m_CurrentWebAppLocation = listWebApplications.SelectedItem as Location;
+                    if (m_CurrentWebAppLocation == null) { return; }
+                    SPWebApplication webApp = GetCurrentWebApplication();
+                    foreach (SPSite site in webApp.Sites)
                     {
-                        foreach (SPWebApplication webApp in GetAllWebApps())
-                        {
-                            if (webApp.Name == listWebApplications.SelectedItem.ToString())
-                            {
-                                m_CurrentWebApp = webApp;
-                            }
-                        }
-
-                        foreach (SPSite site in m_CurrentWebApp.Sites)
-                        {
-                            listSiteCollections.Items.Add(site.Url);
-                        }
+                        Location siteLocation = LocationManager.GetLocation(site);
+                        listSiteCollections.Items.Add(siteLocation);
                     }
-
-                    // tabControl1.Enabled = false;
-                    // tabControl1.Visible = false;
-                    // listFeatures.Items.Clear();
-                    // listDetails.Items.Clear();
+                    // select first site collection if there is only one
+                    if (listSiteCollections.Items.Count == 1)
+                    {
+                        listSiteCollections.SelectedIndex = 0;
+                    }
                 }
                 catch (Exception exc)
                 {
@@ -1377,72 +1286,98 @@ namespace FeatureAdmin
 
         /// <summary>UI method to update the SPWeb list when a user changes the selection in site collection list
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void listSiteCollections_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listSiteCollections.SelectedIndex > -1)
+            using (WaitCursor wait = new WaitCursor())
             {
-                using (WaitCursor wait = new WaitCursor())
+                m_CurrentSiteLocation = listSiteCollections.SelectedItem as Location;
+                ClearCurrentWebData();
+                ReloadCurrentSiteCollectionFeatures();
+                ReloadSubWebList();
+            }
+        }
+
+        private void ClearCurrentSiteCollectionData()
+        {
+            FeatureAdmin.Location.Clear(m_CurrentSiteLocation);
+            listSiteCollections.Items.Clear();
+            clbSPSiteFeatures.Items.Clear();
+        }
+
+        private void ClearCurrentWebData()
+        {
+            FeatureAdmin.Location.Clear(m_CurrentWebLocation);
+            listSites.Items.Clear();
+            clbSPWebFeatures.Items.Clear();
+        }
+
+        private void ReloadCurrentSiteCollectionFeatures()
+        {
+            clbSPSiteFeatures.Items.Clear();
+            if (IsEmpty(m_CurrentSiteLocation)) { return; }
+            List<Feature> features = m_featureDb.GetFeaturesOfLocation(m_CurrentSiteLocation);
+            features.Sort();
+            clbSPSiteFeatures.Items.AddRange(features.ToArray());
+        }
+
+        private void ReloadCurrentWebFeatures()
+        {
+            clbSPWebFeatures.Items.Clear();
+            if (m_CurrentWebLocation == null) { return; }
+            List<Feature> features = m_featureDb.GetFeaturesOfLocation(m_CurrentWebLocation);
+            features.Sort();
+            clbSPWebFeatures.Items.AddRange(features.ToArray());
+        }
+
+        private static bool IsEmpty(Location location)
+        {
+            return FeatureAdmin.Location.IsLocationEmpty(location);
+        }
+
+        private void ReloadSubWebList()
+        {
+            try
+            {
+                removeBtnEnabled(false);
+
+                m_CurrentSiteLocation = listSiteCollections.SelectedItem as Location;
+                if (m_CurrentSiteLocation == null) { return; }
+                using (SPSite site = OpenCurrentSite())
                 {
-                    //Clear the lists
-                    listSites.Items.Clear();
-                    clbSPSiteFeatures.Items.Clear();
-                    clbSPWebFeatures.Items.Clear();
-                    removeBtnEnabled(false);
-
-                    // tabControl1.Enabled = true;
-                    // tabControl1.Visible = true;
-
-                    //If there is only one site collection chosen, list the subsites.
-                    if (listSiteCollections.SelectedItems.Count == 1)
+                    foreach (SPWeb web in site.AllWebs)
                     {
-                        m_CurrentSite = m_CurrentWebApp.Sites[listSiteCollections.SelectedIndices[0]];
                         try
                         {
-                            foreach (SPWeb web in m_CurrentSite.AllWebs)
-                            {
-                                listSites.Items.Add(web.Name + " - " + web.Title + " - " + web.Url);
-                            }
+                            Location webLocation = LocationManager.GetLocation(web);
+                            listSites.Items.Add(webLocation);
                         }
-                        catch (Exception exc)
+                        finally
                         {
-                            string msg = FormatSiteException(m_CurrentSite, exc, "Error enumerating webs");
-                            ReportError(msg);
-                            logException(exc, msg);
+                            site.Dispose();
                         }
-
-                        //List the features for the site.
-                        //FillFeatureList();
                     }
                 }
+                // select first site collection if there is only one
+                if (listSites.Items.Count == 1)
+                {
+                    listSites.SelectedIndex = 0;
+                }
             }
-            else
+            catch (Exception exc)
             {
-                // tabControl1.Enabled = false;
-                // tabControl1.Visible = false;
+                logException(exc, "Exception enumerating site collections");
             }
         }
 
         /// <summary>UI method to load the SiteCollection Features and Site Features
         /// Handles the SelectedIndexChanged event of the listSites control.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void listSites_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //Make sure we have selected a web.
-            if (listSites.SelectedIndex > -1)
+            using (WaitCursor wait = new WaitCursor())
             {
-                m_CurrentWeb = m_CurrentSite.AllWebs[listSites.SelectedIndices[0]];
-
-                //list all the features
-                getFeatures();
-            }
-            else
-            {
-                //listSPLists.Enabled = false;
-                m_CurrentWeb = null;
+                m_CurrentWebLocation = listSites.SelectedItem as Location;
+                ReloadCurrentWebFeatures();
             }
         }
 
@@ -1469,32 +1404,33 @@ namespace FeatureAdmin
 
         private void btnActivateSPWeb_Click(object sender, EventArgs e)
         {
-            featureActivater(SPFeatureScope.Web);
+            activateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope.Web);
         }
 
         private void btnActivateSPSite_Click(object sender, EventArgs e)
         {
-            featureActivater(SPFeatureScope.Site);
+            activateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope.Site);
         }
 
         private void btnActivateSPWebApp_Click(object sender, EventArgs e)
         {
-            featureActivater(SPFeatureScope.WebApplication);
+            activateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope.WebApplication);
         }
 
         private void btnActivateSPFarm_Click(object sender, EventArgs e)
         {
-            featureActivater(SPFeatureScope.Farm);
+            activateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope.Farm);
         }
 
         private void btnFindActivatedFeature_Click(object sender, EventArgs e)
         {
-            if (clbFeatureDefinitions.CheckedItems.Count != 1)
+            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
+            if (selectedFeatures.Count != 1)
             {
                 MessageBox.Show("Please select exactly 1 feature.");
                 return;
             }
-            Feature feature = (Feature)clbFeatureDefinitions.CheckedItems[0];
+            Feature feature = (Feature)selectedFeatures[0];
 
             ActivationFinder finder = new ActivationFinder();
             finder.FoundListeners += delegate(Guid featureId, string url, string name)
@@ -1516,14 +1452,15 @@ namespace FeatureAdmin
         }
         private void btnFindAllActivationsFeature_Click(object sender, EventArgs e)
         {
-            if (clbFeatureDefinitions.CheckedItems.Count != 1)
+            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
+            if (selectedFeatures.Count != 1)
             {
                 MessageBox.Show("Please select exactly 1 feature.");
                 return;
             }
-            Feature feature = (Feature)clbFeatureDefinitions.CheckedItems[0];
+            Feature feature = selectedFeatures[0];
 
-            List<ActivationFinder.Location> featlocs = GetFeatureLocations(feature.Id);
+            List<Location> featlocs = GetFeatureLocations(feature.Id);
             if (featlocs.Count == 0)
             {
                 MessageBox.Show("No activations found");
@@ -1540,7 +1477,7 @@ namespace FeatureAdmin
                     feature.Name,
                     feature.Id
                     ));
-                foreach (ActivationFinder.Location loc in featlocs)
+                foreach (Location loc in featlocs)
                 {
                     string msgtext = "    " + loc.Url;
                     if (loc.Url != loc.Name)
@@ -1551,55 +1488,35 @@ namespace FeatureAdmin
                 }
             }
         }
-        private List<ActivationFinder.Location> GetFeatureLocations(Guid featureId)
+        private List<Location> GetFeatureLocations(Guid featureId)
         {
-            Dictionary<Guid, List<ActivationFinder.Location>> dict = null;
-
-            if (allFeatureLocations != null)
+            if (!m_featureDb.IsLoaded())
             {
-                // use preloaded data
-                dict = allFeatureLocations;
+                ReloadAllActivationData();
             }
-            else
-            {
-                using (WaitCursor wait = new WaitCursor())
-                {
-                    ActivationFinder finder = new ActivationFinder();
-                    // No Found callback b/c we process final list
-                    finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
-
-                    // Call routine to actually find & report activations
-                    dict = finder.FindAllActivations(featureId);
-                }
-            }
-            if (dict.ContainsKey(featureId))
-            {
-                return dict[featureId];
-            }
-            else
-            {
-                return new List<ActivationFinder.Location>(); // empty list
-            }
+            return m_featureDb.GetLocationsOfFeature(featureId);
         }
 
         private void btnLoadAllFeatureActivations_Click(object sender, EventArgs e)
         {
+            ReloadAllActivationData();
+            string msgtext = string.Format(
+                "All activation data reloaded"
+                );
+            MessageBox.Show(msgtext);
+        }
+
+        private void ReloadAllActivationData()
+        {
             using (WaitCursor wait = new WaitCursor())
             {
-                allFeatureLocations = null;
                 ActivationFinder finder = new ActivationFinder();
                 // No Found callback b/c we process final list
                 finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
 
                 // Call routine to actually find & report activations
-                allFeatureLocations
-                    = finder.FindAllActivationsOfAllFeatures();
+                m_featureDb.LoadAllData(finder.FindAllActivationsOfAllFeatures());
             }
-            string msgtext = string.Format(
-                "Locations of {0} features loaded",
-                allFeatureLocations.Count
-                );
-            MessageBox.Show(msgtext);
         }
 
         private void btnFindFaultyFeature_Click(object sender, EventArgs e)
@@ -1720,5 +1637,162 @@ namespace FeatureAdmin
         }
 
         #endregion
+        #region MessageBoxes
+        private static void ErrorBox(string text)
+        {
+            ErrorBox(text, "Error");
+        }
+        private static void ErrorBox(string text, string caption)
+        {
+            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        private static bool ConfirmBox(string text)
+        {
+            return ConfirmBox(text, "Confirm");
+        }
+        private static bool ConfirmBox(string text, string caption)
+        {
+            DialogResult rtn = MessageBox.Show(
+                text, caption,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            return (rtn == DialogResult.Yes);
+        }
+        private static void InfoBox(string text)
+        {
+            InfoBox(text, "");
+        }
+        private static void InfoBox(string text, string caption)
+        {
+            MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        #endregion
+
+        private void gridFeatureDefinitions_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView grid = sender as DataGridView;
+            if (grid.Columns[e.ColumnIndex].DataPropertyName == "Activations")
+            {
+                Feature feature = grid.Rows[e.RowIndex].DataBoundItem as Feature;
+                FeatureLocationSet set = new FeatureLocationSet();
+                ReviewActivationsOfFeature(feature);
+            }
+        }
+
+        private void ReviewActivationsOfFeature(Feature feature)
+        {
+            FeatureLocationSet set = new FeatureLocationSet();
+            set[feature] = GetFeatureLocations(feature.Id);
+            ReviewActivationsOfFeatures(set);
+        }
+        private void ReviewActivationsOfFeatures(FeatureLocationSet featLocs)
+        {
+            // TODO
+            /*
+            if (featLocs.Count == 0 || featLocs.GetTotalLocationCount() == 0)
+            {
+                MessageBox.Show("No activations found");
+            }
+            else
+            {
+                LocationForm form = new LocationForm(featLocs);
+                form.ShowDialog();
+            }
+             * */
+        }
+
+        private void gridFeatureDefinitions_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            m_featureDefGridContextFeature = null;
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) { return; } // Ignore if out of data area
+            if (e.Button == MouseButtons.Right)
+            {
+                // Find feature def on which user right-clicked
+                DataGridView grid = sender as DataGridView;
+                DataGridViewRow row = grid.Rows[e.RowIndex];
+                m_featureDefGridContextFeature = row.DataBoundItem as Feature;
+                if (GetIntValue(m_featureDefGridContextFeature.Activations, 0) == 0)
+                {
+                    // no context menu if feature has no activations
+                    // because the context menu gets stuck up if the no activations
+                    // message box appears
+                    return;
+                }
+                if (m_featureDefGridContextFeature.Id == Guid.Empty)
+                {
+                    // no context menu if no valid id
+                    return;
+                }
+                gridFeatureDefinitions.ContextMenuStrip = m_featureDefGridContextMenu;
+                UpdateGridContextMenu();
+            }
+        }
+
+        private void CreateFeatureDefContextMenu()
+        {
+            // Construct context menu
+            ContextMenuStrip ctxtmenu = new ContextMenuStrip();
+            ToolStripMenuItem header = new ToolStripMenuItem("Feature: ?");
+            header.Name = "Header";
+            header.ForeColor = Color.DarkBlue;
+            ctxtmenu.Items.Add(header);
+            ToolStripMenuItem menuViewActivations = new ToolStripMenuItem("View activations");
+            menuViewActivations.Name = "Activations";
+            menuViewActivations.MouseDown += gridFeatureDefinitions_ViewActivationsClick;
+            ctxtmenu.Items.AddRange(new ToolStripItem[] { menuViewActivations });
+            m_featureDefGridContextMenu = ctxtmenu;
+        }
+
+        private void UpdateGridContextMenu()
+        {
+            Feature feature = m_featureDefGridContextFeature;
+            ContextMenuStrip ctxtmenu = m_featureDefGridContextMenu;
+            ToolStripItem header = ctxtmenu.Items.Find("Header", true)[0];
+            header.Text = string.Format("Feature: {0}", GetFeatureNameOrId(feature));
+            ToolStripItem activations = ctxtmenu.Items.Find("Activations", true)[0];
+            activations.Text = string.Format("View {0} activations", GetIntValue(feature.Activations, 0));
+        }
+
+        private static string GetFeatureNameOrId(Feature feature)
+        {
+            if (!string.IsNullOrEmpty(feature.Name))
+            {
+                return feature.Name;
+            }
+            else
+            {
+                return feature.Id.ToString();
+            }
+        }
+
+        private void gridFeatureDefinitions_ViewActivationsClick(object sender, EventArgs e)
+        {
+            ReviewActivationsOfFeature(m_featureDefGridContextFeature);
+        }
+
+        private static int GetIntValue(int? value, int defval)
+        {
+            return value.HasValue ? value.Value : defval;
+        }
+
+        private void btnViewActivations_Click(object sender, EventArgs e)
+        {
+            if (gridFeatureDefinitions.SelectedRows.Count < 1)
+            {
+                InfoBox("No features selected to review activations");
+                return;
+            }
+            FeatureLocationSet set = new FeatureLocationSet();
+            foreach (Feature feature in GetSelectedFeatureDefinitions())
+            {
+                set.Add(feature, GetFeatureLocations(feature.Id));
+            }
+            ReviewActivationsOfFeatures(set);
+        }
+
+        private void gridFeatureDefinitions_MouseDown(object sender, MouseEventArgs e)
+        {
+            gridFeatureDefinitions.ContextMenuStrip = null;
+            m_featureDefGridContextFeature = null;
+        }
     }
 }

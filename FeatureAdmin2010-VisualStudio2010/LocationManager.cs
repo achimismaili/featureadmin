@@ -6,6 +6,7 @@ namespace FeatureAdmin
 {
     public static class LocationManager
     {
+        public static Location GetLocation(object obj) { return CreateLocation(obj); }
         public static Location CreateLocation(object obj)
         {
             Location loct = new Location();

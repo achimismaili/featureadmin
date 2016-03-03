@@ -40,7 +40,6 @@ namespace FeatureAdmin
             this.lblWebApps = new System.Windows.Forms.Label();
             this.listSites = new System.Windows.Forms.ListBox();
             this.lblWebs = new System.Windows.Forms.Label();
-            this.clbFeatureDefinitions = new System.Windows.Forms.CheckedListBox();
             this.label4 = new System.Windows.Forms.Label();
             this.lblFeatureDefinitions = new System.Windows.Forms.Label();
             this.btnReloadFDefs = new System.Windows.Forms.Button();
@@ -51,6 +50,7 @@ namespace FeatureAdmin
             this.btnRemoveFromFarm = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FarmFeatures = new System.Windows.Forms.TabPage();
+            this.gridFeatureDefinitions = new System.Windows.Forms.DataGridView();
             this.btnLoadAllFeatureActivations = new System.Windows.Forms.Button();
             this.btnFindAllActivationsFeature = new System.Windows.Forms.Button();
             this.btnActivateSPWeb = new System.Windows.Forms.Button();
@@ -68,6 +68,7 @@ namespace FeatureAdmin
             this.splitContainerLeftDownWebsAndLogs = new System.Windows.Forms.SplitContainer();
             this.tabControl1.SuspendLayout();
             this.FarmFeatures.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridFeatureDefinitions)).BeginInit();
             this.RemoveFeatures.SuspendLayout();
             this.splitContainerRightSiteCollFeaturesWebFeatures.Panel1.SuspendLayout();
             this.splitContainerRightSiteCollFeaturesWebFeatures.Panel2.SuspendLayout();
@@ -250,21 +251,6 @@ namespace FeatureAdmin
             this.lblWebs.TabIndex = 8;
             this.lblWebs.Text = "Web Sites within selected SiteCollection";
             // 
-            // clbFeatureDefinitions
-            // 
-            this.clbFeatureDefinitions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.clbFeatureDefinitions.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.clbFeatureDefinitions.CheckOnClick = true;
-            this.clbFeatureDefinitions.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.clbFeatureDefinitions.FormattingEnabled = true;
-            this.clbFeatureDefinitions.Location = new System.Drawing.Point(6, 31);
-            this.clbFeatureDefinitions.Name = "clbFeatureDefinitions";
-            this.clbFeatureDefinitions.Size = new System.Drawing.Size(436, 409);
-            this.clbFeatureDefinitions.TabIndex = 8;
-            this.clbFeatureDefinitions.SelectedIndexChanged += new System.EventHandler(this.clbFeatureDefinitions_SelectedIndexChanged);
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -368,6 +354,7 @@ namespace FeatureAdmin
             // 
             // FarmFeatures
             // 
+            this.FarmFeatures.Controls.Add(this.gridFeatureDefinitions);
             this.FarmFeatures.Controls.Add(this.btnLoadAllFeatureActivations);
             this.FarmFeatures.Controls.Add(this.btnFindAllActivationsFeature);
             this.FarmFeatures.Controls.Add(this.btnActivateSPWeb);
@@ -375,7 +362,6 @@ namespace FeatureAdmin
             this.FarmFeatures.Controls.Add(this.btnActivateSPWebApp);
             this.FarmFeatures.Controls.Add(this.btnFindActivatedFeature);
             this.FarmFeatures.Controls.Add(this.btnActivateSPFarm);
-            this.FarmFeatures.Controls.Add(this.clbFeatureDefinitions);
             this.FarmFeatures.Controls.Add(this.btnUninstFDef);
             this.FarmFeatures.Controls.Add(this.label4);
             this.FarmFeatures.Controls.Add(this.label1);
@@ -388,6 +374,24 @@ namespace FeatureAdmin
             this.FarmFeatures.TabIndex = 1;
             this.FarmFeatures.Text = "Farm Feature Administration";
             this.FarmFeatures.UseVisualStyleBackColor = true;
+            // 
+            // gridFeatureDefinitions
+            // 
+            this.gridFeatureDefinitions.AllowUserToAddRows = false;
+            this.gridFeatureDefinitions.AllowUserToDeleteRows = false;
+            this.gridFeatureDefinitions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridFeatureDefinitions.BackgroundColor = System.Drawing.Color.LightSteelBlue;
+            this.gridFeatureDefinitions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridFeatureDefinitions.Location = new System.Drawing.Point(6, 31);
+            this.gridFeatureDefinitions.Name = "gridFeatureDefinitions";
+            this.gridFeatureDefinitions.ReadOnly = true;
+            this.gridFeatureDefinitions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridFeatureDefinitions.Size = new System.Drawing.Size(436, 387);
+            this.gridFeatureDefinitions.TabIndex = 24;
+            this.gridFeatureDefinitions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridFeatureDefinitions_CellMouseDown);
+            this.gridFeatureDefinitions.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridFeatureDefinitions_DataBindingComplete);
             // 
             // btnLoadAllFeatureActivations
             // 
@@ -631,6 +635,7 @@ namespace FeatureAdmin
             this.tabControl1.ResumeLayout(false);
             this.FarmFeatures.ResumeLayout(false);
             this.FarmFeatures.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridFeatureDefinitions)).EndInit();
             this.RemoveFeatures.ResumeLayout(false);
             this.splitContainerRightSiteCollFeaturesWebFeatures.Panel1.ResumeLayout(false);
             this.splitContainerRightSiteCollFeaturesWebFeatures.Panel1.PerformLayout();
@@ -673,7 +678,6 @@ namespace FeatureAdmin
         private System.Windows.Forms.ListBox listSiteCollections;
         private System.Windows.Forms.ListBox listSites;
         private System.Windows.Forms.Label lblWebs;
-        private System.Windows.Forms.CheckedListBox clbFeatureDefinitions;
         private System.Windows.Forms.Label lblFeatureDefinitions;
 
         private System.Windows.Forms.Button btnReloadFDefs;
@@ -702,6 +706,7 @@ namespace FeatureAdmin
         private System.Windows.Forms.SplitContainer splitContainerLeftDownWebsAndLogs;
         private System.Windows.Forms.Button btnLoadAllFeatureActivations;
         private System.Windows.Forms.Button btnFindAllActivationsFeature;
+        private System.Windows.Forms.DataGridView gridFeatureDefinitions;
     
     }
 }

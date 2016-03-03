@@ -96,14 +96,19 @@
     <Compile Include="ActivationFinder.cs" />
     <Compile Include="ExceptionSerializer.cs" />
     <Compile Include="Feature.cs" />
+    <Compile Include="FeatureActivator.cs" />
     <Compile Include="FeatureChecker.cs" />
+    <Compile Include="FeatureDatabase.cs" />
+    <Compile Include="FeatureLocationSet.cs" />
     <Compile Include="FeatureManager.cs" />
+    <Compile Include="FeatureUninstaller.cs" />
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="GridColMgr.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="LocationForm.cs">
       <SubType>Form</SubType>
