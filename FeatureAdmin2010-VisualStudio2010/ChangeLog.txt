@@ -58,3 +58,4 @@ FrmMain: Replace feature list with feature grid (from FeatureAdmin2007)
 FeatureDatabase: (Backported from FeatureAdmin2013)
   More careful exception handling
   & use feature definition DisplayName when feature definition GetTitle throws exception
+Move "Clear Log" button into Log panel
