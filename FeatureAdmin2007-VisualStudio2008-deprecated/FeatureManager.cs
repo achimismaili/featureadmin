@@ -96,18 +96,19 @@ namespace FeatureAdmin
             {
                 return definition.CompatibilityLevel;
             }
-            #endif
-            #if (SP2010)
-            {
-                return COMPATINAPPLICABLE; // inapplicable
-            }
-            #endif
-            #if (SP2007)
+            #elif (SP2010)
             {
                 return Feature.COMPATINAPPLICABLE; // inapplicable
             }
+            #elif (SP2007)
+            {
+                return Feature.COMPATINAPPLICABLE; // inapplicable
+            }
+            #else
+            {
+                throw new Exception("Unspecified SharePoint Version");
+            }
             #endif
-            throw new Exception("Unspecified SharePoint Version");
         }
     }
 }
