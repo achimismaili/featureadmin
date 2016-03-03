@@ -102,7 +102,10 @@ namespace FeatureAdmin
             IsFaulty = true;
         }
 
-        // sort the features: first Farm, Web App, Site then Web, after this, alphabetically after the name
+        // sort the features: 
+        // First scope (Farm, Web App, Site then Web)
+        // Then name alphabetically
+        // Then Id (to guarantee a stable sort)
         public int CompareTo(object obj)
         {
             if (obj is Feature)

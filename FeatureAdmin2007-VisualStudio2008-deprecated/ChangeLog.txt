@@ -1,4 +1,4 @@
-FeatureAdmin 2007 ChangeLog
+FeatureAdmin2007 ChangeLog
   - this file is intended for developers
   - chronological; newest info at bottom
 
