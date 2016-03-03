@@ -231,7 +231,6 @@ namespace FeatureAdmin
                 clbSPWebFeatures.CheckedItems.Count,
                 LocationManager.SafeDescribeLocation(m_CurrentWebLocation)
                 );
-
             if (MessageBox.Show(msgString, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
                 return;
@@ -311,7 +310,6 @@ namespace FeatureAdmin
             if (IsEmpty(m_CurrentWebLocation)) { return null; }
             return site.OpenWeb(m_CurrentWebLocation.Id);
         }
-
 
         /// <summary>Removes selected features from the current SiteCollection only</summary>
         /// <param name="sender"></param>
@@ -507,7 +505,6 @@ namespace FeatureAdmin
             removeReady(featuresRemoved);
         }
 
-
         #endregion
 
         #region Feature Activation
@@ -612,7 +609,6 @@ namespace FeatureAdmin
         {
             logException(exc, msg);
         }
-
 
         #endregion
 
@@ -750,7 +746,6 @@ namespace FeatureAdmin
             int scannedThrough = 0;
             SPSecurity.RunWithElevatedPrivileges(delegate()
             {
-
                 foreach (SPWeb web in site.AllWebs)
                 {
                     try
@@ -958,7 +953,6 @@ namespace FeatureAdmin
             btnRemoveFromWebApp.Enabled = enabled;
             btnRemoveFromFarm.Enabled = enabled;
         }
-
 
         /// <summary>enables or disables all buttons for feature definition administration</summary>
         /// <param name="enabled">true = enabled, false = disabled</param>
