@@ -1,18 +1,17 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel;
 using Microsoft.SharePoint;
-
-
-using System.Windows.Forms;
 
 
 namespace FeatureAdmin
 {
-    public class Feature : IComparable
+    public class Feature : IComparable, INotifyPropertyChanged
     {
-        #region class variables
+        public const int COMPATINAPPLICABLE = -8;
+        public const int COMPATUNKNOWN = -6;
 
+        #region class variables
+        public event PropertyChangedEventHandler PropertyChanged;
         public Guid Id { get; private set; }
         private SPFeatureScope _Scope = SPFeatureScope.ScopeInvalid;
         public SPFeatureScope Scope
@@ -27,12 +26,29 @@ namespace FeatureAdmin
         public string ScopeAbbrev { get; private set; } // more legible scope names -- see ScopeAbbrevConverter
         public int CompatibilityLevel { get; set; }
         public string Name { get; set; }
-
-        String _exceptionMsg = "";
-        public String ExceptionMsg
+        public bool IsFaulty { get; set; }
+        public string Faulty { get { return (IsFaulty ? "Faulty" : ""); } }
+        public string ExceptionMsg { get; set; }
+        private int? _activations = 0;
+        public int? Activations
         {
-            get { return _exceptionMsg; }
-            set { _exceptionMsg = value; }
+            get
+            {
+                return _activations;
+            }
+            set
+            {
+                _activations = value;
+                OnPropertyChanged("Activations");
+            }
+        }
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
         }
         #endregion
 
@@ -40,13 +56,16 @@ namespace FeatureAdmin
         {
             this.Id = id;
             this.Scope = SPFeatureScope.ScopeInvalid;
+            this.CompatibilityLevel = COMPATUNKNOWN;
         }
 
         public Feature(Guid id, SPFeatureScope scope)
         {
             this.Id = id;
             this.Scope = scope;
+            this.CompatibilityLevel = COMPATUNKNOWN;
         }
+
 
         /// <summary>overwrite method for ToString - defines, what is shown of a Feature Class as string</summary>
         /// <returns>Feature Information string with scope, name and Guid</returns>
@@ -54,7 +73,7 @@ namespace FeatureAdmin
         {
             string idstr = "";
             // ID (with compatibility level if available for this SharePoint version)
-            if (this.CompatibilityLevel == FeatureManager.COMPATINAPPLICABLE)
+            if (this.CompatibilityLevel == COMPATINAPPLICABLE)
             {
                 idstr = String.Format("{0}", this.Id);
             }
@@ -64,7 +83,7 @@ namespace FeatureAdmin
             }
             // Combine name & Id
             String result = string.Empty;
-            if (String.IsNullOrEmpty(Name))
+            if (String.IsNullOrEmpty(this.Name))
             {
                 result = String.Format("ERROR READING FEATURE [{0}], Scope: {1}", idstr, this.Scope.ToString());
             }
@@ -80,6 +99,7 @@ namespace FeatureAdmin
         {
             if (ExceptionMsg != "") ExceptionMsg += "; ";
             ExceptionMsg += ExceptionSerializer.ToString(exc);
+            IsFaulty = true;
         }
 
         // sort the features: 
