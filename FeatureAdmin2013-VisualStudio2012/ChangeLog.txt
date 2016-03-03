@@ -54,3 +54,5 @@ FrmMain: Replace feature list with feature grid (from FeatureAdmin2007)
   Copy over classes FeatureDatabase.cs, GridColMgr.cs
     FeatureLocationSet.cs, FeatureUninstaller.cs
     FeatureActivator from old version of FeatureAdmin2007
+ FeatureDatabase: More careful exception handling & use feature definition
+  DisplayName when feature definition GetTitle throws exception
