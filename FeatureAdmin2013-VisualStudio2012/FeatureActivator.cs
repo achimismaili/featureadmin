@@ -6,8 +6,13 @@ using Microsoft.SharePoint.Administration;
 
 namespace FeatureAdmin
 {
+    /// <summary>
+    /// Can activate or deactivate a set of features across any branch of the farm
+    /// </summary>
     class FeatureActivator
     {
+        public enum Action  { Activating, Deactivating };
+
         /// <summary>
         /// Delegate to handle exception logging
         /// </summary>
@@ -23,53 +28,53 @@ namespace FeatureAdmin
         }
 
         public int Activations { get; private set; }
+        public int ActivationAttempts { get; private set; }
+        private FeatureDatabase _featureDb;
+        private Action _action;
+        private FeatureSet _featureset = null;
+
+        public FeatureActivator(FeatureDatabase featureDb, Action action, FeatureSet featureSet)
+        {
+            _featureDb = featureDb;
+            _action = action;
+            _featureset = featureSet;
+        }
 
         /// <summary>activate features in the whole farm</summary>
-        public void TraverseActivateFeaturesInFarm(List<Feature> features)
+        public void TraverseActivateFeaturesInFarm()
         {
-            ActivateFeaturesInFarm(features);
+            ActivateFeaturesInFarm();
 
             foreach (SPWebApplication webapp in WebAppEnumerator.GetAllWebApps())
             {
-                TraverseActivateFeaturesInWebApplication(webapp, features);
+                TraverseActivateFeaturesInWebApplication(webapp);
             }
         }
         /// <summary>
         /// Activate any farm level features on farm content service
         /// </summary>
-        private void ActivateFeaturesInFarm(List<Feature> features)
+        private void ActivateFeaturesInFarm()
         {
-            foreach (Feature feature in features)
+            foreach (Feature feature in _featureset.FarmFeatures)
             {
-                if (feature.Scope == SPFeatureScope.Farm)
-                {
-                    try
-                    {
-                        if (!(SPWebService.ContentService.Features[feature.Id] is SPFeature))
-                        {
-                            SPWebService.ContentService.Features.Add(feature.Id);
-                            ++Activations;
-                        }
-                    }
-                    catch (Exception exc)
-                    {
-                        LogException(exc, string.Format(
-                            "Attempting to activate farm feature {0} on farm",
-                            feature.Id
-                            ));
-                    }
-                }
+                PerformAction(SPFarm.Local, SPWebService.ContentService.Features, feature);
             }
         }
-        public void TraverseActivateFeaturesInWebApplication(SPWebApplication webapp, List<Feature> features)
+        public void TraverseActivateFeaturesInWebApplication(SPWebApplication webapp)
         {
-            ActivateFeaturesInWebApp(webapp, features);
+            ActivateFeaturesInWebApp(webapp);
+
+            if (_featureset.SiteCollectionFeatureCount == 0
+                && _featureset.WebFeatureCount == 0)
+            {
+                return;
+            }
 
             foreach (SPSite site in webapp.Sites)
             {
                 try
                 {
-                    TraverseActivateFeaturesInSiteCollection(site, features);
+                    TraverseActivateFeaturesInSiteCollection(site);
                 }
                 finally
                 {
@@ -77,15 +82,19 @@ namespace FeatureAdmin
                 }
             }
         }
-        public void TraverseActivateFeaturesInSiteCollection(SPSite site, List<Feature> features)
+        public void TraverseActivateFeaturesInSiteCollection(SPSite site)
         {
-            ActivateFeaturesInSiteCollection(site, features);
+            ActivateFeaturesInSiteCollection(site);
 
+            if (_featureset.WebFeatureCount == 0)
+            {
+                return;
+            }
             foreach (SPWeb web in site.AllWebs)
             {
                 try
                 {
-                    ActivateFeaturesInWeb(web, features);
+                    ActivateFeaturesInWeb(web);
                 }
                 finally
                 {
@@ -96,82 +105,70 @@ namespace FeatureAdmin
         /// <summary>
         /// Activate any webapp features on specified web application
         /// </summary>
-        private void ActivateFeaturesInWebApp(SPWebApplication webapp, List<Feature> features)
+        private void ActivateFeaturesInWebApp(SPWebApplication webapp)
         {
-            foreach (Feature feature in features)
+            foreach (Feature feature in _featureset.WebAppFeatures)
             {
-                if (feature.Scope == SPFeatureScope.WebApplication)
-                {
-                    try
-                    {
-                        if (!(SPWebService.ContentService.Features[feature.Id] is SPFeature))
-                        {
-                            SPWebService.ContentService.Features.Add(feature.Id);
-                            ++Activations;
-                        }
-                    }
-                    catch (Exception exc)
-                    {
-                        LogException(exc, string.Format(
-                            "Attempting to activate webapp feature {0} on webapp {1}",
-                            feature.Id,
-                            LocationManager.SafeDescribeObject(webapp)
-                            ));
-                    }
-                }
+                PerformAction(webapp, SPWebService.ContentService.Features, feature);
             }
         }
         /// <summary>
         /// Activate any site level features on specified site
         /// </summary>
-        private void ActivateFeaturesInSiteCollection(SPSite site, List<Feature> features)
+        private void ActivateFeaturesInSiteCollection(SPSite site)
         {
-            foreach (Feature feature in features)
+            foreach (Feature feature in _featureset.SiteCollectionFeatures)
             {
-                if (feature.Scope == SPFeatureScope.Site)
+                PerformAction(site, site.Features, feature);
+            }
+        }
+        public void ActivateFeaturesInWeb(SPWeb web)
+        {
+            foreach (Feature feature in _featureset.WebFeatures)
+            {
+                PerformAction(web, web.Features, feature);
+            }
+        }
+        private void PerformAction(object locobj, SPFeatureCollection spFeatureCollection, Feature feature)
+        {
+            try
+            {
+                if (_action == Action.Activating)
                 {
-                    try
+                    if (!(spFeatureCollection[feature.Id] is SPFeature))
                     {
-                        if (!(site.Features[feature.Id] is SPFeature))
+                        ++ActivationAttempts;
+                        spFeatureCollection.Add(feature.Id);
+                        if ((spFeatureCollection[feature.Id] is SPFeature))
                         {
-                            site.Features.Add(feature.Id);
+                            _featureDb.RecordFeatureActivation(locobj, feature.Id);
                             ++Activations;
                         }
                     }
-                    catch (Exception exc)
+                }
+                else
+                {
+                    if ((spFeatureCollection[feature.Id] is SPFeature))
                     {
-                        LogException(exc, string.Format(
-                            "Attempting to activate site feature {0} on site {1}",
-                            feature.Id,
-                            LocationManager.SafeDescribeObject(site)
-                            ));
+                        ++ActivationAttempts;
+                        spFeatureCollection.Remove(feature.Id);
+                        if (!(spFeatureCollection[feature.Id] is SPFeature))
+                        {
+                            _featureDb.RecordFeatureDeactivation(locobj, feature.Id);
+                            ++Activations;
+                        }
                     }
                 }
             }
-        }
-        public void ActivateFeaturesInWeb(SPWeb web, List<Feature> features)
-        {
-            foreach (Feature feature in features)
+            catch (Exception exc)
             {
-                if (feature.Scope == SPFeatureScope.Web)
-                {
-                    try
-                    {
-                        if (!(web.Features[feature.Id] is SPFeature))
-                        {
-                            web.Features.Add(feature.Id);
-                            ++Activations;
-                        }
-                    }
-                    catch (Exception exc)
-                    {
-                        LogException(exc, string.Format(
-                            "Attempting to activate web feature {0} on web {1}",
-                            feature.Id,
-                            LocationManager.SafeDescribeObject(web)
-                            ));
-                    }
-                }
+                LogException(exc, string.Format(
+                    "{0} feature {1} on {2}: {3}",
+                    _action,
+                    feature.Id,
+                    feature.Scope,
+                    LocationManager.SafeDescribeObject(locobj)
+                    ));
             }
         }
     }
