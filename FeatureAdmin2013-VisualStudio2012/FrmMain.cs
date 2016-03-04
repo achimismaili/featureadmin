@@ -103,6 +103,7 @@ namespace FeatureAdmin
         private void btnLoadFDefs_Click(object sender, EventArgs e)
         {
             ReloadAllFeatureDefinitions();
+            EnableActionButtonsAsAppropriate();
         }
 
         private void ReloadAllFeatureDefinitions()
