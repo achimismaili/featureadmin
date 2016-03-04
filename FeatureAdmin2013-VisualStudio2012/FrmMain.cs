@@ -150,9 +150,11 @@ namespace FeatureAdmin
         }
 
         /// <summary>Uninstall the selected Feature definition</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnUninstFeatureDef_Click(object sender, EventArgs e)
+        private void btnUninstFDef_Click(object sender, EventArgs e)
+        {
+            PromptAndUninstallFeatureDefs();
+        }
+        private void PromptAndUninstallFeatureDefs()
         {
             List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
             if (selectedFeatures.Count == 1)

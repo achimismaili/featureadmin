@@ -385,6 +385,7 @@ namespace FeatureAdmin
             this.btnUninstFDef.TabIndex = 3;
             this.btnUninstFDef.Text = "Uninstall";
             this.btnUninstFDef.UseVisualStyleBackColor = true;
+            this.btnUninstFDef.Click += new System.EventHandler(this.btnUninstFDef_Click);
             // 
             // btnDeactivateSPFarm
             // 
