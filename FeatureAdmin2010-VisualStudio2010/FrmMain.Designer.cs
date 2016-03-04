@@ -380,6 +380,7 @@ namespace FeatureAdmin
             this.btnUninstFDef.TabIndex = 3;
             this.btnUninstFDef.Text = "Uninstall";
             this.btnUninstFDef.UseVisualStyleBackColor = true;
+            this.btnUninstFDef.Click += new System.EventHandler(this.btnUninstFDef_Click);
             // 
             // btnDeactivateSPFarm
             // 
@@ -389,6 +390,7 @@ namespace FeatureAdmin
             this.btnDeactivateSPFarm.TabIndex = 2;
             this.btnDeactivateSPFarm.Text = "Deactivate";
             this.btnDeactivateSPFarm.UseVisualStyleBackColor = true;
+            this.btnDeactivateSPFarm.Click += new System.EventHandler(this.btnDeactivateSPFarm_Click);
             // 
             // ActionFarmCaption
             // 
@@ -407,6 +409,7 @@ namespace FeatureAdmin
             this.btnActivateSPFarm.TabIndex = 0;
             this.btnActivateSPFarm.Text = "Activate";
             this.btnActivateSPFarm.UseVisualStyleBackColor = true;
+            this.btnActivateSPFarm.Click += new System.EventHandler(this.btnActivateSPFarm_Click);
             // 
             // WebAppActionPanel
             // 
@@ -435,6 +438,7 @@ namespace FeatureAdmin
             this.btnDeactivateSPWebApp.TabIndex = 1;
             this.btnDeactivateSPWebApp.Text = "Deactivate";
             this.btnDeactivateSPWebApp.UseVisualStyleBackColor = true;
+            this.btnDeactivateSPWebApp.Click += new System.EventHandler(this.btnDeactivateSPWebApp_Click);
             // 
             // btnActivateSPWebApp
             // 
@@ -444,6 +448,7 @@ namespace FeatureAdmin
             this.btnActivateSPWebApp.TabIndex = 0;
             this.btnActivateSPWebApp.Text = "Activate";
             this.btnActivateSPWebApp.UseVisualStyleBackColor = true;
+            this.btnActivateSPWebApp.Click += new System.EventHandler(this.btnActivateSPWebApp_Click);
             // 
             // SiteCollectionActionPanel
             // 
@@ -463,6 +468,7 @@ namespace FeatureAdmin
             this.btnDeactivateSPSite.TabIndex = 2;
             this.btnDeactivateSPSite.Text = "Deactivate";
             this.btnDeactivateSPSite.UseVisualStyleBackColor = true;
+            this.btnDeactivateSPSite.Click += new System.EventHandler(this.btnDeactivateSPSite_Click);
             // 
             // ActionSiteCaption
             // 
@@ -481,6 +487,7 @@ namespace FeatureAdmin
             this.btnActivateSPSite.TabIndex = 0;
             this.btnActivateSPSite.Text = "Activate";
             this.btnActivateSPSite.UseVisualStyleBackColor = true;
+            this.btnActivateSPSite.Click += new System.EventHandler(this.btnActivateSPSite_Click);
             // 
             // WebActionPanel
             // 
@@ -500,6 +507,7 @@ namespace FeatureAdmin
             this.btnDeactivateSPWeb.TabIndex = 2;
             this.btnDeactivateSPWeb.Text = "Deactivate";
             this.btnDeactivateSPWeb.UseVisualStyleBackColor = true;
+            this.btnDeactivateSPWeb.Click += new System.EventHandler(this.btnDeactivateSPWeb_Click);
             // 
             // ActionWebCaption
             // 
@@ -518,6 +526,7 @@ namespace FeatureAdmin
             this.btnActivateSPWeb.TabIndex = 0;
             this.btnActivateSPWeb.Text = "Activate";
             this.btnActivateSPWeb.UseVisualStyleBackColor = true;
+            this.btnActivateSPWeb.Click += new System.EventHandler(this.btnActivateSPWeb_Click);
             // 
             // btnViewActivations
             // 
@@ -527,6 +536,7 @@ namespace FeatureAdmin
             this.btnViewActivations.TabIndex = 25;
             this.btnViewActivations.Text = "Review Activations of Selected Feature";
             this.btnViewActivations.UseVisualStyleBackColor = true;
+            this.btnViewActivations.Click += new System.EventHandler(this.btnViewActivations_Click);
             // 
             // gridFeatureDefinitions
             // 
@@ -545,6 +555,7 @@ namespace FeatureAdmin
             this.gridFeatureDefinitions.TabIndex = 24;
             this.gridFeatureDefinitions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridFeatureDefinitions_CellMouseDown);
             this.gridFeatureDefinitions.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridFeatureDefinitions_DataBindingComplete);
+            this.gridFeatureDefinitions.SelectionChanged += new System.EventHandler(this.gridFeatureDefinitions_SelectionChanged);
             // 
             // RemoveFeatures
             // 

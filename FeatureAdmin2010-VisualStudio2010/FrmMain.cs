@@ -150,9 +150,11 @@ namespace FeatureAdmin
         }
 
         /// <summary>Uninstall the selected Feature definition</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnUninstFeatureDef_Click(object sender, EventArgs e)
+        private void btnUninstFDef_Click(object sender, EventArgs e)
+        {
+            PromptAndUninstallFeatureDefs();
+        }
+        private void PromptAndUninstallFeatureDefs()
         {
             List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
             if (selectedFeatures.Count == 1)
@@ -179,7 +181,7 @@ namespace FeatureAdmin
                         }
                         else
                         {
-                            removeFeaturesWithinFarm(feature.Id, feature.Scope);
+                            RemoveFeaturesWithinFarm(feature.Id, feature.Scope);
                         }
 
                     }
@@ -511,7 +513,7 @@ namespace FeatureAdmin
 
         #region Feature Activation + Deactivation
 
-        private void activateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope activationScope, Location currentLocation, FeatureActivator.Action action)
+        private void PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope activationScope, Location currentLocation, FeatureActivator.Action action)
         {
             List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
             FeatureSet featureSet = new FeatureSet(selectedFeatures);
@@ -529,7 +531,7 @@ namespace FeatureAdmin
             }
 
             if (selectedFeatures.Count > 10)
-        {
+            {
                 InfoBox(string.Format(
                     "Too many features ({0}) selected; max 10 may be {1} at time",
                     selectedFeatures.Count,
@@ -569,25 +571,32 @@ namespace FeatureAdmin
                 activationScope,
                 currentLocName
                 );
-            if (!ConfirmBox(msg))
+            if (!ConfirmBoxOkCancel(msg))
             {
                 return;
             }
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular;
+            msg = string.Format("Use Force flag?");
+            if (ConfirmBoxYesNo(msg))
+            {
+                forcefulness = FeatureActivator.Forcefulness.Forcible;
+            }
             FeatureActivator activator = new FeatureActivator(m_featureDb, action, featureSet);
             activator.ExceptionLoggingListeners += new FeatureActivator.ExceptionLoggerHandler(activator_ExceptionLoggingListeners);
+            activator.InfoLoggingListeners += activator_InfoLoggingListeners;
 
             switch (activationScope)
             {
                 case SPFeatureScope.Farm:
                     {
-                        activator.TraverseActivateFeaturesInFarm();
+                        activator.TraverseActivateFeaturesInFarm(forcefulness);
                     }
                     break;
 
                 case SPFeatureScope.WebApplication:
                     {
                         SPWebApplication webapp = GetCurrentWebApplication();
-                        activator.TraverseActivateFeaturesInWebApplication(webapp);
+                        activator.TraverseActivateFeaturesInWebApplication(webapp, forcefulness);
                     }
                     break;
 
@@ -598,7 +607,7 @@ namespace FeatureAdmin
                             if (site == null) { return; }
                             try
                             {
-                                activator.TraverseActivateFeaturesInSiteCollection(site);
+                                activator.TraverseActivateFeaturesInSiteCollection(site, forcefulness);
                             }
                             finally
                             {
@@ -620,7 +629,7 @@ namespace FeatureAdmin
                                     if (web == null) { return; }
                                     try
                                     {
-                                        activator.ActivateFeaturesInWeb(web);
+                                        activator.ActivateFeaturesInWeb(web, forcefulness);
                                     }
                                     finally
                                     {
@@ -665,10 +674,17 @@ namespace FeatureAdmin
             return featureNames.ToString();
         }
 
-        void activator_ExceptionLoggingListeners(Exception exc, string msg)
+        void activator_ExceptionLoggingListeners(Exception exc, Location location, string detail)
         {
+            string msg = string.Format("{0} at {1}", detail, LocationManager.GetLocation(location));
             logException(exc, msg);
         }
+        void activator_InfoLoggingListeners(Location location, string detail)
+        {
+            string msg = string.Format("{0} at {1}", detail, LocationManager.SafeDescribeLocation(location));
+            logMsg(msg);
+        }
+
 
         #endregion
 
@@ -842,14 +858,14 @@ namespace FeatureAdmin
                                         logDateMsg(
                                             string.Format("Success removing feature {0} from {1}",
                                             featureID,
-                                            LocationInfo.SafeDescribeObject(site)));
+                                            LocationManager.SafeDescribeObject(site)));
                                     }
                                     catch (Exception exc)
                                     {
                                         logException(exc,
                                             string.Format("Exception removing feature {0} from {1}",
                                             featureID,
-                                            LocationInfo.SafeDescribeObject(site)));
+                                            LocationManager.SafeDescribeObject(site)));
                                     }
 
                                 }
@@ -869,7 +885,7 @@ namespace FeatureAdmin
         /// <param name="featureID"></param>
         /// <param name="trueForSPWeb"></param>
         /// <returns>number of deleted features</returns>
-        public int removeFeaturesWithinFarm(Guid featureID, SPFeatureScope featureScope)
+        public int RemoveFeaturesWithinFarm(Guid featureID, SPFeatureScope featureScope)
         {
             int removedFeatures = 0;
             int scannedThrough = 0;
@@ -999,78 +1015,9 @@ namespace FeatureAdmin
             logDateMsg(msgString);
         }
 
-        /// <summary>searches for faulty features and provides the option to remove them</summary>
-        /// <param name="features">SPFeatureCollection, the container for the features</param>
-        /// <param name="scope">is needed, in case a feature is found, so that it can be deleted</param>
-        /// <returns></returns>
-        private bool findFaultyFeatureInCollection(SPFeatureCollection features, SPFeatureScope scope)
-        {
-            return false;
-            /*
-            bool faultyFound = false;
-            if (features == null)
-            {
-                logDateMsg("ERROR: Feature Collection was null!");
-                return false;
-            }
-            if (features.Count == 0)
-            {
-                logDateMsg("ERROR: Feature Collection was empty!");
-                return false;
-            }
-
-            // string DBName = string.Empty; // tbd: retrieve the database name of the featureCollection
-            string featuresName = features.ToString();
-
-            try
-            {
-                foreach (SPFeature feature in features)
-                {
-                    FeatureChecker checker = new FeatureChecker();
-                    FeatureChecker.Status status = checker.CheckFeature(feature);
-                    if (status.Faulty)
-                    {
-                        faultyFound = true;
-
-                        string msgString = DescribeFeatureAndLocation(feature);
-                        logDateMsg(msgString);
-                        string caption = string.Format("Found Faulty {0} Feature", scope);
-                        DialogResult response = MessageBox.Show(msgString, caption, 
-                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                        if (response == DialogResult.Yes)
-                        {
-                            removeFeaturesWithinFarm(feature.DefinitionId, scope);
-                        }
-                        if (response == DialogResult.Cancel)
-                        {
-                            return faultyFound;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex is SqlException)
-                {
-                    string msgstring = string.Format("Cannot access a feature collection of scope '{0}'! Not enough access rights for a content DB on SQL Server! dbOwner rights are recommended. Please read the following error message:\n\n'{1}'", scope.ToString(), ex.ToString());
-                    string MessageCaption = string.Format("FeatureCollection in a Content DB not accessible");
-                    if(MessageBox.Show(msgstring, MessageCaption,MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                    {
-                        return faultyFound;
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(ex.ToString(), "An error has occured!", MessageBoxButtons.OK);
-                }
-                return faultyFound;
-            }
-            return faultyFound;
-             * */
-        }
         private string DescribeFeatureAndLocation_Unused(SPFeature feature)
         {
-            string location = LocationInfo.SafeDescribeObject(feature.Parent);
+            string location = LocationManager.SafeDescribeObject(feature.Parent);
 
             string msgString = "Faulty Feature found!\n"
                 + string.Format("Id: {0}", feature.DefinitionId);
@@ -1230,7 +1177,17 @@ namespace FeatureAdmin
 
                 foreach (SPWebApplication webApp in GetAllWebApps())
                 {
-                    listWebApplications.Items.Add(webApp.Name);
+                    try
+                    {
+                        Location webAppLocation = LocationManager.GetLocation(webApp);
+                        listWebApplications.Items.Add(webAppLocation);
+                    }
+                    catch (Exception exc)
+                    {
+                        logException(exc,
+                            string.Format("Exception enumerating webapp: {0}",
+                            LocationManager.SafeDescribeObject(webApp)));
+                    }
                 }
 
                 if (listWebApplications.Items.Count > 0)
@@ -1289,8 +1246,17 @@ namespace FeatureAdmin
                     SPWebApplication webApp = GetCurrentWebApplication();
                     foreach (SPSite site in webApp.Sites)
                     {
-                        Location siteLocation = LocationManager.GetLocation(site);
-                        listSiteCollections.Items.Add(siteLocation);
+                        try
+                        {
+                            Location siteLocation = LocationManager.GetLocation(site);
+                            listSiteCollections.Items.Add(siteLocation);
+                        }
+                        catch (Exception exc)
+                        {
+                            logException(exc,
+                                string.Format("Exception enumerating site: {0}",
+                                LocationManager.SafeDescribeObject(site)));
+                        }
                     }
                     // select first site collection if there is only one
                     if (listSiteCollections.Items.Count == 1)
@@ -1309,14 +1275,26 @@ namespace FeatureAdmin
         /// </summary>
         private void listSiteCollections_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ReloadCurrentWebs();
+            EnableActionButtonsAsAppropriate();
+        }
+
+        private void ReloadCurrentWebs()
+        {
             using (WaitCursor wait = new WaitCursor())
             {
-                m_CurrentSiteLocation = listSiteCollections.SelectedItem as Location;
-                ClearCurrentWebData();
-                ReloadCurrentSiteCollectionFeatures();
-                ReloadSubWebList();
+                try
+                {
+                    m_CurrentSiteLocation = listSiteCollections.SelectedItem as Location;
+                    ClearCurrentWebData();
+                    ReloadCurrentSiteCollectionFeatures();
+                    ReloadSubWebList();
+                }
+                catch (Exception exc)
+                {
+                    logException(exc, "Exception enumerating webs");
+                }
             }
-            EnableActionButtonsAsAppropriate();
         }
 
         private void ClearCurrentSiteCollectionData()
@@ -1345,7 +1323,7 @@ namespace FeatureAdmin
         private void ReloadCurrentWebFeatures()
         {
             clbSPWebFeatures.Items.Clear();
-            if (m_CurrentWebLocation == null) { return; }
+            if (IsEmpty(m_CurrentWebLocation)) { return; }
             List<Feature> features = m_featureDb.GetFeaturesOfLocation(m_CurrentWebLocation);
             features.Sort();
             clbSPWebFeatures.Items.AddRange(features.ToArray());
@@ -1373,9 +1351,15 @@ namespace FeatureAdmin
                             Location webLocation = LocationManager.GetLocation(web);
                             listWebs.Items.Add(webLocation);
                         }
+                        catch (Exception exc)
+                        {
+                            logException(exc,
+                                string.Format("Exception enumerating web: {0}",
+                                LocationManager.SafeDescribeObject(web)));
+                        }
                         finally
                         {
-                            site.Dispose();
+                            web.Dispose();
                         }
                     }
                 }
@@ -1392,7 +1376,7 @@ namespace FeatureAdmin
         }
 
         /// <summary>UI method to load the SiteCollection Features and Site Features
-        /// Handles the SelectedIndexChanged event of the listSites control.
+        /// Handles the SelectedIndexChanged event of the listWebs control.
         /// </summary>
         private void listWebs_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1419,72 +1403,113 @@ namespace FeatureAdmin
             ClearLog();
         }
 
-        private void btnFindActivatedFeature_Click(object sender, EventArgs e)
+        private void gridFeatureDefinitions_SelectionChanged(object sender, EventArgs e)
         {
-            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
-            if (selectedFeatures.Count != 1)
+            EnableActionButtonsAsAppropriate();
+        }
+
+        private void btnActivateSPWeb_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentWebLocation))
             {
-                MessageBox.Show("Please select exactly 1 feature.");
+                InfoBox("No site (SPWeb) selected");
                 return;
             }
-            Feature feature = (Feature)selectedFeatures[0];
-
-            ActivationFinder finder = new ActivationFinder();
-            finder.FoundListeners += delegate(Guid featureId, string url, string name)
-            {
-                string msgtext = url + " = " + name;
-                if (url == name) { msgtext = url; } // farm, farm
-                logDateMsg(msgtext);
-            };
-            finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
-
-            // Call routine to actually find & report activations
-            bool found = finder.FindFirstFeatureActivation(feature.Id);
-            if (!found)
-            {
-                string msgString = "Feature was not found activated in the farm.";
-                MessageBox.Show(msgString);
-                logDateMsg(msgString);
-            }
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Web,
+                m_CurrentWebLocation,
+                FeatureActivator.Action.Activating);
         }
-        private void btnFindAllActivationsFeature_Click(object sender, EventArgs e)
+
+        private void btnDeactivateSPWeb_Click(object sender, EventArgs e)
         {
-            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
-            if (selectedFeatures.Count != 1)
+            if (IsEmpty(m_CurrentWebLocation))
             {
-                MessageBox.Show("Please select exactly 1 feature.");
+                InfoBox("No site (SPWeb) selected");
                 return;
             }
-            Feature feature = selectedFeatures[0];
-
-            List<Location> featlocs = GetFeatureLocations(feature.Id);
-            if (featlocs.Count == 0)
-            {
-                MessageBox.Show("No activations found");
-            }
-            else
-            {
-                string msgString = string.Format(
-                    "Activations found: {0}. See log for locations",
-                    featlocs.Count);
-                MessageBox.Show(msgString, "Feature Activations");
-                logDateMsg(string.Format(
-                    "{0} Activations of feature: {1} [{2}]",
-                    featlocs.Count,
-                    feature.Name,
-                    feature.Id
-                    ));
-                foreach (Location loc in featlocs)
-                {
-                    string msgtext = "    " + loc.Url;
-                    if (loc.Url != loc.Name)
-                    {
-                        msgtext += " = " + loc.Name;
-                    }
-                    logDateMsg(msgtext);
-                }
-            }
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Web,
+                m_CurrentWebLocation,
+                FeatureActivator.Action.Deactivating);
         }
+
+        private void btnActivateSPSite_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentSiteLocation))
+            {
+                InfoBox("No site collection selected");
+                return;
+            }
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Site,
+                m_CurrentSiteLocation,
+                FeatureActivator.Action.Activating);
+        }
+
+        private void btnDeactivateSPSite_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentSiteLocation))
+            {
+                InfoBox("No site collection selected");
+                return;
+            }
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Site,
+                m_CurrentSiteLocation,
+                FeatureActivator.Action.Deactivating);
+        }
+
+        private void btnActivateSPWebApp_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentWebAppLocation))
+            {
+                InfoBox("No web application selected");
+                return;
+            }
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.WebApplication,
+                m_CurrentWebAppLocation,
+                FeatureActivator.Action.Activating);
+        }
+
+        private void btnDeactivateSPWebApp_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentWebAppLocation))
+            {
+                InfoBox("No web application selected");
+                return;
+            }
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.WebApplication,
+                m_CurrentWebAppLocation,
+                FeatureActivator.Action.Deactivating);
+        }
+
+        private void btnActivateSPFarm_Click(object sender, EventArgs e)
+        {
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Farm,
+                null, // Location
+                FeatureActivator.Action.Activating);
+        }
+
+        private void btnDeactivateSPFarm_Click(object sender, EventArgs e)
+        {
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Farm,
+                null, // Location
+                FeatureActivator.Action.Deactivating);
+        }
+
         private List<Location> GetFeatureLocations(Guid featureId)
         {
             if (!m_featureDb.IsLoaded())
@@ -1492,15 +1517,6 @@ namespace FeatureAdmin
                 ReloadAllActivationData();
             }
             return m_featureDb.GetLocationsOfFeature(featureId);
-        }
-
-        private void btnLoadAllFeatureActivations_Click(object sender, EventArgs e)
-        {
-            ReloadAllActivationData();
-            string msgtext = string.Format(
-                "All activation data reloaded"
-                );
-            MessageBox.Show(msgtext);
         }
 
         private void ReloadAllActivationData()
@@ -1513,111 +1529,13 @@ namespace FeatureAdmin
 
                 // Call routine to actually find & report activations
                 m_featureDb.LoadAllData(finder.FindAllActivationsOfAllFeatures());
+                m_featureDb.MarkFaulty(finder.GetFaultyFeatureIdList());
+                lblFeatureDefinitions.Text = string.Format(
+                    "All {0} Features installed in the Farm",
+                    m_featureDb.GetAllFeaturesCount());
             }
         }
 
-        private void btnFindFaultyFeature_Click(object sender, EventArgs e)
-        {
-
-
-            string msgString = string.Empty;
-
-
-            //first, Look in Farm
-            try
-            {
-                if (findFaultyFeatureInCollection(SPWebService.ContentService.Features, SPFeatureScope.Farm))
-                {
-                    return;
-                }
-            }
-            catch (Exception exc)
-            {
-                logException(exc, "Error finding faulty features in farm");
-            }
-
-            //check web applications
-            try
-            {
-                foreach (SPWebApplication webApp in GetAllWebApps())
-                {
-                    try
-                    {
-                        if (findFaultyFeatureInCollection(webApp.Features, SPFeatureScope.WebApplication))
-                        {
-                            return;
-                        }
-                    }
-                    catch (Exception exc)
-                    {
-                        logException(exc, "Enumerating features in web app " + webApp.Name);
-                    }
-
-                    try
-                    {
-                        // then check all site collections
-                        foreach (SPSite site in webApp.Sites)
-                        {
-                            using (site)
-                            {
-                                try
-                                {
-                                    // check sites
-                                    if (findFaultyFeatureInCollection(site.Features, SPFeatureScope.Site))
-                                    {
-                                        return;
-                                    }
-                                }
-                                catch (Exception exc)
-                                {
-                                    logException(exc, "Exception checking features in site " + site.Url);
-                                }
-
-
-                                try
-                                {
-                                    foreach (SPWeb web in site.AllWebs)
-                                    {
-                                        using (web)
-                                        {
-                                            try
-                                            {
-                                                // check webs
-                                                if (findFaultyFeatureInCollection(web.Features, SPFeatureScope.Web))
-                                                {
-                                                    return;
-                                                }
-                                            }
-                                            catch (Exception exc)
-                                            {
-                                                logException(exc, "Exception checking features in web " + web.Url);
-                                            }
-                                        }
-                                    }
-                                }
-                                catch (Exception exc)
-                                {
-                                    string msg = FormatSiteException(site, exc, "Error enumerating webs");
-                                    logException(exc, msg);
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception exc)
-                    {
-                        logException(exc, "Exception enumerating sites in web app " + webApp.Name);
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                logException(exc, "Enumerating web applications");
-            }
-            msgString = "No Faulty Feature was found in the farm!";
-            MessageBox.Show(msgString);
-            logDateMsg(msgString);
-
-        }
         private SPWebApplicationCollection GetAllWebApps()
         {
             SPWebApplicationCollection webapps = SPWebService.ContentService.WebApplications;
@@ -1643,16 +1561,27 @@ namespace FeatureAdmin
         {
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-        private static bool ConfirmBox(string text)
+        private static bool ConfirmBoxYesNo(string text)
         {
-            return ConfirmBox(text, "Confirm");
+            return ConfirmBoxYesNo(text, "Confirm");
         }
-        private static bool ConfirmBox(string text, string caption)
+        private static bool ConfirmBoxYesNo(string text, string caption)
         {
             DialogResult rtn = MessageBox.Show(
                 text, caption,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
             return (rtn == DialogResult.Yes);
+        }
+        private static bool ConfirmBoxOkCancel(string text)
+        {
+            return ConfirmBoxOkCancel(text, "Confirm");
+        }
+        private static bool ConfirmBoxOkCancel(string text, string caption)
+        {
+            DialogResult rtn = MessageBox.Show(
+                text, caption,
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            return (rtn == DialogResult.OK);
         }
         private static void InfoBox(string text)
         {

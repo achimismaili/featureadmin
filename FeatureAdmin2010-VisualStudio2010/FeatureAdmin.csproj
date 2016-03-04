@@ -117,7 +117,6 @@
     <Compile Include="LocationForm.Designer.cs">
       <DependentUpon>LocationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LocationInfo.cs" />
     <Compile Include="LocationManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

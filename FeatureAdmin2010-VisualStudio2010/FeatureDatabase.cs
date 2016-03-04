@@ -92,11 +92,17 @@ namespace FeatureAdmin
             }
         }
         /// <summary>
-        /// Record that a feature has been activated
+        /// Record that a feature has been activated (at location specified by object)
         /// </summary>
         public void RecordFeatureActivation(object locobj, Guid featureId)
         {
             Location location = LocationManager.GetLocation(locobj);
+        }
+        /// <summary>
+        /// Record that a feature has been activated (at location specified by Location)
+        /// </summary>
+        public void RecordFeatureActivationAtLocation(Location location, Guid featureId)
+        {
             Feature feature = GetOrAddFeatureFromDefinitions(featureId, location.Scope);
             AddToFeatureLocations(feature, location);
             AddToLocationFeatures(location, feature);
@@ -107,6 +113,16 @@ namespace FeatureAdmin
         public void RecordFeatureDeactivation(object locobj, Guid featureId)
         {
             Location location = LocationManager.GetLocation(locobj);
+            RecordFeatureDeactivationAtLocation(location, featureId);
+        }
+        public void DoIt()
+        {
+        }
+        /// <summary>
+        /// Record that a feature has been deactivated (at location specified by Location)
+        /// </summary>
+        public void RecordFeatureDeactivationAtLocation(Location location, Guid featureId)
+        {
             Feature feature = GetOrAddFeatureFromDefinitions(featureId, location.Scope);
             RemoveFromFeatureLocations(feature, location);
             RemoveFromLocationFeatures(location, feature);

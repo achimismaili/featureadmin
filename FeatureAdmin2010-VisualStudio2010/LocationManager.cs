@@ -18,7 +18,7 @@ namespace FeatureAdmin
                 loct.Url = "Farm";
                 loct.Name = "Farm";
             }
-            if (obj is SPWebApplication)
+            else if (obj is SPWebApplication)
             {
                 SPWebApplication webapp = obj as SPWebApplication;
                 loct.Id = webapp.Id;
@@ -62,8 +62,15 @@ namespace FeatureAdmin
         }
         public static string SafeDescribeObject(object obj)
         {
-            Location loct = GetLocation(obj);
-            return SafeDescribeLocation(loct);
+            try
+            {
+                Location loct = GetLocation(obj);
+                return SafeDescribeLocation(loct);
+            }
+            catch
+            {
+                return "Exception describing object";
+            }
         }
         public static string SafeDescribeLocation(Location loct)
         {
