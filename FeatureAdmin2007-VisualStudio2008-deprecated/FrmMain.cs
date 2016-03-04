@@ -837,9 +837,20 @@ namespace FeatureAdmin
                                 }
                                 else
                                 {
-                                    //forcefully remove the feature
-                                    site.Features.Remove(featureID, true);
-                                    removedFeatures += 1;
+                                    try
+                                    {
+                                        //forcefully remove the feature
+                                        site.Features.Remove(featureID, true);
+                                        removedFeatures += 1;
+                                    }
+                                    catch (Exception exc)
+                                    {
+                                        logException(exc,
+                                            string.Format("Exception removing feature {0} from {1}",
+                                            featureID,
+                                            LocationManager.SafeDescribeObject(site)));
+                                    }
+
 
                                 }
                                 scannedThrough++;
