@@ -1074,7 +1074,7 @@ namespace FeatureAdmin
 
             string msgString = "Faulty Feature found!\n"
                 + string.Format("Id: {0}", feature.DefinitionId);
-#if SP2013
+#if (SP2013)
             msgString += " Activation=" + feature.TimeActivated.ToString("yyyy-MM-dd");
 #endif
             string solutionInfo = GetFeatureSolutionInfo(feature);
@@ -1084,8 +1084,10 @@ namespace FeatureAdmin
             }
             msgString += Environment.NewLine
                 + string.Format(" Location: {0}\n", location)
+#if (SP2010)
                 + string.Format(" Scope: {0}\n", feature.FeatureDefinitionScope)
                 + string.Format(" Version: {0}\n", feature.Version)
+#endif
                 + " Should it be removed from the farm?";
             return msgString;
         }

@@ -57,3 +57,6 @@ FrmMain: Replace feature list with feature grid (from FeatureAdmin2007)
  FeatureDatabase: More careful exception handling & use feature definition
   DisplayName when feature definition GetTitle throws exception
 Move "Clear Log" button into Log panel
+
+March, 2016 -- Perry
+Rework preprocessor definitions (SP2007, SP2010, SP2013) so they are inclusive
