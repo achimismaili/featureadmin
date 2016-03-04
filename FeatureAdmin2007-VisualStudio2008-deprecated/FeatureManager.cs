@@ -12,6 +12,12 @@ namespace FeatureAdmin
 
         #region class variables
 
+        String _url = null;
+        public String Url
+        {
+            get { return _url; }
+        }
+
         List<Feature> _features = null;
         public List<Feature> Features
         {
@@ -22,8 +28,9 @@ namespace FeatureAdmin
 
         SPFeatureDefinitionCollection _spfeatureDefinitions = null;
 
-        public FeatureManager()
+        public FeatureManager(string url, bool unused)
         {
+            this._url = url;
             this._features = new List<Feature>();
         }
 
@@ -31,7 +38,7 @@ namespace FeatureAdmin
 
         /// <summary>Adds features to the custom Feature class</summary>
         /// <param name="spFeatureDefinitions"></param>
-        public void AddFeatures(SPFeatureCollection spfeatures, SPFeatureScope scope)
+        public void AddFeatures_NotUsed(SPFeatureCollection spfeatures, SPFeatureScope scope)
         {
             this._spfeatures = spfeatures;
 
@@ -89,6 +96,20 @@ namespace FeatureAdmin
             catch
             {
             }
+        }
+        /// <summary>forcefully removes a feature definition from the farm feature definition collection</summary>
+        /// <param name="id">Feature Definition ID</param>
+        public void ForceUninstallFeatureDefinition(Guid id, int compatibilityLevel)
+        {
+#if (SP2013)
+            {
+                _spfeatureDefinitions.Remove(id, compatibilityLevel, true);
+            }
+#else
+            {
+                _spfeatureDefinitions.Remove(id, true);
+            }
+#endif
         }
         public static int GetFeatureCompatibilityLevel(SPFeatureDefinition definition)
         {
