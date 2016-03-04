@@ -673,28 +673,6 @@ namespace FeatureAdmin
 
         #region Helper Methods
 
-
-        /// <summary>write the log in the form, when features are loaded</summary>
-        /// <param name="location"></param>
-        /// <param name="features"></param>
-        /// <returns></returns>
-        private string BuildFeatureLog_Unused(string location, List<Feature> features)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(location);
-            sb.AppendFormat("Features counted: {0}", features.Count);
-            sb.AppendLine();
-
-            foreach (Feature feature in features)
-            {
-                sb.AppendLine(feature.ToString());
-            }
-
-            // sb.AppendLine();
-
-            return sb.ToString();
-        }
-
         private void logFeatureSelected()
         {
             if (clbSPSiteFeatures.CheckedItems.Count + clbSPWebFeatures.CheckedItems.Count > 0)
@@ -725,43 +703,6 @@ namespace FeatureAdmin
                 // disable all remove buttons
                 removeBtnEnabled(false);
             }
-
-        }
-
-        private void logFeatureDefinitionSelected()
-        {
-            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
-            if (selectedFeatures.Count > 0)
-            {
-                // enable all FeatureDef buttons
-                // featDefBtnEnabled(true); TODO - ?
-
-                logDateMsg("Feature Definition selection changed:");
-
-                foreach (Feature feature in selectedFeatures)
-                {
-                    logMsg(feature.ToString());
-                }
-            }
-            else
-            {
-                // disable all FeatureDef buttons
-                // featDefBtnEnabled(false); TODO - ?
-            }
-        }
-
-        /// <summary>Delete a collection of SiteCollection or Web Features forcefully in one site</summary>
-        /// <param name="manager"></param>
-        /// <param name="checkedListItems"></param>
-        private int DeleteSelectedFeatures(FeatureManager manager, CheckedListBox.CheckedItemCollection checkedListItems)
-        {
-            int removedFeatures = 0;
-            foreach (Feature checkedFeature in checkedListItems)
-            {
-                manager.ForceRemoveFeature(checkedFeature.Id);
-                removedFeatures++;
-            }
-            return removedFeatures;
         }
 
         /// <summary>
@@ -818,7 +759,7 @@ namespace FeatureAdmin
                             logDateMsg(
                                 string.Format("Success removing feature {0} from {1}",
                                 featureID,
-                                LocationInfo.SafeDescribeObject(web)));
+                                LocationManager.SafeDescribeObject(web)));
 
                         }
                     }
@@ -827,7 +768,7 @@ namespace FeatureAdmin
                         logException(exc,
                             string.Format("Exception removing feature {0} from {1}",
                             featureID,
-                            LocationInfo.SafeDescribeObject(web)));
+                            LocationManager.SafeDescribeObject(web)));
                     }
                     finally
                     {
@@ -869,14 +810,14 @@ namespace FeatureAdmin
                             logDateMsg(
                                 string.Format("Success removing feature {0} from {1}",
                                 featureID,
-                                LocationInfo.SafeDescribeObject(webApp)));
+                                LocationManager.SafeDescribeObject(webApp)));
                         }
                         catch (Exception exc)
                         {
                             logException(exc,
                                 string.Format("Exception removing feature {0} from {1}",
                                 featureID,
-                                LocationInfo.SafeDescribeObject(webApp)));
+                                LocationManager.SafeDescribeObject(webApp)));
                         }
                     }
                     else
@@ -946,14 +887,14 @@ namespace FeatureAdmin
                         logDateMsg(
                             string.Format("Success removing feature {0} from {1}",
                             featureID,
-                            LocationInfo.SafeDescribeObject(SPFarm.Local)));
+                            LocationManager.SafeDescribeObject(SPFarm.Local)));
                     }
                     catch (Exception exc)
                     {
                         logException(exc,
                             string.Format("Exception removing feature {0} from farm",
                             featureID,
-                            LocationInfo.SafeDescribeObject(SPFarm.Local)));
+                            LocationManager.SafeDescribeObject(SPFarm.Local)));
 
                         logDateMsg("Farm - The Farm Scoped feature '" + featureID.ToString() + "' was not found. ");
                     }
@@ -1327,6 +1268,7 @@ namespace FeatureAdmin
         private void listWebApplications_SelectedIndexChanged(object sender, EventArgs e)
         {
             ReloadCurrentSiteCollections();
+            EnableActionButtonsAsAppropriate();
         }
 
         private void ReloadCurrentSiteCollections()
@@ -1371,6 +1313,7 @@ namespace FeatureAdmin
                 ReloadCurrentSiteCollectionFeatures();
                 ReloadSubWebList();
             }
+            EnableActionButtonsAsAppropriate();
         }
 
         private void ClearCurrentSiteCollectionData()
@@ -1441,7 +1384,7 @@ namespace FeatureAdmin
             }
             catch (Exception exc)
             {
-                logException(exc, "Exception enumerating site collections");
+                logException(exc, "Exception enumerating subwebs");
             }
         }
 
@@ -1455,6 +1398,7 @@ namespace FeatureAdmin
                 m_CurrentWebLocation = listSites.SelectedItem as Location;
                 ReloadCurrentWebFeatures();
             }
+            EnableActionButtonsAsAppropriate();
         }
 
         private void clbSPSiteFeatures_SelectedIndexChanged(object sender, EventArgs e)
@@ -1470,12 +1414,6 @@ namespace FeatureAdmin
         private void btnClearLog_Click(object sender, EventArgs e)
         {
             ClearLog();
-        }
-
-
-        private void clbFeatureDefinitions_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            logFeatureDefinitionSelected();
         }
 
         private void btnFindActivatedFeature_Click(object sender, EventArgs e)
@@ -1742,8 +1680,6 @@ namespace FeatureAdmin
         }
         private void ReviewActivationsOfFeatures(FeatureLocationSet featLocs)
         {
-            // TODO
-            /*
             if (featLocs.Count == 0 || featLocs.GetTotalLocationCount() == 0)
             {
                 MessageBox.Show("No activations found");
@@ -1753,7 +1689,6 @@ namespace FeatureAdmin
                 LocationForm form = new LocationForm(featLocs);
                 form.ShowDialog();
             }
-             * */
         }
 
         private void gridFeatureDefinitions_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
