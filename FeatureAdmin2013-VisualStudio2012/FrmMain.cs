@@ -529,7 +529,7 @@ namespace FeatureAdmin
             }
 
             if (selectedFeatures.Count > 10)
-        {
+            {
                 InfoBox(string.Format(
                     "Too many features ({0}) selected; max 10 may be {1} at time",
                     selectedFeatures.Count,
