@@ -851,6 +851,8 @@ namespace FeatureAdmin
                                             featureID,
                                             LocationManager.SafeDescribeObject(site)));
                                     }
+
+
                                 }
                                 scannedThrough++;
                             }
@@ -902,8 +904,11 @@ namespace FeatureAdmin
                 else
                 {
 
-                    // all the content & admin WebApplications 
-                    SPWebApplicationCollection webApplicationCollection = GetAllWebApps();
+                    // all the content WebApplications 
+                    SPWebApplicationCollection webApplicationCollection = SPWebService.ContentService.WebApplications;
+
+                    //  administrative WebApplications 
+                    // SPWebApplicationCollection webApplicationCollection = SPWebService.AdministrationService.WebApplications;
 
                     foreach (SPWebApplication webApplication in webApplicationCollection)
                     {
@@ -1517,72 +1522,6 @@ namespace FeatureAdmin
                 FeatureActivator.Action.Deactivating);
         }
 
-        private void btnFindActivatedFeature_Click(object sender, EventArgs e)
-        {
-            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
-            if (selectedFeatures.Count != 1)
-            {
-                MessageBox.Show("Please select exactly 1 feature.");
-                return;
-            }
-            Feature feature = (Feature)selectedFeatures[0];
-
-            ActivationFinder finder = new ActivationFinder();
-            finder.FoundListeners += delegate(Guid featureId, string url, string name)
-            {
-                string msgtext = url + " = " + name;
-                if (url == name) { msgtext = url; } // farm, farm
-                logDateMsg(msgtext);
-            };
-            finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
-
-            // Call routine to actually find & report activations
-            bool found = finder.FindFirstFeatureActivation(feature.Id);
-            if (!found)
-            {
-                string msgString = "Feature was not found activated in the farm.";
-                MessageBox.Show(msgString);
-                logDateMsg(msgString);
-            }
-        }
-        private void btnFindAllActivationsFeature_Click(object sender, EventArgs e)
-        {
-            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
-            if (selectedFeatures.Count != 1)
-            {
-                MessageBox.Show("Please select exactly 1 feature.");
-                return;
-            }
-            Feature feature = selectedFeatures[0];
-
-            List<Location> featlocs = GetFeatureLocations(feature.Id);
-            if (featlocs.Count == 0)
-            {
-                MessageBox.Show("No activations found");
-            }
-            else
-            {
-                string msgString = string.Format(
-                    "Activations found: {0}. See log for locations",
-                    featlocs.Count);
-                MessageBox.Show(msgString, "Feature Activations");
-                logDateMsg(string.Format(
-                    "{0} Activations of feature: {1} [{2}]",
-                    featlocs.Count,
-                    feature.Name,
-                    feature.Id
-                    ));
-                foreach (Location loc in featlocs)
-                {
-                    string msgtext = "    " + loc.Url;
-                    if (loc.Url != loc.Name)
-                    {
-                        msgtext += " = " + loc.Name;
-                    }
-                    logDateMsg(msgtext);
-                }
-            }
-        }
         private List<Location> GetFeatureLocations(Guid featureId)
         {
             if (!m_featureDb.IsLoaded())
@@ -1590,15 +1529,6 @@ namespace FeatureAdmin
                 ReloadAllActivationData();
             }
             return m_featureDb.GetLocationsOfFeature(featureId);
-        }
-
-        private void btnLoadAllFeatureActivations_Click(object sender, EventArgs e)
-        {
-            ReloadAllActivationData();
-            string msgtext = string.Format(
-                "All activation data reloaded"
-                );
-            MessageBox.Show(msgtext);
         }
 
         private void ReloadAllActivationData()
@@ -1611,111 +1541,13 @@ namespace FeatureAdmin
 
                 // Call routine to actually find & report activations
                 m_featureDb.LoadAllData(finder.FindAllActivationsOfAllFeatures());
+                m_featureDb.MarkFaulty(finder.GetFaultyFeatureIdList());
+                lblFeatureDefinitions.Text = string.Format(
+                    "All {0} Features installed in the Farm",
+                    m_featureDb.GetAllFeaturesCount());
             }
         }
 
-        private void btnFindFaultyFeature_Click(object sender, EventArgs e)
-        {
-
-
-            string msgString = string.Empty;
-
-
-            //first, Look in Farm
-            try
-            {
-                if (findFaultyFeatureInCollection(SPWebService.ContentService.Features, SPFeatureScope.Farm))
-                {
-                    return;
-                }
-            }
-            catch (Exception exc)
-            {
-                logException(exc, "Error finding faulty features in farm");
-            }
-
-            //check web applications
-            try
-            {
-                foreach (SPWebApplication webApp in GetAllWebApps())
-                {
-                    try
-                    {
-                        if (findFaultyFeatureInCollection(webApp.Features, SPFeatureScope.WebApplication))
-                        {
-                            return;
-                        }
-                    }
-                    catch (Exception exc)
-                    {
-                        logException(exc, "Enumerating features in web app " + webApp.Name);
-                    }
-
-                    try
-                    {
-                        // then check all site collections
-                        foreach (SPSite site in webApp.Sites)
-                        {
-                            using (site)
-                            {
-                                try
-                                {
-                                    // check sites
-                                    if (findFaultyFeatureInCollection(site.Features, SPFeatureScope.Site))
-                                    {
-                                        return;
-                                    }
-                                }
-                                catch (Exception exc)
-                                {
-                                    logException(exc, "Exception checking features in site " + site.Url);
-                                }
-
-
-                                try
-                                {
-                                    foreach (SPWeb web in site.AllWebs)
-                                    {
-                                        using (web)
-                                        {
-                                            try
-                                            {
-                                                // check webs
-                                                if (findFaultyFeatureInCollection(web.Features, SPFeatureScope.Web))
-                                                {
-                                                    return;
-                                                }
-                                            }
-                                            catch (Exception exc)
-                                            {
-                                                logException(exc, "Exception checking features in web " + web.Url);
-                                            }
-                                        }
-                                    }
-                                }
-                                catch (Exception exc)
-                                {
-                                    string msg = FormatSiteException(site, exc, "Error enumerating webs");
-                                    logException(exc, msg);
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception exc)
-                    {
-                        logException(exc, "Exception enumerating sites in web app " + webApp.Name);
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                logException(exc, "Enumerating web applications");
-            }
-            msgString = "No Faulty Feature was found in the farm!";
-            MessageBox.Show(msgString);
-            logDateMsg(msgString);
-
-        }
         private SPWebApplicationCollection GetAllWebApps()
         {
             SPWebApplicationCollection webapps = SPWebService.ContentService.WebApplications;
@@ -1886,6 +1718,5 @@ namespace FeatureAdmin
             gridFeatureDefinitions.ContextMenuStrip = null;
             m_featureDefGridContextFeature = null;
         }
-
     }
 }
