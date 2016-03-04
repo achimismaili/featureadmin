@@ -851,8 +851,6 @@ namespace FeatureAdmin
                                             featureID,
                                             LocationManager.SafeDescribeObject(site)));
                                     }
-
-
                                 }
                                 scannedThrough++;
                             }
@@ -904,11 +902,8 @@ namespace FeatureAdmin
                 else
                 {
 
-                    // all the content WebApplications 
-                    SPWebApplicationCollection webApplicationCollection = SPWebService.ContentService.WebApplications;
-
-                    //  administrative WebApplications 
-                    // SPWebApplicationCollection webApplicationCollection = SPWebService.AdministrationService.WebApplications;
+                    // all the content & admin WebApplications 
+                    SPWebApplicationCollection webApplicationCollection = GetAllWebApps();
 
                     foreach (SPWebApplication webApplication in webApplicationCollection)
                     {
