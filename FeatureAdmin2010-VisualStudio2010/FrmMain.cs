@@ -1214,7 +1214,7 @@ namespace FeatureAdmin
             {
                 listWebApplications.Items.Clear();
                 listSiteCollections.Items.Clear();
-                listSites.Items.Clear();
+                listWebs.Items.Clear();
                 clbSPSiteFeatures.Items.Clear();
                 clbSPWebFeatures.Items.Clear();
                 removeBtnEnabled(false);
@@ -1329,7 +1329,7 @@ namespace FeatureAdmin
         private void ClearCurrentWebData()
         {
             FeatureAdmin.Location.Clear(m_CurrentWebLocation);
-            listSites.Items.Clear();
+            listWebs.Items.Clear();
             clbSPWebFeatures.Items.Clear();
         }
 
@@ -1371,7 +1371,7 @@ namespace FeatureAdmin
                         try
                         {
                             Location webLocation = LocationManager.GetLocation(web);
-                            listSites.Items.Add(webLocation);
+                            listWebs.Items.Add(webLocation);
                         }
                         finally
                         {
@@ -1380,9 +1380,9 @@ namespace FeatureAdmin
                     }
                 }
                 // select first site collection if there is only one
-                if (listSites.Items.Count == 1)
+                if (listWebs.Items.Count == 1)
                 {
-                    listSites.SelectedIndex = 0;
+                    listWebs.SelectedIndex = 0;
                 }
             }
             catch (Exception exc)
@@ -1394,11 +1394,11 @@ namespace FeatureAdmin
         /// <summary>UI method to load the SiteCollection Features and Site Features
         /// Handles the SelectedIndexChanged event of the listSites control.
         /// </summary>
-        private void listSites_SelectedIndexChanged(object sender, EventArgs e)
+        private void listWebs_SelectedIndexChanged(object sender, EventArgs e)
         {
             using (WaitCursor wait = new WaitCursor())
             {
-                m_CurrentWebLocation = listSites.SelectedItem as Location;
+                m_CurrentWebLocation = listWebs.SelectedItem as Location;
                 ReloadCurrentWebFeatures();
             }
             EnableActionButtonsAsAppropriate();

@@ -32,8 +32,8 @@
             this.FeatureTitlePanel = new System.Windows.Forms.Panel();
             this.FeaturePanelCaption = new System.Windows.Forms.Label();
             this.LocationGrid = new System.Windows.Forms.DataGridView();
-            this.DeactivateButton = new System.Windows.Forms.Button();
             this.LocationDetailsView = new System.Windows.Forms.ListView();
+            this.DeactivateButton = new System.Windows.Forms.Button();
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
             this.MainSplitContainer.SuspendLayout();
@@ -51,8 +51,8 @@
             // 
             // MainSplitContainer.Panel1
             // 
-            this.MainSplitContainer.Panel1.Controls.Add(this.LocationGrid);
             this.MainSplitContainer.Panel1.Controls.Add(this.FeatureTitlePanel);
+            this.MainSplitContainer.Panel1.Controls.Add(this.LocationGrid);
             // 
             // MainSplitContainer.Panel2
             // 
@@ -87,17 +87,9 @@
             this.LocationGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.LocationGrid.Location = new System.Drawing.Point(0, 39);
             this.LocationGrid.Name = "LocationGrid";
+            this.LocationGrid.ReadOnly = true;
             this.LocationGrid.Size = new System.Drawing.Size(536, 279);
             this.LocationGrid.TabIndex = 0;
-            // 
-            // DeactivateButton
-            // 
-            this.DeactivateButton.Location = new System.Drawing.Point(184, 3);
-            this.DeactivateButton.Name = "DeactivateButton";
-            this.DeactivateButton.Size = new System.Drawing.Size(200, 23);
-            this.DeactivateButton.TabIndex = 0;
-            this.DeactivateButton.Text = "Deactivate Selected Activations";
-            this.DeactivateButton.UseVisualStyleBackColor = true;
             // 
             // LocationDetailsView
             // 
@@ -107,6 +99,15 @@
             this.LocationDetailsView.TabIndex = 1;
             this.LocationDetailsView.UseCompatibleStateImageBehavior = false;
             this.LocationDetailsView.View = System.Windows.Forms.View.Details;
+            // 
+            // DeactivateButton
+            // 
+            this.DeactivateButton.Location = new System.Drawing.Point(184, 3);
+            this.DeactivateButton.Name = "DeactivateButton";
+            this.DeactivateButton.Size = new System.Drawing.Size(200, 23);
+            this.DeactivateButton.TabIndex = 0;
+            this.DeactivateButton.Text = "Deactivate Selected Activations";
+            this.DeactivateButton.UseVisualStyleBackColor = true;
             // 
             // LocationForm
             // 
@@ -129,10 +130,11 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer MainSplitContainer;
+        private System.Windows.Forms.DataGridView LocationGrid;
         private System.Windows.Forms.Panel FeatureTitlePanel;
         private System.Windows.Forms.Label FeaturePanelCaption;
-        private System.Windows.Forms.DataGridView LocationGrid;
         private System.Windows.Forms.ListView LocationDetailsView;
         private System.Windows.Forms.Button DeactivateButton;
+
     }
 }
