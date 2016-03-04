@@ -62,7 +62,7 @@ namespace FeatureAdmin
 
         /// <summary>Adds feature definitions to the custom Feature class</summary>
         /// <param name="spFeatureDefinitions"></param>
-        public void AddFeatures(SPFeatureDefinitionCollection spFeatureDefinitions)
+        public void AddFeatures_Unused(SPFeatureDefinitionCollection spFeatureDefinitions)
         {
             this._spfeatureDefinitions = spFeatureDefinitions;
 
