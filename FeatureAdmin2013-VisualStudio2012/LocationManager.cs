@@ -62,8 +62,15 @@ namespace FeatureAdmin
         }
         public static string SafeDescribeObject(object obj)
         {
-            Location loct = GetLocation(obj);
-            return SafeDescribeLocation(loct);
+            try
+            {
+                Location loct = GetLocation(obj);
+                return SafeDescribeLocation(loct);
+            }
+            catch
+            {
+                return "Exception describing object";
+            }
         }
         public static string SafeDescribeLocation(Location loct)
         {

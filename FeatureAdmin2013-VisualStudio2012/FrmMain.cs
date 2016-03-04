@@ -1213,7 +1213,7 @@ namespace FeatureAdmin
             {
                 listWebApplications.Items.Clear();
                 listSiteCollections.Items.Clear();
-                listSites.Items.Clear();
+                listWebs.Items.Clear();
                 clbSPSiteFeatures.Items.Clear();
                 clbSPWebFeatures.Items.Clear();
                 removeBtnEnabled(false);
@@ -1229,7 +1229,17 @@ namespace FeatureAdmin
 
                 foreach (SPWebApplication webApp in GetAllWebApps())
                 {
-                    listWebApplications.Items.Add(webApp.Name);
+                    try
+                    {
+                        Location webAppLocation = LocationManager.GetLocation(webApp);
+                        listWebApplications.Items.Add(webAppLocation);
+                    }
+                    catch (Exception exc)
+                    {
+                        logException(exc,
+                            string.Format("Exception enumerating webapp: {0}",
+                            LocationManager.SafeDescribeObject(webApp)));
+                    }
                 }
 
                 if (listWebApplications.Items.Count > 0)
@@ -1288,8 +1298,17 @@ namespace FeatureAdmin
                     SPWebApplication webApp = GetCurrentWebApplication();
                     foreach (SPSite site in webApp.Sites)
                     {
-                        Location siteLocation = LocationManager.GetLocation(site);
-                        listSiteCollections.Items.Add(siteLocation);
+                        try
+                        {
+                            Location siteLocation = LocationManager.GetLocation(site);
+                            listSiteCollections.Items.Add(siteLocation);
+                        }
+                        catch (Exception exc)
+                        {
+                            logException(exc,
+                                string.Format("Exception enumerating site: {0}",
+                                LocationManager.SafeDescribeObject(site)));
+                        }
                     }
                     // select first site collection if there is only one
                     if (listSiteCollections.Items.Count == 1)
@@ -1308,14 +1327,26 @@ namespace FeatureAdmin
         /// </summary>
         private void listSiteCollections_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ReloadCurrentWebs();
+            EnableActionButtonsAsAppropriate();
+        }
+
+        private void ReloadCurrentWebs()
+        {
             using (WaitCursor wait = new WaitCursor())
             {
-                m_CurrentSiteLocation = listSiteCollections.SelectedItem as Location;
-                ClearCurrentWebData();
-                ReloadCurrentSiteCollectionFeatures();
-                ReloadSubWebList();
+                try
+                {
+                    m_CurrentSiteLocation = listSiteCollections.SelectedItem as Location;
+                    ClearCurrentWebData();
+                    ReloadCurrentSiteCollectionFeatures();
+                    ReloadSubWebList();
+                }
+                catch (Exception exc)
+                {
+                    logException(exc, "Exception enumerating webs");
+                }
             }
-            EnableActionButtonsAsAppropriate();
         }
 
         private void ClearCurrentSiteCollectionData()
@@ -1328,7 +1359,7 @@ namespace FeatureAdmin
         private void ClearCurrentWebData()
         {
             FeatureAdmin.Location.Clear(m_CurrentWebLocation);
-            listSites.Items.Clear();
+            listWebs.Items.Clear();
             clbSPWebFeatures.Items.Clear();
         }
 
@@ -1344,7 +1375,7 @@ namespace FeatureAdmin
         private void ReloadCurrentWebFeatures()
         {
             clbSPWebFeatures.Items.Clear();
-            if (m_CurrentWebLocation == null) { return; }
+            if (IsEmpty(m_CurrentWebLocation)) { return; }
             List<Feature> features = m_featureDb.GetFeaturesOfLocation(m_CurrentWebLocation);
             features.Sort();
             clbSPWebFeatures.Items.AddRange(features.ToArray());
@@ -1370,18 +1401,24 @@ namespace FeatureAdmin
                         try
                         {
                             Location webLocation = LocationManager.GetLocation(web);
-                            listSites.Items.Add(webLocation);
+                            listWebs.Items.Add(webLocation);
+                        }
+                        catch (Exception exc)
+                        {
+                            logException(exc,
+                                string.Format("Exception enumerating web: {0}",
+                                LocationManager.SafeDescribeObject(web)));
                         }
                         finally
                         {
-                            site.Dispose();
+                            web.Dispose();
                         }
                     }
                 }
                 // select first site collection if there is only one
-                if (listSites.Items.Count == 1)
+                if (listWebs.Items.Count == 1)
                 {
-                    listSites.SelectedIndex = 0;
+                    listWebs.SelectedIndex = 0;
                 }
             }
             catch (Exception exc)
@@ -1391,13 +1428,13 @@ namespace FeatureAdmin
         }
 
         /// <summary>UI method to load the SiteCollection Features and Site Features
-        /// Handles the SelectedIndexChanged event of the listSites control.
+        /// Handles the SelectedIndexChanged event of the listWebs control.
         /// </summary>
-        private void listSites_SelectedIndexChanged(object sender, EventArgs e)
+        private void listWebs_SelectedIndexChanged(object sender, EventArgs e)
         {
             using (WaitCursor wait = new WaitCursor())
             {
-                m_CurrentWebLocation = listSites.SelectedItem as Location;
+                m_CurrentWebLocation = listWebs.SelectedItem as Location;
                 ReloadCurrentWebFeatures();
             }
             EnableActionButtonsAsAppropriate();

@@ -38,7 +38,7 @@ namespace FeatureAdmin
             this.lblSiteCollections = new System.Windows.Forms.Label();
             this.listSiteCollections = new System.Windows.Forms.ListBox();
             this.lblWebApps = new System.Windows.Forms.Label();
-            this.listSites = new System.Windows.Forms.ListBox();
+            this.listWebs = new System.Windows.Forms.ListBox();
             this.lblWebs = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lblFeatureDefinitions = new System.Windows.Forms.Label();
@@ -245,18 +245,18 @@ namespace FeatureAdmin
             this.lblWebApps.TabIndex = 9;
             this.lblWebApps.Text = "Web Applications";
             // 
-            // listSites
+            // listWebs
             // 
-            this.listSites.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.listWebs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listSites.BackColor = System.Drawing.SystemColors.Window;
-            this.listSites.FormattingEnabled = true;
-            this.listSites.Location = new System.Drawing.Point(0, 16);
-            this.listSites.Name = "listSites";
-            this.listSites.Size = new System.Drawing.Size(412, 121);
-            this.listSites.TabIndex = 9;
-            this.listSites.SelectedIndexChanged += new System.EventHandler(this.listSites_SelectedIndexChanged);
+            this.listWebs.BackColor = System.Drawing.SystemColors.Window;
+            this.listWebs.FormattingEnabled = true;
+            this.listWebs.Location = new System.Drawing.Point(0, 16);
+            this.listWebs.Name = "listWebs";
+            this.listWebs.Size = new System.Drawing.Size(412, 121);
+            this.listWebs.TabIndex = 9;
+            this.listWebs.SelectedIndexChanged += new System.EventHandler(this.listWebs_SelectedIndexChanged);
             // 
             // lblWebs
             // 
@@ -673,7 +673,7 @@ namespace FeatureAdmin
             // splitContainerLeftDownWebsAndLogs.Panel1
             // 
             this.splitContainerLeftDownWebsAndLogs.Panel1.Controls.Add(this.lblWebs);
-            this.splitContainerLeftDownWebsAndLogs.Panel1.Controls.Add(this.listSites);
+            this.splitContainerLeftDownWebsAndLogs.Panel1.Controls.Add(this.listWebs);
             // 
             // splitContainerLeftDownWebsAndLogs.Panel2
             // 
@@ -761,7 +761,7 @@ namespace FeatureAdmin
         private System.Windows.Forms.Label lblWebApps;
         private System.Windows.Forms.Label lblSiteCollections;
         private System.Windows.Forms.ListBox listSiteCollections;
-        private System.Windows.Forms.ListBox listSites;
+        private System.Windows.Forms.ListBox listWebs;
         private System.Windows.Forms.Label lblWebs;
         private System.Windows.Forms.Label lblFeatureDefinitions;
 
