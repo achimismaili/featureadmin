@@ -18,7 +18,7 @@ namespace FeatureAdmin
                 loct.Url = "Farm";
                 loct.Name = "Farm";
             }
-            if (obj is SPWebApplication)
+            else if (obj is SPWebApplication)
             {
                 SPWebApplication webapp = obj as SPWebApplication;
                 loct.Id = webapp.Id;
