@@ -38,25 +38,25 @@ namespace FeatureAdmin
             this.lblSiteCollections = new System.Windows.Forms.Label();
             this.listSiteCollections = new System.Windows.Forms.ListBox();
             this.lblWebApps = new System.Windows.Forms.Label();
-            this.listSites = new System.Windows.Forms.ListBox();
+            this.listWebs = new System.Windows.Forms.ListBox();
             this.lblWebs = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lblFeatureDefinitions = new System.Windows.Forms.Label();
             this.btnReloadFDefs = new System.Windows.Forms.Button();
-            this.btnUninstFDef = new System.Windows.Forms.Button();
             this.btnRemoveFromSiteCollection = new System.Windows.Forms.Button();
             this.btnRemoveFromWebApp = new System.Windows.Forms.Button();
             this.btnRemoveFromFarm = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FarmFeatures = new System.Windows.Forms.TabPage();
-            this.btnViewActivations = new System.Windows.Forms.Button();
             this.FarmActionPanel = new System.Windows.Forms.GroupBox();
+            this.btnViewActivations = new System.Windows.Forms.Button();
+            this.btnUninstFDef = new System.Windows.Forms.Button();
             this.btnDeactivateSPFarm = new System.Windows.Forms.Button();
             this.ActionFarmCaption = new System.Windows.Forms.Label();
             this.btnActivateSPFarm = new System.Windows.Forms.Button();
             this.WebAppActionPanel = new System.Windows.Forms.GroupBox();
-            this.btnDeactivateSPWebApp = new System.Windows.Forms.Button();
             this.ActionWebAppCaption = new System.Windows.Forms.Label();
+            this.btnDeactivateSPWebApp = new System.Windows.Forms.Button();
             this.btnActivateSPWebApp = new System.Windows.Forms.Button();
             this.SiteCollectionActionPanel = new System.Windows.Forms.GroupBox();
             this.btnDeactivateSPSite = new System.Windows.Forms.Button();
@@ -240,18 +240,17 @@ namespace FeatureAdmin
             this.lblWebApps.TabIndex = 9;
             this.lblWebApps.Text = "Web Applications";
             // 
-            // listSites
+            // listWebs
             // 
-            this.listSites.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.listWebs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.listSites.BackColor = System.Drawing.SystemColors.Window;
-            this.listSites.FormattingEnabled = true;
-            this.listSites.Location = new System.Drawing.Point(0, 16);
-            this.listSites.Name = "listSites";
-            this.listSites.Size = new System.Drawing.Size(412, 121);
-            this.listSites.TabIndex = 9;
-            this.listSites.SelectedIndexChanged += new System.EventHandler(this.listSites_SelectedIndexChanged);
+            this.listWebs.BackColor = System.Drawing.SystemColors.Window;
+            this.listWebs.FormattingEnabled = true;
+            this.listWebs.Location = new System.Drawing.Point(0, 16);
+            this.listWebs.Name = "listWebs";
+            this.listWebs.Size = new System.Drawing.Size(412, 121);
+            this.listWebs.TabIndex = 9;
             // 
             // lblWebs
             // 
@@ -292,18 +291,6 @@ namespace FeatureAdmin
             this.btnReloadFDefs.Text = "Load";
             this.btnReloadFDefs.UseVisualStyleBackColor = true;
             this.btnReloadFDefs.Click += new System.EventHandler(this.btnLoadFDefs_Click);
-            // 
-            // btnUninstFDef
-            // 
-            this.btnUninstFDef.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUninstFDef.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnUninstFDef.Location = new System.Drawing.Point(360, 8);
-            this.btnUninstFDef.Name = "btnUninstFDef";
-            this.btnUninstFDef.Size = new System.Drawing.Size(70, 20);
-            this.btnUninstFDef.TabIndex = 8;
-            this.btnUninstFDef.Text = "Uninstall";
-            this.btnUninstFDef.UseVisualStyleBackColor = true;
-            this.btnUninstFDef.Click += new System.EventHandler(this.btnUninstFeatureDef_Click);
             // 
             // btnRemoveFromSiteCollection
             // 
@@ -373,16 +360,6 @@ namespace FeatureAdmin
             this.FarmFeatures.Text = "Farm Feature Administration";
             this.FarmFeatures.UseVisualStyleBackColor = true;
             // 
-            // btnViewActivations
-            // 
-            this.btnViewActivations.Location = new System.Drawing.Point(111, 501);
-            this.btnViewActivations.Name = "btnViewActivations";
-            this.btnViewActivations.Size = new System.Drawing.Size(228, 23);
-            this.btnViewActivations.TabIndex = 29;
-            this.btnViewActivations.Text = "Review Activations of Selected Feature";
-            this.btnViewActivations.UseVisualStyleBackColor = true;
-            this.btnViewActivations.Click += new System.EventHandler(this.btnViewActivations_Click);
-            // 
             // FarmActionPanel
             // 
             this.FarmActionPanel.Controls.Add(this.btnDeactivateSPFarm);
@@ -394,6 +371,17 @@ namespace FeatureAdmin
             this.FarmActionPanel.Size = new System.Drawing.Size(433, 31);
             this.FarmActionPanel.TabIndex = 28;
             this.FarmActionPanel.TabStop = false;
+            // 
+            // btnUninstFDef
+            // 
+            this.btnUninstFDef.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUninstFDef.ForeColor = System.Drawing.Color.MidnightBlue;
+            this.btnUninstFDef.Location = new System.Drawing.Point(360, 8);
+            this.btnUninstFDef.Name = "btnUninstFDef";
+            this.btnUninstFDef.Size = new System.Drawing.Size(70, 20);
+            this.btnUninstFDef.TabIndex = 8;
+            this.btnUninstFDef.Text = "Uninstall";
+            this.btnUninstFDef.UseVisualStyleBackColor = true;
             // 
             // btnDeactivateSPFarm
             // 
@@ -437,6 +425,15 @@ namespace FeatureAdmin
             this.WebAppActionPanel.TabIndex = 27;
             this.WebAppActionPanel.TabStop = false;
             // 
+            // ActionWebAppCaption
+            // 
+            this.ActionWebAppCaption.AutoSize = true;
+            this.ActionWebAppCaption.Location = new System.Drawing.Point(106, 10);
+            this.ActionWebAppCaption.Name = "ActionWebAppCaption";
+            this.ActionWebAppCaption.Size = new System.Drawing.Size(165, 13);
+            this.ActionWebAppCaption.TabIndex = 0;
+            this.ActionWebAppCaption.Text = "Across Selected Web Application";
+            // 
             // btnDeactivateSPWebApp
             // 
             this.btnDeactivateSPWebApp.ForeColor = System.Drawing.Color.MidnightBlue;
@@ -447,15 +444,6 @@ namespace FeatureAdmin
             this.btnDeactivateSPWebApp.Text = "Deactivate";
             this.btnDeactivateSPWebApp.UseVisualStyleBackColor = true;
             this.btnDeactivateSPWebApp.Click += new System.EventHandler(this.btnDeactivateSPWebApp_Click);
-            // 
-            // ActionWebAppCaption
-            // 
-            this.ActionWebAppCaption.AutoSize = true;
-            this.ActionWebAppCaption.Location = new System.Drawing.Point(106, 10);
-            this.ActionWebAppCaption.Name = "ActionWebAppCaption";
-            this.ActionWebAppCaption.Size = new System.Drawing.Size(165, 13);
-            this.ActionWebAppCaption.TabIndex = 0;
-            this.ActionWebAppCaption.Text = "Across Selected Web Application";
             // 
             // btnActivateSPWebApp
             // 
@@ -552,6 +540,16 @@ namespace FeatureAdmin
             this.btnActivateSPWeb.UseVisualStyleBackColor = true;
             this.btnActivateSPWeb.Click += new System.EventHandler(this.btnActivateSPWeb_Click);
             // 
+            // btnViewActivations
+            // 
+            this.btnViewActivations.Location = new System.Drawing.Point(111, 501);
+            this.btnViewActivations.Name = "btnViewActivations";
+            this.btnViewActivations.Size = new System.Drawing.Size(228, 23);
+            this.btnViewActivations.TabIndex = 29;
+            this.btnViewActivations.Text = "Review Activations of Selected Feature";
+            this.btnViewActivations.UseVisualStyleBackColor = true;
+            this.btnViewActivations.Click += new System.EventHandler(this.btnViewActivations_Click);
+            // 
             // gridFeatureDefinitions
             // 
             this.gridFeatureDefinitions.AllowUserToAddRows = false;
@@ -610,17 +608,6 @@ namespace FeatureAdmin
             this.splitContainerRightSiteCollFeaturesWebFeatures.Size = new System.Drawing.Size(458, 484);
             this.splitContainerRightSiteCollFeaturesWebFeatures.SplitterDistance = 236;
             this.splitContainerRightSiteCollFeaturesWebFeatures.TabIndex = 19;
-            // 
-            // btnClearLog
-            // 
-            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClearLog.Location = new System.Drawing.Point(319, 3);
-            this.btnClearLog.Name = "btnClearLog";
-            this.btnClearLog.Size = new System.Drawing.Size(90, 23);
-            this.btnClearLog.TabIndex = 18;
-            this.btnClearLog.Text = "Clear Log";
-            this.btnClearLog.UseVisualStyleBackColor = true;
-            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
             // 
             // splitContainerCompleteMainframe
             // 
@@ -696,7 +683,7 @@ namespace FeatureAdmin
             // splitContainerLeftDownWebsAndLogs.Panel1
             // 
             this.splitContainerLeftDownWebsAndLogs.Panel1.Controls.Add(this.lblWebs);
-            this.splitContainerLeftDownWebsAndLogs.Panel1.Controls.Add(this.listSites);
+            this.splitContainerLeftDownWebsAndLogs.Panel1.Controls.Add(this.listWebs);
             // 
             // splitContainerLeftDownWebsAndLogs.Panel2
             // 
@@ -706,6 +693,17 @@ namespace FeatureAdmin
             this.splitContainerLeftDownWebsAndLogs.Size = new System.Drawing.Size(412, 494);
             this.splitContainerLeftDownWebsAndLogs.SplitterDistance = 146;
             this.splitContainerLeftDownWebsAndLogs.TabIndex = 0;
+            // 
+            // btnClearLog
+            // 
+            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearLog.Location = new System.Drawing.Point(319, 3);
+            this.btnClearLog.Name = "btnClearLog";
+            this.btnClearLog.Size = new System.Drawing.Size(90, 23);
+            this.btnClearLog.TabIndex = 18;
+            this.btnClearLog.Text = "Clear Log";
+            this.btnClearLog.UseVisualStyleBackColor = true;
+            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
             // 
             // FrmMain
             // 
@@ -768,12 +766,11 @@ namespace FeatureAdmin
         private System.Windows.Forms.Label lblWebApps;
         private System.Windows.Forms.Label lblSiteCollections;
         private System.Windows.Forms.ListBox listSiteCollections;
-        private System.Windows.Forms.ListBox listSites;
+        private System.Windows.Forms.ListBox listWebs;
         private System.Windows.Forms.Label lblWebs;
         private System.Windows.Forms.Label lblFeatureDefinitions;
 
         private System.Windows.Forms.Button btnReloadFDefs;
-        private System.Windows.Forms.Button btnUninstFDef;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnRemoveFromSiteCollection;
         private System.Windows.Forms.Button btnRemoveFromWebApp;
@@ -781,11 +778,6 @@ namespace FeatureAdmin
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage RemoveFeatures;
         private System.Windows.Forms.TabPage FarmFeatures;
-        private System.Windows.Forms.Button btnClearLog;
-        private System.Windows.Forms.Button btnActivateSPWeb;
-        private System.Windows.Forms.Button btnActivateSPSite;
-        private System.Windows.Forms.Button btnActivateSPWebApp;
-        private System.Windows.Forms.Button btnActivateSPFarm;
     
         #endregion    
         private System.Windows.Forms.SplitContainer splitContainerRightSiteCollFeaturesWebFeatures;
@@ -794,19 +786,25 @@ namespace FeatureAdmin
         private System.Windows.Forms.SplitContainer splitContainerLeftUpperWebAppAndSiteColl;
         private System.Windows.Forms.SplitContainer splitContainerLeftDownWebsAndLogs;
         private System.Windows.Forms.DataGridView gridFeatureDefinitions;
-        private System.Windows.Forms.GroupBox SiteCollectionActionPanel;
-        private System.Windows.Forms.Label ActionSiteCaption;
+        private System.Windows.Forms.Button btnClearLog;
         private System.Windows.Forms.GroupBox WebActionPanel;
+        private System.Windows.Forms.Button btnActivateSPWeb;
+        private System.Windows.Forms.Button btnViewActivations;
+        private System.Windows.Forms.GroupBox SiteCollectionActionPanel;
+        private System.Windows.Forms.Button btnDeactivateSPSite;
+        private System.Windows.Forms.Label ActionSiteCaption;
+        private System.Windows.Forms.Button btnActivateSPSite;
+        private System.Windows.Forms.Button btnDeactivateSPWeb;
         private System.Windows.Forms.Label ActionWebCaption;
-        private System.Windows.Forms.GroupBox FarmActionPanel;
-        private System.Windows.Forms.Label ActionFarmCaption;
         private System.Windows.Forms.GroupBox WebAppActionPanel;
         private System.Windows.Forms.Label ActionWebAppCaption;
-        private System.Windows.Forms.Button btnViewActivations;
-        private System.Windows.Forms.Button btnDeactivateSPFarm;
         private System.Windows.Forms.Button btnDeactivateSPWebApp;
-        private System.Windows.Forms.Button btnDeactivateSPSite;
-        private System.Windows.Forms.Button btnDeactivateSPWeb;
+        private System.Windows.Forms.Button btnActivateSPWebApp;
+        private System.Windows.Forms.GroupBox FarmActionPanel;
+        private System.Windows.Forms.Button btnUninstFDef;
+        private System.Windows.Forms.Button btnDeactivateSPFarm;
+        private System.Windows.Forms.Label ActionFarmCaption;
+        private System.Windows.Forms.Button btnActivateSPFarm;
     
     }
 }

@@ -35,3 +35,5 @@ FeatureDatabase: (Backported from FeatureAdmin2013)
 
 March, 2016 -- Perry
 Rework preprocessor definitions (SP2007, SP2010, SP2013) so they are inclusive
+Enhance feature deactivation traversals with better exception & logging
+  and add prompt to choose whether to use Force flag
