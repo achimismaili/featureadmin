@@ -842,14 +842,14 @@ namespace FeatureAdmin
                                         logDateMsg(
                                             string.Format("Success removing feature {0} from {1}",
                                             featureID,
-                                            LocationInfo.SafeDescribeObject(site)));
+                                            LocationManager.SafeDescribeObject(site)));
                                     }
                                     catch (Exception exc)
                                     {
                                         logException(exc,
                                             string.Format("Exception removing feature {0} from {1}",
                                             featureID,
-                                            LocationInfo.SafeDescribeObject(site)));
+                                            LocationManager.SafeDescribeObject(site)));
                                     }
 
                                 }
@@ -1070,7 +1070,7 @@ namespace FeatureAdmin
         }
         private string DescribeFeatureAndLocation_Unused(SPFeature feature)
         {
-            string location = LocationInfo.SafeDescribeObject(feature.Parent);
+            string location = LocationManager.SafeDescribeObject(feature.Parent);
 
             string msgString = "Faulty Feature found!\n"
                 + string.Format("Id: {0}", feature.DefinitionId);
