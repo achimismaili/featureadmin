@@ -13,23 +13,15 @@ namespace FeatureAdmin
         public static void ForceUninstallFeatureDefinition(Guid id, int compatibilityLevel)
         {
             SPFeatureDefinitionCollection featuredefs = SPFarm.Local.FeatureDefinitions;
-            #if (SP2013)
+#if (SP2013)
             {
                 featuredefs.Remove(id, compatibilityLevel, true);
             }
-            #elif (SP2010)
+#else
             {
                 featuredefs.Remove(id, true);
             }
-            #elif (SP2007)
-            {
-                featuredefs.Remove(id, true);
-            }
-            #else
-            {
-            throw new Exception("Unspecified SharePoint Version");
-            }
-            #endif
+#endif
         }
     }
 }

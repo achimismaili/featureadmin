@@ -92,23 +92,15 @@ namespace FeatureAdmin
         }
         public static int GetFeatureCompatibilityLevel(SPFeatureDefinition definition)
         {
-            #if (SP2013)
+#if (SP2013)
             {
                 return definition.CompatibilityLevel;
             }
-            #elif (SP2010)
+#else
             {
                 return Feature.COMPATINAPPLICABLE; // inapplicable
             }
-            #elif (SP2007)
-            {
-                return Feature.COMPATINAPPLICABLE; // inapplicable
-            }
-            #else
-            {
-                throw new Exception("Unspecified SharePoint Version");
-            }
-            #endif
+#endif
         }
     }
 }

@@ -32,3 +32,6 @@ Fixed ChangeLog (this) to be chronological from top to bottom
 FeatureDatabase: (Backported from FeatureAdmin2013)
   More careful exception handling
   & use feature definition DisplayName when feature definition GetTitle throws exception
+
+March, 2016 -- Perry
+Rework preprocessor definitions (SP2007, SP2010, SP2013) so they are inclusive

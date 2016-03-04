@@ -1034,22 +1034,10 @@ namespace FeatureAdmin
                     if (status.Faulty)
                     {
                         faultyFound = true;
-                        string location = LocationInfo.SafeDescribeObject(feature.Parent);
 
-                        string msgString = "Faulty Feature found! Id=" + feature.DefinitionId.ToString();
-#if SP2013
-                        msgString += " Activation=" + feature.TimeActivated.ToString("yyyy-MM-dd");
-#endif
-                        string solutionInfo = GetFeatureSolutionInfo(feature);
-                        if (!string.IsNullOrEmpty(solutionInfo))
-                        {
-                            msgString += solutionInfo;
-                        }
-                        msgString += Environment.NewLine
-                            + "Found in " + location + "." + Environment.NewLine
-                            + " Should it be removed from the farm?";
+                        string msgString = DescribeFeatureAndLocation(feature);
                         logDateMsg(msgString);
-                        string caption = "Found Faulty Feature";
+                        string caption = string.Format("Found Faulty {0} Feature", scope);
                         DialogResult response = MessageBox.Show(msgString, caption, 
                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                         if (response == DialogResult.Yes)
@@ -1082,6 +1070,29 @@ namespace FeatureAdmin
             }
             return faultyFound;
              * */
+        }
+        private string DescribeFeatureAndLocation_Unused(SPFeature feature)
+        {
+            string location = LocationManager.SafeDescribeObject(feature.Parent);
+
+            string msgString = "Faulty Feature found!\n"
+                + string.Format("Id: {0}", feature.DefinitionId);
+#if (SP2013)
+            msgString += " Activation=" + feature.TimeActivated.ToString("yyyy-MM-dd");
+#endif
+            string solutionInfo = GetFeatureSolutionInfo(feature);
+            if (!string.IsNullOrEmpty(solutionInfo))
+            {
+                msgString += solutionInfo;
+            }
+            msgString += Environment.NewLine
+                + string.Format(" Location: {0}\n", location)
+#if (SP2010)
+                + string.Format(" Scope: {0}\n", feature.FeatureDefinitionScope)
+                + string.Format(" Version: {0}\n", feature.Version)
+#endif
+                + " Should it be removed from the farm?";
+            return msgString;
         }
         private string GetFeatureSolutionInfo(SPFeature feature)
         {
@@ -1211,17 +1222,18 @@ namespace FeatureAdmin
                 clbSPWebFeatures.Items.Clear();
                 removeBtnEnabled(false);
 
-                if (SPWebService.ContentService != null)
+                if (SPWebService.ContentService == null)
                 {
-                    foreach (SPWebApplication webApp in SPWebService.ContentService.WebApplications)
-                    {
-                        Location location = LocationManager.GetLocation(webApp);
-                        listWebApplications.Items.Add(location);
+                    listWebApplications.Items.Add("SPWebService.ContentService == null! Access error?");
                     }
-                }
-                else
+                if (SPWebService.AdministrationService == null)
                 {
-                    MessageBox.Show("No Content web application found. Are you Farm-Administrator? Is the database accessible?");
+                    listWebApplications.Items.Add("SPWebService.AdministrationService == null! Access error?");
+                }
+
+                foreach (SPWebApplication webApp in GetAllWebApps())
+                {
+                    listWebApplications.Items.Add(webApp.Name);
                 }
 
                 if (listWebApplications.Items.Count > 0)
@@ -1535,6 +1547,15 @@ namespace FeatureAdmin
             }
         }
 
+        private SPWebApplicationCollection GetAllWebApps()
+        {
+            SPWebApplicationCollection webapps = SPWebService.ContentService.WebApplications;
+            foreach (SPWebApplication adminApp in SPWebService.AdministrationService.WebApplications)
+            {
+                webapps.Add(adminApp);
+            }
+            return webapps;
+        }
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
@@ -1696,6 +1717,5 @@ namespace FeatureAdmin
             gridFeatureDefinitions.ContextMenuStrip = null;
             m_featureDefGridContextFeature = null;
         }
-
     }
 }
