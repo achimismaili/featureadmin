@@ -115,11 +115,8 @@ namespace FeatureAdmin
                 ReloadAllActivationData(); // reloads defintions & activation data
 
                 SortableBindingList<Feature> features = m_featureDb.GetAllFeatures();
-                //features.Sort();
 
-                //clbFeatureDefinitions.
                 this.gridFeatureDefinitions.DataSource = features;
-                    //new SortableBindingList<Feature>(features);
 
                 logDateMsg("Feature Definition list updated.");
             }
@@ -842,6 +839,10 @@ namespace FeatureAdmin
                                         //forcefully remove the feature
                                         site.Features.Remove(featureID, true);
                                         removedFeatures += 1;
+                                        logDateMsg(
+                                            string.Format("Success removing feature {0} from {1}",
+                                            featureID,
+                                            LocationManager.SafeDescribeObject(site)));
                                     }
                                     catch (Exception exc)
                                     {
