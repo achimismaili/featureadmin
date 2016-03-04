@@ -28,7 +28,7 @@ namespace FeatureAdmin
 
         SPFeatureDefinitionCollection _spfeatureDefinitions = null;
 
-        public FeatureManager(string url)
+        public FeatureManager(string url, bool unused)
         {
             this._url = url;
             this._features = new List<Feature>();
@@ -38,7 +38,7 @@ namespace FeatureAdmin
 
         /// <summary>Adds features to the custom Feature class</summary>
         /// <param name="spFeatureDefinitions"></param>
-        public void AddFeatures(SPFeatureCollection spfeatures, SPFeatureScope scope)
+        public void AddFeatures_NotUsed(SPFeatureCollection spfeatures, SPFeatureScope scope)
         {
             this._spfeatures = spfeatures;
 
