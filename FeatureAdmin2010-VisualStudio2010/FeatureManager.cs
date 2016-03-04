@@ -97,48 +97,31 @@ namespace FeatureAdmin
             {
             }
         }
-        public const int COMPATINAPPLICABLE = -8;
         /// <summary>forcefully removes a feature definition from the farm feature definition collection</summary>
         /// <param name="id">Feature Definition ID</param>
         public void ForceUninstallFeatureDefinition(Guid id, int compatibilityLevel)
         {
-            #if (SP2013)
+#if (SP2013)
             {
                 _spfeatureDefinitions.Remove(id, compatibilityLevel, true);
             }
-            #elif (SP2010)
+#else
             {
                 _spfeatureDefinitions.Remove(id, true);
             }
-            #elif (SP2007)
-            {
-                _spfeatureDefinitions.Remove(id, true);
-            }
-            #else
-            {
-                throw new Exception("Unspecified SharePoint Version");
-            }
-            #endif
+#endif
         }
         public static int GetFeatureCompatibilityLevel(SPFeatureDefinition definition)
         {
-            #if (SP2013)
+#if (SP2013)
             {
                 return definition.CompatibilityLevel;
             }
-            #elif (SP2010)
+#else
             {
-                return COMPATINAPPLICABLE; // inapplicable
+                return Feature.COMPATINAPPLICABLE; // inapplicable
             }
-            #elif (SP2007)
-            {
-                return COMPATINAPPLICABLE; // inapplicable
-            }
-            #else
-            {
-                throw new Exception("Unspecified SharePoint Version");
-            }
-            #endif
+#endif
         }
     }
 }
