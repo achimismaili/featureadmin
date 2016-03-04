@@ -181,7 +181,7 @@ namespace FeatureAdmin
                         }
                         else
                         {
-                            removeFeaturesWithinFarm(feature.Id, feature.Scope);
+                            RemoveFeaturesWithinFarm(feature.Id, feature.Scope);
                         }
 
                     }
@@ -513,7 +513,7 @@ namespace FeatureAdmin
 
         #region Feature Activation + Deactivation
 
-        private void activateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope activationScope, Location currentLocation, FeatureActivator.Action action)
+        private void PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope activationScope, Location currentLocation, FeatureActivator.Action action)
         {
             List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
             FeatureSet featureSet = new FeatureSet(selectedFeatures);
@@ -571,25 +571,32 @@ namespace FeatureAdmin
                 activationScope,
                 currentLocName
                 );
-            if (!ConfirmBox(msg))
+            if (!ConfirmBoxOkCancel(msg))
             {
                 return;
             }
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular;
+            msg = string.Format("Use Force flag?");
+            if (ConfirmBoxYesNo(msg))
+            {
+                forcefulness = FeatureActivator.Forcefulness.Forcible;
+            }
             FeatureActivator activator = new FeatureActivator(m_featureDb, action, featureSet);
             activator.ExceptionLoggingListeners += new FeatureActivator.ExceptionLoggerHandler(activator_ExceptionLoggingListeners);
+            activator.InfoLoggingListeners += activator_InfoLoggingListeners;
 
             switch (activationScope)
             {
                 case SPFeatureScope.Farm:
                     {
-                        activator.TraverseActivateFeaturesInFarm();
+                        activator.TraverseActivateFeaturesInFarm(forcefulness);
                     }
                     break;
 
                 case SPFeatureScope.WebApplication:
                     {
                         SPWebApplication webapp = GetCurrentWebApplication();
-                        activator.TraverseActivateFeaturesInWebApplication(webapp);
+                        activator.TraverseActivateFeaturesInWebApplication(webapp, forcefulness);
                     }
                     break;
 
@@ -600,7 +607,7 @@ namespace FeatureAdmin
                             if (site == null) { return; }
                             try
                             {
-                                activator.TraverseActivateFeaturesInSiteCollection(site);
+                                activator.TraverseActivateFeaturesInSiteCollection(site, forcefulness);
                             }
                             finally
                             {
@@ -622,7 +629,7 @@ namespace FeatureAdmin
                                     if (web == null) { return; }
                                     try
                                     {
-                                        activator.ActivateFeaturesInWeb(web);
+                                        activator.ActivateFeaturesInWeb(web, forcefulness);
                                     }
                                     finally
                                     {
@@ -667,10 +674,17 @@ namespace FeatureAdmin
             return featureNames.ToString();
         }
 
-        void activator_ExceptionLoggingListeners(Exception exc, string msg)
+        void activator_ExceptionLoggingListeners(Exception exc, Location location, string detail)
         {
+            string msg = string.Format("{0} at {1}", detail, LocationManager.GetLocation(location));
             logException(exc, msg);
         }
+        void activator_InfoLoggingListeners(Location location, string detail)
+        {
+            string msg = string.Format("{0} at {1}", detail, LocationManager.SafeDescribeLocation(location));
+            logMsg(msg);
+        }
+
 
         #endregion
 
@@ -870,7 +884,7 @@ namespace FeatureAdmin
         /// <param name="featureID"></param>
         /// <param name="trueForSPWeb"></param>
         /// <returns>number of deleted features</returns>
-        public int removeFeaturesWithinFarm(Guid featureID, SPFeatureScope featureScope)
+        public int RemoveFeaturesWithinFarm(Guid featureID, SPFeatureScope featureScope)
         {
             int removedFeatures = 0;
             int scannedThrough = 0;
@@ -1469,7 +1483,8 @@ namespace FeatureAdmin
                 InfoBox("No site (SPWeb) selected");
                 return;
             }
-            activateSelectedFeaturesAcrossSpecifiedScope(
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
                 SPFeatureScope.Web,
                 m_CurrentWebLocation,
                 FeatureActivator.Action.Activating);
@@ -1482,7 +1497,8 @@ namespace FeatureAdmin
                 InfoBox("No site (SPWeb) selected");
                 return;
             }
-            activateSelectedFeaturesAcrossSpecifiedScope(
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
                 SPFeatureScope.Web,
                 m_CurrentWebLocation,
                 FeatureActivator.Action.Deactivating);
@@ -1495,7 +1511,8 @@ namespace FeatureAdmin
                 InfoBox("No site collection selected");
                 return;
             }
-            activateSelectedFeaturesAcrossSpecifiedScope(
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
                 SPFeatureScope.Site,
                 m_CurrentSiteLocation,
                 FeatureActivator.Action.Activating);
@@ -1508,7 +1525,8 @@ namespace FeatureAdmin
                 InfoBox("No site collection selected");
                 return;
             }
-            activateSelectedFeaturesAcrossSpecifiedScope(
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
                 SPFeatureScope.Site,
                 m_CurrentSiteLocation,
                 FeatureActivator.Action.Deactivating);
@@ -1521,7 +1539,8 @@ namespace FeatureAdmin
                 InfoBox("No web application selected");
                 return;
             }
-            activateSelectedFeaturesAcrossSpecifiedScope(
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
                 SPFeatureScope.WebApplication,
                 m_CurrentWebAppLocation,
                 FeatureActivator.Action.Activating);
@@ -1534,7 +1553,8 @@ namespace FeatureAdmin
                 InfoBox("No web application selected");
                 return;
             }
-            activateSelectedFeaturesAcrossSpecifiedScope(
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
                 SPFeatureScope.WebApplication,
                 m_CurrentWebAppLocation,
                 FeatureActivator.Action.Deactivating);
@@ -1542,7 +1562,8 @@ namespace FeatureAdmin
 
         private void btnActivateSPFarm_Click(object sender, EventArgs e)
         {
-            activateSelectedFeaturesAcrossSpecifiedScope(
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
                 SPFeatureScope.Farm,
                 null, // Location
                 FeatureActivator.Action.Activating);
@@ -1550,7 +1571,8 @@ namespace FeatureAdmin
 
         private void btnDeactivateSPFarm_Click(object sender, EventArgs e)
         {
-            activateSelectedFeaturesAcrossSpecifiedScope(
+            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
                 SPFeatureScope.Farm,
                 null, // Location
                 FeatureActivator.Action.Deactivating);
@@ -1607,16 +1629,27 @@ namespace FeatureAdmin
         {
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-        private static bool ConfirmBox(string text)
+        private static bool ConfirmBoxYesNo(string text)
         {
-            return ConfirmBox(text, "Confirm");
+            return ConfirmBoxYesNo(text, "Confirm");
         }
-        private static bool ConfirmBox(string text, string caption)
+        private static bool ConfirmBoxYesNo(string text, string caption)
         {
             DialogResult rtn = MessageBox.Show(
                 text, caption,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
             return (rtn == DialogResult.Yes);
+        }
+        private static bool ConfirmBoxOkCancel(string text)
+        {
+            return ConfirmBoxOkCancel(text, "Confirm");
+        }
+        private static bool ConfirmBoxOkCancel(string text, string caption)
+        {
+            DialogResult rtn = MessageBox.Show(
+                text, caption,
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            return (rtn == DialogResult.OK);
         }
         private static void InfoBox(string text)
         {

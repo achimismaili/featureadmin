@@ -99,7 +99,7 @@ namespace FeatureAdmin
                         }
                     }
                 }
-                featurefound = parentWindow.removeFeaturesWithinFarm(featureID, scopeWindowScope);
+                featurefound = parentWindow.RemoveFeaturesWithinFarm(featureID, scopeWindowScope);
                 if (featurefound == 0)
                 {
                     msgString = "Feature not found in Scope:'" + scopeWindowScope.ToString() + "'. Do you want to try something else?";
@@ -194,7 +194,7 @@ namespace FeatureAdmin
             string msgString = string.Empty;
             int featurefound;
 
-            featurefound = parentWindow.removeFeaturesWithinFarm(featureID, scope);
+            featurefound = parentWindow.RemoveFeaturesWithinFarm(featureID, scope);
             /// search all webs
             if (featurefound == 0)
             {
