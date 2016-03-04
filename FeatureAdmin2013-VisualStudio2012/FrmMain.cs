@@ -851,7 +851,6 @@ namespace FeatureAdmin
                                             featureID,
                                             LocationManager.SafeDescribeObject(site)));
                                     }
-
                                 }
                                 scannedThrough++;
                             }
@@ -1419,6 +1418,105 @@ namespace FeatureAdmin
             ClearLog();
         }
 
+        private void gridFeatureDefinitions_SelectionChanged(object sender, EventArgs e)
+        {
+            EnableActionButtonsAsAppropriate();
+        }
+
+        private void btnActivateSPWeb_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentWebLocation))
+            {
+                InfoBox("No site (SPWeb) selected");
+                return;
+            }
+            activateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Web,
+                m_CurrentWebLocation,
+                FeatureActivator.Action.Activating);
+        }
+
+        private void btnDeactivateSPWeb_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentWebLocation))
+            {
+                InfoBox("No site (SPWeb) selected");
+                return;
+            }
+            activateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Web,
+                m_CurrentWebLocation,
+                FeatureActivator.Action.Deactivating);
+        }
+
+        private void btnActivateSPSite_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentSiteLocation))
+            {
+                InfoBox("No site collection selected");
+                return;
+            }
+            activateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Site,
+                m_CurrentSiteLocation,
+                FeatureActivator.Action.Activating);
+        }
+
+        private void btnDeactivateSPSite_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentSiteLocation))
+            {
+                InfoBox("No site collection selected");
+                return;
+            }
+            activateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Site,
+                m_CurrentSiteLocation,
+                FeatureActivator.Action.Deactivating);
+        }
+
+        private void btnActivateSPWebApp_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentWebAppLocation))
+            {
+                InfoBox("No web application selected");
+                return;
+            }
+            activateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.WebApplication,
+                m_CurrentWebAppLocation,
+                FeatureActivator.Action.Activating);
+        }
+
+        private void btnDeactivateSPWebApp_Click(object sender, EventArgs e)
+        {
+            if (IsEmpty(m_CurrentWebAppLocation))
+            {
+                InfoBox("No web application selected");
+                return;
+            }
+            activateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.WebApplication,
+                m_CurrentWebAppLocation,
+                FeatureActivator.Action.Deactivating);
+        }
+
+        private void btnActivateSPFarm_Click(object sender, EventArgs e)
+        {
+            activateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Farm,
+                null, // Location
+                FeatureActivator.Action.Activating);
+        }
+
+        private void btnDeactivateSPFarm_Click(object sender, EventArgs e)
+        {
+            activateSelectedFeaturesAcrossSpecifiedScope(
+                SPFeatureScope.Farm,
+                null, // Location
+                FeatureActivator.Action.Deactivating);
+        }
+
         private void btnFindActivatedFeature_Click(object sender, EventArgs e)
         {
             List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
@@ -1788,5 +1886,6 @@ namespace FeatureAdmin
             gridFeatureDefinitions.ContextMenuStrip = null;
             m_featureDefGridContextFeature = null;
         }
+
     }
 }
