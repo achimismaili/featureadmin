@@ -363,6 +363,7 @@ namespace FeatureAdmin
             // 
             // FarmActionPanel
             // 
+            this.FarmActionPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.FarmActionPanel.Controls.Add(this.btnUninstFDef);
             this.FarmActionPanel.Controls.Add(this.btnDeactivateSPFarm);
             this.FarmActionPanel.Controls.Add(this.ActionFarmCaption);
@@ -413,6 +414,7 @@ namespace FeatureAdmin
             // 
             // WebAppActionPanel
             // 
+            this.WebAppActionPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WebAppActionPanel.Controls.Add(this.ActionWebAppCaption);
             this.WebAppActionPanel.Controls.Add(this.btnDeactivateSPWebApp);
             this.WebAppActionPanel.Controls.Add(this.btnActivateSPWebApp);
@@ -452,6 +454,7 @@ namespace FeatureAdmin
             // 
             // SiteCollectionActionPanel
             // 
+            this.SiteCollectionActionPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SiteCollectionActionPanel.Controls.Add(this.btnDeactivateSPSite);
             this.SiteCollectionActionPanel.Controls.Add(this.ActionSiteCaption);
             this.SiteCollectionActionPanel.Controls.Add(this.btnActivateSPSite);
@@ -491,6 +494,7 @@ namespace FeatureAdmin
             // 
             // WebActionPanel
             // 
+            this.WebActionPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WebActionPanel.Controls.Add(this.btnDeactivateSPWeb);
             this.WebActionPanel.Controls.Add(this.ActionWebCaption);
             this.WebActionPanel.Controls.Add(this.btnActivateSPWeb);
@@ -530,6 +534,7 @@ namespace FeatureAdmin
             // 
             // btnViewActivations
             // 
+            this.btnViewActivations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnViewActivations.Location = new System.Drawing.Point(111, 501);
             this.btnViewActivations.Name = "btnViewActivations";
             this.btnViewActivations.Size = new System.Drawing.Size(228, 23);
