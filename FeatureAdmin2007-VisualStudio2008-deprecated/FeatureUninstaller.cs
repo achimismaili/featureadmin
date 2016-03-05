@@ -8,18 +8,20 @@ namespace FeatureAdmin
 {
     public static class FeatureUninstaller
     {
+        public enum Forcibility { None, Regular, Forcible };
         /// <summary>forcefully removes a feature definition from the farm feature definition collection</summary>
         /// <param name="id">Feature Definition ID</param>
-        public static void ForceUninstallFeatureDefinition(Guid id, int compatibilityLevel)
+        public static void UninstallFeatureDefinition(Guid id, int compatibilityLevel, Forcibility forcibility)
         {
+            bool force = (forcibility == Forcibility.Forcible ? true : false);
             SPFeatureDefinitionCollection featuredefs = SPFarm.Local.FeatureDefinitions;
 #if (SP2013)
             {
-                featuredefs.Remove(id, compatibilityLevel, true);
+                featuredefs.Remove(id, compatibilityLevel, force);
             }
 #else
             {
-                featuredefs.Remove(id, true);
+                featuredefs.Remove(id, force);
             }
 #endif
         }

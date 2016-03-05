@@ -97,20 +97,6 @@ namespace FeatureAdmin
             {
             }
         }
-        /// <summary>forcefully removes a feature definition from the farm feature definition collection</summary>
-        /// <param name="id">Feature Definition ID</param>
-        public void ForceUninstallFeatureDefinition(Guid id, int compatibilityLevel)
-        {
-#if (SP2013)
-            {
-                _spfeatureDefinitions.Remove(id, compatibilityLevel, true);
-            }
-#else
-            {
-                _spfeatureDefinitions.Remove(id, true);
-            }
-#endif
-        }
         public static int GetFeatureCompatibilityLevel(SPFeatureDefinition definition)
         {
 #if (SP2013)
