@@ -157,43 +157,42 @@ namespace FeatureAdmin
         private void PromptAndUninstallFeatureDefs()
         {
             List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
-            if (selectedFeatures.Count == 1)
-            {
-                Feature feature = selectedFeatures[0];
-
-                if (MessageBox.Show("This will forcefully uninstall the " + selectedFeatures.Count +
-                    " selected feature definition(s) from the Farm. Continue ?",
-                    "Warning",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                {
-                    if (MessageBox.Show("Before uninstalling a feature, it should be deactivated everywhere in the farm. " +
-                        "Should the Feature be removed from everywhere in the farm before it gets uninstalled?",
-                        "Please Select",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                    {
-                        // iterate through the farm to remove the feature
-                        if (feature.Scope == SPFeatureScope.ScopeInvalid)
-                        {
-                            RemoveInvalidFeature formScopeUnclear = new RemoveInvalidFeature(this, feature.Id);
-                            formScopeUnclear.Show();
-                            return;
-
-                        }
-                        else
-                        {
-                            RemoveFeaturesWithinFarm(feature.Id, feature.Scope);
-                        }
-
-                    }
-                    using (WaitCursor wait = new WaitCursor())
-                    {
-                        UninstallSelectedFeatureDefinitions(selectedFeatures);
-                    }
-                }
-            }
-            else
+            if (selectedFeatures.Count != 1)
             {
                 MessageBox.Show("Please select exactly 1 feature.");
+                return;
+            }
+            Feature feature = selectedFeatures[0];
+
+            string msg = string.Format(
+                "This will uninstall the {0} selected feature definition(s) from the Farm.",
+                selectedFeatures.Count);
+            if (!ConfirmBoxOkCancel(msg))
+            {
+                return;
+            }
+
+            msg = "Before uninstalling a feature, it should be deactivated everywhere in the farm.";
+            msg += string.Format("\nFeature Scope: {0}", feature.Scope);
+            msg += "\nAttempt to remove this feature from everywhere in the farm first?";
+            DialogResult choice = MessageBox.Show(msg, "Deactivate Feature", MessageBoxButtons.YesNoCancel);
+            if (choice == DialogResult.Cancel)
+            {
+                return;
+            }
+            if (choice == DialogResult.Yes)
+            {
+                RemoveFeaturesWithinFarm(feature.Id, feature.Scope);
+            }
+            msg = "Use Force flag for uninstall?";
+            FeatureUninstaller.Forcibility forcibility = FeatureUninstaller.Forcibility.Regular;
+            if (ConfirmBoxYesNo(msg))
+            {
+                forcibility = FeatureUninstaller.Forcibility.Forcible;
+            }
+            using (WaitCursor wait = new WaitCursor())
+            {
+                UninstallSelectedFeatureDefinitions(selectedFeatures, forcibility);
             }
         }
 
@@ -935,23 +934,26 @@ namespace FeatureAdmin
         }
 
 
-        /// <summary>Uninstall a collection of Farm Feature Definitions forcefully</summary>
-        /// <param name="manager"></param>
-        /// <param name="checkedListItems"></param>
-        private void UninstallSelectedFeatureDefinitions(List<Feature> features)
+        /// <summary>Uninstall a collection of Farm Feature Definitions</summary>
+        private void UninstallSelectedFeatureDefinitions(List<Feature> features, FeatureUninstaller.Forcibility forcibility)
         {
             foreach (Feature feature in features)
             {
                 try
                 {
-                    FeatureUninstaller.ForceUninstallFeatureDefinition(
-                        feature.Id, feature.CompatibilityLevel);
+                    FeatureUninstaller.UninstallFeatureDefinition(
+                        feature.Id, feature.CompatibilityLevel, forcibility);
                 }
                 catch (Exception exc)
                 {
-                    logException(exc, string.Format(
+                    string msg = string.Format(
                         "Exception uninstalling feature defintion {0}",
-                        feature.Id));
+                        feature.Id);
+                    if (forcibility == FeatureUninstaller.Forcibility.Forcible)
+                    {
+                        msg += " (Force flag)";
+                    }
+                    logException(exc, msg);
                 }
             }
         }
