@@ -691,6 +691,7 @@ namespace FeatureAdmin
             this.gridSiteCollections.Location = new System.Drawing.Point(0, 15);
             this.gridSiteCollections.Name = "gridSiteCollections";
             this.gridSiteCollections.ReadOnly = true;
+            this.gridSiteCollections.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridSiteCollections.Size = new System.Drawing.Size(412, 82);
             this.gridSiteCollections.TabIndex = 9;
             this.gridSiteCollections.SelectionChanged += new System.EventHandler(this.gridSiteCollections_SelectionChanged);
@@ -706,6 +707,7 @@ namespace FeatureAdmin
             this.gridWebs.Location = new System.Drawing.Point(0, 15);
             this.gridWebs.Name = "gridWebs";
             this.gridWebs.ReadOnly = true;
+            this.gridWebs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridWebs.Size = new System.Drawing.Size(412, 212);
             this.gridWebs.TabIndex = 9;
             this.gridWebs.SelectionChanged += new System.EventHandler(this.gridWebs_SelectionChanged);
