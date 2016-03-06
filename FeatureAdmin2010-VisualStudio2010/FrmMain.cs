@@ -42,16 +42,18 @@ namespace FeatureAdmin
             InitializeComponent();
 
             SetTitle();
-            // web app list is prefilled
-            loadWebAppList();
 
             removeBtnEnabled(false);
             EnableActionButtonsAsAppropriate();
 
             ConfigureFeatureDefGrid();
+            ConfigureWebApplicationsGrid();
 
             this.Show();
-            ReloadAllFeatureDefinitions();
+
+            LoadWebAppGrid(); // Load list of web applications
+            ReloadAllFeatureDefinitions(); // Load list of all feature definitions
+
             EnableActionButtonsAsAppropriate();
         }
 
@@ -98,8 +100,6 @@ namespace FeatureAdmin
         }
 
         /// <summary>Used to populate the list of Farm Feature Definitions</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void btnLoadFDefs_Click(object sender, EventArgs e)
         {
             ReloadAllFeatureDefinitions();
@@ -401,9 +401,9 @@ namespace FeatureAdmin
         // TODO: All this traverse remove code should be factored into its own class
         private void TraverseForceRemoveFeaturesFromFarm(List<Feature> scFeatures, List<Feature> webFeatures)
         {
-            foreach (SPWebApplication webapp in WebAppEnumerator.GetAllWebApps())
+            foreach (WebAppEnumerator.WebAppInfo webappInfo in WebAppEnumerator.GetAllWebApps())
             {
-                TraverseForceRemoveFeaturesFromWebApplication(webapp, scFeatures, webFeatures);
+                TraverseForceRemoveFeaturesFromWebApplication(webappInfo.WebApp, scFeatures, webFeatures);
             }
         }
 
@@ -918,7 +918,7 @@ namespace FeatureAdmin
                 {
 
                     // all the content & admin WebApplications 
-                    SPWebApplicationCollection webApplicationCollection = GetAllWebApps();
+                    List<SPWebApplication> webApplicationCollection = GetAllWebApps();
 
                     foreach (SPWebApplication webApplication in webApplicationCollection)
                     {
@@ -1129,52 +1129,79 @@ namespace FeatureAdmin
         /// <param name="e"></param>
         private void btnListWebApplications_Click(object sender, EventArgs e)
         {
-            loadWebAppList();
+            LoadWebAppGrid();
+        }
+
+        private void ConfigureWebApplicationsGrid()
+        {
+            DataGridView grid = gridWebApplications;
+            grid.AutoGenerateColumns = false;
+            GridColMgr.AddTextColumn(grid, "Url", 100);
+            GridColMgr.AddTextColumn(grid, "Name", 100);
+            GridColMgr.AddTextColumn(grid, "Id", 100);
+
+            // Set all columns sortable
+            foreach (DataGridViewColumn column in grid.Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.Automatic;
+            }
+
+            // TODO - analogue to CreateFeatureDefContextMenu ?
+        }
+
+        private Location GetSelectedWebApp()
+        {
+            if (gridWebApplications.SelectedRows.Count != 1) { return null; }
+            DataGridViewRow row = gridWebApplications.SelectedRows[0];
+            Location location = (row.DataBoundItem as Location);
+            return location;
         }
 
         /// <summary>populate the web application list</summary>
-        private void loadWebAppList()
+        private void LoadWebAppGrid()
         {
             using (WaitCursor wait = new WaitCursor())
             {
-                listWebApplications.Items.Clear();
+                gridWebApplications.DataSource = null;
                 listSiteCollections.Items.Clear();
                 listWebs.Items.Clear();
                 clbSPSiteFeatures.Items.Clear();
                 clbSPWebFeatures.Items.Clear();
                 removeBtnEnabled(false);
 
+                SortableBindingList<Location> webapps = new SortableBindingList<Location>();
                 if (SPWebService.ContentService == null)
                 {
-                    listWebApplications.Items.Add("SPWebService.ContentService == null! Access error?");
-                    }
+                    logMsg("SPWebService.ContentService == null! Access error?");
+                }
                 if (SPWebService.AdministrationService == null)
                 {
-                    listWebApplications.Items.Add("SPWebService.AdministrationService == null! Access error?");
+                    logMsg("SPWebService.AdministrationService == null! Access error?");
                 }
 
-                foreach (SPWebApplication webApp in GetAllWebApps())
+                foreach (WebAppEnumerator.WebAppInfo webappInfo in WebAppEnumerator.GetAllWebApps())
                 {
                     try
                     {
-                        Location webAppLocation = LocationManager.GetLocation(webApp);
-                        listWebApplications.Items.Add(webAppLocation);
+                        Location webAppLocation = LocationManager.GetWebAppLocation(webappInfo.WebApp, webappInfo.Admin);
+                        webapps.Add(webAppLocation);
                     }
                     catch (Exception exc)
                     {
                         logException(exc,
                             string.Format("Exception enumerating webapp: {0}",
-                            LocationManager.SafeDescribeObject(webApp)));
+                            LocationManager.SafeDescribeObject(webappInfo.WebApp)));
                     }
                 }
 
-                if (listWebApplications.Items.Count > 0)
+                gridWebApplications.DataSource = webapps;
+                if (webapps.Count > 0)
                 {
                     listSiteCollections.Enabled = true;
                     // If there is only one, select it
-                    if (listWebApplications.Items.Count == 0)
+                    if (webapps.Count == 0)
                     {
-                        listWebApplications.SelectedIndex = 0;
+                        gridWebApplications.Rows[0].Selected = true;
                     }
                 }
                 else
@@ -1203,7 +1230,7 @@ namespace FeatureAdmin
 
         /// <summary>Update SiteCollections list when a user changes the selection in Web Application list
         /// </summary>
-        private void listWebApplications_SelectedIndexChanged(object sender, EventArgs e)
+        private void gridWebApplications_SelectionChanged(object sender, EventArgs e)
         {
             ReloadCurrentSiteCollections();
             EnableActionButtonsAsAppropriate();
@@ -1219,7 +1246,7 @@ namespace FeatureAdmin
                     ClearCurrentWebData();
                     removeBtnEnabled(false);
 
-                    m_CurrentWebAppLocation = listWebApplications.SelectedItem as Location;
+                    m_CurrentWebAppLocation = GetSelectedWebApp();
                     if (m_CurrentWebAppLocation == null) { return; }
                     SPWebApplication webApp = GetCurrentWebApplication();
                     foreach (SPSite site in webApp.Sites)
@@ -1514,9 +1541,13 @@ namespace FeatureAdmin
             }
         }
 
-        private SPWebApplicationCollection GetAllWebApps()
+        private List<SPWebApplication> GetAllWebApps()
         {
-            SPWebApplicationCollection webapps = SPWebService.ContentService.WebApplications;
+            List<SPWebApplication> webapps = new List<SPWebApplication>();
+            foreach (SPWebApplication contentApp in SPWebService.ContentService.WebApplications)
+            {
+                webapps.Add(contentApp);
+            }
             foreach (SPWebApplication adminApp in SPWebService.AdministrationService.WebApplications)
             {
                 webapps.Add(adminApp);
