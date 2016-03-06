@@ -48,6 +48,8 @@ namespace FeatureAdmin
 
             ConfigureFeatureDefGrid();
             ConfigureWebApplicationsGrid();
+            ConfigureSiteCollectionsGrid();
+            ConfigureWebsGrid();
 
             this.Show();
 
@@ -1134,7 +1136,18 @@ namespace FeatureAdmin
 
         private void ConfigureWebApplicationsGrid()
         {
-            DataGridView grid = gridWebApplications;
+            ConfigureLocationGrid(gridWebApplications);
+        }
+        private void ConfigureSiteCollectionsGrid()
+        {
+            ConfigureLocationGrid(gridSiteCollections);
+        }
+        private void ConfigureWebsGrid()
+        {
+            ConfigureLocationGrid(gridWebs);
+        }
+        private void ConfigureLocationGrid(DataGridView grid)
+        {
             grid.AutoGenerateColumns = false;
             GridColMgr.AddTextColumn(grid, "Url", 100);
             GridColMgr.AddTextColumn(grid, "Name", 100);
@@ -1145,7 +1158,6 @@ namespace FeatureAdmin
             {
                 column.SortMode = DataGridViewColumnSortMode.Automatic;
             }
-
             // TODO - analogue to CreateFeatureDefContextMenu ?
         }
 
@@ -1163,10 +1175,8 @@ namespace FeatureAdmin
             using (WaitCursor wait = new WaitCursor())
             {
                 gridWebApplications.DataSource = null;
-                listSiteCollections.Items.Clear();
-                listWebs.Items.Clear();
-                clbSPSiteFeatures.Items.Clear();
-                clbSPWebFeatures.Items.Clear();
+                ClearCurrentSiteCollectionData();
+                ClearCurrentWebData();
                 removeBtnEnabled(false);
 
                 SortableBindingList<Location> webapps = new SortableBindingList<Location>();
@@ -1197,16 +1207,16 @@ namespace FeatureAdmin
                 gridWebApplications.DataSource = webapps;
                 if (webapps.Count > 0)
                 {
-                    listSiteCollections.Enabled = true;
+                    gridSiteCollections.Enabled = true;
                     // If there is only one, select it
-                    if (webapps.Count == 0)
+                    if (gridWebApplications.RowCount == 0)
                     {
                         gridWebApplications.Rows[0].Selected = true;
                     }
                 }
                 else
                 {
-                    listSiteCollections.Enabled = false;
+                    gridSiteCollections.Enabled = false;
                 }
             }
         }
@@ -1249,12 +1259,13 @@ namespace FeatureAdmin
                     m_CurrentWebAppLocation = GetSelectedWebApp();
                     if (m_CurrentWebAppLocation == null) { return; }
                     SPWebApplication webApp = GetCurrentWebApplication();
+                    SortableBindingList<Location> sitecolls = new SortableBindingList<Location>();
                     foreach (SPSite site in webApp.Sites)
                     {
                         try
                         {
                             Location siteLocation = LocationManager.GetLocation(site);
-                            listSiteCollections.Items.Add(siteLocation);
+                            sitecolls.Add(siteLocation);
                         }
                         catch (Exception exc)
                         {
@@ -1263,10 +1274,11 @@ namespace FeatureAdmin
                                 LocationManager.SafeDescribeObject(site)));
                         }
                     }
+                    gridSiteCollections.DataSource = sitecolls;
                     // select first site collection if there is only one
-                    if (listSiteCollections.Items.Count == 1)
+                    if (gridSiteCollections.RowCount == 1)
                     {
-                        listSiteCollections.SelectedIndex = 0;
+                        gridSiteCollections.Rows[0].Selected = true;
                     }
                 }
                 catch (Exception exc)
@@ -1278,10 +1290,18 @@ namespace FeatureAdmin
 
         /// <summary>UI method to update the SPWeb list when a user changes the selection in site collection list
         /// </summary>
-        private void listSiteCollections_SelectedIndexChanged(object sender, EventArgs e)
+        private void gridSiteCollections_SelectionChanged(object sender, EventArgs e)
         {
             ReloadCurrentWebs();
             EnableActionButtonsAsAppropriate();
+        }
+
+        private Location GetSelectedSiteCollection()
+        {
+            if (gridSiteCollections.SelectedRows.Count != 1) { return null; }
+            DataGridViewRow row = gridSiteCollections.SelectedRows[0];
+            Location location = (row.DataBoundItem as Location);
+            return location;
         }
 
         private void ReloadCurrentWebs()
@@ -1290,7 +1310,7 @@ namespace FeatureAdmin
             {
                 try
                 {
-                    m_CurrentSiteLocation = listSiteCollections.SelectedItem as Location;
+                    m_CurrentSiteLocation = GetSelectedSiteCollection();
                     ClearCurrentWebData();
                     ReloadCurrentSiteCollectionFeatures();
                     ReloadSubWebList();
@@ -1305,14 +1325,14 @@ namespace FeatureAdmin
         private void ClearCurrentSiteCollectionData()
         {
             FeatureAdmin.Location.Clear(m_CurrentSiteLocation);
-            listSiteCollections.Items.Clear();
+            gridSiteCollections.DataSource = null;
             clbSPSiteFeatures.Items.Clear();
         }
 
         private void ClearCurrentWebData()
         {
             FeatureAdmin.Location.Clear(m_CurrentWebLocation);
-            listWebs.Items.Clear();
+            gridWebs.DataSource = null;
             clbSPWebFeatures.Items.Clear();
         }
 
@@ -1339,14 +1359,23 @@ namespace FeatureAdmin
             return FeatureAdmin.Location.IsLocationEmpty(location);
         }
 
+        private Location GetSelectedWeb()
+        {
+            if (gridWebs.SelectedRows.Count != 1) { return null; }
+            DataGridViewRow row = gridWebs.SelectedRows[0];
+            Location location = (row.DataBoundItem as Location);
+            return location;
+        }
+
         private void ReloadSubWebList()
         {
             try
             {
                 removeBtnEnabled(false);
 
-                m_CurrentSiteLocation = listSiteCollections.SelectedItem as Location;
+                m_CurrentSiteLocation = GetSelectedSiteCollection();
                 if (m_CurrentSiteLocation == null) { return; }
+                SortableBindingList<Location> weblocs = new SortableBindingList<Location>();
                 using (SPSite site = OpenCurrentSite())
                 {
                     foreach (SPWeb web in site.AllWebs)
@@ -1354,7 +1383,7 @@ namespace FeatureAdmin
                         try
                         {
                             Location webLocation = LocationManager.GetLocation(web);
-                            listWebs.Items.Add(webLocation);
+                            weblocs.Add(webLocation);
                         }
                         catch (Exception exc)
                         {
@@ -1368,10 +1397,11 @@ namespace FeatureAdmin
                         }
                     }
                 }
+                gridWebs.DataSource = weblocs;
                 // select first site collection if there is only one
-                if (listWebs.Items.Count == 1)
+                if (gridWebs.RowCount == 1)
                 {
-                    listWebs.SelectedIndex = 0;
+                    gridWebs.Rows[0].Selected = true;
                 }
             }
             catch (Exception exc)
@@ -1380,14 +1410,14 @@ namespace FeatureAdmin
             }
         }
 
-        /// <summary>UI method to load the SiteCollection Features and Site Features
+        /// <summary>UI method to load the Web Features and Site Features
         /// Handles the SelectedIndexChanged event of the listWebs control.
         /// </summary>
-        private void listWebs_SelectedIndexChanged(object sender, EventArgs e)
+        private void gridWebs_SelectionChanged(object sender, EventArgs e)
         {
             using (WaitCursor wait = new WaitCursor())
             {
-                m_CurrentWebLocation = listWebs.SelectedItem as Location;
+                m_CurrentWebLocation = GetSelectedWeb();
                 ReloadCurrentWebFeatures();
             }
             EnableActionButtonsAsAppropriate();
