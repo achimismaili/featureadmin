@@ -24,7 +24,8 @@ namespace FeatureAdmin
             }
         }
         public string ScopeAbbrev { get; private set; } // more legible scope names -- see ScopeAbbrevConverter
-        public string Url { get; set; } // server relative for site collections
+        public string FullUrl { get; set; }
+        public string RelativeUrl { get; set; } // relative to parent (server for site collection, site collection for web)
         public string Name { get; set; }
         public string Access { get; set; } // for ReadOnly or ReadLocked sites
         public TemplateInfo Template { get; set; }
@@ -34,7 +35,8 @@ namespace FeatureAdmin
             Id = Guid.Empty;
             ContentDatabaseId = Guid.Empty;
             Scope = SPFeatureScope.ScopeInvalid;
-            Url = null;
+            FullUrl = null;
+            RelativeUrl = null;
             Name = null;
         }
 
@@ -74,7 +76,7 @@ namespace FeatureAdmin
             {
                 return Name;
             }
-            return Name + ": " + Url;
+            return Name + ": " + FullUrl;
         }
         public bool Equals(Location other)
         {

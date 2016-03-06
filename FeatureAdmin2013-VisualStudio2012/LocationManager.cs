@@ -12,7 +12,8 @@ namespace FeatureAdmin
             loct.Id = webapp.Id;
             // loct.ContentDatabaseId
             loct.Scope = SPFeatureScope.WebApplication;
-            loct.Url = SafeGetWebAppUrl(webapp);
+            loct.FullUrl = SafeGetWebAppUrl(webapp);
+            loct.RelativeUrl = loct.FullUrl;
             loct.Name = SafeGetWebAppTitle(webapp, admin);
             loct.Access = SafeGetWebAppAccess(webapp);
             return loct;
@@ -26,7 +27,8 @@ namespace FeatureAdmin
                 loct.Id = farm.Id;
                 // loct.ContentDatabaseId
                 loct.Scope = SPFeatureScope.Farm;
-                loct.Url = "Farm";
+                loct.FullUrl = "Farm";
+                loct.RelativeUrl = loct.FullUrl;
                 loct.Name = "Farm";
             }
             else if (obj is SPWebApplication)
@@ -41,7 +43,8 @@ namespace FeatureAdmin
                 loct.Id = site.ID;
                 loct.ContentDatabaseId = site.ContentDatabase.Id;
                 loct.Scope = SPFeatureScope.Site;
-                loct.Url = SafeGetSiteRelativeUrl(site);
+                loct.FullUrl = SafeGetSiteFullUrl(site);
+                loct.RelativeUrl = SafeGetSiteRelativeUrl(site);
                 loct.Name = SafeGetSiteTitle(site);
                 loct.Access = SafeGetSiteAccess(site);
                 PopulateTemplate(loct, site.RootWeb);
@@ -55,7 +58,8 @@ namespace FeatureAdmin
                 loct.Id = web.ID;
                 loct.ContentDatabaseId = web.Site.ContentDatabase.Id;
                 loct.Scope = SPFeatureScope.Web;
-                loct.Url = SafeGetWebUrl(web);
+                loct.FullUrl = SafeGetWebFullUrl(web);
+                loct.RelativeUrl = SafeGetWebRelativeUrl(web);
                 loct.Name = SafeGetWebTitle(web);
                 loct.Access = SafeGetWebAccess(web);
                 PopulateTemplate(loct, web);
@@ -63,7 +67,8 @@ namespace FeatureAdmin
             else
             {
                 loct.Name = "?";
-                loct.Url = "?";
+                loct.FullUrl = "?";
+                loct.RelativeUrl = loct.FullUrl;
             }
             return loct;
         }
@@ -85,16 +90,16 @@ namespace FeatureAdmin
             {
                 return "Farm";
             }
-            if (!string.IsNullOrEmpty(loct.Url))
+            if (!string.IsNullOrEmpty(loct.FullUrl))
             {
                 if (!string.IsNullOrEmpty(loct.Name))
                 { // have url and name
-                    return string.Format("{0} - {1}", loct.Url, loct.Name);
+                    return string.Format("{0} - {1}", loct.FullUrl, loct.Name);
                 }
                 else
                 {
                     // have url
-                    return loct.Url;
+                    return loct.FullUrl;
                 }
             }
             else
@@ -172,6 +177,17 @@ namespace FeatureAdmin
                 return null;
             }
         }
+        public static string SafeGetSiteFullUrl(SPSite site)
+        {
+            try
+            {
+                return site.Url;
+            }
+            catch
+            {
+                return null;
+            }
+        }
         public static string SafeGetSiteRelativeUrl(SPSite site)
         {
             try
@@ -194,11 +210,23 @@ namespace FeatureAdmin
                 return null;
             }
         }
-        public static string SafeGetWebUrl(SPWeb web)
+        public static string SafeGetWebFullUrl(SPWeb web)
         {
             try
             {
                 return web.Url;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public static string SafeGetWebRelativeUrl(SPWeb web)
+        {
+            try
+            {
+                int preflen = web.Site.Url.Length;
+                return web.Url.Substring(preflen);
             }
             catch
             {

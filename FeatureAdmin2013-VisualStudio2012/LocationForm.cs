@@ -22,14 +22,14 @@ namespace FeatureAdmin
                     return Feature.Name;
                 }
             }
-            public string LocationUrl
+            public string LocationFullUrl
             {
                 get
                 {
                     if (Location == null)
                         return "";
                     else
-                        return Location.Url;
+                        return Location.FullUrl;
                 }
             }
             public string LocationName
@@ -72,7 +72,7 @@ namespace FeatureAdmin
             {
                 GridColMgr.AddTextColumn(grid, "FeatureName");
             }
-            GridColMgr.AddTextColumn(grid, "LocationUrl", 300);
+            GridColMgr.AddTextColumn(grid, "LocationFullUrl", 300);
             GridColMgr.AddTextColumn(grid, "LocationName");
 
             // Set all columns sortable
@@ -121,7 +121,7 @@ namespace FeatureAdmin
             AddLocationProperty("Feature Id", floc.Feature.Id.ToString());
             AddLocationProperty("Scope", floc.Location.ScopeAbbrev);
             AddLocationProperty("Location Name", floc.Location.Name);
-            AddLocationProperty("Location URL", floc.Location.Url);
+            AddLocationProperty("Location URL", floc.Location.FullUrl);
             AddLocationProperty("Location Id", floc.Location.Id.ToString());
             if (!string.IsNullOrEmpty(floc.Location.Template.Name))
             {

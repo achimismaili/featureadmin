@@ -250,7 +250,7 @@ namespace FeatureAdmin
                     catch (Exception exc)
                     {
                         OnException(exc,
-                            "Exception checking web: " + LocationManager.SafeGetWebUrl(web)
+                            "Exception checking web: " + LocationManager.SafeGetWebFullUrl(web)
                             );
                     }
                 }

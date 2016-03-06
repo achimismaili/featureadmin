@@ -301,7 +301,7 @@ namespace FeatureAdmin
             if (webapp == null) { return null; }
             try
             {
-                return webapp.Sites[m_CurrentSiteLocation.Url];
+                return webapp.Sites[m_CurrentSiteLocation.RelativeUrl];
             }
             catch (Exception exc)
             {
@@ -559,7 +559,7 @@ namespace FeatureAdmin
             }
             else
             {
-                currentLocName = currentLocation.Name + " -- " + currentLocation.Url;
+                currentLocName = currentLocation.Name + " -- " + currentLocation.FullUrl;
             }
             string msg;
             msg = string.Format(
@@ -1136,21 +1136,25 @@ namespace FeatureAdmin
 
         private void ConfigureWebApplicationsGrid()
         {
-            ConfigureLocationGrid(gridWebApplications);
+            bool relativeUrls = false;
+            ConfigureLocationGrid(gridWebApplications, relativeUrls);
         }
         private void ConfigureSiteCollectionsGrid()
         {
-            ConfigureLocationGrid(gridSiteCollections);
+            bool relativeUrls = true;
+            ConfigureLocationGrid(gridSiteCollections, relativeUrls);
         }
         private void ConfigureWebsGrid()
         {
-            ConfigureLocationGrid(gridWebs);
+            bool relativeUrls = true;
+            ConfigureLocationGrid(gridWebs, relativeUrls);
         }
-        private void ConfigureLocationGrid(DataGridView grid)
+        private void ConfigureLocationGrid(DataGridView grid, bool relativeUrls)
         {
             grid.AutoGenerateColumns = false;
-            GridColMgr.AddTextColumn(grid, "Url", 100);
-            GridColMgr.AddTextColumn(grid, "Name", 100);
+            string urlField = (relativeUrls ? "RelativeUrl" : "FullUrl");
+            GridColMgr.AddTextColumn(grid, urlField, 100);
+            GridColMgr.AddTextColumn(grid, "Name", 150);
             GridColMgr.AddTextColumn(grid, "Id", 100);
 
             // Set all columns sortable
