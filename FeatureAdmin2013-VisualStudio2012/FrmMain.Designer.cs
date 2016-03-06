@@ -33,7 +33,6 @@ namespace FeatureAdmin
             this.clbSPWebFeatures = new System.Windows.Forms.CheckedListBox();
             this.btnRemoveFromWeb = new System.Windows.Forms.Button();
             this.lblLog = new System.Windows.Forms.Label();
-            this.listWebApplications = new System.Windows.Forms.ListBox();
             this.btnListWebApplications = new System.Windows.Forms.Button();
             this.lblSiteCollections = new System.Windows.Forms.Label();
             this.listSiteCollections = new System.Windows.Forms.ListBox();
@@ -74,6 +73,7 @@ namespace FeatureAdmin
             this.splitContainerLeftUpperWebAppAndSiteColl = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftDownWebsAndLogs = new System.Windows.Forms.SplitContainer();
             this.btnClearLog = new System.Windows.Forms.Button();
+            this.gridWebApplications = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.FarmFeatures.SuspendLayout();
             this.FarmActionPanel.SuspendLayout();
@@ -102,6 +102,7 @@ namespace FeatureAdmin
             this.splitContainerLeftDownWebsAndLogs.Panel1.SuspendLayout();
             this.splitContainerLeftDownWebsAndLogs.Panel2.SuspendLayout();
             this.splitContainerLeftDownWebsAndLogs.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridWebApplications)).BeginInit();
             this.SuspendLayout();
             // 
             // txtResult
@@ -185,19 +186,6 @@ namespace FeatureAdmin
             this.lblLog.Size = new System.Drawing.Size(25, 13);
             this.lblLog.TabIndex = 10;
             this.lblLog.Text = "Log";
-            // 
-            // listWebApplications
-            // 
-            this.listWebApplications.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listWebApplications.BackColor = System.Drawing.SystemColors.Window;
-            this.listWebApplications.FormattingEnabled = true;
-            this.listWebApplications.Location = new System.Drawing.Point(0, 32);
-            this.listWebApplications.Name = "listWebApplications";
-            this.listWebApplications.Size = new System.Drawing.Size(412, 69);
-            this.listWebApplications.TabIndex = 11;
-            this.listWebApplications.SelectedIndexChanged += new System.EventHandler(this.listWebApplications_SelectedIndexChanged);
             // 
             // btnListWebApplications
             // 
@@ -655,9 +643,9 @@ namespace FeatureAdmin
             // 
             // splitContainerLeftUpperWebAppAndSiteColl.Panel1
             // 
+            this.splitContainerLeftUpperWebAppAndSiteColl.Panel1.Controls.Add(this.gridWebApplications);
             this.splitContainerLeftUpperWebAppAndSiteColl.Panel1.Controls.Add(this.lblWebApps);
             this.splitContainerLeftUpperWebAppAndSiteColl.Panel1.Controls.Add(this.btnListWebApplications);
-            this.splitContainerLeftUpperWebAppAndSiteColl.Panel1.Controls.Add(this.listWebApplications);
             // 
             // splitContainerLeftUpperWebAppAndSiteColl.Panel2
             // 
@@ -700,6 +688,23 @@ namespace FeatureAdmin
             this.btnClearLog.Text = "Clear Log";
             this.btnClearLog.UseVisualStyleBackColor = true;
             this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
+            // 
+            // gridWebApplications
+            // 
+            this.gridWebApplications.AllowUserToAddRows = false;
+            this.gridWebApplications.AllowUserToDeleteRows = false;
+            this.gridWebApplications.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridWebApplications.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridWebApplications.Location = new System.Drawing.Point(0, 32);
+            this.gridWebApplications.MultiSelect = false;
+            this.gridWebApplications.Name = "gridWebApplications";
+            this.gridWebApplications.ReadOnly = true;
+            this.gridWebApplications.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridWebApplications.Size = new System.Drawing.Size(412, 69);
+            this.gridWebApplications.TabIndex = 13;
+            this.gridWebApplications.SelectionChanged += new System.EventHandler(this.gridWebApplications_SelectionChanged);
             // 
             // FrmMain
             // 
@@ -749,6 +754,7 @@ namespace FeatureAdmin
             this.splitContainerLeftDownWebsAndLogs.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerLeftDownWebsAndLogs)).EndInit();
             this.splitContainerLeftDownWebsAndLogs.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridWebApplications)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -762,7 +768,6 @@ namespace FeatureAdmin
         private System.Windows.Forms.CheckedListBox clbSPWebFeatures;
         private System.Windows.Forms.Button btnRemoveFromWeb;
         private System.Windows.Forms.Label lblLog;
-        private System.Windows.Forms.ListBox listWebApplications;
         private System.Windows.Forms.Button btnListWebApplications;
         private System.Windows.Forms.Label lblWebApps;
         private System.Windows.Forms.Label lblSiteCollections;
@@ -806,6 +811,7 @@ namespace FeatureAdmin
         private System.Windows.Forms.Button btnDeactivateSPFarm;
         private System.Windows.Forms.Label ActionFarmCaption;
         private System.Windows.Forms.Button btnActivateSPFarm;
+        private System.Windows.Forms.DataGridView gridWebApplications;
     
     }
 }

@@ -86,8 +86,9 @@ namespace FeatureAdmin
             }
 
             // check all web apps and everything under
-            foreach (SPWebApplication webApp in WebAppEnumerator.GetAllWebApps())
+            foreach (WebAppEnumerator.WebAppInfo webappInfo in WebAppEnumerator.GetAllWebApps())
             {
+                SPWebApplication webApp = webappInfo.WebApp;
                 try
                 {
                     CheckWebApp(webApp);

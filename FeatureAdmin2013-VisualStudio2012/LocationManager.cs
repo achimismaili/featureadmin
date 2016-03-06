@@ -6,6 +6,17 @@ namespace FeatureAdmin
 {
     public static class LocationManager
     {
+        public static Location GetWebAppLocation(SPWebApplication webapp, bool admin)
+        {
+            Location loct = new Location();
+            loct.Id = webapp.Id;
+            // loct.ContentDatabaseId
+            loct.Scope = SPFeatureScope.WebApplication;
+            loct.Url = SafeGetWebAppUrl(webapp);
+            loct.Name = SafeGetWebAppTitle(webapp, admin);
+            loct.Access = SafeGetWebAppAccess(webapp);
+            return loct;
+        }
         public static Location GetLocation(object obj)
         {
             Location loct = new Location();
@@ -21,12 +32,8 @@ namespace FeatureAdmin
             else if (obj is SPWebApplication)
             {
                 SPWebApplication webapp = obj as SPWebApplication;
-                loct.Id = webapp.Id;
-                // loct.ContentDatabaseId
-                loct.Scope = SPFeatureScope.WebApplication;
-                loct.Url = SafeGetWebAppUrl(webapp);
-                loct.Name = SafeGetWebAppTitle(webapp);
-                loct.Access = SafeGetWebAppAccess(webapp);
+                bool admin = false;
+                loct = GetWebAppLocation(webapp, admin);
             }
             else if (obj is SPSite)
             {
@@ -102,16 +109,31 @@ namespace FeatureAdmin
                 }
             }
         }
-        public static string SafeGetWebAppTitle(SPWebApplication webApp)
+        public static string SafeGetWebAppTitle(SPWebApplication webApp, bool admin)
         {
+            string name = "";
             try
             {
-                return webApp.Name;
+                if (webApp.Name != null)
+                {
+                    name = webApp.Name;
+                }
             }
             catch
             {
-                return null;
             }
+            if (admin)
+            {
+                if (name != "")
+                {
+                    name = " {CentralAdmin}: " + name; ;
+                }
+                else
+                {
+                    name = "{CentralAdmin}";
+                }
+            }
+            return name;
         }
         public static string SafeGetWebAppUrl(SPWebApplication webApp)
         {

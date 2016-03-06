@@ -55,9 +55,9 @@ namespace FeatureAdmin
             _forcefulness = forcefulness;
             ActivateFeaturesInFarm();
 
-            foreach (SPWebApplication webapp in WebAppEnumerator.GetAllWebApps())
+            foreach (WebAppEnumerator.WebAppInfo webappInfo  in WebAppEnumerator.GetAllWebApps())
             {
-                TraverseActivateFeaturesInWebApplication(webapp, forcefulness);
+                TraverseActivateFeaturesInWebApplication(webappInfo.WebApp, forcefulness);
             }
         }
         /// <summary>
