@@ -1,8 +1,9 @@
 FeatureAdmin 2010 Release Notes by version
   - this file is intended for end users
+  - chronological; newest info at bottom
 
 
-version 2.3 (Feb 24th 2013): "FeatureAdmin for SharePoint 2010 - v2.3"
+version 2.3 (Feb 24, 2013): "FeatureAdmin for SharePoint 2010 - v2.3"
 BugFixes:
 - Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
 - Fix Find Activated Feature to correctly find web application scoped features
@@ -19,3 +20,8 @@ version 2.4.4 (Sep 23, 2015): "FeatureAdmin for SharePoint 2010 - v2.4.4"
 
 version 2.4.6 (Feb 10, 2016): "FeatureAdmin for SharePoint 2010 - v2.4.6"
  - Fix erroneous exception during ForceUninstallFeatureDefinition
+
+version 2.4.8 (Not Yet Released)
+ - Improved exception handling
+ - Ask user whether to use Force Flag
+ - Upgrade right-hand lists (webapps, sites, webs) to multicolumn

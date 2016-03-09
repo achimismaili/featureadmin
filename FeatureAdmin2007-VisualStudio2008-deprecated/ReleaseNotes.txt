@@ -1,19 +1,32 @@
 FeatureAdmin 2007 Release Notes by version
   - this file is intended for end users
+  - chronological; newest info at bottom
 
 
 WARNING - There are two active branches of the SP2007 code
   BOTH should be updated with any changes
   See also the peer branch "FeatureAdmin2007-VisualStudio2010"
 
-version 2.3 (Feb 24th 2013): "FeatureAdmin for MOSS 2007 - v2.3"
+version 2.0 (Feb 11, 2009): "Feature Admin Tool v2.0 for MOSS 2007 and WSS 3"
+ Initial Version published on CodePlex.
+- List Features and Feature Definitions
+- Search for Faulty Features in the Farm
+- Uninstall cleanly Feature Definitions, even if faulty
+- can also simply activate or deactivate features in the whole farm, in only a Web Application, only within a SiteCollection or in a Site (SPWeb)
+- Based on Visual Studio 2008
+
+version 2.3 (Feb 24, 2013): "FeatureAdmin for MOSS 2007 - v2.3"
 - Fixed VS2008 source to compile
 BugFixes:
 - Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
 - Fix Find Activated Feature to correctly find web application scoped features
 - Fix control anchoring so main form can be enlarged
 
-version 2.4.6
+version 2.4.6 (Feb 4, 2016): "FeatureAdmin for SharePoint 2007 - v2.4.6" 
  - New "Find All Activations" and "Load All Activation Data" buttons
  - Allow user to resize areas of windows (backported from FeatureAdmin2010&2013)
  - More graceful handling of faulty features
+
+version 2.4.8 (Not Yet Released)
+ - Improved exception handling
+ - Ask user whether to use Force Flag
