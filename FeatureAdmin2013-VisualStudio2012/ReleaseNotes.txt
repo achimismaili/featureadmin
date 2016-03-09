@@ -28,4 +28,4 @@ version 2.4.6 (Feb 10, 2016): "FeatureAdmin for SharePoint 2013 - v2.4.6"
 version 2.4.8 (Not Yet Released)
  - Improved exception handling
  - Ask user whether to use Force Flag
- - Upgrade right-hand lists (webapps, sites, webs) to multicolumn
+ - Upgrade left-hand lists (webapps, sites, webs) to multicolumn

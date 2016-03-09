@@ -30,3 +30,4 @@ version 2.4.6 (Feb 4, 2016): "FeatureAdmin for SharePoint 2007 - v2.4.6"
 version 2.4.8 (Not Yet Released)
  - Improved exception handling
  - Ask user whether to use Force Flag
+ - Upgrade left-hand lists (webapps, sites, webs) to multicolumn
