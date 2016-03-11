@@ -64,3 +64,5 @@ Enhance feature deactivation traversals with better exception & logging
   and add prompt to choose whether to use Force flag
 Replace (left-hand) webapp, site, and web lists with grids
 Upgraded WebAppEnumerator to return list of WebAppInfo (to include Admin flag)
+
+** Mar 10, 2016: RELEASE 2.4.8: "FeatureAdmin for SharePoint 2013 - v2.4.8" **
