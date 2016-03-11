@@ -21,7 +21,7 @@ version 2.4.4 (Sep 23, 2015): "FeatureAdmin for SharePoint 2010 - v2.4.4"
 version 2.4.6 (Feb 10, 2016): "FeatureAdmin for SharePoint 2010 - v2.4.6"
  - Fix erroneous exception during ForceUninstallFeatureDefinition
 
-version 2.4.8 (Not Yet Released)
+version 2.4.8 (Mar 10, 2016): "FeatureAdmin for SharePoint 2010 - v2.4.8"
  - Improved exception handling
  - Ask user whether to use Force Flag
  - Upgrade left-hand lists (webapps, sites, webs) to multicolumn
