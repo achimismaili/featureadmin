@@ -6,7 +6,7 @@
   blue Background: Installed Features in the farm
 
 * Search for faulty features in the farm and remove them cleanly if wanted
-  Use the Button [Find Faulty Features](Find-Faulty-Features)
+  Use the Button [Find Faulty Features](Find-Faulty-Features.md)
   
 * Uninstall feature Definitions from the farm, even if faulty
 
