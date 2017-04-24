@@ -3,7 +3,7 @@ If you want to use FeatureAdmin, you need to have rights!
 SharePoint requires different rights, depending on the scope of a Feature, you would like to cleanup, activate, deactivate or uninstall.
 
 
-If you are e.g. using the [Find Faulty Feature](Find-Faulty-Feature.md) functionality the complete farm is parsed and all the following rights are required:
+If you are e.g. using the [Find Faulty Feature](Find-Faulty-Features.md) functionality the complete farm is parsed and all the following rights are required:
 
 _+Rights required for Farm scoped Features:+_
 - Full control on SQL database Level for SharePoint Config Database
