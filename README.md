@@ -1,6 +1,4 @@
 ## FeatureAdmin
-SharePoint Feature Administration and Clean Up Tool
-## FeatureAdmin
 SharePoint Feature Administration and Clean Up Tool to find and delete broken features in a SharePoint farm
 
 [Further Documentation](docs/Documentation.md)
