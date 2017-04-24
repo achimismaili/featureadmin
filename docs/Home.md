@@ -65,10 +65,10 @@ If you use the "find faulty feature" functionality, it will parse through the wh
 
 ## Screenshots
 Feature View - remove Features
-![](Home_SharePoint Feature Admin Tool 2010.png)      
+![](FeatureAdmin-Remove-Features.png)      
 
 Feature Definition View - activate or uninstall Features 
-![](Home_SharePoint Feature Admin Tool 2010 - Installed Features.png)
+![](FeatureAdmin-Installed-Features.png)
 
 ## The Problem, that triggered development of this tool:
 After doing Solution Package based deployment for a while, I found out, that 'stsadm -o upgradesolution' is not supported, when features are added / removed. (see article about this [http://sharepointtipoftheday.blogspot.com/2009/06/solution-feature-upgrading-and.html](http://sharepointtipoftheday.blogspot.com/2009/06/solution-feature-upgrading-and.html))
