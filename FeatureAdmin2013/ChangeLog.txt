@@ -66,3 +66,9 @@ Replace (left-hand) webapp, site, and web lists with grids
 Upgraded WebAppEnumerator to return list of WebAppInfo (to include Admin flag)
 
 ** Mar 10, 2016: RELEASE 2.4.8: "FeatureAdmin for SharePoint 2013 - v2.4.8" **
+
+** 2017-06 - Release 2.5 (Achim) **
+- Reintroduced the "Find Faulty Feature" - Button
+- Fixed some Button activation issues
+- Added Feature versioning and Feature Upgrade
+- Added Unit tests
