@@ -10,7 +10,7 @@ namespace FeatureAdmin
     /// <summary>
     /// Feature definition and activation data for all features in farm
     /// </summary>
-    class FeatureDatabase
+    public class FeatureDatabase
     {
         Dictionary<Guid, Feature> _AllFeatureDefinitions = new Dictionary<Guid, Feature>();
         Dictionary<string, List<Feature>> _LocationFeatures = new Dictionary<string,List<Feature>>();

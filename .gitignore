@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 *.pubxml
+/FeatureAdmin2013/FeatureAdmin.Test/App.config

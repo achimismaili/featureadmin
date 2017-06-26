@@ -7,7 +7,7 @@ using FeatureAdmin.Models;
 
 namespace FeatureAdmin
 {
-    class ActivationFinder
+    public class ActivationFinder
     {
         /// <summary>
         /// Delegate to report when feature found

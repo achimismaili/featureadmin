@@ -38,7 +38,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Common Files\microsoft shared\Web Server Extensions\15\ISAPI\Microsoft.SharePoint.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
       <Private>True</Private>
@@ -69,14 +74,28 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="FarmFeatures.cs" />
+    <Compile Include="ActivationFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestContent\ReferenceAssertions.cs" />
+    <Compile Include="TestContent\SharePointContainers.cs" />
+    <Compile Include="TestContent\TestFeatures.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+    <Content Include="App.config.txt" />
     <None Include="packages.config" />
+    <Compile Include="UserInterface\RemoveInvalidFeature.Tests.cs" />
+    <Compile Include="UserInterface\LocationForm.Tests.cs" />
+    <Compile Include="UserInterface\FrmMain.Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FeatureAdmin\FeatureAdmin.csproj">
+      <Project>{28e3ed33-143a-45eb-894c-48f47c88490c}</Project>
+      <Name>FeatureAdmin</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
