@@ -140,7 +140,7 @@
     <Compile Include="LocationManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertyComparer.cs" />
+    <Compile Include="Common\PropertyComparer.cs" />
     <Compile Include="UserInterface\RemoveInvalidFeature.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,7 +148,6 @@
       <DependentUpon>RemoveInvalidFeature.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\SortableBindingList.cs" />
-    <Compile Include="spver.cs" />
     <Compile Include="TemplateInfo.cs" />
     <Compile Include="UserInterface\WaitCursor.cs" />
     <Compile Include="WebAppEnumerator.cs" />

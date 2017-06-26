@@ -3,7 +3,7 @@ using System.ComponentModel;
 using Microsoft.SharePoint;
 
 
-namespace FeatureAdmin
+namespace FeatureAdmin.Models
 {
     public class Feature : IComparable, INotifyPropertyChanged
     {

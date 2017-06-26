@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace CursorUtil
+namespace FeatureAdmin.UserInterface
 {
     public class WaitCursor : IDisposable
     {

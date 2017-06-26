@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using Microsoft.SharePoint;
 
-namespace FeatureAdmin
+namespace FeatureAdmin.UserInterface
 {
     public static class GridColMgr
     {

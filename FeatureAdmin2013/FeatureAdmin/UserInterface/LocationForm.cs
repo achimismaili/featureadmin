@@ -4,10 +4,9 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.SharePoint;
-using Be.Timvw.Framework.Collections.Generic;
-using Be.Timvw.Framework.ComponentModel;
+using FeatureAdmin.Models;
 
-namespace FeatureAdmin
+namespace FeatureAdmin.UserInterface
 {
     public partial class LocationForm : Form
     {

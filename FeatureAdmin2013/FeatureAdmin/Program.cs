@@ -23,7 +23,7 @@ namespace FeatureAdmin
                 string msg = "Cannot find local SharePoint Farm. "
                     + "Either this account has not enough access to the SharePoint config db"
                     + " (dbReader is not sufficient, dbOwner is recommended)"
-                    + " or SharePoint " + spver.SharePointVersion
+                    + " or SharePoint " + Common.Constants.SharePointVersion
                     + " is not installed on this machine. "
                     + " FeatureAdmin will close now.";
                 MessageBox.Show(msg);
@@ -34,7 +34,7 @@ namespace FeatureAdmin
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMain());
+            Application.Run(new UserInterface.FrmMain());
         }
     }
 }

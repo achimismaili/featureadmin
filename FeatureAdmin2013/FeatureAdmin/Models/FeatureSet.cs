@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.SharePoint;
 
-namespace FeatureAdmin
+namespace FeatureAdmin.Models
 {
     /// <summary>
     /// A list of features

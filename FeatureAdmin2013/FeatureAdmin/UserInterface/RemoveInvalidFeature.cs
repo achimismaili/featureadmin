@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 
-namespace FeatureAdmin
+namespace FeatureAdmin.UserInterface
 {
     /// <summary>
     /// This window is only needed in a special case:

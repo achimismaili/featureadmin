@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FeatureAdmin
+namespace FeatureAdmin.Models
 {
     public class FeatureLocationSet : Dictionary<Feature, List<Location>>
     {

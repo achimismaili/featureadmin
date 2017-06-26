@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Be.Timvw.Framework.Collections.Generic;
+using FeatureAdmin.Common;
 
-namespace Be.Timvw.Framework.ComponentModel
+namespace FeatureAdmin.Models
 {
     public class SortableBindingList<T> : BindingList<T>
     {

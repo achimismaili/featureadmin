@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
+using FeatureAdmin.Models;
 
 namespace FeatureAdmin
 {

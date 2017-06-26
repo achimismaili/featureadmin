@@ -1,4 +1,4 @@
-namespace FeatureAdmin
+namespace FeatureAdmin.UserInterface
 {
     partial class FrmMain
     {

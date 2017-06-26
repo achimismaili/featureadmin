@@ -2,7 +2,7 @@
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 
-namespace FeatureAdmin
+namespace FeatureAdmin.Models
 {
     public class Location : IEquatable<Location>
     {

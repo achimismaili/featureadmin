@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
+using FeatureAdmin.Models;
 
 namespace FeatureAdmin
 {

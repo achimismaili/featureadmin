@@ -8,11 +8,10 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
-using CursorUtil;
-using Be.Timvw.Framework.Collections.Generic;
-using Be.Timvw.Framework.ComponentModel;
+using FeatureAdmin.Common;
+using FeatureAdmin.Models;
 
-namespace FeatureAdmin
+namespace FeatureAdmin.UserInterface
 {
     public partial class FrmMain : Form
     {
@@ -65,7 +64,7 @@ namespace FeatureAdmin
         {
             Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             this.Text = string.Format("FeatureAdmin for SharePoint {0} - v{1}",
-                spver.SharePointVersion, version);
+                Common.Constants.SharePointVersion, version);
         }
 
         private void ConfigureFeatureDefGrid()
@@ -1332,14 +1331,14 @@ namespace FeatureAdmin
 
         private void ClearCurrentSiteCollectionData()
         {
-            FeatureAdmin.Location.Clear(m_CurrentSiteLocation);
+            Models.Location.Clear(m_CurrentSiteLocation);
             gridSiteCollections.DataSource = null;
             clbSPSiteFeatures.Items.Clear();
         }
 
         private void ClearCurrentWebData()
         {
-            FeatureAdmin.Location.Clear(m_CurrentWebLocation);
+            Models.Location.Clear(m_CurrentWebLocation);
             gridWebs.DataSource = null;
             clbSPWebFeatures.Items.Clear();
         }
@@ -1364,7 +1363,7 @@ namespace FeatureAdmin
 
         private static bool IsEmpty(Location location)
         {
-            return FeatureAdmin.Location.IsLocationEmpty(location);
+            return Models.Location.IsLocationEmpty(location);
         }
 
         private Location GetSelectedWeb()
