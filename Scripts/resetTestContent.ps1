@@ -4,6 +4,15 @@
 # https://gallery.technet.microsoft.com/office/Get-collection-owners-for-13336f43
 # https://gallery.technet.microsoft.com/scriptcenter/c1366cfb-f518-4595-98c7-3a2fc3454473
 
+# How to Use / Getting started:
+# Before the tests can be run, some preparation is required:
+# 1. build the two dummy features projects and deploy them to the farm
+# 2. run this script with a parameter of a test web application, e.g. resetTestContent.ps1 https://sp.local
+# 3. The script will create a managed path fa and it will create 2 Sitecollection below it
+# 4. the script will retract the dummyfeaturesfaulty solution, so that the activated features of this solution will become faulty
+# 5. now you can run the reference end to end tests
+
+
 
 $snapin = get-pssnapin | Where-Object { $_.Name -eq "Microsoft.SharePoint.PowerShell" }
 if ($snapin -eq $null) {
@@ -28,6 +37,8 @@ $testSitesManagedPath = "fa" # fa = feature admin
 
 $nameActivated = "activated"
 $nameInactive = "inactive"
+
+$dummySolutionWspName = "DummyFeaturesFaulty.wsp"
 
 $featureIdHealthyWeb = "6a5615a2-4c44-40dd-ac9f-26cc45fb7e79"
 $featureIdHealthySiCo = "bdd4c395-4c92-4bf8-8c61-9d12349bb853"
@@ -59,15 +70,15 @@ function CreateSiteCollection($url, $title, $featuresActivated) {
     Write-Output ""
     Write-Output "Working on site collection $($url)"    
      
-    New-SPSite -Url $url -Name $title -owneralias $ownerAlias -template $template
+    New-SPSite -Url $url -Name $title -owneralias $ownerAlias -template $template -CompatibilityLevel $compatibilityLevel -Language $language
 
     # in RootWeb, enable web features same as SiCo features
     if ($featuresActivated) {
-        Enable-SPFeature -identity $featureIdHealthySiCo -Url $url  -CompatibilityLevel $compatibilityLevel
-        Enable-SPFeature -identity $featureIdFaultySiCo -Url $url  -CompatibilityLevel $compatibilityLevel
+        Enable-SPFeature -identity $featureIdHealthySiCo -Url $url  
+        Enable-SPFeature -identity $featureIdFaultySiCo -Url $url  
         
-        Enable-SPFeature -identity $featureIdHealthyWeb -Url $url  -CompatibilityLevel $compatibilityLevel
-        Enable-SPFeature -identity $featureIdFaultyWeb -Url $url  -CompatibilityLevel $compatibilityLevel
+        Enable-SPFeature -identity $featureIdHealthyWeb -Url $url 
+        Enable-SPFeature -identity $featureIdFaultyWeb -Url $url  
     }
 
     # create sub webs
@@ -80,23 +91,27 @@ function CreateSpWeb($url, $title, $webFeaturesActivated) {
     Write-Output ""
     Write-Output "  - Working on sub web $($url)"    
      
-    New-SPWeb -Url $url -Name $title -template $template
+    New-SPWeb -Url $url -Name $title -template $template -Language 1033
 
     if ($webFeaturesActivated) {
-        Enable-SPFeature -identity $featureIdHealthyWeb -Url $url -CompatibilityLevel $compatibilityLevel
-        Enable-SPFeature -identity $featureIdFaultyWeb -Url $url  -CompatibilityLevel $compatibilityLevel
+        Enable-SPFeature -identity $featureIdHealthyWeb -Url $url 
+        Enable-SPFeature -identity $featureIdFaultyWeb -Url $url  
     }
 
 }
         
 try {
    
+    # Install the solution, if it is currently retracted ... ( it needs to be added already)
+    Install-SPSolution $dummySolutionWspName -GACDeployment -ErrorAction SilentlyContinue
+
+
     Write-Output ""
     Write-Output "Enabling farm features"
 
     # enable farm features
     Enable-SPFeature -identity $featureIdHealthyFarm -Force:$true -ErrorAction SilentlyContinue
-    Enable-SPFeature -identity $featureIdFaultyFarm -Force:$true -ErrorAction SilentlyContinue
+    Enable-SPFeature -identity $featureIdFaultyFarm -Force:$true -ErrorAction SilentlyContinue 
 
     #Fetches webapplication
     $wa = Get-SPWebApplication $webAppUrl
@@ -145,6 +160,12 @@ try {
     $title = "Features $nameInactive $titleSuffix"
 
     CreateSiteCollection $url $title $false
+
+
+    # retract dummy faulty feature solution
+    Write-Output ""
+    Write-Output "Retracting dummy faulty feature solution '$dummySolutionWspName'"
+    Uninstall-SPSolution $dummySolutionWspName -Confirm:$false
 
 }    
 
