@@ -157,7 +157,8 @@ namespace FeatureAdmin
                 foreach (SPFeature feature in webApp.Features)
                 {
                     bool faulty = IsFeatureFaulty(feature);
-                    ReportWebAppFeature(desiredFeature, faulty, webApp);
+                    Guid featureId = faulty ? Guid.Empty : feature.DefinitionId;
+                    ReportWebAppFeature(featureId, faulty, webApp);
                 }
             }
         }

@@ -126,8 +126,8 @@ try {
     Write-Output "Working on web application $($webAppUrl)"
 
     # enable web app features
-    Enable-SPFeature -identity $featureIdHealthyWebApp -Url $url -Force:$true -ErrorAction SilentlyContinue
-    Enable-SPFeature -identity $featureIdFaultyWebApp -Url $url -Force:$true -ErrorAction SilentlyContinue
+    Enable-SPFeature -identity $featureIdHealthyWebApp -Url $webAppUrl -Force:$true -ErrorAction SilentlyContinue
+    Enable-SPFeature -identity $featureIdFaultyWebApp -Url $webAppUrl -Force:$true -ErrorAction SilentlyContinue
 
 
     New-SPManagedPath $testSitesManagedPath -WebApplication $webAppUrl -ErrorAction SilentlyContinue
