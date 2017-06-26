@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActivationFinder.cs" />
+    <Compile Include="Common\Constants.cs" />
     <Compile Include="ExceptionSerializer.cs" />
     <Compile Include="Feature.cs" />
     <Compile Include="FeatureActivator.cs" />

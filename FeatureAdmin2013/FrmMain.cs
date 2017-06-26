@@ -77,14 +77,18 @@ namespace FeatureAdmin
 #if (SP2013)
             GridColMgr.AddTextColumn(grid, "CompatibilityLevel", "Compat", 60);
 #endif
+            GridColMgr.AddTextColumn(grid, "Version", "Version", 60);
             GridColMgr.AddTextColumn(grid, "Id", 50);
-            GridColMgr.AddTextColumn(grid, "Activations", 60);
+            GridColMgr.AddTextColumn(grid, Common.Constants.PropertyNames.Activations, 60);
             GridColMgr.AddTextColumn(grid, "Faulty", 60);
+
+            GridColMgr.AddTextColumn(grid, Common.Constants.PropertyNames.UpgradesRequired, "Upgrades required", 60);
 
             // Set most columns sortable
             foreach (DataGridViewColumn column in grid.Columns)
             {
-                if (column.DataPropertyName != "Activations")
+                if (column.DataPropertyName != Common.Constants.PropertyNames.Activations &&
+                    column.DataPropertyName != Common.Constants.PropertyNames.UpgradesRequired)
                 {
                     column.SortMode = DataGridViewColumnSortMode.Automatic;
                 }

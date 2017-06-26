@@ -25,10 +25,15 @@ namespace FeatureAdmin
         }
         public string ScopeAbbrev { get; private set; } // more legible scope names -- see ScopeAbbrevConverter
         public int CompatibilityLevel { get; set; }
+        // only relevant for activated/added features / feature instances
+        public string VersionActivated { get; set; }
+        public string VersionDefinition { get; set; }
         public string Name { get; set; }
         public bool IsFaulty { get; set; }
         public string Faulty { get { return (IsFaulty ? "Faulty" : ""); } }
         public string ExceptionMsg { get; set; }
+
+        // only relevant for feature definitions
         private int? _activations = 0;
         public int? Activations
         {
@@ -42,6 +47,27 @@ namespace FeatureAdmin
                 OnPropertyChanged("Activations");
             }
         }
+
+        public bool UpgradeRequired { get
+            {
+                return VersionDefinition.CompareTo(VersionActivated) > 0;
+            } }
+
+        // only relevant for feature definitions
+        private int? _upgradesRequired = 0;
+        public int? UpgradesRequired
+        {
+            get
+            {
+                return _upgradesRequired;
+            }
+            set
+            {
+                _upgradesRequired = value;
+                OnPropertyChanged("UpgradesRequired");
+            }
+        }
+
         protected void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
