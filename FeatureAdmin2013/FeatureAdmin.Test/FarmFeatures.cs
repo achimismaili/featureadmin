@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace FeatureAdmin.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class FarmFeatures
     {
         [TestMethod]
         public void TestMethod1()

@@ -20,7 +20,7 @@ namespace FeatureAdmin
             set
             {
                 _Scope = value;
-                ScopeAbbrev = ScopeAbbrevConverter.ScopeToAbbrev(value);
+                ScopeAbbrev = Common.StringHelpers.ConvertScopeToAbbreviation(value);
             }
         }
         public string ScopeAbbrev { get; private set; } // more legible scope names -- see ScopeAbbrevConverter
