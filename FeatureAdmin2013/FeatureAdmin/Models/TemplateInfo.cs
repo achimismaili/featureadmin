@@ -1,5 +1,5 @@
 ﻿
-namespace FeatureAdmin
+namespace FeatureAdmin.Models
 {
     public class TemplateInfo
     {
