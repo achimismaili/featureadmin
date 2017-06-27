@@ -8,7 +8,7 @@ namespace FeatureAdmin.Models
     /// <summary>
     /// A list of features
     /// </summary>
-    class FeatureSet
+    public class FeatureSet
     {
         List<Feature> _FarmFeatures = new List<Feature>();
         List<Feature> _WebAppFeatures = new List<Feature>();
@@ -16,6 +16,8 @@ namespace FeatureAdmin.Models
         List<Feature> _WebFeatures = new List<Feature>();
         SPFeatureScope _HighestScope = SPFeatureScope.ScopeInvalid;
         SPFeatureScope _LowestScope = SPFeatureScope.ScopeInvalid;
+
+        public int Count { get; }
 
         public SPFeatureScope HighestScope { get { return _HighestScope; } }
         public SPFeatureScope LowestScope { get { return _LowestScope; } }
@@ -30,6 +32,7 @@ namespace FeatureAdmin.Models
 
         public FeatureSet(List<Feature> features)
         {
+            this.Count = features.Count;
             foreach (Feature feature in features)
             {
                 if (_HighestScope == SPFeatureScope.ScopeInvalid)

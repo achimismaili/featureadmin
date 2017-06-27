@@ -11,6 +11,7 @@ using Microsoft.SharePoint.Administration;
 using FeatureAdmin.Common;
 using FeatureAdmin.Models;
 
+
 namespace FeatureAdmin.UserInterface
 {
     public partial class FrmMain : Form
@@ -18,14 +19,7 @@ namespace FeatureAdmin.UserInterface
 
         #region members
 
-        // warning, when no feature was selected
-        public const string NOFEATURESELECTED = "No feature selected. Please select at least 1 feature.";
-
-        // defines, how the format of the log time
-        public static string DATETIMEFORMAT = "yyyy/MM/dd HH:mm:ss";
-        // prefix for log entries: Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) + " - "; 
-
-        private FeatureDatabase m_featureDb = new FeatureDatabase();
+        public FeatureDatabase FeatureDb = new FeatureDatabase();
         private Location m_CurrentWebAppLocation;
         private Location m_CurrentSiteLocation;
         private Location m_CurrentWebLocation;
@@ -119,7 +113,7 @@ namespace FeatureAdmin.UserInterface
 
                 ReloadAllActivationData(); // reloads defintions & activation data
 
-                SortableBindingList<Feature> features = m_featureDb.GetAllFeatures();
+                SortableBindingList<Feature> features = FeatureDb.GetAllFeatures();
 
                 this.gridFeatureDefinitions.DataSource = features;
 
@@ -222,8 +216,8 @@ namespace FeatureAdmin.UserInterface
         {
             if (clbSPWebFeatures.CheckedItems.Count == 0)
             {
-                MessageBox.Show(NOFEATURESELECTED);
-                logDateMsg(NOFEATURESELECTED);
+                MessageBox.Show(Constants.Text.NOFEATURESELECTED);
+                logDateMsg(Constants.Text.NOFEATURESELECTED);
                 return;
             }
             if (IsEmpty(m_CurrentWebLocation))
@@ -265,8 +259,8 @@ namespace FeatureAdmin.UserInterface
         {
             if (clbSPSiteFeatures.CheckedItems.Count == 0)
             {
-                MessageBox.Show(NOFEATURESELECTED);
-                logDateMsg(NOFEATURESELECTED);
+                MessageBox.Show(Constants.Text.NOFEATURESELECTED);
+                logDateMsg(Constants.Text.NOFEATURESELECTED);
                 return;
             }
             if (clbSPWebFeatures.CheckedItems.Count > 0) { throw new Exception("Mixed mode unsupported"); }
@@ -326,8 +320,8 @@ namespace FeatureAdmin.UserInterface
         {
             if ((clbSPSiteFeatures.CheckedItems.Count == 0) && (clbSPWebFeatures.CheckedItems.Count == 0))
             {
-                MessageBox.Show(NOFEATURESELECTED);
-                logDateMsg(NOFEATURESELECTED);
+                MessageBox.Show(Constants.Text.NOFEATURESELECTED);
+                logDateMsg(Constants.Text.NOFEATURESELECTED);
             }
 
             string msgString = string.Empty;
@@ -377,8 +371,8 @@ namespace FeatureAdmin.UserInterface
             int featuresSelected = clbSPSiteFeatures.CheckedItems.Count + clbSPWebFeatures.CheckedItems.Count;
             if (featuresSelected == 0)
             {
-                MessageBox.Show(NOFEATURESELECTED);
-                logDateMsg(NOFEATURESELECTED);
+                MessageBox.Show(Constants.Text.NOFEATURESELECTED);
+                logDateMsg(Constants.Text.NOFEATURESELECTED);
                 return;
             }
 
@@ -490,8 +484,8 @@ namespace FeatureAdmin.UserInterface
             int featuresSelected = clbSPSiteFeatures.CheckedItems.Count + clbSPWebFeatures.CheckedItems.Count;
             if (featuresSelected == 0)
             {
-                MessageBox.Show(NOFEATURESELECTED);
-                logDateMsg(NOFEATURESELECTED);
+                MessageBox.Show(Constants.Text.NOFEATURESELECTED);
+                logDateMsg(Constants.Text.NOFEATURESELECTED);
                 return;
             }
 
@@ -520,6 +514,21 @@ namespace FeatureAdmin.UserInterface
         private void PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope activationScope, Location currentLocation, FeatureActivator.Action action)
         {
             List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
+
+            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
+                selectedFeatures,
+            activationScope,
+                 currentLocation,
+                action
+                );
+
+        }
+        public void PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
+            List<Feature> selectedFeatures,
+            SPFeatureScope activationScope,
+            Location currentLocation,
+            FeatureActivator.Action action)
+        {
             FeatureSet featureSet = new FeatureSet(selectedFeatures);
             string verbnow = "?", verbpast = "?";
             switch (action)
@@ -533,6 +542,8 @@ namespace FeatureAdmin.UserInterface
                 default:
                     throw new Exception("Invalid action in activateSelectedFeaturesAcrossSpecifiedScope");
             }
+
+
 
             if (selectedFeatures.Count > 10)
             {
@@ -585,7 +596,7 @@ namespace FeatureAdmin.UserInterface
             {
                 forcefulness = FeatureActivator.Forcefulness.Forcible;
             }
-            FeatureActivator activator = new FeatureActivator(m_featureDb, action, featureSet);
+            FeatureActivator activator = new FeatureActivator(FeatureDb, action, featureSet);
             activator.ExceptionLoggingListeners += new FeatureActivator.ExceptionLoggerHandler(activator_ExceptionLoggingListeners);
             activator.InfoLoggingListeners += activator_InfoLoggingListeners;
 
@@ -765,7 +776,7 @@ namespace FeatureAdmin.UserInterface
         {
             int removedFeatures = 0;
             int scannedThrough = 0;
-            SPSecurity.RunWithElevatedPrivileges(delegate()
+            SPSecurity.RunWithElevatedPrivileges(delegate ()
             {
                 foreach (SPWeb web in site.AllWebs)
                 {
@@ -820,7 +831,7 @@ namespace FeatureAdmin.UserInterface
             msgString = "Removing Feature '" + featureID.ToString() + "' from Web Application: '" + webApp.Name.ToString() + "'.";
             logDateMsg(" WebApp - " + msgString);
 
-            SPSecurity.RunWithElevatedPrivileges(delegate()
+            SPSecurity.RunWithElevatedPrivileges(delegate ()
                 {
                     if (featureScope == SPFeatureScope.WebApplication)
                     {
@@ -894,7 +905,7 @@ namespace FeatureAdmin.UserInterface
             int scannedThrough = 0;
             string msgString;
 
-            SPSecurity.RunWithElevatedPrivileges(delegate()
+            SPSecurity.RunWithElevatedPrivileges(delegate ()
             {
                 msgString = "Removing Feature '" + featureID.ToString() + ", Scope: " + featureScope.ToString() + "' from the Farm.";
                 logDateMsg("Farm - " + msgString);
@@ -981,7 +992,7 @@ namespace FeatureAdmin.UserInterface
         /// <param name="enabled">true = enabled, false = disabled</param>
         private void EnableActionButtonsAsAppropriate()
         {
-            bool bDb = m_featureDb.IsLoaded();
+            bool bDb = FeatureDb.IsLoaded();
             SPFeatureScope lowestScope = GetLowestSelectedScope();
 
             bool bWeb = !IsEmpty(m_CurrentWebLocation) && lowestScope >= SPFeatureScope.Web;
@@ -1033,15 +1044,21 @@ namespace FeatureAdmin.UserInterface
                     SPSolution solution = SPFarm.Local.Solutions[feature.Definition.SolutionId];
                     if (solution != null)
                     {
-                        try {
+                        try
+                        {
                             text += string.Format(", SolutionName='{0}'", solution.Name);
-                        } catch { }
-                        try {
+                        }
+                        catch { }
+                        try
+                        {
                             text += string.Format(", SolutionDisplayName='{0}'", solution.DisplayName);
-                        } catch { }
-                        try {
+                        }
+                        catch { }
+                        try
+                        {
                             text += string.Format(", SolutionDeploymentState='{0}'", solution.DeploymentState);
-                        } catch { }
+                        }
+                        catch { }
                     }
                 }
             }
@@ -1105,7 +1122,7 @@ namespace FeatureAdmin.UserInterface
         /// </summary>
         protected void logDateMsg(string msg)
         {
-            logMsg(DateTime.Now.ToString(DATETIMEFORMAT) + " - " + msg);
+            logMsg(DateTime.Now.ToString(Constants.Text.DATETIMEFORMAT) + " - " + msg);
         }
         /// <summary>
         /// Log message plus line return
@@ -1347,7 +1364,7 @@ namespace FeatureAdmin.UserInterface
         {
             clbSPSiteFeatures.Items.Clear();
             if (IsEmpty(m_CurrentSiteLocation)) { return; }
-            List<Feature> features = m_featureDb.GetFeaturesOfLocation(m_CurrentSiteLocation);
+            List<Feature> features = FeatureDb.GetFeaturesOfLocation(m_CurrentSiteLocation);
             features.Sort();
             clbSPSiteFeatures.Items.AddRange(features.ToArray());
         }
@@ -1356,7 +1373,7 @@ namespace FeatureAdmin.UserInterface
         {
             clbSPWebFeatures.Items.Clear();
             if (IsEmpty(m_CurrentWebLocation)) { return; }
-            List<Feature> features = m_featureDb.GetFeaturesOfLocation(m_CurrentWebLocation);
+            List<Feature> features = FeatureDb.GetFeaturesOfLocation(m_CurrentWebLocation);
             features.Sort();
             clbSPWebFeatures.Items.AddRange(features.ToArray());
         }
@@ -1554,11 +1571,11 @@ namespace FeatureAdmin.UserInterface
 
         private List<Location> GetFeatureLocations(Guid featureId)
         {
-            if (!m_featureDb.IsLoaded())
+            if (!FeatureDb.IsLoaded())
             {
                 ReloadAllActivationData();
             }
-            return m_featureDb.GetLocationsOfFeature(featureId);
+            return FeatureDb.GetLocationsOfFeature(featureId);
         }
 
         private void ReloadAllActivationData()
@@ -1570,11 +1587,11 @@ namespace FeatureAdmin.UserInterface
                 finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
 
                 // Call routine to actually find & report activations
-                m_featureDb.LoadAllData(finder.FindAllActivationsOfAllFeatures());
-                m_featureDb.MarkFaulty(finder.GetFaultyFeatureIdList());
+                FeatureDb.LoadAllData(finder.FindAllActivationsOfAllFeatures());
+                FeatureDb.MarkFaulty(finder.GetFaultyFeatureIdList());
                 lblFeatureDefinitions.Text = string.Format(
                     "All {0} Features installed in the Farm",
-                    m_featureDb.GetAllFeaturesCount());
+                    FeatureDb.GetAllFeaturesCount());
             }
         }
 
@@ -1607,11 +1624,11 @@ namespace FeatureAdmin.UserInterface
         {
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-        private static bool ConfirmBoxYesNo(string text)
+        public static bool ConfirmBoxYesNo(string text)
         {
             return ConfirmBoxYesNo(text, "Confirm");
         }
-        private static bool ConfirmBoxYesNo(string text, string caption)
+        public static bool ConfirmBoxYesNo(string text, string caption)
         {
             DialogResult rtn = MessageBox.Show(
                 text, caption,
@@ -1664,7 +1681,7 @@ namespace FeatureAdmin.UserInterface
             }
             else
             {
-                LocationForm form = new LocationForm(featLocs);
+                LocationForm form = new LocationForm(featLocs, this);
                 form.ShowDialog();
             }
         }

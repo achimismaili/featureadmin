@@ -110,6 +110,7 @@
             this.DeactivateButton.TabIndex = 0;
             this.DeactivateButton.Text = "Deactivate Selected Activations";
             this.DeactivateButton.UseVisualStyleBackColor = true;
+            this.DeactivateButton.Click += new System.EventHandler(this.DeactivateButton_Click);
             // 
             // LocationForm
             // 

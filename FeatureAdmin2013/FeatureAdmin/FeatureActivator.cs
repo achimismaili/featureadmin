@@ -10,7 +10,7 @@ namespace FeatureAdmin
     /// <summary>
     /// Can activate or deactivate a set of features across any branch of the farm
     /// </summary>
-    class FeatureActivator
+    public class FeatureActivator
     {
         public enum Action  { None, Activating, Deactivating };
         public enum Forcefulness { None, Regular, Forcible };
@@ -124,7 +124,7 @@ namespace FeatureAdmin
             Location webappLoc = LocationManager.GetLocation(webapp);
             foreach (Feature feature in _featureset.WebAppFeatures)
             {
-                PerformAction(webappLoc, SPWebService.ContentService.Features, feature);
+                PerformAction(webappLoc, webapp.Features, feature);
             }
         }
         /// <summary>

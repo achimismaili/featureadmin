@@ -8,6 +8,16 @@ namespace FeatureAdmin.Common
 {
     public static class Constants
     {
+        public static class Text
+        {
+            // warning, when no feature was selected
+            public const string NOFEATURESELECTED = "No feature selected. Please select at least 1 feature.";
+
+            // defines, how the format of the log time
+            public static string DATETIMEFORMAT = "yyyy/MM/dd HH:mm:ss";
+            // prefix for log entries: Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) + " - "; 
+
+        }
         public static class PropertyNames
         {
             public const string Activations = "Activations";

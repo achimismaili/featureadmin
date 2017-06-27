@@ -52,7 +52,7 @@ namespace FeatureAdmin.UserInterface
         private void btnScopeCancel_Click(object sender, EventArgs e)
         {
             string msgString = "Action canceled.";
-            parentWindow.logTxt(DateTime.Now.ToString(FrmMain.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+            parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
             this.Close();
             this.Dispose();
         }
@@ -93,7 +93,7 @@ namespace FeatureAdmin.UserInterface
                             else
                                 msgString = "Error in scope selection! Task canceled";
                             MessageBox.Show(msgString);
-                            ((FrmMain)parentWindow).logTxt(DateTime.Now.ToString(FrmMain.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                            ((FrmMain)parentWindow).logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
 
                             return;
                         }
@@ -116,10 +116,10 @@ namespace FeatureAdmin.UserInterface
                 {
                     msgString = "Success! Feature was found and deactivated " + featurefound + " times in Scope:'" + scopeWindowScope.ToString() + "'!";
                     MessageBox.Show(msgString);
-                    parentWindow.logTxt(DateTime.Now.ToString(FrmMain.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                    parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
 
                     SPFarm.Local.FeatureDefinitions.Remove(featureID, true);
-                    parentWindow.logTxt(DateTime.Now.ToString(FrmMain.DATETIMEFORMAT) + " - FeatureDefinition was uninstalled." + Environment.NewLine);
+                    parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - FeatureDefinition was uninstalled." + Environment.NewLine);
 
                 }
             }
@@ -163,14 +163,14 @@ namespace FeatureAdmin.UserInterface
                     }
 
                     SPFarm.Local.FeatureDefinitions.Remove(featureID, true);
-                    parentWindow.logTxt(DateTime.Now.ToString(FrmMain.DATETIMEFORMAT) + " - FeatureDefinition was uninstalled." + Environment.NewLine);
+                    parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - FeatureDefinition was uninstalled." + Environment.NewLine);
                     this.Close();
                     this.Dispose();
                 }
 
                 catch
                 {
-                    parentWindow.logTxt(DateTime.Now.ToString(FrmMain.DATETIMEFORMAT) + " - An error occured iterating through the features ..." + Environment.NewLine);
+                    parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - An error occured iterating through the features ..." + Environment.NewLine);
 
                 }
                 finally
@@ -199,14 +199,14 @@ namespace FeatureAdmin.UserInterface
             if (featurefound == 0)
             {
                 msgString = "Search through all Scopes:'" + scope.ToString() + "' done..., feature not found.";
-                parentWindow.logTxt(DateTime.Now.ToString(FrmMain.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
                 return false;
             }
             else
             {
                 msgString = "Success! Feature was found and deactivated " + featurefound + " times in Scope:'" + scope.ToString() + "'!";
                 MessageBox.Show(msgString);
-                parentWindow.logTxt(DateTime.Now.ToString(FrmMain.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
                 return true;
             }
 

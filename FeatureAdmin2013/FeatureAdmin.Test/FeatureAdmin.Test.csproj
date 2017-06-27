@@ -84,9 +84,9 @@
     <None Include="App.config" />
     <Content Include="App.config.txt" />
     <None Include="packages.config" />
-    <Compile Include="UserInterface\RemoveInvalidFeature.Tests.cs" />
-    <Compile Include="UserInterface\LocationForm.Tests.cs" />
-    <Compile Include="UserInterface\FrmMain.Tests.cs" />
+    <Compile Include="UserInterface\RemoveInvalidFeature.cs" />
+    <Compile Include="UserInterface\LocationForm.cs" />
+    <Compile Include="UserInterface\FrmMain.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
