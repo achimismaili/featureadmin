@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.SharePointFarmService
 {
-    public static class SharePointFeatureFactory
+    public static class FeatureService
     {
-        public List<ActivatedFeature> GetAllActivatedFeaturesFromFarm()
+        public static List<ActivatedFeature> GetAllActivatedFeaturesFromFarm()
         {
             var allActivatedFeatures = new List<ActivatedFeature>();
 
             // Get Farm features
             var farm = new Farm();
+            farm.GetAllActivatedFeatures();
 
 
             return allActivatedFeatures;

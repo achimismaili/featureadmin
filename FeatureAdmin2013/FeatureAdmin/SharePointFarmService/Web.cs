@@ -10,9 +10,16 @@ namespace FeatureAdmin.SharePointFarmService
 {
     public class Web : BaseSharePointContainer
     {
+        private SPWeb spWeb;
         public Web(SPWeb web)
         {
+            spWeb = web;
             featureCollection = web.Features;
+        }
+
+        public void Dispose()
+        {
+            spWeb.Dispose();
         }
     }
 }

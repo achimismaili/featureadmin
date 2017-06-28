@@ -114,10 +114,11 @@
   <ItemGroup>
     <Compile Include="ActivationFinder.cs" />
     <Compile Include="Common\Constants.cs" />
-    <Compile Include="Common\ActivatedFeatureFactory.cs" />
+    <Compile Include="Models\ActivatedFeatureFactory.cs" />
     <Compile Include="Common\FeatureActivationHelper.cs" />
     <Compile Include="Common\FeatureDeactivationHelper.cs" />
     <Compile Include="Common\FeatureDefinitionFactory.cs" />
+    <Compile Include="Common\FeatureParentFactory.cs" />
     <Compile Include="Common\StringHelpers.cs" />
     <Compile Include="Models\ActivatedFeature.cs" />
     <Compile Include="Models\FeatureDefinition.cs" />
@@ -135,7 +136,7 @@
     <Compile Include="Repository\FeatureDefinitionRepository.cs" />
     <Compile Include="Repository\InMemoryDatabase.cs" />
     <Compile Include="Models\TemplateInfo.cs" />
-    <Compile Include="SharePointFarmService\SharePointFeatureFactory.cs" />
+    <Compile Include="SharePointFarmService\FeatureService.cs" />
     <Compile Include="SharePointFarmService\BaseSharePointContainerFarmService.cs" />
     <Compile Include="SharePointFarmService\Farm.cs" />
     <Compile Include="SharePointFarmService\Interfaces\IFeatureDefinitionService.cs" />

@@ -48,6 +48,14 @@ namespace FeatureAdmin.Test.TestContent
                     return SPUtility.ConcatUrls(url, "/"); // make sure, Url ends with a "/" ...
                 }
             }
+
+            public static string UrlPlusManagedPath
+            {
+                get
+                {
+                    return SPUtility.ConcatUrls(Url, "fa"); 
+                }
+            }
         }
 
         public static class SiCoActivated
@@ -59,7 +67,7 @@ namespace FeatureAdmin.Test.TestContent
             public const int HealthyWebFeatureActivatedTotal = 2;
             public const int FaultyWebFeatureActivatedTotal = 2;
 
-            public static string Url = SPUtility.ConcatUrls(WebApplication.Url, nameActivated);
+            public static string Url = SPUtility.ConcatUrls(WebApplication.UrlPlusManagedPath, nameActivated);
 
             public static class SubWebActivated
             {
@@ -83,7 +91,7 @@ namespace FeatureAdmin.Test.TestContent
             public const int FaultyWebFeatureActivated = 0;
             public const int HealthyWebFeatureActivatedTotal = 1;
             public const int FaultyWebFeatureActivatedTotal = 1;
-            public static string Url = SPUtility.ConcatUrls(WebApplication.Url, nameInactive);
+            public static string Url = SPUtility.ConcatUrls(WebApplication.UrlPlusManagedPath, nameInactive);
 
             public static class SubWebActivated
             {

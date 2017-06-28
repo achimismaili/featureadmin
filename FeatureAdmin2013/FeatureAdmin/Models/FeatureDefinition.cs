@@ -10,7 +10,7 @@ namespace FeatureAdmin.Models
 {
     public class FeatureDefinition
     {
-        public SPFeatureDefinition Definition { get; };
+        public SPFeatureDefinition Definition { get; }
 
         public Guid Id { get; }
 

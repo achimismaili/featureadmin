@@ -8,37 +8,18 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.SharePointFarmService
 {
-    public class SiteCollection: IActivatedFeatureService
+    public class SiteCollection: BaseSharePointContainer, IDisposable
     {
-        private SPFeatureCollection featureCollection;
-
-        public SPFeature GetActivatedFeature(Guid Id)
-        {
-            if (featureCollection != null || Id == Guid.Empty)
-            {
-                return null;
-            }
-            return featureCollection.FirstOrDefault(f => f.DefinitionId == Id);
-        }
-
-        public SPFeatureCollection GetAllActivatedFeatures()
-        {
-            if (featureCollection != null)
-            {
-                return null;
-            }
-
-            return featureCollection;
-        }
-
-        public Web(SPWeb web)
-        {
-            featureCollection = web.Features;
-        }
-
+        private SPSite spSite;
         public SiteCollection(SPSite siteCollection)
         {
-            siCo = siteCollection;
+            spSite = siteCollection;
+            featureCollection = siteCollection.Features;
         }
-}
+
+        public void Dispose()
+        {
+            spSite.Dispose();
+        }
+    }
 }
