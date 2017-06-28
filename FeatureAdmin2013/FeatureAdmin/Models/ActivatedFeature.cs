@@ -96,6 +96,11 @@ namespace FeatureAdmin.Models
         }
 
         /// <summary>
+        /// When was this Feature activated?
+        /// </summary>
+        public DateTime TimeActivated { get; private set; }
+
+        /// <summary>
         /// Version of the activated Feature
         /// </summary>
         public System.Version Version { get; private set; }
@@ -145,6 +150,20 @@ namespace FeatureAdmin.Models
             // Version
             try
             {
+                af.TimeActivated = spFeature.TimeActivated;
+            }
+            catch (Exception ex)
+            {
+                if (af.Name.Equals("undefined"))
+                {
+                    af.Name = ex.Message;
+                }
+                af.Faulty = true;
+            }
+
+            // Version
+            try
+            {
                 af.Version = spFeature.Version;
             }
             catch (Exception ex)
@@ -174,7 +193,16 @@ namespace FeatureAdmin.Models
             // Name
             try
             {
-                af.Name = spFeature.Definition.DisplayName;
+                var def = spFeature.Definition;
+
+                if (def != null)
+                {
+                    af.Name = def.DisplayName;
+                }
+                else
+                {
+                    af.Faulty = true;
+                }
             }
             catch (Exception ex)
             {

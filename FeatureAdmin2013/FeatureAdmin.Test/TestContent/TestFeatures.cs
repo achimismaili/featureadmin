@@ -50,7 +50,7 @@ namespace FeatureAdmin.Test.TestContent
         {
 
             public static Guid Id = new Guid("be656c15-c3c9-45e4-af56-ffcf3ef0330a");
-            public static string Name = "Object reference not set to an instance of an object."; // "DummyFeaturesFaulty_FaultyWeb";
+            public static string Name = "undefined"; // "DummyFeaturesFaulty_FaultyWeb";
             public static SPFeatureScope Scope = Microsoft.SharePoint.SPFeatureScope.Web;
             public static Version Version = new Version("1.0.0.0");
             public static bool Faulty = true;
@@ -59,7 +59,7 @@ namespace FeatureAdmin.Test.TestContent
         public static class FaultySite
         {
             public static Guid Id = new Guid("ff832e14-23ea-483e-80f8-5a22cb7297a0");
-            public static string Name = "Object reference not set to an instance of an object."; // "DummyFeaturesFaulty_FaultySiCo";
+            public static string Name = "undefined"; // "DummyFeaturesFaulty_FaultySiCo";
             public static SPFeatureScope Scope = Microsoft.SharePoint.SPFeatureScope.Web;
             public static Version Version = new Version("1.0.0.0");
             public static bool Faulty = true;
@@ -68,7 +68,7 @@ namespace FeatureAdmin.Test.TestContent
         public static class FaultyWebApp
         {
             public static Guid Id = new Guid("6bf1d2d1-ea35-4bf7-817f-a65549c5ffe9");
-            public static string Name = "Object reference not set to an instance of an object."; // "DummyFeaturesFaulty_FaultyWebApp";
+            public static string Name = "undefined"; // "DummyFeaturesFaulty_FaultyWebApp";
             public static SPFeatureScope Scope = Microsoft.SharePoint.SPFeatureScope.WebApplication;
             public static Version Version = new Version("1.0.0.0");
             public static bool Faulty = true;
@@ -77,7 +77,7 @@ namespace FeatureAdmin.Test.TestContent
         public static class FaultyFarm
         {
             public static Guid Id = new Guid("c08299d9-65fd-4871-b2e4-8de19315f7e8");
-            public static string Name = "Object reference not set to an instance of an object."; // "DummyFeaturesFaulty_FaultyFarm";
+            public static string Name = "undefined"; // "DummyFeaturesFaulty_FaultyFarm";
             public static SPFeatureScope Scope = Microsoft.SharePoint.SPFeatureScope.Farm;
             public static Version Version = new Version("1.0.0.0");
             public static bool Faulty = true;
