@@ -1,4 +1,5 @@
 ﻿using FeatureAdmin.Models;
+using Microsoft.SharePoint;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,40 +8,25 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Repository
 {
-    public static class AdminRepository
+    public class AdminRepository
     {
-        public static List<FeatureDefinition> RefreshData()
+        private SharePointFarmService.SharePointDataBase db;
+
+        public AdminRepository()
         {
-            InMemoryDatabase.FeatureDefinitions = SharePointFarmService.GetFeatureDefinitions.GetAllFeatureDefinitions();
-            InMemoryDatabase.ActivatedFeatures = SharePointFarmService.GetActivatedFeatures.GetAllFromFarm();
+            db = SharePointFarmService.SharePointDataBase.SingletonInstance;
+        }
 
-            if (InMemoryDatabase.ActivatedFeatures != null && InMemoryDatabase.ActivatedFeatures.Any())
+        public List<FeatureDefinition> GetFeatureDefinitions (SPFeatureScope? scope = null)
+        {
+            if(scope == null)
             {
-                var distinctActivatedFeatureIds = InMemoryDatabase.ActivatedFeatures.Select(af => af.Id).Distinct();
-
-                foreach (Guid featureId in distinctActivatedFeatureIds)
-                {
-                    var activatedFeatureGroup = InMemoryDatabase.ActivatedFeatures.Where(af => af.Id == featureId);
-
-                    var featureDef = InMemoryDatabase.FeatureDefinitions.FirstOrDefault(fd => fd.Id == featureId);
-
-                    if (featureDef != null)
-                    {
-                        // add activated features to feature definition
-                        featureDef.ActivatedFeatures.AddRange(activatedFeatureGroup);
-                    }
-                    else
-                    {
-                        // fyi - if we get here, we have most likely a group of faulty features ...
-
-                        // create feature definition and add features
-                        var newFeatureDef = FeatureDefinition.GetFeatureDefinition(activatedFeatureGroup);
-                        InMemoryDatabase.FeatureDefinitions.Add(newFeatureDef);
-                    }
-                }
+                return db.FeatureDefinitions;
             }
-
-            return InMemoryDatabase.FeatureDefinitions;
+            else
+            {
+                return db.FeatureDefinitions.Where(fd => fd.Scope == scope.Value).ToList();
+            }
         }
     }
 }

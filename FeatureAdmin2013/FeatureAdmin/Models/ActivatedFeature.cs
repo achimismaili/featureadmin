@@ -81,7 +81,7 @@ namespace FeatureAdmin.Models
         /// <remarks>The title is only retrieved in the Feature Definition --> Definition.GetTitle(culture)</remarks>
         public string Name { get; private set; }
 
-                /// <summary>
+        /// <summary>
         /// Feature Parent of the activated feature
         /// </summary>
         public FeatureParent Parent { get; private set; }
@@ -227,6 +227,35 @@ namespace FeatureAdmin.Models
                 }
                 af.Faulty = true;
             }
+
+            return af;
+        }
+
+        /// <summary>
+        /// Factory to map SPFeatureCollections to ActivatedFeatures
+        /// </summary>
+        /// <param name="featureCollection"></param>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public static List<ActivatedFeature> MapSpFeatureToActivatedFeature(SPFeatureCollection featureCollection, FeatureParent parent)
+        {
+            List<ActivatedFeature> activatedFeatures = new List<ActivatedFeature>();
+
+            if (featureCollection != null)
+            {
+                foreach (SPFeature f in featureCollection)
+                {
+                    var af = MapSpFeatureToActivatedFeature(f, parent);
+                    activatedFeatures.Add(af);
+                }
+            }
+
+            return activatedFeatures;
+        }
+
+        private static ActivatedFeature MapSpFeatureToActivatedFeature(SPFeature feature, FeatureParent parent)
+        {
+            var af = GetActivatedFeature(feature, parent);
 
             return af;
         }

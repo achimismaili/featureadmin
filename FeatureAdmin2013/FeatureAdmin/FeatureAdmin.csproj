@@ -114,7 +114,6 @@
   <ItemGroup>
     <Compile Include="ActivationFinder.cs" />
     <Compile Include="Common\Constants.cs" />
-    <Compile Include="Models\ActivatedFeatureFactory.cs" />
     <Compile Include="Common\FeatureActivationHelper.cs" />
     <Compile Include="Common\FeatureDeactivationHelper.cs" />
     <Compile Include="Common\FeatureDefinitionFactory.cs" />
@@ -132,11 +131,8 @@
     <Compile Include="FeatureUninstaller.cs" />
     <Compile Include="Models\IFeatureBase.cs" />
     <Compile Include="Repository\AdminRepository.cs" />
-    <Compile Include="Repository\FeatureDefinitionRepository.cs" />
-    <Compile Include="Repository\InMemoryDatabase.cs" />
+    <Compile Include="SharePointFarmService\SharePointDataBase.cs" />
     <Compile Include="Models\TemplateInfo.cs" />
-    <Compile Include="SharePointFarmService\GetActivatedFeatures.cs" />
-    <Compile Include="SharePointFarmService\GetFeatureDefinitions.cs" />
     <Compile Include="UserInterface\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>

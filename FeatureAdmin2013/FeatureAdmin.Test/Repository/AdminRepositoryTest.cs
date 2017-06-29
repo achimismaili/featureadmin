@@ -14,16 +14,17 @@ namespace FeatureAdmin.Test.Repository
         {
             // Arrange
 
-
             //Act
-            var featureDefinitionDb = FeatureAdmin.Repository.AdminRepository.RefreshData();
+            var repository = new FeatureAdmin.Repository.AdminRepository();
 
-            var FDefinitionHealthyWeb = featureDefinitionDb.FirstOrDefault(f => f.Id == TestContent.TestFeatures.HealthyWeb.Id);
-            var FDefinitionHealthySite = featureDefinitionDb.FirstOrDefault(f => f.Id == TestContent.TestFeatures.HealthySite.Id);
-            var FDefinitionHealthyWebApp = featureDefinitionDb.FirstOrDefault(f => f.Id == TestContent.TestFeatures.HealthyWebApp.Id);
-            var FDefinitionHealthyFarm = featureDefinitionDb.FirstOrDefault(f => f.Id == TestContent.TestFeatures.HealthyFarm.Id);
-            var FDefinitionFaultyWeb = featureDefinitionDb.FirstOrDefault(f => f.Id == TestContent.TestFeatures.FaultyWeb.Id);
-            var FDefinitionFaultySite = featureDefinitionDb.FirstOrDefault(f => f.Id == TestContent.TestFeatures.FaultySite.Id);
+            var featureDefinitions = repository.GetFeatureDefinitions();
+            
+            var FDefinitionHealthyWeb = featureDefinitions.FirstOrDefault(f => f.Id == TestContent.TestFeatures.HealthyWeb.Id);
+            var FDefinitionHealthySite = featureDefinitions.FirstOrDefault(f => f.Id == TestContent.TestFeatures.HealthySite.Id);
+            var FDefinitionHealthyWebApp = featureDefinitions.FirstOrDefault(f => f.Id == TestContent.TestFeatures.HealthyWebApp.Id);
+            var FDefinitionHealthyFarm = featureDefinitions.FirstOrDefault(f => f.Id == TestContent.TestFeatures.HealthyFarm.Id);
+            var FDefinitionFaultyWeb = featureDefinitions.FirstOrDefault(f => f.Id == TestContent.TestFeatures.FaultyWeb.Id);
+            var FDefinitionFaultySite = featureDefinitions.FirstOrDefault(f => f.Id == TestContent.TestFeatures.FaultySite.Id);
 
 
             //Assert
