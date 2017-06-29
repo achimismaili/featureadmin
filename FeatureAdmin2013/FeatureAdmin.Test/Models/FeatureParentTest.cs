@@ -108,7 +108,7 @@ namespace FeatureAdmin.Test.Models
             var parentScope = SPFeatureScope.WebApplication;
             var parentUrl = TestContent.SharePointContainers.WebApplication.Url;
 
-            using (SPSite site = new SPSite(TestContent.SharePointContainers.SiCInActive.Url))
+            using (SPSite site = new SPSite(TestContent.SharePointContainers.SiCoInActive.Url))
             {
                 SPWebApplication parent = site.WebApplication;
 

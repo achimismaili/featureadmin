@@ -129,7 +129,6 @@
     <Compile Include="Models\FeatureParent.cs" />
     <Compile Include="Models\FeatureSet.cs" />
     <Compile Include="FeatureUninstaller.cs" />
-    <Compile Include="Models\IFeatureBase.cs" />
     <Compile Include="Repository\AdminRepository.cs" />
     <Compile Include="SharePointFarmService\SharePointDataBase.cs" />
     <Compile Include="Models\TemplateInfo.cs" />

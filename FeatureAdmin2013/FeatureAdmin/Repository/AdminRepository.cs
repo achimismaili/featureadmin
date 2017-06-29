@@ -28,5 +28,26 @@ namespace FeatureAdmin.Repository
                 return db.FeatureDefinitions.Where(fd => fd.Scope == scope.Value).ToList();
             }
         }
+
+        /// <summary>
+        /// Gets the Web Applications
+        /// </summary>
+        /// <returns></returns>
+        public List<FeatureParent> GetSharePointWebApplications()
+        {
+            return GetSharePointChildHierarchy(db.FarmId);
+        }
+
+        public List<FeatureParent> GetSharePointChildHierarchy(Guid containerId)
+        {
+            if(db.SharePointParentHierarchy.ContainsKey(db.FarmId))
+            {
+                return db.SharePointParentHierarchy[containerId];
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

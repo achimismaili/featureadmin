@@ -14,7 +14,7 @@ namespace FeatureAdmin.Test.TestContent
     public static class SharePointContainers
     {
         private const string appConfigKeyWebApp = "WebAppUrl";
-
+        private const string managedPath = "/fa";
         private const string nameActivated = "activated";
         private const string nameInactive = "inactive";
 
@@ -53,7 +53,7 @@ namespace FeatureAdmin.Test.TestContent
             {
                 get
                 {
-                    return SPUtility.ConcatUrls(Url, "fa"); 
+                    return SPUtility.ConcatUrls(Url, managedPath); 
                 }
             }
         }
@@ -66,13 +66,14 @@ namespace FeatureAdmin.Test.TestContent
             public const int FaultyWebFeatureActivated = 1;
             public const int HealthyWebFeatureActivatedTotal = 2;
             public const int FaultyWebFeatureActivatedTotal = 2;
-
+            public static string UrlRelative = SPUtility.ConcatUrls(managedPath, nameActivated);
             public static string Url = SPUtility.ConcatUrls(WebApplication.UrlPlusManagedPath, nameActivated);
 
             public static class SubWebActivated
             {
                 public const int HealthyWebFeatureActivated = 1;
                 public const int FaultyWebFeatureActivated = 1;
+                public static string UrlRelative = SPUtility.ConcatUrls(SiCoActivated.UrlRelative, nameActivated);
                 public static string Url = SPUtility.ConcatUrls(SiCoActivated.Url, nameActivated);
             }
 
@@ -80,10 +81,11 @@ namespace FeatureAdmin.Test.TestContent
             {
                 public const int HealthyWebFeatureActivated = 0;
                 public const int FaultyWebFeatureActivated = 0;
+                public static string UrlRelative = SPUtility.ConcatUrls(SiCoActivated.UrlRelative, nameInactive);
                 public static string Url = SPUtility.ConcatUrls(SiCoActivated.Url, nameInactive);
             }
         }
-        public static class SiCInActive
+        public static class SiCoInActive
         {
             public const int HealthySiCoFeatureActivated = 0;
             public const int FaultySiCoFeatureActivated = 0;
@@ -91,20 +93,23 @@ namespace FeatureAdmin.Test.TestContent
             public const int FaultyWebFeatureActivated = 0;
             public const int HealthyWebFeatureActivatedTotal = 1;
             public const int FaultyWebFeatureActivatedTotal = 1;
+            public static string UrlRelative = SPUtility.ConcatUrls(managedPath, nameInactive);
             public static string Url = SPUtility.ConcatUrls(WebApplication.UrlPlusManagedPath, nameInactive);
 
             public static class SubWebActivated
             {
                 public const int HealthyWebFeatureActivated = 1;
                 public const int FaultyWebFeatureActivated = 1;
-                public static string Url = SPUtility.ConcatUrls(SiCInActive.Url, nameActivated);
+                public static string UrlRelative = SPUtility.ConcatUrls(SiCoInActive.UrlRelative, nameActivated);
+                public static string Url = SPUtility.ConcatUrls(SiCoInActive.Url, nameActivated);
             }
 
             public static class SubWebInactive
             {
                 public const int HealthyWebFeatureActivated = 0;
                 public const int FaultyWebFeatureActivated = 0;
-                public static string Url = SPUtility.ConcatUrls(SiCInActive.Url, nameInactive);
+                public static string UrlRelative = SPUtility.ConcatUrls(SiCoInActive.UrlRelative, nameInactive);
+                public static string Url = SPUtility.ConcatUrls(SiCoInActive.Url, nameInactive);
             }
         }
 
