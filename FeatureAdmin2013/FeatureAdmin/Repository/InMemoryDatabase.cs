@@ -9,15 +9,7 @@ namespace FeatureAdmin.Repository
 {
     public static class InMemoryDatabase
     {
-        static List<ActivatedFeature> ActivatedFeatures;
-        static List<FeatureDefinition> FeatureDefinitions;
-
-        static InMemoryDatabase()
-        {
-            ActivatedFeatures = ActivatedFeaturesRepository.Refresh;
-            FeatureDefinitions = FeatureDefinitionRepository.Refresh; 
-        }
-
-
+        public static List<ActivatedFeature> ActivatedFeatures;
+        public static List<FeatureDefinition> FeatureDefinitions;
     }
 }

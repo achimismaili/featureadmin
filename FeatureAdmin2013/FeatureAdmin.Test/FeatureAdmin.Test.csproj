@@ -78,6 +78,9 @@
     <Compile Include="Models\ActivatedFeatureTest.cs" />
     <Compile Include="Models\FeatureParentTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\AdminRepositoryTest.cs" />
+    <Compile Include="SharePointFarmService\GetActivatedFeaturesTest.cs" />
+    <Compile Include="SharePointFarmService\GetFeatureDefinitionsTest.cs" />
     <Compile Include="TestContent\ReferenceAssertions.cs" />
     <Compile Include="TestContent\SharePointContainers.cs" />
     <Compile Include="TestContent\TestFeatures.cs" />
@@ -90,9 +93,7 @@
     <Compile Include="UserInterface\LocationFormTest.cs" />
     <Compile Include="UserInterface\FrmMainTest.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SharePointFarmService\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\FeatureAdmin\FeatureAdmin.csproj">
       <Project>{28e3ed33-143a-45eb-894c-48f47c88490c}</Project>

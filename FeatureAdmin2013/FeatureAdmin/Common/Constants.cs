@@ -10,6 +10,8 @@ namespace FeatureAdmin.Common
     {
         public static class Text
         {
+            public const string UndefinedActivatedFeature = "Faulty - Id: {0}";
+
             // warning, when no feature was selected
             public const string NOFEATURESELECTED = "No feature selected. Please select at least 1 feature.";
 

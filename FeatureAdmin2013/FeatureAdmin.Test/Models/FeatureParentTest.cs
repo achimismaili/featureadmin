@@ -114,7 +114,7 @@ namespace FeatureAdmin.Test.Models
 
 
             var testFeatureHealthy = parent.Features[TestContent.TestFeatures.HealthyWebApp.Id];
-                var testFeatureFaulty = parent.Features[TestContent.TestFeatures.FaultyWebApp.Id];
+               // var testFeatureFaulty = parent.Features[TestContent.TestFeatures.FaultyWebApp.Id];
 
                 // Act
                 var parentRetrievedWithScope = FeatureParent.GetFeatureParent(testFeatureHealthy, parentScope);
@@ -146,7 +146,7 @@ namespace FeatureAdmin.Test.Models
 
 
                 var testFeatureHealthy = parent.Features[TestContent.TestFeatures.HealthyFarm.Id];
-                var testFeatureFaulty = parent.Features[TestContent.TestFeatures.FaultyFarm.Id];
+                // var testFeatureFaulty = parent.Features[TestContent.TestFeatures.FaultyFarm.Id];
 
                 // Act
                 var parentRetrievedWithScope = FeatureParent.GetFeatureParent(testFeatureHealthy, parentScope);

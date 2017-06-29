@@ -103,7 +103,7 @@ namespace FeatureAdmin.Models
             }
         }
 
-        public static FeatureParent GetFeatureParent(SPWebApplication webApp)
+        public static FeatureParent GetFeatureParent(SPWebApplication webApp, string name = "")
         {
             try
             {
@@ -114,7 +114,7 @@ namespace FeatureAdmin.Models
 
                 var p = new FeatureParent()
                 {
-                    DisplayName = webApp.Name, // + " (" + web.Name + ")",
+                    DisplayName = string.IsNullOrEmpty(name) ? webApp.Name : name , // + " (" + web.Name + ")",
                     Url = webApp.GetResponseUri(SPUrlZone.Default).ToString(),
                     Id = webApp.Id,
                     Scope = SPFeatureScope.WebApplication

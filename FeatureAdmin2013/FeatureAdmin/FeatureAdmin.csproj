@@ -118,7 +118,6 @@
     <Compile Include="Common\FeatureActivationHelper.cs" />
     <Compile Include="Common\FeatureDeactivationHelper.cs" />
     <Compile Include="Common\FeatureDefinitionFactory.cs" />
-    <Compile Include="Common\FeatureParentFactory.cs" />
     <Compile Include="Common\StringHelpers.cs" />
     <Compile Include="Models\ActivatedFeature.cs" />
     <Compile Include="Models\FeatureDefinition.cs" />
@@ -132,18 +131,12 @@
     <Compile Include="Models\FeatureSet.cs" />
     <Compile Include="FeatureUninstaller.cs" />
     <Compile Include="Models\IFeatureBase.cs" />
-    <Compile Include="Repository\ActivatedFeaturesRepository.cs" />
+    <Compile Include="Repository\AdminRepository.cs" />
     <Compile Include="Repository\FeatureDefinitionRepository.cs" />
     <Compile Include="Repository\InMemoryDatabase.cs" />
     <Compile Include="Models\TemplateInfo.cs" />
-    <Compile Include="SharePointFarmService\FeatureService.cs" />
-    <Compile Include="SharePointFarmService\BaseSharePointContainerFarmService.cs" />
-    <Compile Include="SharePointFarmService\Farm.cs" />
-    <Compile Include="SharePointFarmService\Interfaces\IFeatureDefinitionService.cs" />
-    <Compile Include="SharePointFarmService\Interfaces\IActivatedFeatureService.cs" />
-    <Compile Include="SharePointFarmService\SiteCollection.cs" />
-    <Compile Include="SharePointFarmService\Web.cs" />
-    <Compile Include="SharePointFarmService\WebApplication.cs" />
+    <Compile Include="SharePointFarmService\GetActivatedFeatures.cs" />
+    <Compile Include="SharePointFarmService\GetFeatureDefinitions.cs" />
     <Compile Include="UserInterface\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
