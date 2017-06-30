@@ -16,7 +16,7 @@ namespace FeatureAdmin.UserInterface
     {
 
         #region members
-        
+
         public FeatureDatabase FeatureDb = new FeatureDatabase();
         private Location m_CurrentWebAppLocation;
         private Location m_CurrentSiteLocation;
@@ -90,7 +90,7 @@ namespace FeatureAdmin.UserInterface
 
         void gridFeatureDefinitions_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-           UiConfig.SetRowRedAndBold(gridFeatureDefinitions.Rows);
+            UiConfig.SetRowRedAndBold(gridFeatureDefinitions.Rows);
         }
 
         /// <summary>Used to populate the list of Farm Feature Definitions</summary>
@@ -675,7 +675,7 @@ namespace FeatureAdmin.UserInterface
         void activator_ExceptionLoggingListeners(Exception exc, Location location, string detail)
         {
             string msg = string.Format("{0} at {1}", detail, LocationManager.GetLocation(location));
-            Log.Error(exc, msg);
+            Log.Error(msg, exc);
         }
         void activator_InfoLoggingListeners(Location location, string detail)
         {
@@ -745,9 +745,11 @@ namespace FeatureAdmin.UserInterface
             }
             catch (Exception exc)
             {
-                Log.Error(exc, string.Format(
+                Log.Error(string.Format(
                     "Trying to remove feature {0} from {1}",
-                    featureId, LocationManager.SafeDescribeLocation(location)));
+                    featureId, LocationManager.SafeDescribeLocation(location)),
+                    exc
+                    );
             }
         }
 
@@ -780,10 +782,12 @@ namespace FeatureAdmin.UserInterface
                     }
                     catch (Exception exc)
                     {
-                        Log.Error(exc,
+                        Log.Error(
                             string.Format("Exception removing feature {0} from {1}",
                             featureID,
-                            LocationManager.SafeDescribeObject(web)));
+                            LocationManager.SafeDescribeObject(web)),
+                            exc
+                            );
                     }
                     finally
                     {
@@ -829,10 +833,12 @@ namespace FeatureAdmin.UserInterface
                         }
                         catch (Exception exc)
                         {
-                            Log.Error(exc,
+                            Log.Error(
                                 string.Format("Exception removing feature {0} from {1}",
                                 featureID,
-                                LocationManager.SafeDescribeObject(webApp)));
+                                LocationManager.SafeDescribeObject(webApp)),
+                                exc
+                                );
                         }
                     }
                     else
@@ -860,10 +866,11 @@ namespace FeatureAdmin.UserInterface
                                     }
                                     catch (Exception exc)
                                     {
-                                        Log.Error(exc,
+                                        Log.Error(
                                             string.Format("Exception removing feature {0} from {1}",
                                             featureID,
-                                            LocationManager.SafeDescribeObject(site)));
+                                            LocationManager.SafeDescribeObject(site)),
+                                            exc);
                                     }
                                 }
                                 scannedThrough++;
@@ -905,10 +912,12 @@ namespace FeatureAdmin.UserInterface
                     }
                     catch (Exception exc)
                     {
-                        Log.Error(exc,
+                        Log.Error(
                             string.Format("Exception removing feature {0} from farm",
                             featureID,
-                            LocationManager.SafeDescribeObject(SPFarm.Local)));
+                            LocationManager.SafeDescribeObject(SPFarm.Local)),
+                            exc
+                            );
 
                         Log.Warning("Farm - The Farm Scoped feature '" + featureID.ToString() + "' was not found. ");
                     }
@@ -952,7 +961,7 @@ namespace FeatureAdmin.UserInterface
                     {
                         msg += " (Force flag)";
                     }
-                    Log.Error(exc, msg);
+                    Log.Error( msg, exc);
                 }
             }
         }
@@ -1128,9 +1137,11 @@ namespace FeatureAdmin.UserInterface
                     }
                     catch (Exception exc)
                     {
-                        Log.Error(exc,
+                        Log.Error(
                             string.Format("Exception enumerating webapp: {0}",
-                            LocationManager.SafeDescribeObject(webappInfo.WebApp)));
+                            LocationManager.SafeDescribeObject(webappInfo.WebApp)),
+                            exc
+                            );
                     }
                 }
 
@@ -1199,9 +1210,10 @@ namespace FeatureAdmin.UserInterface
                         }
                         catch (Exception exc)
                         {
-                            Log.Error(exc,
+                            Log.Error(
                                 string.Format("Exception enumerating site: {0}",
-                                LocationManager.SafeDescribeObject(site)));
+                                LocationManager.SafeDescribeObject(site)),
+                                exc);
                         }
                     }
                     gridSiteCollections.DataSource = sitecolls;
@@ -1213,7 +1225,7 @@ namespace FeatureAdmin.UserInterface
                 }
                 catch (Exception exc)
                 {
-                    Log.Error(exc, "Exception enumerating site collections");
+                    Log.Error("Exception enumerating site collections", exc);
                 }
             }
         }
@@ -1247,7 +1259,7 @@ namespace FeatureAdmin.UserInterface
                 }
                 catch (Exception exc)
                 {
-                    Log.Error(exc, "Exception enumerating webs");
+                    Log.Error("Exception enumerating webs", exc);
                 }
             }
         }
@@ -1317,9 +1329,11 @@ namespace FeatureAdmin.UserInterface
                         }
                         catch (Exception exc)
                         {
-                            Log.Error(exc,
+                            Log.Error(
                                 string.Format("Exception enumerating web: {0}",
-                                LocationManager.SafeDescribeObject(web)));
+                                LocationManager.SafeDescribeObject(web)),
+                                exc
+                                );
                         }
                         finally
                         {
@@ -1336,7 +1350,7 @@ namespace FeatureAdmin.UserInterface
             }
             catch (Exception exc)
             {
-                Log.Error(exc, "Exception enumerating subwebs");
+                Log.Error("Exception enumerating subwebs", exc);
             }
         }
 
@@ -1489,8 +1503,6 @@ namespace FeatureAdmin.UserInterface
             using (WaitCursor wait = new WaitCursor())
             {
                 ActivationFinder finder = new ActivationFinder();
-                // No Found callback b/c we process final list
-                finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logTextWriter.ExceptionLogger);
 
                 // Call routine to actually find & report activations
                 FeatureDb.LoadAllData(finder.FindAllActivationsOfAllFeatures());

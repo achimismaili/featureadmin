@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using FeatureAdmin.Models;
+using Serilog;
 
 namespace FeatureAdmin
 {
@@ -22,14 +23,6 @@ namespace FeatureAdmin
                 FoundListeners(featureId, url, name);
             }
         }
-
-        /// <summary>
-        /// Delegate to report exception
-        /// </summary>
-        /// <param name="msg"></param>
-        public delegate void ExceptionHandler(Exception exc, string msg);
-        public event ExceptionHandler ExceptionListeners;
-        protected void OnException(Exception exc, string msg) { if (ExceptionListeners != null) ExceptionListeners(exc, msg); }
 
         private Guid desiredFeature; //Empty if enumerating all
         private bool stopAtFirstHit;
@@ -81,9 +74,7 @@ namespace FeatureAdmin
             }
             catch (Exception exc)
             {
-                OnException(exc,
-                    "Exception checking farm"
-                    );
+                Log.Error( "Exception checking farm", exc );
             }
 
             // check all web apps and everything under
@@ -97,7 +88,7 @@ namespace FeatureAdmin
                 }
                 catch (Exception exc)
                 {
-                    OnException(exc,
+                    Log.Error(exc,
                         "Exception checking webapp: " + LocationManager.SafeGetWebAppUrl(webApp)
                         );
                 }
@@ -110,8 +101,9 @@ namespace FeatureAdmin
                 }
                 catch (Exception exc)
                 {
-                    OnException(exc,
-                        "Exception enumerating sites of webapp: " + LocationManager.SafeGetWebAppUrl(webApp)
+                    Log.Error(
+                        "Exception enumerating sites of webapp: " + LocationManager.SafeGetWebAppUrl(webApp),
+                        exc
                         );
                 }
             }
@@ -194,8 +186,9 @@ namespace FeatureAdmin
                     }
                     catch (Exception exc)
                     {
-                        OnException(exc,
-                            "Exception checking site: " + LocationManager.SafeGetSiteAbsoluteUrl(site)
+                        Log.Error(
+                            "Exception checking site: " + LocationManager.SafeGetSiteAbsoluteUrl(site),
+                            exc
                             );
                     }
                     // check subwebs
@@ -206,8 +199,9 @@ namespace FeatureAdmin
                     }
                     catch (Exception exc)
                     {
-                        OnException(exc,
-                            "Exception enumerating webs of site: " + LocationManager.SafeGetSiteAbsoluteUrl(site)
+                        Log.Error(
+                            "Exception enumerating webs of site: " + LocationManager.SafeGetSiteAbsoluteUrl(site),
+                            exc
                             );
                     }
                 }
@@ -251,8 +245,9 @@ namespace FeatureAdmin
                     }
                     catch (Exception exc)
                     {
-                        OnException(exc,
-                            "Exception checking web: " + LocationManager.SafeGetWebFullUrl(web)
+                        Log.Error(
+                            "Exception checking web: " + LocationManager.SafeGetWebFullUrl(web),
+                            exc
                             );
                     }
                 }

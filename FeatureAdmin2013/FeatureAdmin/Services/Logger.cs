@@ -50,14 +50,5 @@ namespace FeatureAdmin.Services
         {
             textBox.Clear();
         }
-
-        public void ExceptionLogger(Exception exc, string msg)
-        {
-            if (exc is System.UnauthorizedAccessException && exc.InnerException == null)
-            {
-                msg = "Access is Denied! " + msg;
-            }
-            Log.Error(msg, exc);
-        }
     }
 }
