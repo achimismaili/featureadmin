@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin.Services.SharePointFarmService
+namespace FeatureAdmin.Services.SharePointApi
 {
-    public static class SingleFeatureProcessingViaSharePointApi
+    public static class FeatureActivationAndDeactivationCore
     {
         public static int ProcessFarmFeatureInFarm(SPWebService farm, Guid featureId, bool activate, bool force, out Exception exception)
         {

@@ -6,17 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 using FeatureAdmin.Models;
-using FeatureAdmin.Services.SharePointFarmService;
+using FeatureAdmin.Services.SharePointApi;
 
 namespace FeatureAdmin.Repository
 {
     public class ReadRepository
     {
-        private SharePointOfflineObjectsDataBase db;
+        private InMemoryDataBase db;
 
         public ReadRepository()
         {
-            db = SharePointOfflineObjectsDataBase.SingletonInstance;
+            db = InMemoryDataBase.SingletonInstance;
         }
 
         public List<FeatureDefinition> GetFeatureDefinitions (SPFeatureScope? scope = null)

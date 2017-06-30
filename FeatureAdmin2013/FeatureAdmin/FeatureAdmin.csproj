@@ -143,11 +143,12 @@
     <Compile Include="Repository\ReadRepository.cs" />
     <Compile Include="Repository\ChangeRepository.cs" />
     <Compile Include="Services\Logger.cs" />
-    <Compile Include="Services\SharePointFarmService\FeatureProcessingViaSharePointApi.cs" />
-    <Compile Include="Services\SharePointFarmService\ReadViaSharePointApi.cs" />
-    <Compile Include="Services\SharePointFarmService\SharePointOfflineObjectsDataBase.cs" />
+    <Compile Include="Services\SharePointApi\FeatureActivationAndDeactivationBulk.cs" />
+    <Compile Include="Services\SharePointApi\FarmRead.cs" />
+    <Compile Include="Services\SharePointApi\InMemoryDataBase.cs" />
     <Compile Include="Models\TemplateInfo.cs" />
-    <Compile Include="Services\SharePointFarmService\SingleFeatureProcessingViaSharePointApi.cs" />
+    <Compile Include="Services\SharePointApi\FeatureDefinitionUninstall.cs" />
+    <Compile Include="Services\SharePointApi\FeatureActivationAndDeactivationCore.cs" />
     <Compile Include="UserInterface\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>

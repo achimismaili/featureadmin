@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin.Services.SharePointFarmService
+namespace FeatureAdmin.Services.SharePointApi
 {
-    public static class ReadViaSharePointApi
+    public static class FarmRead
     {
         /// <summary>
         /// Get the farm FeatureParent to retrieve SPFeatureCollection
@@ -40,7 +40,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
             SPWebApplication webApp = null;
 
             // first try content web apps:
-            var webApps = ReadViaSharePointApi.GetWebApplicationsContent();
+            var webApps = FarmRead.GetWebApplicationsContent();
 
             if (webApps != null && webApps.Count > 0)
             {
@@ -50,7 +50,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
             // else try admin web apps:
             if (webApp == null)
             {
-                webApps = ReadViaSharePointApi.GetWebApplicationsAdmin();
+                webApps = FarmRead.GetWebApplicationsAdmin();
 
                 if (webApps != null && webApps.Count > 0)
                 {

@@ -70,10 +70,10 @@ namespace FeatureAdmin.UserInterface
             this.splitContainerLeftWindow = new System.Windows.Forms.SplitContainer();
             this.splitContainerLeftUpperWebAppAndSiteColl = new System.Windows.Forms.SplitContainer();
             this.gridWebApplications = new System.Windows.Forms.DataGridView();
-            this.splitContainerLeftDownWebsAndLogs = new System.Windows.Forms.SplitContainer();
-            this.btnClearLog = new System.Windows.Forms.Button();
             this.gridSiteCollections = new System.Windows.Forms.DataGridView();
+            this.splitContainerLeftDownWebsAndLogs = new System.Windows.Forms.SplitContainer();
             this.gridWebs = new System.Windows.Forms.DataGridView();
+            this.btnClearLog = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.FarmFeatures.SuspendLayout();
             this.FarmActionPanel.SuspendLayout();
@@ -99,11 +99,11 @@ namespace FeatureAdmin.UserInterface
             this.splitContainerLeftUpperWebAppAndSiteColl.Panel2.SuspendLayout();
             this.splitContainerLeftUpperWebAppAndSiteColl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridWebApplications)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridSiteCollections)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerLeftDownWebsAndLogs)).BeginInit();
             this.splitContainerLeftDownWebsAndLogs.Panel1.SuspendLayout();
             this.splitContainerLeftDownWebsAndLogs.Panel2.SuspendLayout();
             this.splitContainerLeftDownWebsAndLogs.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridSiteCollections)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridWebs)).BeginInit();
             this.SuspendLayout();
             // 
@@ -116,7 +116,7 @@ namespace FeatureAdmin.UserInterface
             this.txtResult.Multiline = true;
             this.txtResult.Name = "txtResult";
             this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtResult.Size = new System.Drawing.Size(412, 313);
+            this.txtResult.Size = new System.Drawing.Size(498, 313);
             this.txtResult.TabIndex = 2;
             this.txtResult.WordWrap = false;
             // 
@@ -192,7 +192,7 @@ namespace FeatureAdmin.UserInterface
             // btnListWebApplications
             // 
             this.btnListWebApplications.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnListWebApplications.Location = new System.Drawing.Point(304, 3);
+            this.btnListWebApplications.Location = new System.Drawing.Point(390, 3);
             this.btnListWebApplications.Name = "btnListWebApplications";
             this.btnListWebApplications.Size = new System.Drawing.Size(105, 24);
             this.btnListWebApplications.TabIndex = 12;
@@ -306,7 +306,7 @@ namespace FeatureAdmin.UserInterface
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(450, 719);
+            this.tabControl1.Size = new System.Drawing.Size(547, 719);
             this.tabControl1.TabIndex = 17;
             // 
             // FarmFeatures
@@ -323,7 +323,7 @@ namespace FeatureAdmin.UserInterface
             this.FarmFeatures.Location = new System.Drawing.Point(4, 22);
             this.FarmFeatures.Name = "FarmFeatures";
             this.FarmFeatures.Padding = new System.Windows.Forms.Padding(3);
-            this.FarmFeatures.Size = new System.Drawing.Size(442, 693);
+            this.FarmFeatures.Size = new System.Drawing.Size(539, 693);
             this.FarmFeatures.TabIndex = 1;
             this.FarmFeatures.Text = "Farm Feature Administration";
             this.FarmFeatures.UseVisualStyleBackColor = true;
@@ -523,7 +523,7 @@ namespace FeatureAdmin.UserInterface
             this.gridFeatureDefinitions.Name = "gridFeatureDefinitions";
             this.gridFeatureDefinitions.ReadOnly = true;
             this.gridFeatureDefinitions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridFeatureDefinitions.Size = new System.Drawing.Size(436, 465);
+            this.gridFeatureDefinitions.Size = new System.Drawing.Size(533, 465);
             this.gridFeatureDefinitions.TabIndex = 24;
             this.gridFeatureDefinitions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridFeatureDefinitions_CellMouseDown);
             this.gridFeatureDefinitions.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridFeatureDefinitions_DataBindingComplete);
@@ -582,8 +582,8 @@ namespace FeatureAdmin.UserInterface
             // splitContainerCompleteMainframe.Panel2
             // 
             this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainerCompleteMainframe.Size = new System.Drawing.Size(890, 728);
-            this.splitContainerCompleteMainframe.SplitterDistance = 422;
+            this.splitContainerCompleteMainframe.Size = new System.Drawing.Size(1073, 728);
+            this.splitContainerCompleteMainframe.SplitterDistance = 508;
             this.splitContainerCompleteMainframe.TabIndex = 19;
             // 
             // splitContainerLeftWindow
@@ -602,7 +602,7 @@ namespace FeatureAdmin.UserInterface
             // splitContainerLeftWindow.Panel2
             // 
             this.splitContainerLeftWindow.Panel2.Controls.Add(this.splitContainerLeftDownWebsAndLogs);
-            this.splitContainerLeftWindow.Size = new System.Drawing.Size(419, 725);
+            this.splitContainerLeftWindow.Size = new System.Drawing.Size(505, 725);
             this.splitContainerLeftWindow.SplitterDistance = 220;
             this.splitContainerLeftWindow.TabIndex = 13;
             // 
@@ -625,7 +625,7 @@ namespace FeatureAdmin.UserInterface
             // 
             this.splitContainerLeftUpperWebAppAndSiteColl.Panel2.Controls.Add(this.gridSiteCollections);
             this.splitContainerLeftUpperWebAppAndSiteColl.Panel2.Controls.Add(this.lblSiteCollections);
-            this.splitContainerLeftUpperWebAppAndSiteColl.Size = new System.Drawing.Size(412, 214);
+            this.splitContainerLeftUpperWebAppAndSiteColl.Size = new System.Drawing.Size(498, 214);
             this.splitContainerLeftUpperWebAppAndSiteColl.SplitterDistance = 105;
             this.splitContainerLeftUpperWebAppAndSiteColl.TabIndex = 0;
             // 
@@ -642,9 +642,25 @@ namespace FeatureAdmin.UserInterface
             this.gridWebApplications.Name = "gridWebApplications";
             this.gridWebApplications.ReadOnly = true;
             this.gridWebApplications.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridWebApplications.Size = new System.Drawing.Size(412, 69);
+            this.gridWebApplications.Size = new System.Drawing.Size(498, 69);
             this.gridWebApplications.TabIndex = 13;
             this.gridWebApplications.SelectionChanged += new System.EventHandler(this.gridWebApplications_SelectionChanged);
+            // 
+            // gridSiteCollections
+            // 
+            this.gridSiteCollections.AllowUserToAddRows = false;
+            this.gridSiteCollections.AllowUserToDeleteRows = false;
+            this.gridSiteCollections.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridSiteCollections.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridSiteCollections.Location = new System.Drawing.Point(0, 15);
+            this.gridSiteCollections.Name = "gridSiteCollections";
+            this.gridSiteCollections.ReadOnly = true;
+            this.gridSiteCollections.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridSiteCollections.Size = new System.Drawing.Size(498, 82);
+            this.gridSiteCollections.TabIndex = 9;
+            this.gridSiteCollections.SelectionChanged += new System.EventHandler(this.gridSiteCollections_SelectionChanged);
             // 
             // splitContainerLeftDownWebsAndLogs
             // 
@@ -665,36 +681,9 @@ namespace FeatureAdmin.UserInterface
             this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.btnClearLog);
             this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.lblLog);
             this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.txtResult);
-            this.splitContainerLeftDownWebsAndLogs.Size = new System.Drawing.Size(412, 494);
+            this.splitContainerLeftDownWebsAndLogs.Size = new System.Drawing.Size(498, 494);
             this.splitContainerLeftDownWebsAndLogs.SplitterDistance = 146;
             this.splitContainerLeftDownWebsAndLogs.TabIndex = 0;
-            // 
-            // btnClearLog
-            // 
-            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClearLog.Location = new System.Drawing.Point(319, 3);
-            this.btnClearLog.Name = "btnClearLog";
-            this.btnClearLog.Size = new System.Drawing.Size(90, 23);
-            this.btnClearLog.TabIndex = 19;
-            this.btnClearLog.Text = "Clear Log";
-            this.btnClearLog.UseVisualStyleBackColor = true;
-            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
-            // 
-            // gridSiteCollections
-            // 
-            this.gridSiteCollections.AllowUserToAddRows = false;
-            this.gridSiteCollections.AllowUserToDeleteRows = false;
-            this.gridSiteCollections.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gridSiteCollections.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridSiteCollections.Location = new System.Drawing.Point(0, 15);
-            this.gridSiteCollections.Name = "gridSiteCollections";
-            this.gridSiteCollections.ReadOnly = true;
-            this.gridSiteCollections.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridSiteCollections.Size = new System.Drawing.Size(412, 82);
-            this.gridSiteCollections.TabIndex = 9;
-            this.gridSiteCollections.SelectionChanged += new System.EventHandler(this.gridSiteCollections_SelectionChanged);
             // 
             // gridWebs
             // 
@@ -708,15 +697,26 @@ namespace FeatureAdmin.UserInterface
             this.gridWebs.Name = "gridWebs";
             this.gridWebs.ReadOnly = true;
             this.gridWebs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridWebs.Size = new System.Drawing.Size(412, 212);
+            this.gridWebs.Size = new System.Drawing.Size(498, 212);
             this.gridWebs.TabIndex = 9;
             this.gridWebs.SelectionChanged += new System.EventHandler(this.gridWebs_SelectionChanged);
+            // 
+            // btnClearLog
+            // 
+            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearLog.Location = new System.Drawing.Point(405, 3);
+            this.btnClearLog.Name = "btnClearLog";
+            this.btnClearLog.Size = new System.Drawing.Size(90, 23);
+            this.btnClearLog.TabIndex = 19;
+            this.btnClearLog.Text = "Clear Log";
+            this.btnClearLog.UseVisualStyleBackColor = true;
+            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
             // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(892, 730);
+            this.ClientSize = new System.Drawing.Size(1075, 730);
             this.Controls.Add(this.splitContainerCompleteMainframe);
             this.Name = "FrmMain";
             this.Text = "FeatureAdmin for SharePoint";
@@ -755,13 +755,13 @@ namespace FeatureAdmin.UserInterface
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerLeftUpperWebAppAndSiteColl)).EndInit();
             this.splitContainerLeftUpperWebAppAndSiteColl.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridWebApplications)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridSiteCollections)).EndInit();
             this.splitContainerLeftDownWebsAndLogs.Panel1.ResumeLayout(false);
             this.splitContainerLeftDownWebsAndLogs.Panel1.PerformLayout();
             this.splitContainerLeftDownWebsAndLogs.Panel2.ResumeLayout(false);
             this.splitContainerLeftDownWebsAndLogs.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerLeftDownWebsAndLogs)).EndInit();
             this.splitContainerLeftDownWebsAndLogs.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridSiteCollections)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridWebs)).EndInit();
             this.ResumeLayout(false);
 

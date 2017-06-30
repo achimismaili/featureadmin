@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin.Services.SharePointFarmService
+namespace FeatureAdmin.Services.SharePointApi
 {
     /// <summary>
     /// sp in membory database as singleton
@@ -15,27 +15,27 @@ namespace FeatureAdmin.Services.SharePointFarmService
     /// <remarks>see also
     /// https://msdn.microsoft.com/en-us/library/ff650316.aspx
     /// </remarks>
-    public class SharePointOfflineObjectsDataBase
+    public class InMemoryDataBase
     {
         public List<ActivatedFeature> ActivatedFeatures { get; private set; }
         public List<FeatureDefinition> FeatureDefinitions { get; private set; }
         public Dictionary<Guid, List<FeatureParent>> SharePointParentHierarchy { get; private set; }
         public Guid FarmId { get; private set; }
 
-        private static SharePointOfflineObjectsDataBase singletonInstance;
+        private static InMemoryDataBase singletonInstance;
         /// <summary>
         /// SharePointDataBase as singleton
         /// </summary>
         /// <remarks>
         /// see also https://msdn.microsoft.com/en-us/library/ff650316.aspx
         /// </remarks>
-        public static SharePointOfflineObjectsDataBase SingletonInstance
+        public static InMemoryDataBase SingletonInstance
         {
             get
             {
                 if (singletonInstance == null)
                 {
-                    singletonInstance = new SharePointOfflineObjectsDataBase();
+                    singletonInstance = new InMemoryDataBase();
                 }
                 return singletonInstance;
             }
@@ -44,7 +44,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
         /// <summary>
         /// private ctor, db can only be generated via static property
         /// </summary>
-        private SharePointOfflineObjectsDataBase()
+        private InMemoryDataBase()
         {
             // Get feature definitions
             FeatureDefinitions = LoadAllFeatureDefinitions();
@@ -67,7 +67,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
 
             SPSecurity.RunWithElevatedPrivileges(delegate ()
             {
-                var farm = ReadViaSharePointApi.GetFarm();
+                var farm = FarmRead.GetFarm();
                 // Get Farm features
                 var farmFeatures = farm.Features;
 
@@ -86,7 +86,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
 
                 // Get Web App features
 
-                var adminWebApps = ReadViaSharePointApi.GetWebApplicationsAdmin();
+                var adminWebApps = FarmRead.GetWebApplicationsAdmin();
 
                 // Central Admin
                 var caIndex = 1;
@@ -121,7 +121,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
                 }
 
                 // Content Web Apps
-                var contentWebApps = ReadViaSharePointApi.GetWebApplicationsContent();
+                var contentWebApps = FarmRead.GetWebApplicationsContent();
 
                 foreach (SPWebApplication webApp in contentWebApps)
                 {
@@ -260,7 +260,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
 
         private List<FeatureDefinition> LoadAllFeatureDefinitions()
         {
-            var spDefs = ReadViaSharePointApi.GetFeatureDefinitionCollection();
+            var spDefs = FarmRead.GetFeatureDefinitionCollection();
 
             return FeatureDefinition.GetFeatureDefinition(spDefs);
         }

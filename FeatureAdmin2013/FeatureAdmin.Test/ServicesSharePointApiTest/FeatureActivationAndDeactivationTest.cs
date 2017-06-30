@@ -1,15 +1,15 @@
 ﻿using FeatureAdmin.Models;
 using FeatureAdmin.Repository;
-using FeatureAdmin.Services.SharePointFarmService;
+using FeatureAdmin.Services.SharePointApi;
 using FeatureAdmin.Test.TestContent.MockModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace FeatureAdmin.Test.ServicesTest.SharePointFarmServiceTest
+namespace FeatureAdmin.Test.ServicesSharePointApiTest
 {
-    public class FeatureProcessingViaSharePointApiTest
+    public class FeatureActivationAndDeactivationTest
     {
         [Fact]
         public void CanDeactivateAndActivateHealthyFeatures()
@@ -20,13 +20,13 @@ namespace FeatureAdmin.Test.ServicesTest.SharePointFarmServiceTest
             Exception exception;
 
             // Act
-            processingCounter = FeatureProcessingViaSharePointApi.DeactivateAllFeatures(TestContent.TestFeatures.AllHealthyActivatedFeatures, false, out exception);
+            processingCounter = FeatureActivationAndDeactivationBulk.DeactivateAllFeatures(TestContent.TestFeatures.AllHealthyActivatedFeatures, false, out exception);
 
             // Assert
             Assert.Equal(6, processingCounter);
 
             // Act - activate healthy web and sico feature in active sico
-            processingCounter = FeatureProcessingViaSharePointApi.ActivateAllFeaturesWithinSharePointContainer(
+            processingCounter = FeatureActivationAndDeactivationBulk.ActivateAllFeaturesWithinSharePointContainer(
                 TestContent.SharePointContainers.SiCoActivated.GetMockFeatureParent(),
                 TestContent.TestFeatures.AllHealthyFeatureDefinitions,
                 false, 
@@ -36,7 +36,7 @@ namespace FeatureAdmin.Test.ServicesTest.SharePointFarmServiceTest
             Assert.Equal(4, processingCounter);
 
             // Act - activate healthy web feature in inactive sico subweb active
-            processingCounter = FeatureProcessingViaSharePointApi.ActivateAllFeaturesWithinSharePointContainer(
+            processingCounter = FeatureActivationAndDeactivationBulk.ActivateAllFeaturesWithinSharePointContainer(
                 TestContent.SharePointContainers.SiCoInActive.SubWebActivated.GetMockFeatureParent(),
                 TestContent.TestFeatures.AllHealthyFeatureDefinitions,
                 false,
@@ -48,7 +48,7 @@ namespace FeatureAdmin.Test.ServicesTest.SharePointFarmServiceTest
             // from here more or less do tests and rollback previous activation state ...
 
             // Act - deactivate the healthy web feature in inactive sico subweb inactive
-            processingCounter = FeatureProcessingViaSharePointApi.DeactivateAllFeatures(
+            processingCounter = FeatureActivationAndDeactivationBulk.DeactivateAllFeatures(
                 new List<MockActivatedFeature>() {
                 TestContent.TestFeatures.HealthyWeb.GetMockActivatedFeature(TestContent.SharePointContainers.SiCoActivated.SubWebInactive.GetMockFeatureParent())
                 },
@@ -59,8 +59,8 @@ namespace FeatureAdmin.Test.ServicesTest.SharePointFarmServiceTest
             Assert.Equal(1, processingCounter);
 
             // Act activate web app feature
-            processingCounter = SingleFeatureProcessingViaSharePointApi.ProcessWebAppFeatureInWebApp(
-                ReadViaSharePointApi.GetWebAppByUrl(TestContent.SharePointContainers.WebApplication.Url),
+            processingCounter = FeatureActivationAndDeactivationCore.ProcessWebAppFeatureInWebApp(
+                FarmRead.GetWebAppByUrl(TestContent.SharePointContainers.WebApplication.Url),
                 TestContent.TestFeatures.HealthyWebApp.Id,
                 true,
                 false,
@@ -70,8 +70,8 @@ namespace FeatureAdmin.Test.ServicesTest.SharePointFarmServiceTest
             Assert.Equal(1, processingCounter);
 
             // Act activate farm feature
-            processingCounter = SingleFeatureProcessingViaSharePointApi.ProcessFarmFeatureInFarm(
-                ReadViaSharePointApi.GetFarm(),
+            processingCounter = FeatureActivationAndDeactivationCore.ProcessFarmFeatureInFarm(
+                FarmRead.GetFarm(),
                 TestContent.TestFeatures.HealthyFarm.Id,
                 true,
                 false,
@@ -93,7 +93,7 @@ namespace FeatureAdmin.Test.ServicesTest.SharePointFarmServiceTest
             Exception exception;
 
             // Act
-            processingCounter = FeatureProcessingViaSharePointApi.DeactivateAllFeatures(
+            processingCounter = FeatureActivationAndDeactivationBulk.DeactivateAllFeatures(
                 //new List<MockActivatedFeature>() {
                 //    TestContent.TestFeatures.FaultyWeb.GetMockActivatedFeatureInSiCoActivatedRootWeb() }, 
                 TestContent.TestFeatures.AllFaultyActivatedFeatures,

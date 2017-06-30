@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin.Services.SharePointFarmService
+namespace FeatureAdmin.Services.SharePointApi
 {
-    public static class FeatureProcessingViaSharePointApi
+    public static class FeatureActivationAndDeactivationBulk
     {
 
         #region public multiple scope methods called with no real SharePoint objects, only FeatureParent and/or ActivatedFeature and/or FeatureDefinition
@@ -161,7 +161,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
             
             try
             {
-                var farm = ReadViaSharePointApi.GetFarm();
+                var farm = FarmRead.GetFarm();
                 if (farm == null)
                 {
                     exception = new ArgumentNullException("farm is null !? not enough rights?");
@@ -189,7 +189,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
             }
             try
             {
-                var webApp = ReadViaSharePointApi.GetWebAppByUrl(webAppUrl);
+                var webApp = FarmRead.GetWebAppByUrl(webAppUrl);
                 if (webApp == null)
                 {
                     exception = new ArgumentNullException("webApp not found by Url " + webAppUrl);
@@ -284,7 +284,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
 
                 if (scope != SPFeatureScope.Farm)
                 {
-                    SPWebApplicationCollection webApps = ReadViaSharePointApi.GetWebApplicationsContent();
+                    SPWebApplicationCollection webApps = FarmRead.GetWebApplicationsContent();
 
                     if (webApps != null && webApps.Count > 0)
                     {
@@ -294,7 +294,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
                         }
                     }
 
-                    webApps = ReadViaSharePointApi.GetWebApplicationsAdmin();
+                    webApps = FarmRead.GetWebApplicationsAdmin();
                     if (webApps != null && webApps.Count > 0)
                     {
                         foreach (SPWebApplication wa in webApps)
@@ -395,7 +395,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
                 foreach (Guid id in featureIds)
                 {
                     // overwrite the exception, it is just for logging, in case at least one happens ...
-                    processingCounter += SingleFeatureProcessingViaSharePointApi.ProcessFarmFeatureInFarm(farm, id, activate, force, out exception);
+                    processingCounter += FeatureActivationAndDeactivationCore.ProcessFarmFeatureInFarm(farm, id, activate, force, out exception);
                 }
             }
 
@@ -412,7 +412,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
                 foreach (Guid id in featureIds)
                 {
                     // overwrite the exception, it is just for logging, in case at least one happens ...
-                    processingCounter += SingleFeatureProcessingViaSharePointApi.ProcessWebAppFeatureInWebApp(webApp, id, activate, force, out exception);
+                    processingCounter += FeatureActivationAndDeactivationCore.ProcessWebAppFeatureInWebApp(webApp, id, activate, force, out exception);
                 }
             }
 
@@ -429,7 +429,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
                 foreach (Guid id in featureIds)
                 {
                     // overwrite the exception, it is just for logging, in case at least one happens ...
-                    processingCounter += SingleFeatureProcessingViaSharePointApi.ProcessSiteFeatureInSite(site, id, activate, force, out exception);
+                    processingCounter += FeatureActivationAndDeactivationCore.ProcessSiteFeatureInSite(site, id, activate, force, out exception);
                 }
             }
 
@@ -445,7 +445,7 @@ namespace FeatureAdmin.Services.SharePointFarmService
                 foreach (Guid id in featureIds)
                 {
                     // overwrite the exception, it is just for logging, in case at least one happens ...
-                    processingCounter += SingleFeatureProcessingViaSharePointApi.ProcessWebFeatureInWeb(web, id, activate, force, out exception);
+                    processingCounter += FeatureActivationAndDeactivationCore.ProcessWebFeatureInWeb(web, id, activate, force, out exception);
                 }
             }
 
