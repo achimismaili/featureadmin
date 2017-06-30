@@ -8,13 +8,16 @@ using Xunit;
 
 namespace FeatureAdmin.Test.Repository
 {
+    /// <summary>
+    /// For SharePoint tests, make sure, you run in 64bit mode - Test - Test Settings - Default Processor Architecture - X64
+    /// </summary>
     public class AdminRepositoryGetFeatureDefinitionTest 
     {
-        private AdminRepository repository;
+        private ReadRepository repository;
 
         public AdminRepositoryGetFeatureDefinitionTest()
         {
-            repository = new AdminRepository();
+            repository = new ReadRepository();
         }
 
         [Fact]

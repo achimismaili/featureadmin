@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint;
+﻿using FeatureAdmin.Models.Interfaces;
+using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Models
 {
-    public class ActivatedFeature
+    public class ActivatedFeature : IActivatedFeature
     {
         /// <summary>
         /// corresponding SharePoint SPFeature to this class instance
@@ -84,7 +85,7 @@ namespace FeatureAdmin.Models
         /// <summary>
         /// Feature Parent of the activated feature
         /// </summary>
-        public FeatureParent Parent { get; private set; }
+        public IFeatureParent Parent { get; private set; }
 
         /// <summary>
         /// Scope, the Feature is activated in

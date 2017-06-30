@@ -102,6 +102,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\Program Files\Common Files\microsoft shared\Web Server Extensions\15\ISAPI\Microsoft.SharePoint.Security.dll</HintPath>
     </Reference>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.0.0\lib\net45\Serilog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog.Sinks.TextWriter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.TextWriter.2.1.0\lib\net45\Serilog.Sinks.TextWriter.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -129,9 +137,17 @@
     <Compile Include="Models\FeatureParent.cs" />
     <Compile Include="Models\FeatureSet.cs" />
     <Compile Include="FeatureUninstaller.cs" />
-    <Compile Include="Repository\AdminRepository.cs" />
-    <Compile Include="SharePointFarmService\SharePointDataBase.cs" />
+    <Compile Include="Models\Interfaces\IFeatureDefinition.cs" />
+    <Compile Include="Models\Interfaces\IFeatureParent.cs" />
+    <Compile Include="Models\Interfaces\IActivatedFeature.cs" />
+    <Compile Include="Repository\ReadRepository.cs" />
+    <Compile Include="Repository\ChangeRepository.cs" />
+    <Compile Include="Services\Logger.cs" />
+    <Compile Include="Services\SharePointFarmService\FeatureProcessingViaSharePointApi.cs" />
+    <Compile Include="Services\SharePointFarmService\ReadViaSharePointApi.cs" />
+    <Compile Include="Services\SharePointFarmService\SharePointOfflineObjectsDataBase.cs" />
     <Compile Include="Models\TemplateInfo.cs" />
+    <Compile Include="Services\SharePointFarmService\SingleFeatureProcessingViaSharePointApi.cs" />
     <Compile Include="UserInterface\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,6 +176,7 @@
     <Compile Include="UserInterface\WaitCursor.cs" />
     <Compile Include="WebAppEnumerator.cs" />
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UserInterface\FrmMain.resx">

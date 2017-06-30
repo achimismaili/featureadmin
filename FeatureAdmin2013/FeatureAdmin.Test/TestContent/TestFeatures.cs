@@ -1,4 +1,6 @@
 ﻿using FeatureAdmin.Models;
+using FeatureAdmin.Models.Interfaces;
+using FeatureAdmin.Test.TestContent.MockModels;
 using Microsoft.SharePoint;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,39 @@ namespace FeatureAdmin.Test.TestContent
 {
     public static class TestFeatures
     {
-        public static class HealthyWeb {
+        public static class HealthyWeb
+        {
+            public static MockFeatureDefinition GetMockFeatureDefinition()
+            {
+                return new MockFeatureDefinition()
+                {
+                    Id = Id,
+                    Name = Name,
+                    Scope = Scope,
+                    DefinitionVersion = Version,
+                    Faulty = Faulty,
+                    GetTitle = Title
+                };
+            }
+            public static MockActivatedFeature GetMockActivatedFeatureInSiCoActivatedRootWeb()
+            {
+
+                var SiCoActivatedParent = SharePointContainers.SiCoActivated.RootWeb.GetMockFeatureParent();
+                return GetMockActivatedFeature(SiCoActivatedParent);
+            }
+            public static MockActivatedFeature GetMockActivatedFeature(IFeatureParent parent)
+            {
+                return new MockActivatedFeature()
+                {
+                    Id = Id,
+                    Name = Name,
+                    Scope = Scope,
+                    DefinitionVersion = Version,
+                    Faulty = Faulty,
+                    Parent = parent,
+                    Version = Version
+                };
+            }
             public static int TotalActivated = 3;
             public static Guid Id = new Guid("6a5615a2-4c44-40dd-ac9f-26cc45fb7e79");
             public static string Name = "DummyFeaturesHealthy_HealthyWeb";
@@ -22,6 +56,37 @@ namespace FeatureAdmin.Test.TestContent
 
         public static class HealthySite
         {
+            public static MockFeatureDefinition GetMockFeatureDefinition()
+            {
+                return new MockFeatureDefinition()
+                {
+                    Id = Id,
+                    Name = Name,
+                    Scope = Scope,
+                    DefinitionVersion = Version,
+                    Faulty = Faulty,
+                    GetTitle = Title
+                };
+            }
+            public static MockActivatedFeature GetMockActivatedFeatureInSiCoActivated()
+            {
+
+                var SiCoActivatedParent = SharePointContainers.SiCoActivated.GetMockFeatureParent();
+                return GetMockActivatedFeature(SiCoActivatedParent);
+            }
+            public static MockActivatedFeature GetMockActivatedFeature(IFeatureParent parent)
+            {
+                return new MockActivatedFeature()
+                {
+                    Id = Id,
+                    Name = Name,
+                    Scope = Scope,
+                    DefinitionVersion = Version,
+                    Faulty = Faulty,
+                    Parent = SharePointContainers.SiCoActivated.GetMockFeatureParent(),
+                    Version = Version
+                };
+            }
             public static int TotalActivated = 1;
             public static Guid Id = new Guid("bdd4c395-4c92-4bf8-8c61-9d12349bb853");
             public static string Name = "DummyFeaturesHealthy_HealthySiCo";
@@ -33,6 +98,31 @@ namespace FeatureAdmin.Test.TestContent
 
         public static class HealthyWebApp
         {
+            public static MockFeatureDefinition GetMockFeatureDefinition()
+            {
+                return new MockFeatureDefinition()
+                {
+                    Id = Id,
+                    Name = Name,
+                    Scope = Scope,
+                    DefinitionVersion = Version,
+                    Faulty = Faulty,
+                    GetTitle = Title
+                };
+            }
+            public static MockActivatedFeature GetMockActivatedFeature()
+            {
+                return new MockActivatedFeature()
+                {
+                    Id = Id,
+                    Name = Name,
+                    Scope = Scope,
+                    DefinitionVersion = Version,
+                    Faulty = Faulty,
+                    Parent = SharePointContainers.WebApplication.GetMockFeatureParent(),
+                    Version = Version
+                };
+            }
             public static int TotalActivated = 1;
             public static Guid Id = new Guid("cb53cddc-4335-4560-bf29-f1a0c47f8e6a");
             public static string Name = "DummyFeaturesHealthy_HealthyWebApp";
@@ -51,10 +141,66 @@ namespace FeatureAdmin.Test.TestContent
             public static Version Version = new Version("1.0.0.0");
             public static bool Faulty = false;
             public const string Title = "Dummy Features Healthy Farm";
+            public static MockFeatureDefinition GetMockFeatureDefinition()
+            {
+                return new MockFeatureDefinition()
+                {
+                    Id = Id,
+                    Name = Name,
+                    Scope = Scope,
+                    DefinitionVersion = Version,
+                    Faulty = Faulty,
+                    GetTitle = Title
+                };
+            }
+            public static MockActivatedFeature GetMockActivatedFeature()
+            {
+                return new MockActivatedFeature()
+                {
+                    Id = Id,
+                    Name = Name,
+                    Scope = Scope,
+                    DefinitionVersion = Version,
+                    Faulty = Faulty,
+                    Parent = SharePointContainers.Farm.GetMockFeatureParent(),
+                    Version = Version
+                };
+            }
         };
 
         public static class FaultyWeb
         {
+            public static MockFeatureDefinition GetMockFeatureDefinition()
+            {
+                return new MockFeatureDefinition()
+                {
+                    Id = Id,
+                    Name = Name,
+                    Scope = Scope,
+                    DefinitionVersion = Version,
+                    Faulty = Faulty,
+                    GetTitle = Title
+                };
+            }
+            public static MockActivatedFeature GetMockActivatedFeatureInSiCoActivatedRootWeb()
+            {
+
+                var SiCoActivatedParent = SharePointContainers.SiCoActivated.RootWeb.GetMockFeatureParent();
+                return GetMockActivatedFeature(SiCoActivatedParent);
+            }
+            public static MockActivatedFeature GetMockActivatedFeature(IFeatureParent parent)
+            {
+                return new MockActivatedFeature()
+                {
+                    Id = Id,
+                    Name = Name,
+                    Scope = Scope,
+                    DefinitionVersion = Version,
+                    Faulty = Faulty,
+                    Parent = parent,
+                    Version = Version
+                };
+            }
             public static int TotalActivated = 3;
             public static Guid Id = new Guid("be656c15-c3c9-45e4-af56-ffcf3ef0330a");
             public static string Title = "undefined"; // if not faulty, it would be: "Dummy Features Faulty Web";
@@ -66,6 +212,37 @@ namespace FeatureAdmin.Test.TestContent
 
         public static class FaultySite
         {
+            public static MockFeatureDefinition GetMockFeatureDefinition()
+            {
+                return new MockFeatureDefinition()
+                {
+                    Id = Id,
+                    Name = Name,
+                    Scope = Scope,
+                    DefinitionVersion = Version,
+                    Faulty = Faulty,
+                    GetTitle = Title
+                };
+            }
+            public static MockActivatedFeature GetMockActivatedFeatureInSiCoActivated()
+            {
+
+                var SiCoActivatedParent = SharePointContainers.SiCoActivated.GetMockFeatureParent();
+                return GetMockActivatedFeature(SiCoActivatedParent);
+            }
+            public static MockActivatedFeature GetMockActivatedFeature(IFeatureParent parent)
+            {
+                return new MockActivatedFeature()
+                {
+                    Id = Id,
+                    Name = Name,
+                    Scope = Scope,
+                    DefinitionVersion = Version,
+                    Faulty = Faulty,
+                    Parent = SharePointContainers.SiCoActivated.GetMockFeatureParent(),
+                    Version = Version
+                };
+            }
             public static int TotalActivated = 1;
             public static Guid Id = new Guid("ff832e14-23ea-483e-80f8-5a22cb7297a0");
             public static string Title = "undefined"; // if not faulty, it would be: "Dummy Features Faulty SiCo";
@@ -98,34 +275,70 @@ namespace FeatureAdmin.Test.TestContent
         //};
 
 
-        public static List<Guid> AllFaultyFeatures = new List<Guid>()
+        public static List<MockActivatedFeature> AllFaultyActivatedFeatures = new List<MockActivatedFeature>()
         {
-            FaultyWeb.Id, FaultySite.Id // , FaultyWebApp.Id, FaultyFarm.Id
+            FaultyWeb.GetMockActivatedFeatureInSiCoActivatedRootWeb(),
+            FaultyWeb.GetMockActivatedFeature(TestContent.SharePointContainers.SiCoActivated.SubWebActivated.GetMockFeatureParent()),
+            FaultyWeb.GetMockActivatedFeature(TestContent.SharePointContainers.SiCoInActive.SubWebActivated.GetMockFeatureParent()),
+            FaultySite.GetMockActivatedFeatureInSiCoActivated() 
+            // , FaultyWebApp.Id, FaultyFarm.Id
         };
 
-        public static List<Guid> AllHealthyFeatures = new List<Guid>()
+        public static List<MockActivatedFeature> AllHealthyActivatedFeatures = new List<MockActivatedFeature>()
                 {
-                    HealthyWeb.Id, HealthySite.Id, HealthyWebApp.Id, HealthyFarm.Id
-                };
-         
-        public static List<Guid> AllFeatures
+            HealthyWeb.GetMockActivatedFeatureInSiCoActivatedRootWeb(),
+            HealthyWeb.GetMockActivatedFeature(SharePointContainers.SiCoActivated.SubWebActivated.GetMockFeatureParent()),
+            HealthyWeb.GetMockActivatedFeature(SharePointContainers.SiCoInActive.SubWebActivated.GetMockFeatureParent()),
+            HealthySite.GetMockActivatedFeatureInSiCoActivated(),
+            HealthyWebApp.GetMockActivatedFeature(),
+            HealthyFarm.GetMockActivatedFeature()
+                            };
+
+        public static List<MockActivatedFeature> AllActiveFeatures
         {
             get
             {
-                var allFeatures = new List<Guid>(AllFaultyFeatures);
-                allFeatures.AddRange(AllHealthyFeatures);
+                var allFeatures = new List<MockActivatedFeature>(AllFaultyActivatedFeatures);
+                allFeatures.AddRange(AllHealthyActivatedFeatures);
                 return allFeatures;
             }
         }
 
-        public static List<Guid> AllWebFeatures= new List<Guid>()
+        public static List<MockFeatureDefinition> AllFaultyFeatureDefinitions = new List<MockFeatureDefinition>()
+        {
+            FaultyWeb.GetMockFeatureDefinition(),
+            FaultySite.GetMockFeatureDefinition() 
+            // , FaultyWebApp.Id, FaultyFarm.Id
+        };
+
+        public static List<MockFeatureDefinition> AllHealthyFeatureDefinitions = new List<MockFeatureDefinition>()
+        {
+          HealthyWeb.GetMockFeatureDefinition(),
+          HealthySite.GetMockFeatureDefinition(),
+          HealthyWebApp.GetMockFeatureDefinition(),
+          HealthyFarm.GetMockFeatureDefinition()
+        };
+
+        public static List<MockFeatureDefinition> AllFeatureDefinitions
+        {
+            get
+            {
+                var allFeatures = new List<MockFeatureDefinition>(AllFaultyFeatureDefinitions);
+                allFeatures.AddRange(AllHealthyFeatureDefinitions);
+                return allFeatures;
+            }
+        }
+
+
+        public static List<MockFeatureDefinition> AllWebFeatureDefinitions = new List<MockFeatureDefinition>()
                 {
-                    HealthyWeb.Id, FaultyWeb.Id
+
+            HealthyWeb.GetMockFeatureDefinition(), FaultyWeb.GetMockFeatureDefinition()
                 };
 
-        public static List<Guid> AllSiCoFeatures = new List<Guid>()
+        public static List<MockFeatureDefinition> AllSiCoFeatureDefinitions = new List<MockFeatureDefinition>()
                 {
-                    HealthySite.Id, FaultySite.Id
+                    HealthySite.GetMockFeatureDefinition(), FaultySite.GetMockFeatureDefinition()
                 };
     }
 }

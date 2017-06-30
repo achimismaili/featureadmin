@@ -1,20 +1,22 @@
-﻿using FeatureAdmin.Models;
-using Microsoft.SharePoint;
+﻿using Microsoft.SharePoint;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using FeatureAdmin.Models;
+using FeatureAdmin.Services.SharePointFarmService;
+
 namespace FeatureAdmin.Repository
 {
-    public class AdminRepository
+    public class ReadRepository
     {
-        private SharePointFarmService.SharePointDataBase db;
+        private SharePointOfflineObjectsDataBase db;
 
-        public AdminRepository()
+        public ReadRepository()
         {
-            db = SharePointFarmService.SharePointDataBase.SingletonInstance;
+            db = SharePointOfflineObjectsDataBase.SingletonInstance;
         }
 
         public List<FeatureDefinition> GetFeatureDefinitions (SPFeatureScope? scope = null)

@@ -1,4 +1,6 @@
-﻿using Microsoft.SharePoint.Utilities;
+﻿using FeatureAdmin.Test.TestContent.MockModels;
+using Microsoft.SharePoint;
+using Microsoft.SharePoint.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,15 @@ namespace FeatureAdmin.Test.TestContent
 
         public static class Farm
         {
+            public static MockFeatureParent GetMockFeatureParent()
+            {
+                return new MockFeatureParent()
+                {
+                    Url = "tbd",
+                    Scope = SPFeatureScope.Farm,
+                    DisplayName = "Farm"
+                };
+            }
             public const int HealthyWebFeatureActivatedTotal = 3;
             public const int FaultyWebFeatureActivatedTotal = 3;
             public const int HealthySiCoFeatureActivatedTotal = 1;
@@ -35,6 +46,14 @@ namespace FeatureAdmin.Test.TestContent
 
             public static class WebApplication
         {
+            public static MockFeatureParent GetMockFeatureParent()
+            {
+                return new MockFeatureParent()
+                {
+                    Url = Url,
+                    Scope = SPFeatureScope.WebApplication,
+                };
+            }
             public const int HealthyWebAppFeatureActivated = 1;
             public const int FaultyWebAppFeatureActivated = 1;
 
@@ -60,6 +79,14 @@ namespace FeatureAdmin.Test.TestContent
 
         public static class SiCoActivated
         {
+            public static MockFeatureParent GetMockFeatureParent()
+            {
+                return new MockFeatureParent()
+                {
+                    Url = Url,
+                    Scope = SPFeatureScope.Site,
+                };
+            }
             public const int HealthySiCoFeatureActivated = 1;
             public const int FaultySiCoFeatureActivated = 1;
             public const int HealthyWebFeatureActivated = 1;
@@ -69,8 +96,30 @@ namespace FeatureAdmin.Test.TestContent
             public static string UrlRelative = SPUtility.ConcatUrls(managedPath, nameActivated);
             public static string Url = SPUtility.ConcatUrls(WebApplication.UrlPlusManagedPath, nameActivated);
 
+            public static class RootWeb            {
+                public static MockFeatureParent GetMockFeatureParent()
+                {
+                    return new MockFeatureParent()
+                    {
+                        Url = Url,
+                        Scope = SPFeatureScope.Web,
+                    };
+                }
+                public const int HealthyWebFeatureActivated = 1;
+                public const int FaultyWebFeatureActivated = 1;
+                public static string UrlRelative = SiCoActivated.UrlRelative;
+                public static string Url = SiCoActivated.Url;
+            }
             public static class SubWebActivated
             {
+                public static MockFeatureParent GetMockFeatureParent()
+                {
+                    return new MockFeatureParent()
+                    {
+                        Url = Url,
+                        Scope = SPFeatureScope.Web,
+                    };
+                }
                 public const int HealthyWebFeatureActivated = 1;
                 public const int FaultyWebFeatureActivated = 1;
                 public static string UrlRelative = SPUtility.ConcatUrls(SiCoActivated.UrlRelative, nameActivated);
@@ -79,6 +128,14 @@ namespace FeatureAdmin.Test.TestContent
 
             public static class SubWebInactive
             {
+                public static MockFeatureParent GetMockFeatureParent()
+                {
+                    return new MockFeatureParent()
+                    {
+                        Url = Url,
+                        Scope = SPFeatureScope.Web,
+                    };
+                }
                 public const int HealthyWebFeatureActivated = 0;
                 public const int FaultyWebFeatureActivated = 0;
                 public static string UrlRelative = SPUtility.ConcatUrls(SiCoActivated.UrlRelative, nameInactive);
@@ -87,6 +144,14 @@ namespace FeatureAdmin.Test.TestContent
         }
         public static class SiCoInActive
         {
+            public static MockFeatureParent GetMockFeatureParent()
+            {
+                return new MockFeatureParent()
+                {
+                    Url = Url,
+                    Scope = SPFeatureScope.Site,
+                };
+            }
             public const int HealthySiCoFeatureActivated = 0;
             public const int FaultySiCoFeatureActivated = 0;
             public const int HealthyWebFeatureActivated = 0;
@@ -96,8 +161,31 @@ namespace FeatureAdmin.Test.TestContent
             public static string UrlRelative = SPUtility.ConcatUrls(managedPath, nameInactive);
             public static string Url = SPUtility.ConcatUrls(WebApplication.UrlPlusManagedPath, nameInactive);
 
+            public static class RootWeb
+            {
+                public static MockFeatureParent GetMockFeatureParent()
+                {
+                    return new MockFeatureParent()
+                    {
+                        Url = Url,
+                        Scope = SPFeatureScope.Web,
+                    };
+                }
+                public const int HealthyWebFeatureActivated = 1;
+                public const int FaultyWebFeatureActivated = 1;
+                public static string UrlRelative = SiCoActivated.UrlRelative;
+                public static string Url = SiCoActivated.Url;
+            }
             public static class SubWebActivated
             {
+                public static MockFeatureParent GetMockFeatureParent()
+                {
+                    return new MockFeatureParent()
+                    {
+                        Url = Url,
+                        Scope = SPFeatureScope.Web,
+                    };
+                }
                 public const int HealthyWebFeatureActivated = 1;
                 public const int FaultyWebFeatureActivated = 1;
                 public static string UrlRelative = SPUtility.ConcatUrls(SiCoInActive.UrlRelative, nameActivated);
@@ -106,6 +194,14 @@ namespace FeatureAdmin.Test.TestContent
 
             public static class SubWebInactive
             {
+                public static MockFeatureParent GetMockFeatureParent()
+                {
+                    return new MockFeatureParent()
+                    {
+                        Url = Url,
+                        Scope = SPFeatureScope.Web,
+                    };
+                }
                 public const int HealthyWebFeatureActivated = 0;
                 public const int FaultyWebFeatureActivated = 0;
                 public static string UrlRelative = SPUtility.ConcatUrls(SiCoInActive.UrlRelative, nameInactive);

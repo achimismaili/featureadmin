@@ -9,7 +9,7 @@ namespace FeatureAdmin.Test.Models
     /// <summary>
     /// For SharePoint tests, make sure, you run in 64bit mode - Test - Test Settings - Default Processor Architecture - X64
     /// </summary>
-    public class FeatureParentTest
+    public class FeatureParentFactoryTest
     {
         [Fact]
         public void CanGetFeatureParentFromWeb()

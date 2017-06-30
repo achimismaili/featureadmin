@@ -9,9 +9,12 @@ using Xunit;
 
 namespace FeatureAdmin.Test.Repository
 {
+    /// <summary>
+    /// For SharePoint tests, make sure, you run in 64bit mode - Test - Test Settings - Default Processor Architecture - X64
+    /// </summary>
     public class AdminRepositoryGetHierarchyTest 
     {
-        private AdminRepository repository;
+        private ReadRepository repository;
 
         private Guid webAppId;
         private Guid siCoActivatedId;
@@ -26,7 +29,7 @@ namespace FeatureAdmin.Test.Repository
         public AdminRepositoryGetHierarchyTest()
         {
             // Arrange
-            repository = new AdminRepository();
+            repository = new ReadRepository();
 
             // SiCo Activated
             using (SPSite site = new SPSite(TestContent.SharePointContainers.SiCoActivated.Url))

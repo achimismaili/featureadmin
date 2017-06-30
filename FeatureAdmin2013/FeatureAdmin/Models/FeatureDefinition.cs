@@ -7,7 +7,7 @@ using System.Text;
 
 namespace FeatureAdmin.Models
 {
-    public class FeatureDefinition
+    public class FeatureDefinition : Interfaces.IFeatureDefinition
     {
         /// <summary>
         /// a list of all activated features based on this definition

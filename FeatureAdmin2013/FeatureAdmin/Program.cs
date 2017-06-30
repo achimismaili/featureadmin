@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Microsoft.SharePoint.Administration;
 using Microsoft.SharePoint;
+using Serilog;
 
 // Codeplex Project http://FeatureAdmin.codeplex.com
 // Started by Achim Ismaili in September 2009 - email: achim@ismaili.de
@@ -18,11 +19,17 @@ namespace FeatureAdmin
         [STAThread]
         static void Main()
         {
+            Log.Logger = new LoggerConfiguration()
+               .WriteTo.TextWriter(Services.Logger.LogMessages)
+               .CreateLogger();
+
             if (SPFarm.Local == null)
             {
                 string msg = "Cannot find local SharePoint Farm. "
                     + "Either this account has not enough access to the SharePoint config db"
-                    + " (dbReader is not sufficient, dbOwner is recommended)"
+                    + " (dbReader is not sufficient, dbOwner is recommended),"
+                    + " you may not be in windows local admin group, Farm-Admin group or "
+                    + " you may require additional rights like SPShellAdmin, ... \n"
                     + " or SharePoint " + Common.Constants.SharePointVersion
                     + " is not installed on this machine. "
                     + " FeatureAdmin will close now.";

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Models
 {
-    public class FeatureParent
+    public class FeatureParent : Interfaces.IFeatureParent
     {
         public string DisplayName { get; private set; }
         public Guid Id { get; private set; }
