@@ -167,6 +167,15 @@ try {
     Write-Output "Retracting dummy faulty feature solution '$dummySolutionWspName'"
     Uninstall-SPSolution $dummySolutionWspName -Confirm:$false
 
+# $serviceName = "SharePoint Timer Service"
+
+# net stop $serviceName
+
+# net start $serviceName
+
+Restart-WebAppPool -Name "SharePoint Content"
+
+
 }    
 
 catch [Exception] {
