@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
+using Serilog;
 
 namespace FeatureAdmin.UserInterface
 {
@@ -51,8 +52,7 @@ namespace FeatureAdmin.UserInterface
         /// <param name="e"></param>
         private void btnScopeCancel_Click(object sender, EventArgs e)
         {
-            string msgString = "Action canceled.";
-            parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+            Log.Information( "Action canceled.");
             this.Close();
             this.Dispose();
         }
@@ -93,7 +93,7 @@ namespace FeatureAdmin.UserInterface
                             else
                                 msgString = "Error in scope selection! Task canceled";
                             MessageBox.Show(msgString);
-                            ((FrmMain)parentWindow).logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                            Log.Information(msgString);
 
                             return;
                         }
@@ -107,19 +107,15 @@ namespace FeatureAdmin.UserInterface
                     {
                         this.Show();
                     }
-                    else
-                    {
-
-                    }
                 }
                 else
                 {
                     msgString = "Success! Feature was found and deactivated " + featurefound + " times in Scope:'" + scopeWindowScope.ToString() + "'!";
                     MessageBox.Show(msgString);
-                    parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                    Log.Information(msgString );
 
                     SPFarm.Local.FeatureDefinitions.Remove(featureID, true);
-                    parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - FeatureDefinition was uninstalled." + Environment.NewLine);
+                    Log.Information("FeatureDefinition was uninstalled.");
 
                 }
             }
@@ -163,15 +159,14 @@ namespace FeatureAdmin.UserInterface
                     }
 
                     SPFarm.Local.FeatureDefinitions.Remove(featureID, true);
-                    parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - FeatureDefinition was uninstalled." + Environment.NewLine);
+                    Log.Information("FeatureDefinition was uninstalled.");
                     this.Close();
                     this.Dispose();
                 }
 
-                catch
+                catch (Exception ex)
                 {
-                    parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - An error occured iterating through the features ..." + Environment.NewLine);
-
+                    Log.Error("An error occured iterating through the features ..." , ex);
                 }
                 finally
                 {
@@ -199,14 +194,14 @@ namespace FeatureAdmin.UserInterface
             if (featurefound == 0)
             {
                 msgString = "Search through all Scopes:'" + scope.ToString() + "' done..., feature not found.";
-                parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                Log.Information(msgString);
                 return false;
             }
             else
             {
                 msgString = "Success! Feature was found and deactivated " + featurefound + " times in Scope:'" + scope.ToString() + "'!";
                 MessageBox.Show(msgString);
-                parentWindow.logTxt(DateTime.Now.ToString(Common.Constants.Text.DATETIMEFORMAT) + " - " + msgString + Environment.NewLine);
+                Log.Information(msgString);
                 return true;
             }
 

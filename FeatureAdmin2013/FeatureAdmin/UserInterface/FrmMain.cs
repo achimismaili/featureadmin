@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
@@ -11,6 +8,7 @@ using Microsoft.SharePoint.Administration;
 using FeatureAdmin.Common;
 using FeatureAdmin.Models;
 
+using Serilog;
 
 namespace FeatureAdmin.UserInterface
 {
@@ -18,7 +16,7 @@ namespace FeatureAdmin.UserInterface
     {
 
         #region members
-
+        
         public FeatureDatabase FeatureDb = new FeatureDatabase();
         private Location m_CurrentWebAppLocation;
         private Location m_CurrentSiteLocation;
@@ -26,6 +24,7 @@ namespace FeatureAdmin.UserInterface
         private ContextMenuStrip m_featureDefGridContextMenu;
         private Feature m_featureDefGridContextFeature;
 
+        private FeatureAdmin.Services.Logger logTextWriter;
         #endregion
 
 
@@ -34,7 +33,10 @@ namespace FeatureAdmin.UserInterface
         {
             InitializeComponent();
 
-            SetTitle();
+            this.Text = Constants.Text.FeatureAdminTitle;
+
+            // initialize logging
+            logTextWriter = new Services.Logger(txtResult);
 
             removeBtnEnabled(false);
             EnableActionButtonsAsAppropriate();
@@ -53,13 +55,6 @@ namespace FeatureAdmin.UserInterface
         }
 
         #region FeatureDefinition Methods
-
-        private void SetTitle()
-        {
-            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            this.Text = string.Format("FeatureAdmin for SharePoint {0} - v{1}",
-                Common.Constants.SharePointVersion, version);
-        }
 
         private void ConfigureFeatureDefGrid()
         {
@@ -87,7 +82,7 @@ namespace FeatureAdmin.UserInterface
                 }
             }
 
-            CreateFeatureDefContextMenu();
+            m_featureDefGridContextMenu = UiConfig.CreateFeatureDefinitionContextMenu(gridFeatureDefinitions_ViewActivationsClick);
 
             // Color faulty rows
             grid.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(gridFeatureDefinitions_DataBindingComplete);
@@ -95,7 +90,7 @@ namespace FeatureAdmin.UserInterface
 
         void gridFeatureDefinitions_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            MarkFaultyFeatureDefs();
+           UiConfig.SetRowRedAndBold(gridFeatureDefinitions.Rows);
         }
 
         /// <summary>Used to populate the list of Farm Feature Definitions</summary>
@@ -117,19 +112,7 @@ namespace FeatureAdmin.UserInterface
 
                 this.gridFeatureDefinitions.DataSource = features;
 
-                logDateMsg("Feature Definition list updated.");
-            }
-        }
-
-        private void MarkFaultyFeatureDefs()
-        {
-            foreach (DataGridViewRow row in gridFeatureDefinitions.Rows)
-            {
-                Feature feature = row.DataBoundItem as Feature;
-                if (feature.IsFaulty)
-                {
-                    row.DefaultCellStyle.ForeColor = Color.DarkRed;
-                }
+                Serilog.Log.Information("Feature Definition list updated.");
             }
         }
 
@@ -217,7 +200,7 @@ namespace FeatureAdmin.UserInterface
             if (clbSPWebFeatures.CheckedItems.Count == 0)
             {
                 MessageBox.Show(Constants.Text.NOFEATURESELECTED);
-                logDateMsg(Constants.Text.NOFEATURESELECTED);
+                Log.Warning(Constants.Text.NOFEATURESELECTED);
                 return;
             }
             if (IsEmpty(m_CurrentWebLocation))
@@ -251,7 +234,7 @@ namespace FeatureAdmin.UserInterface
             }
 
             msgString = "Done. Please refresh the feature list, when all features are removed!";
-            logDateMsg(msgString);
+            Log.Information(msgString);
         }
 
         /// <summary>Removes selected features from the current site collection only</summary>
@@ -260,7 +243,7 @@ namespace FeatureAdmin.UserInterface
             if (clbSPSiteFeatures.CheckedItems.Count == 0)
             {
                 MessageBox.Show(Constants.Text.NOFEATURESELECTED);
-                logDateMsg(Constants.Text.NOFEATURESELECTED);
+                Log.Warning(Constants.Text.NOFEATURESELECTED);
                 return;
             }
             if (clbSPWebFeatures.CheckedItems.Count > 0) { throw new Exception("Mixed mode unsupported"); }
@@ -288,7 +271,7 @@ namespace FeatureAdmin.UserInterface
             }
 
             msgString = "Done. Please refresh the feature list, when all features are removed!";
-            logDateMsg(msgString);
+            Log.Information(msgString);
         }
 
         private SPSite OpenCurrentSite()
@@ -302,7 +285,7 @@ namespace FeatureAdmin.UserInterface
             }
             catch (Exception exc)
             {
-                logException(exc, "Exception accessing current site collection");
+                Log.Error("Exception accessing current site collection", exc);
                 return null;
             }
         }
@@ -321,7 +304,7 @@ namespace FeatureAdmin.UserInterface
             if ((clbSPSiteFeatures.CheckedItems.Count == 0) && (clbSPWebFeatures.CheckedItems.Count == 0))
             {
                 MessageBox.Show(Constants.Text.NOFEATURESELECTED);
-                logDateMsg(Constants.Text.NOFEATURESELECTED);
+                Log.Warning(Constants.Text.NOFEATURESELECTED);
             }
 
             string msgString = string.Empty;
@@ -372,7 +355,7 @@ namespace FeatureAdmin.UserInterface
             if (featuresSelected == 0)
             {
                 MessageBox.Show(Constants.Text.NOFEATURESELECTED);
-                logDateMsg(Constants.Text.NOFEATURESELECTED);
+                Log.Warning(Constants.Text.NOFEATURESELECTED);
                 return;
             }
 
@@ -485,7 +468,7 @@ namespace FeatureAdmin.UserInterface
             if (featuresSelected == 0)
             {
                 MessageBox.Show(Constants.Text.NOFEATURESELECTED);
-                logDateMsg(Constants.Text.NOFEATURESELECTED);
+                Log.Warning(Constants.Text.NOFEATURESELECTED);
                 return;
             }
 
@@ -671,7 +654,7 @@ namespace FeatureAdmin.UserInterface
                 activator.Activations,
                 verbpast);
             MessageBox.Show(msg);
-            logDateMsg(msg);
+            Log.Information(msg);
         }
 
         private static string GetFeatureSummaries(List<Feature> features, string format)
@@ -692,12 +675,12 @@ namespace FeatureAdmin.UserInterface
         void activator_ExceptionLoggingListeners(Exception exc, Location location, string detail)
         {
             string msg = string.Format("{0} at {1}", detail, LocationManager.GetLocation(location));
-            logException(exc, msg);
+            Log.Error(exc, msg);
         }
         void activator_InfoLoggingListeners(Location location, string detail)
         {
             string msg = string.Format("{0} at {1}", detail, LocationManager.SafeDescribeLocation(location));
-            logMsg(msg);
+            Log.Information(msg);
         }
 
 
@@ -713,12 +696,12 @@ namespace FeatureAdmin.UserInterface
                 // enable all remove buttons
                 removeBtnEnabled(true);
 
-                logDateMsg("Feature selection changed:");
+                Log.Information("Feature selection changed:");
                 if (clbSPSiteFeatures.CheckedItems.Count > 0)
                 {
                     foreach (Feature checkedFeature in clbSPSiteFeatures.CheckedItems)
                     {
-                        logMsg(checkedFeature.ToString() + ", Scope: Site");
+                        Log.Information(checkedFeature.ToString() + ", Scope: Site");
                     }
                 }
 
@@ -726,7 +709,7 @@ namespace FeatureAdmin.UserInterface
                 {
                     foreach (Feature checkedFeature in clbSPWebFeatures.CheckedItems)
                     {
-                        logMsg(checkedFeature.ToString() + ", Scope: Web");
+                        Log.Information(checkedFeature.ToString() + ", Scope: Web");
                     }
                 }
             }
@@ -762,7 +745,7 @@ namespace FeatureAdmin.UserInterface
             }
             catch (Exception exc)
             {
-                logException(exc, string.Format(
+                Log.Error(exc, string.Format(
                     "Trying to remove feature {0} from {1}",
                     featureId, LocationManager.SafeDescribeLocation(location)));
             }
@@ -788,7 +771,7 @@ namespace FeatureAdmin.UserInterface
                             bool force = true;
                             web.Features.Remove(featureID, force);
                             removedFeatures++;
-                            logDateMsg(
+                            Log.Information(
                                 string.Format("Success removing feature {0} from {1}",
                                 featureID,
                                 LocationManager.SafeDescribeObject(web)));
@@ -797,7 +780,7 @@ namespace FeatureAdmin.UserInterface
                     }
                     catch (Exception exc)
                     {
-                        logException(exc,
+                        Log.Error(exc,
                             string.Format("Exception removing feature {0} from {1}",
                             featureID,
                             LocationManager.SafeDescribeObject(web)));
@@ -812,7 +795,7 @@ namespace FeatureAdmin.UserInterface
                     }
                 }
                 string msgString = removedFeatures + " Web Scoped Features removed in the SiteCollection " + site.Url.ToString() + ". " + scannedThrough + " sites/subsites were scanned.";
-                logDateMsg("  SiteColl - " + msgString);
+                Log.Information("  SiteColl - " + msgString);
             });
             return removedFeatures;
         }
@@ -829,7 +812,7 @@ namespace FeatureAdmin.UserInterface
             string msgString;
 
             msgString = "Removing Feature '" + featureID.ToString() + "' from Web Application: '" + webApp.Name.ToString() + "'.";
-            logDateMsg(" WebApp - " + msgString);
+            Log.Information(" WebApp - " + msgString);
 
             SPSecurity.RunWithElevatedPrivileges(delegate ()
                 {
@@ -839,14 +822,14 @@ namespace FeatureAdmin.UserInterface
                         {
                             webApp.Features.Remove(featureID, true);
                             removedFeatures++;
-                            logDateMsg(
+                            Log.Information(
                                 string.Format("Success removing feature {0} from {1}",
                                 featureID,
                                 LocationManager.SafeDescribeObject(webApp)));
                         }
                         catch (Exception exc)
                         {
-                            logException(exc,
+                            Log.Error(exc,
                                 string.Format("Exception removing feature {0} from {1}",
                                 featureID,
                                 LocationManager.SafeDescribeObject(webApp)));
@@ -870,14 +853,14 @@ namespace FeatureAdmin.UserInterface
                                         //forcefully remove the feature
                                         site.Features.Remove(featureID, true);
                                         removedFeatures += 1;
-                                        logDateMsg(
+                                        Log.Information(
                                             string.Format("Success removing feature {0} from {1}",
                                             featureID,
                                             LocationManager.SafeDescribeObject(site)));
                                     }
                                     catch (Exception exc)
                                     {
-                                        logException(exc,
+                                        Log.Error(exc,
                                             string.Format("Exception removing feature {0} from {1}",
                                             featureID,
                                             LocationManager.SafeDescribeObject(site)));
@@ -890,7 +873,7 @@ namespace FeatureAdmin.UserInterface
 
                 });
             msgString = removedFeatures + " Features removed in the Web Application. " + scannedThrough + " SiteCollections were scanned.";
-            logDateMsg(" WebApp - " + msgString);
+            Log.Information(" WebApp - " + msgString);
 
             return removedFeatures;
         }
@@ -908,26 +891,26 @@ namespace FeatureAdmin.UserInterface
             SPSecurity.RunWithElevatedPrivileges(delegate ()
             {
                 msgString = "Removing Feature '" + featureID.ToString() + ", Scope: " + featureScope.ToString() + "' from the Farm.";
-                logDateMsg("Farm - " + msgString);
+                Log.Information("Farm - " + msgString);
                 if (featureScope == SPFeatureScope.Farm)
                 {
                     try
                     {
                         SPWebService.ContentService.Features.Remove(featureID, true);
                         removedFeatures++;
-                        logDateMsg(
+                        Log.Information(
                             string.Format("Success removing feature {0} from {1}",
                             featureID,
                             LocationManager.SafeDescribeObject(SPFarm.Local)));
                     }
                     catch (Exception exc)
                     {
-                        logException(exc,
+                        Log.Error(exc,
                             string.Format("Exception removing feature {0} from farm",
                             featureID,
                             LocationManager.SafeDescribeObject(SPFarm.Local)));
 
-                        logDateMsg("Farm - The Farm Scoped feature '" + featureID.ToString() + "' was not found. ");
+                        Log.Warning("Farm - The Farm Scoped feature '" + featureID.ToString() + "' was not found. ");
                     }
                 }
                 else
@@ -944,7 +927,7 @@ namespace FeatureAdmin.UserInterface
                     }
                 }
                 msgString = removedFeatures + " Features removed in the Farm. " + scannedThrough + " Web Applications were scanned.";
-                logDateMsg("Farm - " + msgString);
+                Log.Information("Farm - " + msgString);
             });
             return removedFeatures;
         }
@@ -969,13 +952,9 @@ namespace FeatureAdmin.UserInterface
                     {
                         msg += " (Force flag)";
                     }
-                    logException(exc, msg);
+                    Log.Error(exc, msg);
                 }
             }
-        }
-
-        private void ForceUninstallFeatureDefinition(Feature feature)
-        {
         }
 
         /// <summary>enables or disables all buttons for feature removal</summary>
@@ -993,6 +972,7 @@ namespace FeatureAdmin.UserInterface
         private void EnableActionButtonsAsAppropriate()
         {
             bool bDb = FeatureDb.IsLoaded();
+
             SPFeatureScope lowestScope = GetLowestSelectedScope();
 
             bool bWeb = !IsEmpty(m_CurrentWebLocation) && lowestScope >= SPFeatureScope.Web;
@@ -1029,7 +1009,7 @@ namespace FeatureAdmin.UserInterface
             string msgString;
             msgString = featuresRemoved.ToString() + " Features were removed. Please 'Reload Web Applications'!";
             MessageBox.Show(msgString);
-            logDateMsg(msgString);
+            Log.Information(msgString);
         }
 
         private string GetFeatureSolutionInfo(SPFeature feature)
@@ -1066,80 +1046,6 @@ namespace FeatureAdmin.UserInterface
             {
             }
             return text;
-        }
-
-        #endregion
-        #region Error & Logging Methods
-
-        protected void ReportError(string msg)
-        {
-            ReportError(msg, "Error");
-        }
-        protected void ReportError(string msg, string caption)
-        {
-            // TODO - be nice to have an option to suppress message boxes
-            MessageBox.Show(msg, caption);
-        }
-
-        protected string FormatSiteException(SPSite site, Exception exc, string msg)
-        {
-            msg += " on site " + site.ServerRelativeUrl + " (ContentDB: " + site.ContentDatabase.Name + ")";
-            if (IsSimpleAccessDenied(exc))
-            {
-                msg += " (web application user policy with Full Control and dbOwner rights on contentdb recommended for this account)";
-            }
-            return msg;
-        }
-
-        protected void logException(Exception exc, string msg)
-        {
-            logDateMsg(msg + " -- " + DescribeException(exc));
-        }
-
-        protected bool IsSimpleAccessDenied(Exception exc)
-        {
-            return (exc is System.UnauthorizedAccessException && exc.InnerException == null);
-        }
-
-        protected string DescribeException(Exception exc)
-        {
-            if (IsSimpleAccessDenied(exc))
-            {
-                return "Access is Denied";
-            }
-            StringBuilder txt = new StringBuilder();
-            while (exc != null)
-            {
-                if (txt.Length > 0) txt.Append(" =++= ");
-                txt.Append(exc.Message);
-                exc = exc.InnerException;
-            }
-            return txt.ToString();
-        }
-
-        /// <summary>
-        /// Log current date+time, plus message, plus line return
-        /// </summary>
-        protected void logDateMsg(string msg)
-        {
-            logMsg(DateTime.Now.ToString(Constants.Text.DATETIMEFORMAT) + " - " + msg);
-        }
-        /// <summary>
-        /// Log message plus line return
-        /// </summary>
-        protected void logMsg(string msg)
-        {
-            logTxt(msg + Environment.NewLine);
-        }
-
-        /// <summary>adds log string to the logfile</summary>
-        public void logTxt(string logtext)
-        {
-            this.txtResult.AppendText(logtext);
-        }
-        protected void ClearLog()
-        {
-            this.txtResult.Clear();
         }
 
         #endregion
@@ -1206,11 +1112,11 @@ namespace FeatureAdmin.UserInterface
                 SortableBindingList<Location> webapps = new SortableBindingList<Location>();
                 if (SPWebService.ContentService == null)
                 {
-                    logMsg("SPWebService.ContentService == null! Access error?");
+                    Log.Error("SPWebService.ContentService == null! Access error?");
                 }
                 if (SPWebService.AdministrationService == null)
                 {
-                    logMsg("SPWebService.AdministrationService == null! Access error?");
+                    Log.Error("SPWebService.AdministrationService == null! Access error?");
                 }
 
                 foreach (WebAppEnumerator.WebAppInfo webappInfo in WebAppEnumerator.GetAllWebApps())
@@ -1222,7 +1128,7 @@ namespace FeatureAdmin.UserInterface
                     }
                     catch (Exception exc)
                     {
-                        logException(exc,
+                        Log.Error(exc,
                             string.Format("Exception enumerating webapp: {0}",
                             LocationManager.SafeDescribeObject(webappInfo.WebApp)));
                     }
@@ -1293,7 +1199,7 @@ namespace FeatureAdmin.UserInterface
                         }
                         catch (Exception exc)
                         {
-                            logException(exc,
+                            Log.Error(exc,
                                 string.Format("Exception enumerating site: {0}",
                                 LocationManager.SafeDescribeObject(site)));
                         }
@@ -1307,7 +1213,7 @@ namespace FeatureAdmin.UserInterface
                 }
                 catch (Exception exc)
                 {
-                    logException(exc, "Exception enumerating site collections");
+                    Log.Error(exc, "Exception enumerating site collections");
                 }
             }
         }
@@ -1341,7 +1247,7 @@ namespace FeatureAdmin.UserInterface
                 }
                 catch (Exception exc)
                 {
-                    logException(exc, "Exception enumerating webs");
+                    Log.Error(exc, "Exception enumerating webs");
                 }
             }
         }
@@ -1411,7 +1317,7 @@ namespace FeatureAdmin.UserInterface
                         }
                         catch (Exception exc)
                         {
-                            logException(exc,
+                            Log.Error(exc,
                                 string.Format("Exception enumerating web: {0}",
                                 LocationManager.SafeDescribeObject(web)));
                         }
@@ -1430,7 +1336,7 @@ namespace FeatureAdmin.UserInterface
             }
             catch (Exception exc)
             {
-                logException(exc, "Exception enumerating subwebs");
+                Log.Error(exc, "Exception enumerating subwebs");
             }
         }
 
@@ -1459,7 +1365,7 @@ namespace FeatureAdmin.UserInterface
 
         private void btnClearLog_Click(object sender, EventArgs e)
         {
-            ClearLog();
+            logTextWriter.ClearLog();
         }
 
         private void gridFeatureDefinitions_SelectionChanged(object sender, EventArgs e)
@@ -1584,7 +1490,7 @@ namespace FeatureAdmin.UserInterface
             {
                 ActivationFinder finder = new ActivationFinder();
                 // No Found callback b/c we process final list
-                finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logException);
+                finder.ExceptionListeners += new ActivationFinder.ExceptionHandler(logTextWriter.ExceptionLogger);
 
                 // Call routine to actually find & report activations
                 FeatureDb.LoadAllData(finder.FindAllActivationsOfAllFeatures());
@@ -1711,21 +1617,6 @@ namespace FeatureAdmin.UserInterface
                 gridFeatureDefinitions.ContextMenuStrip = m_featureDefGridContextMenu;
                 UpdateGridContextMenu();
             }
-        }
-
-        private void CreateFeatureDefContextMenu()
-        {
-            // Construct context menu
-            ContextMenuStrip ctxtmenu = new ContextMenuStrip();
-            ToolStripMenuItem header = new ToolStripMenuItem("Feature: ?");
-            header.Name = "Header";
-            header.ForeColor = Color.DarkBlue;
-            ctxtmenu.Items.Add(header);
-            ToolStripMenuItem menuViewActivations = new ToolStripMenuItem("View activations");
-            menuViewActivations.Name = "Activations";
-            menuViewActivations.MouseDown += gridFeatureDefinitions_ViewActivationsClick;
-            ctxtmenu.Items.AddRange(new ToolStripItem[] { menuViewActivations });
-            m_featureDefGridContextMenu = ctxtmenu;
         }
 
         private void UpdateGridContextMenu()

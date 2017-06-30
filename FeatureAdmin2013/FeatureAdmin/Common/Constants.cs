@@ -10,14 +10,15 @@ namespace FeatureAdmin.Common
     {
         public static class Text
         {
+            public static string FeatureAdminTitle = string.Format(
+            "FeatureAdmin for SharePoint {0} - v{1}",
+                Common.Constants.SharePointVersion,
+                version);
+
             public const string UndefinedActivatedFeature = "Faulty - Id: {0}";
 
             // warning, when no feature was selected
             public const string NOFEATURESELECTED = "No feature selected. Please select at least 1 feature.";
-
-            // defines, how the format of the log time
-            public static string DATETIMEFORMAT = "yyyy/MM/dd HH:mm:ss";
-            // prefix for log entries: Environment.NewLine + DateTime.Now.ToString(DATETIMEFORMAT) + " - "; 
 
         }
         public static class PropertyNames
@@ -25,6 +26,8 @@ namespace FeatureAdmin.Common
             public const string Activations = "Activations";
             public const string UpgradesRequired = "UpgradesRequired";
         }
+
+        public static Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 
 #if (SP2013)
         public static string SharePointVersion = "2013";

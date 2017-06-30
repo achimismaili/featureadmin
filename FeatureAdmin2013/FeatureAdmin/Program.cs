@@ -19,9 +19,6 @@ namespace FeatureAdmin
         [STAThread]
         static void Main()
         {
-            Log.Logger = new LoggerConfiguration()
-               .WriteTo.TextWriter(Services.Logger.LogMessages)
-               .CreateLogger();
 
             if (SPFarm.Local == null)
             {
