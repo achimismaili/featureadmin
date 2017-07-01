@@ -13,11 +13,11 @@ namespace FeatureAdmin.Test.Repository
     /// </summary>
     public class AdminRepositoryGetFeatureDefinitionTest 
     {
-        private ReadRepository repository;
+        private FeatureRepository repository;
 
         public AdminRepositoryGetFeatureDefinitionTest()
         {
-            repository = new ReadRepository();
+            repository = new FeatureRepository();
         }
 
         [Fact]

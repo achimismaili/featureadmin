@@ -5,7 +5,7 @@ using Microsoft.SharePoint.Administration;
 
 namespace FeatureAdmin.Models.Interfaces
 {
-    public interface IFeatureDefinition
+    public interface IFeatureDefinition : IFeatureIdentifier
     {
         List<ActivatedFeature> ActivatedFeatures { get; set; }
         IEnumerable<KeyValuePair<string, string>> AdditionalProperties { get; }
@@ -14,8 +14,6 @@ namespace FeatureAdmin.Models.Interfaces
         Version DefinitionVersion { get; }
         bool Faulty { get; }
         string GetTitle { get; }
-        Guid Id { get; }
         string Name { get; }
-        SPFeatureScope Scope { get; }
     }
 }

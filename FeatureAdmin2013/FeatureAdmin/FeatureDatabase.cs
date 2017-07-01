@@ -14,7 +14,7 @@ namespace FeatureAdmin
     {
         Dictionary<Guid, Feature> _AllFeatureDefinitions = new Dictionary<Guid, Feature>();
         Dictionary<string, List<Feature>> _LocationFeatures = new Dictionary<string,List<Feature>>();
-        Dictionary<Guid, List<Location>> _FeatureLocations = new Dictionary<Guid, List<Location>>();
+        Dictionary<Guid, List<FeatureParent>> _FeatureLocations = new Dictionary<Guid, List<FeatureParent>>();
 
         public bool IsLoaded() { return _AllFeatureDefinitions.Count > 0; }
 
@@ -27,7 +27,7 @@ namespace FeatureAdmin
             return _AllFeatureDefinitions.Count;
         }
 
-        public List<Feature> GetFeaturesOfLocation(Location location)
+        public List<Feature> GetFeaturesOfLocation(FeatureParent location)
         {
             return GetFeaturesOfLocation(location.Key);
         }
@@ -42,11 +42,11 @@ namespace FeatureAdmin
                 return new List<Feature>();
             }
         }
-        public List<Location> GetLocationsOfFeature(Feature feature)
+        public List<FeatureParent> GetLocationsOfFeature(Feature feature)
         {
             return GetLocationsOfFeature(feature.Id);
         }
-        public List<Location> GetLocationsOfFeature(Guid featureId)
+        public List<FeatureParent> GetLocationsOfFeature(Guid featureId)
         {
             if (_FeatureLocations.ContainsKey(featureId))
             {
@@ -54,14 +54,14 @@ namespace FeatureAdmin
             }
             else
             {
-                return new List<Location>();
+                return new List<FeatureParent>();
             }
         }
 
         /// <summary>
         /// Reload all feature definition and activation data by traversing farm
         /// </summary>
-        public void LoadAllData(Dictionary<Guid, List<Location>> activatedFeatureLocations)
+        public void LoadAllData(Dictionary<Guid, List<FeatureParent>> activatedFeatureLocations)
         {
             _AllFeatureDefinitions.Clear();
             _LocationFeatures.Clear();
@@ -96,12 +96,12 @@ namespace FeatureAdmin
         /// </summary>
         public void RecordFeatureActivation(object locobj, Guid featureId)
         {
-            Location location = LocationManager.GetLocation(locobj);
+            FeatureParent location = LocationManager.GetLocation(locobj);
         }
         /// <summary>
         /// Record that a feature has been activated (at location specified by Location)
         /// </summary>
-        public void RecordFeatureActivationAtLocation(Location location, Guid featureId)
+        public void RecordFeatureActivationAtLocation(FeatureParent location, Guid featureId)
         {
             Feature feature = GetOrAddFeatureFromDefinitions(featureId, location.Scope);
             AddToFeatureLocations(feature, location);
@@ -112,7 +112,7 @@ namespace FeatureAdmin
         /// </summary>
         public void RecordFeatureDeactivation(object locobj, Guid featureId)
         {
-            Location location = LocationManager.GetLocation(locobj);
+            FeatureParent location = LocationManager.GetLocation(locobj);
             RecordFeatureDeactivationAtLocation(location, featureId);
         }
         public void DoIt()
@@ -121,7 +121,7 @@ namespace FeatureAdmin
         /// <summary>
         /// Record that a feature has been deactivated (at location specified by Location)
         /// </summary>
-        public void RecordFeatureDeactivationAtLocation(Location location, Guid featureId)
+        public void RecordFeatureDeactivationAtLocation(FeatureParent location, Guid featureId)
         {
             Feature feature = GetOrAddFeatureFromDefinitions(featureId, location.Scope);
             RemoveFromFeatureLocations(feature, location);
@@ -198,19 +198,19 @@ namespace FeatureAdmin
                 feature.IsFaulty = true;
             }
         }
-        private void LoadAllFeatureActivations(Dictionary<Guid, List<Location>> activatedFeatureLocations)
+        private void LoadAllFeatureActivations(Dictionary<Guid, List<FeatureParent>> activatedFeatureLocations)
         {
-            foreach (KeyValuePair<Guid, List<Location>> activation in activatedFeatureLocations)
+            foreach (KeyValuePair<Guid, List<FeatureParent>> activation in activatedFeatureLocations)
             {
                 Guid featureId = activation.Key;
-                List<Location> locations = activation.Value;
+                List<FeatureParent> locations = activation.Value;
                 SPFeatureScope scope = locations[0].Scope;
                 Feature feature = GetOrAddFeatureFromDefinitions(featureId, scope);
                 // Add to FeatureLocations, which can be done as a lump
                 _FeatureLocations[featureId] = locations;
                 feature.Activations = locations.Count;
                 // Add to LocationFeatures, which has to be done one location at a time
-                foreach (Location location in locations)
+                foreach (FeatureParent location in locations)
                 {
                     AddToLocationFeatures(location, feature);
                 }
@@ -239,7 +239,7 @@ namespace FeatureAdmin
         /// <summary>
         /// Add record to our _LocationFeatures
         /// </summary>
-        private void AddToLocationFeatures(Location location, Feature feature)
+        private void AddToLocationFeatures(FeatureParent location, Feature feature)
         {
             string lkey = location.Key;
             if (!_LocationFeatures.ContainsKey(lkey))
@@ -255,13 +255,13 @@ namespace FeatureAdmin
         /// <summary>
         /// Add record to our _FeaturesLocation
         /// </summary>
-        private void AddToFeatureLocations(Feature feature, Location location)
+        private void AddToFeatureLocations(Feature feature, FeatureParent location)
         {
             if (!_FeatureLocations.ContainsKey(feature.Id))
             {
-                _FeatureLocations.Add(feature.Id, new List<Location>());
+                _FeatureLocations.Add(feature.Id, new List<FeatureParent>());
             }
-            List<Location> locations = _FeatureLocations[feature.Id];
+            List<FeatureParent> locations = _FeatureLocations[feature.Id];
             if (!locations.Contains(location))
             {
                 locations.Add(location);
@@ -271,7 +271,7 @@ namespace FeatureAdmin
         /// <summary>
         /// Remove record from our _LocationFeatures
         /// </summary>
-        private void RemoveFromLocationFeatures(Location location, Feature feature)
+        private void RemoveFromLocationFeatures(FeatureParent location, Feature feature)
         {
             string lkey = location.Key;
             if (_LocationFeatures.ContainsKey(lkey))
@@ -286,11 +286,11 @@ namespace FeatureAdmin
         /// <summary>
         /// Remove record from our _FeaturesLocation
         /// </summary>
-        private void RemoveFromFeatureLocations(Feature feature, Location location)
+        private void RemoveFromFeatureLocations(Feature feature, FeatureParent location)
         {
             if (_FeatureLocations.ContainsKey(feature.Id))
             {
-                List<Location> locations = _FeatureLocations[feature.Id];
+                List<FeatureParent> locations = _FeatureLocations[feature.Id];
                 if (locations.Contains(location))
                 {
                     locations.Remove(location);

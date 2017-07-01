@@ -27,7 +27,7 @@ namespace FeatureAdmin
         private Guid desiredFeature; //Empty if enumerating all
         private bool stopAtFirstHit;
         private int activationsFound = 0;
-        private Dictionary<Guid, List<Location>> featureLocations = new Dictionary<Guid, List<Location>>();
+        private Dictionary<Guid, List<FeatureParent>> featureLocations = new Dictionary<Guid, List<FeatureParent>>();
         private Dictionary<Guid, int> faultyFeatures = new Dictionary<Guid, int>();
 
         public List<Guid> GetFaultyFeatureIdList() { return new List<Guid>(faultyFeatures.Keys); }
@@ -47,7 +47,7 @@ namespace FeatureAdmin
         /// Find and return all activated locations of specified feature
         /// </summary>
         /// <returns>list of locations (dictionary only lists specified feature)</returns>
-        public Dictionary<Guid, List<Location>> FindAllActivations(Guid featureId)
+        public Dictionary<Guid, List<FeatureParent>> FindAllActivations(Guid featureId)
         {
             desiredFeature = featureId;
             stopAtFirstHit = false;
@@ -58,7 +58,7 @@ namespace FeatureAdmin
         /// Find and return all activated locations of all features
         /// </summary>
         /// <returns>dictionary of all locations of all features</returns>
-        public Dictionary<Guid, List<Location>> FindAllActivationsOfAllFeatures()
+        public Dictionary<Guid, List<FeatureParent>> FindAllActivationsOfAllFeatures()
         {
             desiredFeature = Guid.Empty;
             stopAtFirstHit = false;
@@ -280,15 +280,15 @@ namespace FeatureAdmin
         private void ReportFeature(object obj, bool faulty, SPFeatureScope scope, Guid featureId, string url, string name)
         {
             OnFoundFeature(featureId, url, name);
-            Location location = LocationManager.GetLocation(obj);
-            List<Location> locs = null;
+            FeatureParent location = LocationManager.GetLocation(obj);
+            List<FeatureParent> locs = null;
             if (featureLocations.ContainsKey(featureId))
             {
                 locs = featureLocations[featureId];
             }
             else
             {
-                locs = new List<Location>();
+                locs = new List<FeatureParent>();
             }
             locs.Add(location);
             featureLocations[featureId] = locs;

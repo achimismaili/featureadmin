@@ -9,20 +9,22 @@ using FeatureAdmin.Common;
 using FeatureAdmin.Models;
 
 using Serilog;
+using FeatureAdmin.Repository;
+using FeatureAdmin.Services.SharePointApi;
+using System.Linq;
 
 namespace FeatureAdmin.UserInterface
 {
     public partial class FrmMain : Form
     {
-
         #region members
 
-        public FeatureDatabase FeatureDb = new FeatureDatabase();
-        private Location m_CurrentWebAppLocation;
-        private Location m_CurrentSiteLocation;
-        private Location m_CurrentWebLocation;
+        private FeatureRepository repository = new FeatureRepository();
+        private FeatureParent m_CurrentWebAppLocation;
+        private FeatureParent m_CurrentSiteLocation;
+        private FeatureParent m_CurrentWebLocation;
         private ContextMenuStrip m_featureDefGridContextMenu;
-        private Feature m_featureDefGridContextFeature;
+        private FeatureDefinition m_featureDefGridContextFeature;
 
         private FeatureAdmin.Services.Logger logTextWriter;
         #endregion
@@ -93,39 +95,18 @@ namespace FeatureAdmin.UserInterface
             UiConfig.SetRowRedAndBold(gridFeatureDefinitions.Rows);
         }
 
-        /// <summary>Used to populate the list of Farm Feature Definitions</summary>
-        private void btnLoadFDefs_Click(object sender, EventArgs e)
-        {
-            ReloadAllFeatureDefinitions();
-            EnableActionButtonsAsAppropriate();
-        }
-
-        private void ReloadAllFeatureDefinitions()
-        {
-            using (WaitCursor wait = new WaitCursor())
-            {
-                this.gridFeatureDefinitions.DataSource = null;
-
-                ReloadAllActivationData(); // reloads defintions & activation data
-
-                SortableBindingList<Feature> features = FeatureDb.GetAllFeatures();
-
-                this.gridFeatureDefinitions.DataSource = features;
-
-                Serilog.Log.Information("Feature Definition list updated.");
-            }
-        }
+     
 
         /// <summary>
         /// Get list of all feature definitions currently selected in the
         ///  Feature Definition list
         /// </summary>
-        private List<Feature> GetSelectedFeatureDefinitions()
+        private List<FeatureDefinition> GetSelectedFeatureDefinitions()
         {
-            List<Feature> features = new List<Feature>();
+            var features = new List<FeatureDefinition>();
             foreach (DataGridViewRow row in this.gridFeatureDefinitions.SelectedRows)
             {
-                Feature feature = row.DataBoundItem as Feature;
+                FeatureDefinition feature = row.DataBoundItem as FeatureDefinition;
                 features.Add(feature);
             }
             return features;
@@ -138,13 +119,13 @@ namespace FeatureAdmin.UserInterface
         }
         private void PromptAndUninstallFeatureDefs()
         {
-            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
+            List<FeatureDefinition> selectedFeatures = GetSelectedFeatureDefinitions();
             if (selectedFeatures.Count != 1)
             {
                 MessageBox.Show("Please select exactly 1 feature.");
                 return;
             }
-            Feature feature = selectedFeatures[0];
+            var feature = selectedFeatures[0];
 
             string msg = string.Format(
                 "This will uninstall the {0} selected feature definition(s) from the Farm.",
@@ -167,14 +148,10 @@ namespace FeatureAdmin.UserInterface
                 RemoveFeaturesWithinFarm(feature.Id, feature.Scope);
             }
             msg = "Use Force flag for uninstall?";
-            FeatureUninstaller.Forcibility forcibility = FeatureUninstaller.Forcibility.Regular;
-            if (ConfirmBoxYesNo(msg))
-            {
-                forcibility = FeatureUninstaller.Forcibility.Forcible;
-            }
+            
             using (WaitCursor wait = new WaitCursor())
             {
-                UninstallSelectedFeatureDefinitions(selectedFeatures, forcibility);
+                UninstallSelectedFeatureDefinitions(selectedFeatures, repository.AlwaysUseForce);
             }
         }
 
@@ -214,7 +191,7 @@ namespace FeatureAdmin.UserInterface
                 "This will force deactivate the {0} selected feature(s) from the selected Site(SPWeb): {1}"
                 + "\n Continue ?",
                 clbSPWebFeatures.CheckedItems.Count,
-                LocationManager.SafeDescribeLocation(m_CurrentWebLocation)
+                m_CurrentWebLocation.Url
                 );
             if (MessageBox.Show(msgString, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
@@ -223,17 +200,13 @@ namespace FeatureAdmin.UserInterface
 
             using (WaitCursor wait = new WaitCursor())
             {
-                using (SPSite site = OpenCurrentSite())
-                {
-                    using (SPWeb web = OpenCurrentWeb(site))
-                    {
-                        List<Feature> webFeatures = GetSelectedWebFeatures();
-                        ForceRemoveFeaturesFromLocation(m_CurrentWebAppLocation, web.Features, webFeatures);
-                    }
-                }
+                List<ActivatedFeature> webFeatures = 
+                    GridConverter.SelectedRowsToActivatedFeature(clbSPWebFeatures.CheckedItems);
+
+                repository.DeactivateFeatures(webFeatures, repository.AlwaysUseForce);
             }
 
-            msgString = "Done. Please refresh the feature list, when all features are removed!";
+            msgString = "Done. Please Reload, when all features are removed!";
             Log.Information(msgString);
         }
 
@@ -254,47 +227,27 @@ namespace FeatureAdmin.UserInterface
             }
 
             string msgString;
-            msgString = "This will force remove/deactivate the selected Feature(s) from the selected Site Collection only. Continue ?";
+            msgString = "This will remove/deactivate the selected Feature(s) from the selected Site Collection only. Continue ?";
             if (MessageBox.Show(msgString, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
                 return;
             }
 
+
             using (WaitCursor wait = new WaitCursor())
             {
-                using (SPSite site = OpenCurrentSite())
-                {
-                    List<Feature> scFeatures = GetSelectedSiteCollectionFeatures();
-                    Location scLocation = LocationManager.GetLocation(site);
-                    ForceRemoveFeaturesFromLocation(null, site.Features, scFeatures);
-                }
+                List<ActivatedFeature> siteFeatures =
+                    GridConverter.SelectedRowsToActivatedFeature(clbSPSiteFeatures.CheckedItems);
+
+                repository.DeactivateFeatures(siteFeatures, repository.AlwaysUseForce);
             }
+
 
             msgString = "Done. Please refresh the feature list, when all features are removed!";
             Log.Information(msgString);
         }
 
-        private SPSite OpenCurrentSite()
-        {
-            if (IsEmpty(m_CurrentSiteLocation)) { return null; }
-            SPWebApplication webapp = GetCurrentWebApplication();
-            if (webapp == null) { return null; }
-            try
-            {
-                return webapp.Sites[m_CurrentSiteLocation.RelativeUrl];
-            }
-            catch (Exception exc)
-            {
-                Log.Error("Exception accessing current site collection", exc);
-                return null;
-            }
-        }
-
-        private SPWeb OpenCurrentWeb(SPSite site)
-        {
-            if (IsEmpty(m_CurrentWebLocation)) { return null; }
-            return site.OpenWeb(m_CurrentWebLocation.Id);
-        }
+       
 
         /// <summary>Removes selected features from the current SiteCollection only</summary>
         /// <param name="sender"></param>
@@ -334,15 +287,9 @@ namespace FeatureAdmin.UserInterface
 
             using (WaitCursor wait = new WaitCursor())
             {
-                using (SPSite site = OpenCurrentSite())
-                {
-                    if (site == null) { return; }
-                    // the web features need a special treatment
-                    foreach (Feature checkedFeature in clbSPWebFeatures.CheckedItems)
-                    {
-                        featuresRemoved += removeWebFeaturesWithinSiteCollection(site, checkedFeature.Id);
-                    }
-                }
+                var features = GridConverter.SelectedRowsToActivatedFeature(clbSPWebFeatures.CheckedItems);
+
+                featuresRemoved = repository.DeactivateFeatures(features, repository.AlwaysUseForce);
             }
             removeReady(featuresRemoved);
         }
@@ -361,7 +308,7 @@ namespace FeatureAdmin.UserInterface
 
             int featuresRemoved = 0;
 
-            string title = m_CurrentWebAppLocation.Name;
+            string title = m_CurrentWebAppLocation.DisplayName;
             string msgString = string.Empty;
             msgString = "The " + featuresSelected + " selected Feature(s) " +
                 "will be removed/deactivated from the complete web application: " + title + ". Continue?";
@@ -372,95 +319,19 @@ namespace FeatureAdmin.UserInterface
 
             using (WaitCursor wait = new WaitCursor())
             {
-                SPWebApplication webApp = GetCurrentWebApplication();
-                List<Feature> scFeatures = GetSelectedSiteCollectionFeatures();
-                List<Feature> webFeatures = GetSelectedWebFeatures();
-                TraverseForceRemoveFeaturesFromWebApplication(webApp, scFeatures, webFeatures);
+                var parent = m_CurrentWebAppLocation.Id;
+                List<ActivatedFeature> scFeatures = GridConverter.SelectedRowsToActivatedFeature( clbSPSiteFeatures.CheckedItems);
+                featuresRemoved = repository.DeactivateFeatures(parent, scFeatures, repository.AlwaysUseForce);
+
+                List<ActivatedFeature> webFeatures = GridConverter.SelectedRowsToActivatedFeature(clbSPWebFeatures.CheckedItems);
+                
+
             }
             removeReady(featuresRemoved);
         }
 
-        // TODO: All this traverse remove code should be factored into its own class
-        private void TraverseForceRemoveFeaturesFromFarm(List<Feature> scFeatures, List<Feature> webFeatures)
-        {
-            foreach (WebAppEnumerator.WebAppInfo webappInfo in WebAppEnumerator.GetAllWebApps())
-            {
-                TraverseForceRemoveFeaturesFromWebApplication(webappInfo.WebApp, scFeatures, webFeatures);
-            }
-        }
-
-        // TODO: All this traverse remove code should be factored into its own class
-        private void TraverseForceRemoveFeaturesFromWebApplication(SPWebApplication webapp, List<Feature> scFeatures, List<Feature> webFeatures)
-        {
-            foreach (SPSite site in webapp.Sites)
-            {
-                try
-                {
-                    TraverseForceRemoveFeaturesFromSiteCollection(site, scFeatures, webFeatures);
-                }
-                finally
-                {
-                    if (site != null)
-                    {
-                        site.Dispose();
-                    }
-                }
-            }
-        }
-
-        private void TraverseForceRemoveFeaturesFromSiteCollection(SPSite site, List<Feature> scFeatures, List<Feature> webFeatures)
-        {
-            if (scFeatures != null && scFeatures.Count > 0)
-            {
-                Location scLoc = LocationManager.GetLocation(site);
-                ForceRemoveFeaturesFromLocation(scLoc, site.Features, scFeatures);
-            }
-            if (webFeatures != null && webFeatures.Count > 0)
-            {
-                foreach (SPWeb web in site.AllWebs)
-                {
-                    try
-                    {
-                        ForceRemoveFeaturesFromWeb(web, webFeatures);
-                    }
-                    finally
-                    {
-                        if (web != null)
-                        {
-                            web.Dispose();
-                        }
-                    }
-                }
-            }
-        }
-
-        private void ForceRemoveFeaturesFromWeb(SPWeb web, List<Feature> webFeatures)
-        {
-            if (webFeatures != null && webFeatures.Count > 0)
-            {
-                Location webLoc = LocationManager.GetLocation(web);
-                ForceRemoveFeaturesFromLocation(webLoc, web.Features, webFeatures);
-            }
-        }
-
-        private List<Feature> GetSelectedSiteCollectionFeatures()
-        {
-            List<Feature> list = new List<Feature>();
-            foreach (Feature feature in clbSPSiteFeatures.CheckedItems)
-            {
-                list.Add(feature);
-            }
-            return list;
-        }
-        private List<Feature> GetSelectedWebFeatures()
-        {
-            List<Feature> list = new List<Feature>();
-            foreach (Feature feature in clbSPWebFeatures.CheckedItems)
-            {
-                list.Add(feature);
-            }
-            return list;
-        }
+        
+        
         /// <summary>Removes selected features from the whole Farm</summary>
         private void btnRemoveFromFarm_Click(object sender, EventArgs e)
         {
@@ -483,9 +354,12 @@ namespace FeatureAdmin.UserInterface
             }
             using (WaitCursor wait = new WaitCursor())
             {
-                List<Feature> scFeatures = GetSelectedSiteCollectionFeatures();
-                List<Feature> webFeatures = GetSelectedWebFeatures();
-                TraverseForceRemoveFeaturesFromFarm(scFeatures, webFeatures);
+                List<ActivatedFeature> scFeatures = GridConverter.SelectedRowsToActivatedFeature(clbSPSiteFeatures.CheckedItems);
+                repository.DeactivateFeaturesRecursive(repository.GetFeatureParentFarm(), scFeatures, repository.AlwaysUseForce);
+                List<ActivatedFeature> webFeatures = GridConverter.SelectedRowsToActivatedFeature(clbSPSiteFeatures.CheckedItems);
+                repository.DeactivateFeaturesRecursive(repository.GetFeatureParentFarm(), webFeatures, repository.AlwaysUseForce);
+
+
             }
             removeReady(featuresRemoved);
         }
@@ -494,9 +368,9 @@ namespace FeatureAdmin.UserInterface
 
         #region Feature Activation + Deactivation
 
-        private void PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope activationScope, Location currentLocation, FeatureActivator.Action action)
+        private void PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(SPFeatureScope activationScope, FeatureParent currentLocation, FeatureActivator.Action action)
         {
-            List<Feature> selectedFeatures = GetSelectedFeatureDefinitions();
+            List<FeatureDefinition> selectedFeatures = GetSelectedFeatureDefinitions();
 
             PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
                 selectedFeatures,
@@ -507,63 +381,25 @@ namespace FeatureAdmin.UserInterface
 
         }
         public void PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
-            List<Feature> selectedFeatures,
+            List<FeatureDefinition> selectedFeatures,
             SPFeatureScope activationScope,
-            Location currentLocation,
-            FeatureActivator.Action action)
+            FeatureParent currentLocation)
         {
-            FeatureSet featureSet = new FeatureSet(selectedFeatures);
-            string verbnow = "?", verbpast = "?";
-            switch (action)
-            {
-                case FeatureActivator.Action.Activating:
-                    verbnow = "activate"; verbpast = "activated";
-                    break;
-                case FeatureActivator.Action.Deactivating:
-                    verbnow = "deactivate"; verbpast = "deactivated";
-                    break;
-                default:
-                    throw new Exception("Invalid action in activateSelectedFeaturesAcrossSpecifiedScope");
-            }
-
-
 
             if (selectedFeatures.Count > 10)
             {
                 InfoBox(string.Format(
-                    "Too many features ({0}) selected; max 10 may be {1} at time",
-                    selectedFeatures.Count,
-                    verbpast
+                    "Too many features ({0}) selected; max is 10 at a time",
+                    selectedFeatures.Count
                     ));
                 return;
             }
 
-            if (featureSet.LowestScope < activationScope)
-            {
-                InfoBox(string.Format(
-                    "{0} Feature(s) cannot be {1} at level {2}",
-                    featureSet.LowestScope,
-                    verbpast,
-                    activationScope
-                    ));
-                return;
-            }
-
-            string currentLocName = "?";
-            if (activationScope == SPFeatureScope.Farm)
-            {
-                currentLocName = "Local Farm";
-            }
-            else
-            {
-                currentLocName = currentLocation.Name + " -- " + currentLocation.FullUrl;
-            }
-            string msg;
-            msg = string.Format(
-                "{0}  the selected {1} features: \n"
-                + "{2}"
-                + "in the selected {3}: \n\t{4}",
-                CultureInfo.CurrentCulture.TextInfo.ToTitleCase(verbnow),
+ 
+            var msg = string.Format(
+                "Processing the selected {0} features: \n"
+                + "{1}"
+                + "in the selected {2}: \n\t{3}",
                 selectedFeatures.Count,
                 GetFeatureSummaries(selectedFeatures, "\t{Name} ({Scope})\n"),
                 activationScope,
@@ -579,7 +415,7 @@ namespace FeatureAdmin.UserInterface
             {
                 forcefulness = FeatureActivator.Forcefulness.Forcible;
             }
-            FeatureActivator activator = new FeatureActivator(FeatureDb, action, featureSet);
+            FeatureActivator activator = new FeatureActivator(repository, action, featureSet);
             activator.ExceptionLoggingListeners += new FeatureActivator.ExceptionLoggerHandler(activator_ExceptionLoggingListeners);
             activator.InfoLoggingListeners += activator_InfoLoggingListeners;
 
@@ -671,19 +507,6 @@ namespace FeatureAdmin.UserInterface
             }
             return featureNames.ToString();
         }
-
-        void activator_ExceptionLoggingListeners(Exception exc, Location location, string detail)
-        {
-            string msg = string.Format("{0} at {1}", detail, LocationManager.GetLocation(location));
-            Log.Error(msg, exc);
-        }
-        void activator_InfoLoggingListeners(Location location, string detail)
-        {
-            string msg = string.Format("{0} at {1}", detail, LocationManager.SafeDescribeLocation(location));
-            Log.Information(msg);
-        }
-
-
         #endregion
 
         #region Helper Methods
@@ -699,7 +522,7 @@ namespace FeatureAdmin.UserInterface
                 Log.Information("Feature selection changed:");
                 if (clbSPSiteFeatures.CheckedItems.Count > 0)
                 {
-                    foreach (Feature checkedFeature in clbSPSiteFeatures.CheckedItems)
+                    foreach (ActivatedFeature checkedFeature in clbSPSiteFeatures.CheckedItems)
                     {
                         Log.Information(checkedFeature.ToString() + ", Scope: Site");
                     }
@@ -707,7 +530,7 @@ namespace FeatureAdmin.UserInterface
 
                 if (clbSPWebFeatures.CheckedItems.Count > 0)
                 {
-                    foreach (Feature checkedFeature in clbSPWebFeatures.CheckedItems)
+                    foreach (ActivatedFeature checkedFeature in clbSPWebFeatures.CheckedItems)
                     {
                         Log.Information(checkedFeature.ToString() + ", Scope: Web");
                     }
@@ -724,7 +547,7 @@ namespace FeatureAdmin.UserInterface
         /// Forcefully delete specified features from specified collection
         /// (Could be SPFarm.Features, or SPWebApplication.Features, or etc.)
         /// </summary>
-        private int ForceRemoveFeaturesFromLocation(Location location, SPFeatureCollection spfeatureSet, List<Feature> featuresToRemove)
+        private int ForceRemoveFeaturesFromLocation(FeatureParent location, SPFeatureCollection spfeatureSet, List<Feature> featuresToRemove)
         {
             int removedFeatures = 0;
             foreach (Feature feature in featuresToRemove)
@@ -737,7 +560,7 @@ namespace FeatureAdmin.UserInterface
 
         /// <summary>forcefully removes a feature from a featurecollection</summary>
         /// <param name="id">Feature ID</param>
-        public void ForceRemoveFeatureFromLocation(Location location, SPFeatureCollection spfeatureSet, Guid featureId)
+        public void ForceRemoveFeatureFromLocation(FeatureParent location, SPFeatureCollection spfeatureSet, Guid featureId)
         {
             try
             {
@@ -943,25 +766,32 @@ namespace FeatureAdmin.UserInterface
 
 
         /// <summary>Uninstall a collection of Farm Feature Definitions</summary>
-        private void UninstallSelectedFeatureDefinitions(List<Feature> features, FeatureUninstaller.Forcibility forcibility)
+        private void UninstallSelectedFeatureDefinitions(List<FeatureDefinition> features, bool force)
         {
-            foreach (Feature feature in features)
+            Exception exception = null;
+
+            foreach (FeatureDefinition feature in features)
             {
+                string excMsg = string.Format(
+                       "Exception uninstalling feature defintion {0}",
+                       feature.Id);
+
                 try
                 {
-                    FeatureUninstaller.UninstallFeatureDefinition(
-                        feature.Id, feature.CompatibilityLevel, forcibility);
+                    FeatureDefinitionUninstall.Uninstall(
+                        feature.Id,
+                        feature.CompatibilityLevel,
+                        force, out exception);
+
+                    if (exception != null)
+                    {
+                        Log.Error("Inner " + excMsg, exception);
+                    }
                 }
                 catch (Exception exc)
                 {
-                    string msg = string.Format(
-                        "Exception uninstalling feature defintion {0}",
-                        feature.Id);
-                    if (forcibility == FeatureUninstaller.Forcibility.Forcible)
-                    {
-                        msg += " (Force flag)";
-                    }
-                    Log.Error( msg, exc);
+                   
+                    Log.Error(excMsg, exc);
                 }
             }
         }
@@ -980,7 +810,7 @@ namespace FeatureAdmin.UserInterface
         /// <param name="enabled">true = enabled, false = disabled</param>
         private void EnableActionButtonsAsAppropriate()
         {
-            bool bDb = FeatureDb.IsLoaded();
+            bool bDb = repository.IsLoaded();
 
             SPFeatureScope lowestScope = GetLowestSelectedScope();
 
@@ -1016,7 +846,7 @@ namespace FeatureAdmin.UserInterface
         private void removeReady(int featuresRemoved)
         {
             string msgString;
-            msgString = featuresRemoved.ToString() + " Features were removed. Please 'Reload Web Applications'!";
+            msgString = featuresRemoved.ToString() + " Features were removed. Please 'Reload all Data'!";
             MessageBox.Show(msgString);
             Log.Information(msgString);
         }
@@ -1061,12 +891,27 @@ namespace FeatureAdmin.UserInterface
 
         #region Feature lists, WebApp, SiteCollection and SPWeb list set up
 
-        /// <summary>trigger load of web application list</summary>
+        /// <summary>trigger reload of in memory database</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnListWebApplications_Click(object sender, EventArgs e)
+        private void btnRefreshAllContent_Click(object sender, EventArgs e)
         {
-            LoadWebAppGrid();
+            using (WaitCursor wait = new WaitCursor())
+            {
+                
+                EnableActionButtonsAsAppropriate();
+                LoadWebAppGrid();
+            
+                this.gridFeatureDefinitions.DataSource = null;
+
+                ReloadAllActivationData(); // reloads defintions & activation data
+
+                var featureDefinitions = repository.GetFeatureDefinitions();
+
+                this.gridFeatureDefinitions.DataSource = new SortableBindingList<FeatureDefinition>(featureDefinitions);
+
+                Log.Information("Feature Definition list updated.");
+            }
         }
 
         private void ConfigureWebApplicationsGrid()
@@ -1100,11 +945,11 @@ namespace FeatureAdmin.UserInterface
             // TODO - analogue to CreateFeatureDefContextMenu ?
         }
 
-        private Location GetSelectedWebApp()
+        private FeatureParent GetSelectedWebApp()
         {
             if (gridWebApplications.SelectedRows.Count != 1) { return null; }
             DataGridViewRow row = gridWebApplications.SelectedRows[0];
-            Location location = (row.DataBoundItem as Location);
+            FeatureParent location = (row.DataBoundItem as FeatureParent);
             return location;
         }
 
@@ -1118,39 +963,15 @@ namespace FeatureAdmin.UserInterface
                 ClearCurrentWebData();
                 removeBtnEnabled(false);
 
-                SortableBindingList<Location> webapps = new SortableBindingList<Location>();
-                if (SPWebService.ContentService == null)
-                {
-                    Log.Error("SPWebService.ContentService == null! Access error?");
-                }
-                if (SPWebService.AdministrationService == null)
-                {
-                    Log.Error("SPWebService.AdministrationService == null! Access error?");
-                }
-
-                foreach (WebAppEnumerator.WebAppInfo webappInfo in WebAppEnumerator.GetAllWebApps())
-                {
-                    try
-                    {
-                        Location webAppLocation = LocationManager.GetWebAppLocation(webappInfo.WebApp, webappInfo.Admin);
-                        webapps.Add(webAppLocation);
-                    }
-                    catch (Exception exc)
-                    {
-                        Log.Error(
-                            string.Format("Exception enumerating webapp: {0}",
-                            LocationManager.SafeDescribeObject(webappInfo.WebApp)),
-                            exc
-                            );
-                    }
-                }
-
+                SortableBindingList<FeatureParent> webapps = new SortableBindingList<FeatureParent>(
+                    repository.GetSharePointWebApplications()
+                    );
                 gridWebApplications.DataSource = webapps;
                 if (webapps.Count > 0)
                 {
                     gridSiteCollections.Enabled = true;
-                    // If there is only one, select it
-                    if (gridWebApplications.RowCount == 0)
+                    // If there is any row, select the first
+                    if (gridWebApplications.Rows.Count >0)
                     {
                         gridWebApplications.Rows[0].Selected = true;
                     }
@@ -1159,23 +980,6 @@ namespace FeatureAdmin.UserInterface
                 {
                     gridSiteCollections.Enabled = false;
                 }
-            }
-        }
-
-        private SPWebApplication GetCurrentWebApplication()
-        {
-            Guid id = m_CurrentWebAppLocation.Id;
-            if (id == Guid.Empty)
-            {
-                return null;
-            }
-            else if (id == SPAdministrationWebApplication.Local.Id)
-            {
-                return SPAdministrationWebApplication.Local;
-            }
-            else
-            {
-                return SPWebService.ContentService.WebApplications[id];
             }
         }
 
@@ -1200,12 +1004,12 @@ namespace FeatureAdmin.UserInterface
                     m_CurrentWebAppLocation = GetSelectedWebApp();
                     if (m_CurrentWebAppLocation == null) { return; }
                     SPWebApplication webApp = GetCurrentWebApplication();
-                    SortableBindingList<Location> sitecolls = new SortableBindingList<Location>();
+                    SortableBindingList<FeatureParent> sitecolls = new SortableBindingList<FeatureParent>();
                     foreach (SPSite site in webApp.Sites)
                     {
                         try
                         {
-                            Location siteLocation = LocationManager.GetLocation(site);
+                            FeatureParent siteLocation = LocationManager.GetLocation(site);
                             sitecolls.Add(siteLocation);
                         }
                         catch (Exception exc)
@@ -1238,11 +1042,11 @@ namespace FeatureAdmin.UserInterface
             EnableActionButtonsAsAppropriate();
         }
 
-        private Location GetSelectedSiteCollection()
+        private FeatureParent GetSelectedSiteCollection()
         {
             if (gridSiteCollections.SelectedRows.Count != 1) { return null; }
             DataGridViewRow row = gridSiteCollections.SelectedRows[0];
-            Location location = (row.DataBoundItem as Location);
+            FeatureParent location = (row.DataBoundItem as FeatureParent);
             return location;
         }
 
@@ -1266,14 +1070,14 @@ namespace FeatureAdmin.UserInterface
 
         private void ClearCurrentSiteCollectionData()
         {
-            Models.Location.Clear(m_CurrentSiteLocation);
+            Models.FeatureParent.Clear(m_CurrentSiteLocation);
             gridSiteCollections.DataSource = null;
             clbSPSiteFeatures.Items.Clear();
         }
 
         private void ClearCurrentWebData()
         {
-            Models.Location.Clear(m_CurrentWebLocation);
+            Models.FeatureParent.Clear(m_CurrentWebLocation);
             gridWebs.DataSource = null;
             clbSPWebFeatures.Items.Clear();
         }
@@ -1281,8 +1085,9 @@ namespace FeatureAdmin.UserInterface
         private void ReloadCurrentSiteCollectionFeatures()
         {
             clbSPSiteFeatures.Items.Clear();
-            if (IsEmpty(m_CurrentSiteLocation)) { return; }
-            List<Feature> features = FeatureDb.GetFeaturesOfLocation(m_CurrentSiteLocation);
+            if (IsEmpty(m_CurrentSiteLocation))
+            { return; }
+            List<Feature> features = repository.GetFeaturesOfLocation(m_CurrentSiteLocation);
             features.Sort();
             clbSPSiteFeatures.Items.AddRange(features.ToArray());
         }
@@ -1290,22 +1095,23 @@ namespace FeatureAdmin.UserInterface
         private void ReloadCurrentWebFeatures()
         {
             clbSPWebFeatures.Items.Clear();
-            if (IsEmpty(m_CurrentWebLocation)) { return; }
-            List<Feature> features = FeatureDb.GetFeaturesOfLocation(m_CurrentWebLocation);
+            if (IsEmpty(m_CurrentWebLocation))
+            { return; }
+            List<Feature> features = repository.GetFeaturesOfLocation(m_CurrentWebLocation);
             features.Sort();
             clbSPWebFeatures.Items.AddRange(features.ToArray());
         }
 
-        private static bool IsEmpty(Location location)
+        private static bool IsEmpty(FeatureParent location)
         {
-            return Models.Location.IsLocationEmpty(location);
+            return Models.FeatureParent.IsLocationEmpty(location);
         }
 
-        private Location GetSelectedWeb()
+        private FeatureParent GetSelectedWeb()
         {
             if (gridWebs.SelectedRows.Count != 1) { return null; }
             DataGridViewRow row = gridWebs.SelectedRows[0];
-            Location location = (row.DataBoundItem as Location);
+            FeatureParent location = (row.DataBoundItem as FeatureParent);
             return location;
         }
 
@@ -1316,33 +1122,21 @@ namespace FeatureAdmin.UserInterface
                 removeBtnEnabled(false);
 
                 m_CurrentSiteLocation = GetSelectedSiteCollection();
-                if (m_CurrentSiteLocation == null) { return; }
-                SortableBindingList<Location> weblocs = new SortableBindingList<Location>();
-                using (SPSite site = OpenCurrentSite())
+                if (m_CurrentSiteLocation == null) {
+                    
+                    return; }
+
+                var webs = repository.GetSharePointChildHierarchy(m_CurrentSiteLocation.Id);
+                if (webs == null || webs.Count == 0)
                 {
-                    foreach (SPWeb web in site.AllWebs)
-                    {
-                        try
-                        {
-                            Location webLocation = LocationManager.GetLocation(web);
-                            weblocs.Add(webLocation);
-                        }
-                        catch (Exception exc)
-                        {
-                            Log.Error(
-                                string.Format("Exception enumerating web: {0}",
-                                LocationManager.SafeDescribeObject(web)),
-                                exc
-                                );
-                        }
-                        finally
-                        {
-                            web.Dispose();
-                        }
-                    }
+                    Log.Warning("No webs found for site " +
+                        m_CurrentSiteLocation.Url);
+                    return;
                 }
-                gridWebs.DataSource = weblocs;
-                // select first site collection if there is only one
+                
+                gridWebs.DataSource = new SortableBindingList<FeatureParent>(webs);
+                
+                // select first web if there is only one
                 if (gridWebs.RowCount == 1)
                 {
                     gridWebs.Rows[0].Selected = true;
@@ -1394,11 +1188,10 @@ namespace FeatureAdmin.UserInterface
                 InfoBox("No site (SPWeb) selected");
                 return;
             }
-            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
-            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
-                SPFeatureScope.Web,
-                m_CurrentWebLocation,
-                FeatureActivator.Action.Activating);
+
+            var fds = Common.GridConverter.SelectedRowsToFeatureDefinition(gridFeatureDefinitions.SelectedRows);
+
+                repository.ActivateFeaturesRecursive(m_CurrentWebLocation, fds, repository.AlwaysUseForce);
         }
 
         private void btnDeactivateSPWeb_Click(object sender, EventArgs e)
@@ -1408,11 +1201,9 @@ namespace FeatureAdmin.UserInterface
                 InfoBox("No site (SPWeb) selected");
                 return;
             }
-            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
-            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
-                SPFeatureScope.Web,
-                m_CurrentWebLocation,
-                FeatureActivator.Action.Deactivating);
+            var fds = Common.GridConverter.SelectedRowsToFeatureDefinition(gridFeatureDefinitions.SelectedRows);
+
+            repository.DeactivateFeaturesRecursive(m_CurrentWebLocation, fds, repository.AlwaysUseForce);
         }
 
         private void btnActivateSPSite_Click(object sender, EventArgs e)
@@ -1422,11 +1213,10 @@ namespace FeatureAdmin.UserInterface
                 InfoBox("No site collection selected");
                 return;
             }
-            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
-            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
-                SPFeatureScope.Site,
-                m_CurrentSiteLocation,
-                FeatureActivator.Action.Activating);
+
+            var fds = Common.GridConverter.SelectedRowsToFeatureDefinition(gridFeatureDefinitions.SelectedRows);
+
+            repository.ActivateFeaturesRecursive(m_CurrentSiteLocation, fds, repository.AlwaysUseForce);
         }
 
         private void btnDeactivateSPSite_Click(object sender, EventArgs e)
@@ -1436,11 +1226,10 @@ namespace FeatureAdmin.UserInterface
                 InfoBox("No site collection selected");
                 return;
             }
-            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
-            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
-                SPFeatureScope.Site,
-                m_CurrentSiteLocation,
-                FeatureActivator.Action.Deactivating);
+
+            var fds = Common.GridConverter.SelectedRowsToFeatureDefinition(gridFeatureDefinitions.SelectedRows);
+
+            repository.DeactivateFeaturesRecursive(m_CurrentSiteLocation, fds, repository.AlwaysUseForce);
         }
 
         private void btnActivateSPWebApp_Click(object sender, EventArgs e)
@@ -1450,11 +1239,9 @@ namespace FeatureAdmin.UserInterface
                 InfoBox("No web application selected");
                 return;
             }
-            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
-            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
-                SPFeatureScope.WebApplication,
-                m_CurrentWebAppLocation,
-                FeatureActivator.Action.Activating);
+            var fds = Common.GridConverter.SelectedRowsToFeatureDefinition(gridFeatureDefinitions.SelectedRows);
+
+            repository.ActivateFeaturesRecursive(m_CurrentWebAppLocation, fds, repository.AlwaysUseForce);
         }
 
         private void btnDeactivateSPWebApp_Click(object sender, EventArgs e)
@@ -1464,38 +1251,32 @@ namespace FeatureAdmin.UserInterface
                 InfoBox("No web application selected");
                 return;
             }
-            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
-            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
-                SPFeatureScope.WebApplication,
-                m_CurrentWebAppLocation,
-                FeatureActivator.Action.Deactivating);
+            var fds = Common.GridConverter.SelectedRowsToFeatureDefinition(gridFeatureDefinitions.SelectedRows);
+
+            repository.DeactivateFeaturesRecursive(m_CurrentWebAppLocation, fds, repository.AlwaysUseForce);
         }
 
         private void btnActivateSPFarm_Click(object sender, EventArgs e)
         {
-            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
-            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
-                SPFeatureScope.Farm,
-                null, // Location
-                FeatureActivator.Action.Activating);
+            var fds = Common.GridConverter.SelectedRowsToFeatureDefinition(gridFeatureDefinitions.SelectedRows);
+
+            repository.ActivateFeaturesRecursive(repository.GetFeatureParentFarm(), fds, repository.AlwaysUseForce);
         }
 
         private void btnDeactivateSPFarm_Click(object sender, EventArgs e)
         {
-            FeatureActivator.Forcefulness forcefulness = FeatureActivator.Forcefulness.Regular; // TODO
-            PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
-                SPFeatureScope.Farm,
-                null, // Location
-                FeatureActivator.Action.Deactivating);
+            var fds = Common.GridConverter.SelectedRowsToFeatureDefinition(gridFeatureDefinitions.SelectedRows);
+
+            repository.DeactivateFeaturesRecursive(repository.GetFeatureParentFarm(), fds, repository.AlwaysUseForce);
         }
 
-        private List<Location> GetFeatureLocations(Guid featureId)
+        private List<FeatureParent> GetFeatureLocations(Guid featureId)
         {
-            if (!FeatureDb.IsLoaded())
+            if (!repository.IsLoaded())
             {
                 ReloadAllActivationData();
             }
-            return FeatureDb.GetLocationsOfFeature(featureId);
+            return repository.GetLocationsOfFeature(featureId);
         }
 
         private void ReloadAllActivationData()
@@ -1505,11 +1286,11 @@ namespace FeatureAdmin.UserInterface
                 ActivationFinder finder = new ActivationFinder();
 
                 // Call routine to actually find & report activations
-                FeatureDb.LoadAllData(finder.FindAllActivationsOfAllFeatures());
-                FeatureDb.MarkFaulty(finder.GetFaultyFeatureIdList());
+                repository.LoadAllData(finder.FindAllActivationsOfAllFeatures());
+                repository.MarkFaulty(finder.GetFaultyFeatureIdList());
                 lblFeatureDefinitions.Text = string.Format(
                     "All {0} Features installed in the Farm",
-                    FeatureDb.GetAllFeaturesCount());
+                    repository.GetAllFeaturesCount());
             }
         }
 
@@ -1579,30 +1360,13 @@ namespace FeatureAdmin.UserInterface
             DataGridView grid = sender as DataGridView;
             if (grid.Columns[e.ColumnIndex].DataPropertyName == "Activations")
             {
-                Feature feature = grid.Rows[e.RowIndex].DataBoundItem as Feature;
+                FeatureDefinition feature = grid.Rows[e.RowIndex].DataBoundItem as FeatureDefinition;
                 FeatureLocationSet set = new FeatureLocationSet();
                 ReviewActivationsOfFeature(feature);
             }
         }
 
-        private void ReviewActivationsOfFeature(Feature feature)
-        {
-            FeatureLocationSet set = new FeatureLocationSet();
-            set[feature] = GetFeatureLocations(feature.Id);
-            ReviewActivationsOfFeatures(set);
-        }
-        private void ReviewActivationsOfFeatures(FeatureLocationSet featLocs)
-        {
-            if (featLocs.Count == 0 || featLocs.GetTotalLocationCount() == 0)
-            {
-                MessageBox.Show("No activations found");
-            }
-            else
-            {
-                LocationForm form = new LocationForm(featLocs, this);
-                form.ShowDialog();
-            }
-        }
+        
 
         private void gridFeatureDefinitions_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -1683,5 +1447,16 @@ namespace FeatureAdmin.UserInterface
             gridFeatureDefinitions.ContextMenuStrip = null;
             m_featureDefGridContextFeature = null;
         }
+
+        private void useForce_CheckedChanged(object sender, EventArgs e)
+        {
+            repository.AlwaysUseForce = useForce.Checked;
+        }
+
+        private void ActionWebCaption_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

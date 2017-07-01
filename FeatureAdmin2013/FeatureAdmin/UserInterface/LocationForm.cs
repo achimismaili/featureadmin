@@ -17,7 +17,7 @@ namespace FeatureAdmin.UserInterface
         private class FeatureLocation
         {
             public Feature Feature;
-            public Location Location;
+            public FeatureParent Location;
             public string FeatureName
             {
                 get
@@ -95,11 +95,11 @@ namespace FeatureAdmin.UserInterface
         {
             // Create list of FeatureLocations
             List<FeatureLocation> list = new List<FeatureLocation>();
-            foreach (KeyValuePair<Feature, List<Location>> pair in _FeatureLocations)
+            foreach (KeyValuePair<Feature, List<FeatureParent>> pair in _FeatureLocations)
             {
                 Feature feature = pair.Key;
-                List<Location> locations = pair.Value;
-                foreach (Location location in locations)
+                List<FeatureParent> locations = pair.Value;
+                foreach (FeatureParent location in locations)
                 {
                     FeatureLocation floc = new FeatureLocation();
                     floc.Feature = feature;
@@ -154,10 +154,10 @@ namespace FeatureAdmin.UserInterface
                     break;
             }
         }
-        private void AddSiteDetails(Location location)
+        private void AddSiteDetails(FeatureParent location)
         {
         }
-        private void AddWebDetails(Location location)
+        private void AddWebDetails(FeatureParent location)
         {
         }
         private void AddLocationProperty(string name, string value)
@@ -217,7 +217,7 @@ namespace FeatureAdmin.UserInterface
                 && countFarm + countWebApp + countSiCo + countWeb > 0 // sanity check ...
                 )
             {
-                foreach (Location l in _selectedFeatureLocations.Select(fl => fl.Location).Distinct())
+                foreach (FeatureParent l in _selectedFeatureLocations.Select(fl => fl.Location).Distinct())
                 {
                     _parentForm.PromptAndActivateSelectedFeaturesAcrossSpecifiedScope(
                        _selectedFeatureLocations

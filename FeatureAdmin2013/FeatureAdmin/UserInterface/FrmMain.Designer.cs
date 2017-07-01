@@ -33,18 +33,18 @@ namespace FeatureAdmin.UserInterface
             this.clbSPWebFeatures = new System.Windows.Forms.CheckedListBox();
             this.btnRemoveFromWeb = new System.Windows.Forms.Button();
             this.lblLog = new System.Windows.Forms.Label();
-            this.btnListWebApplications = new System.Windows.Forms.Button();
+            this.btnRefreshAllContent = new System.Windows.Forms.Button();
             this.lblSiteCollections = new System.Windows.Forms.Label();
             this.lblWebApps = new System.Windows.Forms.Label();
             this.lblWebs = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lblFeatureDefinitions = new System.Windows.Forms.Label();
-            this.btnReloadFDefs = new System.Windows.Forms.Button();
             this.btnRemoveFromSiteCollection = new System.Windows.Forms.Button();
             this.btnRemoveFromWebApp = new System.Windows.Forms.Button();
             this.btnRemoveFromFarm = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FarmFeatures = new System.Windows.Forms.TabPage();
+            this.useForce = new System.Windows.Forms.CheckBox();
             this.FarmActionPanel = new System.Windows.Forms.Panel();
             this.btnUninstFDef = new System.Windows.Forms.Button();
             this.btnDeactivateSPFarm = new System.Windows.Forms.Button();
@@ -74,6 +74,16 @@ namespace FeatureAdmin.UserInterface
             this.splitContainerLeftDownWebsAndLogs = new System.Windows.Forms.SplitContainer();
             this.gridWebs = new System.Windows.Forms.DataGridView();
             this.btnClearLog = new System.Windows.Forms.Button();
+            this.all = new System.Windows.Forms.RadioButton();
+            this.featureFilterBox = new System.Windows.Forms.GroupBox();
+            this.farm = new System.Windows.Forms.RadioButton();
+            this.webApp = new System.Windows.Forms.RadioButton();
+            this.siCo = new System.Windows.Forms.RadioButton();
+            this.web = new System.Windows.Forms.RadioButton();
+            this.faulty = new System.Windows.Forms.RadioButton();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnUpgrade = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.tabControl1.SuspendLayout();
             this.FarmFeatures.SuspendLayout();
             this.FarmActionPanel.SuspendLayout();
@@ -105,6 +115,7 @@ namespace FeatureAdmin.UserInterface
             this.splitContainerLeftDownWebsAndLogs.Panel2.SuspendLayout();
             this.splitContainerLeftDownWebsAndLogs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridWebs)).BeginInit();
+            this.featureFilterBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtResult
@@ -116,7 +127,7 @@ namespace FeatureAdmin.UserInterface
             this.txtResult.Multiline = true;
             this.txtResult.Name = "txtResult";
             this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtResult.Size = new System.Drawing.Size(498, 313);
+            this.txtResult.Size = new System.Drawing.Size(423, 313);
             this.txtResult.TabIndex = 2;
             this.txtResult.WordWrap = false;
             // 
@@ -189,16 +200,17 @@ namespace FeatureAdmin.UserInterface
             this.lblLog.TabIndex = 10;
             this.lblLog.Text = "Log";
             // 
-            // btnListWebApplications
+            // btnRefreshAllContent
             // 
-            this.btnListWebApplications.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnListWebApplications.Location = new System.Drawing.Point(390, 3);
-            this.btnListWebApplications.Name = "btnListWebApplications";
-            this.btnListWebApplications.Size = new System.Drawing.Size(105, 24);
-            this.btnListWebApplications.TabIndex = 12;
-            this.btnListWebApplications.Text = "Reload Web Apps";
-            this.btnListWebApplications.UseVisualStyleBackColor = true;
-            this.btnListWebApplications.Click += new System.EventHandler(this.btnListWebApplications_Click);
+            this.btnRefreshAllContent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRefreshAllContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRefreshAllContent.Location = new System.Drawing.Point(135, 3);
+            this.btnRefreshAllContent.Name = "btnRefreshAllContent";
+            this.btnRefreshAllContent.Size = new System.Drawing.Size(95, 41);
+            this.btnRefreshAllContent.TabIndex = 12;
+            this.btnRefreshAllContent.Text = "Refresh \r\nall content";
+            this.btnRefreshAllContent.UseVisualStyleBackColor = true;
+            this.btnRefreshAllContent.Click += new System.EventHandler(this.btnRefreshAllContent_Click);
             // 
             // lblSiteCollections
             // 
@@ -214,7 +226,7 @@ namespace FeatureAdmin.UserInterface
             // 
             this.lblWebApps.AutoSize = true;
             this.lblWebApps.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblWebApps.Location = new System.Drawing.Point(12, 9);
+            this.lblWebApps.Location = new System.Drawing.Point(3, 4);
             this.lblWebApps.Name = "lblWebApps";
             this.lblWebApps.Size = new System.Drawing.Size(90, 13);
             this.lblWebApps.TabIndex = 9;
@@ -248,17 +260,6 @@ namespace FeatureAdmin.UserInterface
             this.lblFeatureDefinitions.Size = new System.Drawing.Size(158, 13);
             this.lblFeatureDefinitions.TabIndex = 9;
             this.lblFeatureDefinitions.Text = "All Features installed in the Farm";
-            // 
-            // btnReloadFDefs
-            // 
-            this.btnReloadFDefs.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.btnReloadFDefs.Location = new System.Drawing.Point(222, 6);
-            this.btnReloadFDefs.Name = "btnReloadFDefs";
-            this.btnReloadFDefs.Size = new System.Drawing.Size(62, 21);
-            this.btnReloadFDefs.TabIndex = 8;
-            this.btnReloadFDefs.Text = "Load";
-            this.btnReloadFDefs.UseVisualStyleBackColor = true;
-            this.btnReloadFDefs.Click += new System.EventHandler(this.btnLoadFDefs_Click);
             // 
             // btnRemoveFromSiteCollection
             // 
@@ -303,48 +304,63 @@ namespace FeatureAdmin.UserInterface
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.FarmFeatures);
             this.tabControl1.Controls.Add(this.RemoveFeatures);
-            this.tabControl1.Location = new System.Drawing.Point(3, 3);
+            this.tabControl1.Location = new System.Drawing.Point(-4, 50);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(547, 719);
+            this.tabControl1.Size = new System.Drawing.Size(768, 672);
             this.tabControl1.TabIndex = 17;
             // 
             // FarmFeatures
             // 
-            this.FarmFeatures.Controls.Add(this.FarmActionPanel);
-            this.FarmFeatures.Controls.Add(this.WebAppActionPanel);
-            this.FarmFeatures.Controls.Add(this.SiteCollectionActionPanel);
+            this.FarmFeatures.Controls.Add(this.btnUpgrade);
+            this.FarmFeatures.Controls.Add(this.label1);
             this.FarmFeatures.Controls.Add(this.WebActionPanel);
-            this.FarmFeatures.Controls.Add(this.btnViewActivations);
+            this.FarmFeatures.Controls.Add(this.btnUninstFDef);
             this.FarmFeatures.Controls.Add(this.gridFeatureDefinitions);
             this.FarmFeatures.Controls.Add(this.label4);
+            this.FarmFeatures.Controls.Add(this.btnViewActivations);
             this.FarmFeatures.Controls.Add(this.lblFeatureDefinitions);
-            this.FarmFeatures.Controls.Add(this.btnReloadFDefs);
+            this.FarmFeatures.Controls.Add(this.SiteCollectionActionPanel);
+            this.FarmFeatures.Controls.Add(this.FarmActionPanel);
+            this.FarmFeatures.Controls.Add(this.WebAppActionPanel);
+            this.FarmFeatures.Controls.Add(this.panel1);
             this.FarmFeatures.Location = new System.Drawing.Point(4, 22);
             this.FarmFeatures.Name = "FarmFeatures";
             this.FarmFeatures.Padding = new System.Windows.Forms.Padding(3);
-            this.FarmFeatures.Size = new System.Drawing.Size(539, 693);
+            this.FarmFeatures.Size = new System.Drawing.Size(760, 646);
             this.FarmFeatures.TabIndex = 1;
             this.FarmFeatures.Text = "Farm Feature Administration";
             this.FarmFeatures.UseVisualStyleBackColor = true;
             // 
+            // useForce
+            // 
+            this.useForce.AutoSize = true;
+            this.useForce.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.useForce.Location = new System.Drawing.Point(236, 7);
+            this.useForce.Name = "useForce";
+            this.useForce.Size = new System.Drawing.Size(134, 30);
+            this.useForce.TabIndex = 30;
+            this.useForce.Text = "Always use FORCE\r\non changes";
+            this.useForce.UseVisualStyleBackColor = true;
+            this.useForce.CheckedChanged += new System.EventHandler(this.useForce_CheckedChanged);
+            // 
             // FarmActionPanel
             // 
             this.FarmActionPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.FarmActionPanel.Controls.Add(this.btnUninstFDef);
             this.FarmActionPanel.Controls.Add(this.btnDeactivateSPFarm);
             this.FarmActionPanel.Controls.Add(this.ActionFarmCaption);
             this.FarmActionPanel.Controls.Add(this.btnActivateSPFarm);
-            this.FarmActionPanel.Location = new System.Drawing.Point(11, 650);
+            this.FarmActionPanel.Location = new System.Drawing.Point(-1, 549);
             this.FarmActionPanel.Name = "FarmActionPanel";
-            this.FarmActionPanel.Size = new System.Drawing.Size(433, 31);
+            this.FarmActionPanel.Size = new System.Drawing.Size(92, 97);
             this.FarmActionPanel.TabIndex = 29;
             // 
             // btnUninstFDef
             // 
-            this.btnUninstFDef.Location = new System.Drawing.Point(360, 8);
+            this.btnUninstFDef.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUninstFDef.Location = new System.Drawing.Point(6, 520);
             this.btnUninstFDef.Name = "btnUninstFDef";
-            this.btnUninstFDef.Size = new System.Drawing.Size(70, 20);
+            this.btnUninstFDef.Size = new System.Drawing.Size(75, 20);
             this.btnUninstFDef.TabIndex = 3;
             this.btnUninstFDef.Text = "Uninstall";
             this.btnUninstFDef.UseVisualStyleBackColor = true;
@@ -352,7 +368,7 @@ namespace FeatureAdmin.UserInterface
             // 
             // btnDeactivateSPFarm
             // 
-            this.btnDeactivateSPFarm.Location = new System.Drawing.Point(277, 8);
+            this.btnDeactivateSPFarm.Location = new System.Drawing.Point(6, 34);
             this.btnDeactivateSPFarm.Name = "btnDeactivateSPFarm";
             this.btnDeactivateSPFarm.Size = new System.Drawing.Size(76, 20);
             this.btnDeactivateSPFarm.TabIndex = 2;
@@ -363,11 +379,12 @@ namespace FeatureAdmin.UserInterface
             // ActionFarmCaption
             // 
             this.ActionFarmCaption.AutoSize = true;
-            this.ActionFarmCaption.Location = new System.Drawing.Point(106, 10);
+            this.ActionFarmCaption.Location = new System.Drawing.Point(13, 57);
             this.ActionFarmCaption.Name = "ActionFarmCaption";
-            this.ActionFarmCaption.Size = new System.Drawing.Size(95, 13);
+            this.ActionFarmCaption.Size = new System.Drawing.Size(60, 26);
             this.ActionFarmCaption.TabIndex = 1;
-            this.ActionFarmCaption.Text = "Across Entire Farm";
+            this.ActionFarmCaption.Text = "Across\r\nEntire Farm";
+            this.ActionFarmCaption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnActivateSPFarm
             // 
@@ -385,23 +402,24 @@ namespace FeatureAdmin.UserInterface
             this.WebAppActionPanel.Controls.Add(this.ActionWebAppCaption);
             this.WebAppActionPanel.Controls.Add(this.btnDeactivateSPWebApp);
             this.WebAppActionPanel.Controls.Add(this.btnActivateSPWebApp);
-            this.WebAppActionPanel.Location = new System.Drawing.Point(9, 610);
+            this.WebAppActionPanel.Location = new System.Drawing.Point(99, 549);
             this.WebAppActionPanel.Name = "WebAppActionPanel";
-            this.WebAppActionPanel.Size = new System.Drawing.Size(433, 31);
+            this.WebAppActionPanel.Size = new System.Drawing.Size(93, 97);
             this.WebAppActionPanel.TabIndex = 28;
             // 
             // ActionWebAppCaption
             // 
             this.ActionWebAppCaption.AutoSize = true;
-            this.ActionWebAppCaption.Location = new System.Drawing.Point(106, 10);
+            this.ActionWebAppCaption.Location = new System.Drawing.Point(3, 57);
             this.ActionWebAppCaption.Name = "ActionWebAppCaption";
-            this.ActionWebAppCaption.Size = new System.Drawing.Size(165, 13);
+            this.ActionWebAppCaption.Size = new System.Drawing.Size(85, 26);
             this.ActionWebAppCaption.TabIndex = 3;
-            this.ActionWebAppCaption.Text = "Across Selected Web Application";
+            this.ActionWebAppCaption.Text = "Across Selected\r\nWeb Application";
+            this.ActionWebAppCaption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnDeactivateSPWebApp
             // 
-            this.btnDeactivateSPWebApp.Location = new System.Drawing.Point(277, 8);
+            this.btnDeactivateSPWebApp.Location = new System.Drawing.Point(6, 34);
             this.btnDeactivateSPWebApp.Name = "btnDeactivateSPWebApp";
             this.btnDeactivateSPWebApp.Size = new System.Drawing.Size(76, 20);
             this.btnDeactivateSPWebApp.TabIndex = 1;
@@ -425,14 +443,14 @@ namespace FeatureAdmin.UserInterface
             this.SiteCollectionActionPanel.Controls.Add(this.btnDeactivateSPSite);
             this.SiteCollectionActionPanel.Controls.Add(this.ActionSiteCaption);
             this.SiteCollectionActionPanel.Controls.Add(this.btnActivateSPSite);
-            this.SiteCollectionActionPanel.Location = new System.Drawing.Point(9, 570);
+            this.SiteCollectionActionPanel.Location = new System.Drawing.Point(198, 549);
             this.SiteCollectionActionPanel.Name = "SiteCollectionActionPanel";
-            this.SiteCollectionActionPanel.Size = new System.Drawing.Size(433, 31);
+            this.SiteCollectionActionPanel.Size = new System.Drawing.Size(97, 104);
             this.SiteCollectionActionPanel.TabIndex = 27;
             // 
             // btnDeactivateSPSite
             // 
-            this.btnDeactivateSPSite.Location = new System.Drawing.Point(277, 8);
+            this.btnDeactivateSPSite.Location = new System.Drawing.Point(6, 34);
             this.btnDeactivateSPSite.Name = "btnDeactivateSPSite";
             this.btnDeactivateSPSite.Size = new System.Drawing.Size(76, 20);
             this.btnDeactivateSPSite.TabIndex = 2;
@@ -443,11 +461,12 @@ namespace FeatureAdmin.UserInterface
             // ActionSiteCaption
             // 
             this.ActionSiteCaption.AutoSize = true;
-            this.ActionSiteCaption.Location = new System.Drawing.Point(106, 10);
+            this.ActionSiteCaption.Location = new System.Drawing.Point(3, 57);
             this.ActionSiteCaption.Name = "ActionSiteCaption";
-            this.ActionSiteCaption.Size = new System.Drawing.Size(154, 13);
+            this.ActionSiteCaption.Size = new System.Drawing.Size(84, 26);
             this.ActionSiteCaption.TabIndex = 1;
-            this.ActionSiteCaption.Text = "Across Selected Site Collection";
+            this.ActionSiteCaption.Text = "Across Selected\r\nSite Collection";
+            this.ActionSiteCaption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnActivateSPSite
             // 
@@ -461,18 +480,17 @@ namespace FeatureAdmin.UserInterface
             // 
             // WebActionPanel
             // 
-            this.WebActionPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.WebActionPanel.Controls.Add(this.btnDeactivateSPWeb);
             this.WebActionPanel.Controls.Add(this.ActionWebCaption);
             this.WebActionPanel.Controls.Add(this.btnActivateSPWeb);
-            this.WebActionPanel.Location = new System.Drawing.Point(9, 530);
+            this.WebActionPanel.Location = new System.Drawing.Point(301, 549);
             this.WebActionPanel.Name = "WebActionPanel";
-            this.WebActionPanel.Size = new System.Drawing.Size(433, 31);
+            this.WebActionPanel.Size = new System.Drawing.Size(93, 101);
             this.WebActionPanel.TabIndex = 26;
             // 
             // btnDeactivateSPWeb
             // 
-            this.btnDeactivateSPWeb.Location = new System.Drawing.Point(277, 8);
+            this.btnDeactivateSPWeb.Location = new System.Drawing.Point(6, 34);
             this.btnDeactivateSPWeb.Name = "btnDeactivateSPWeb";
             this.btnDeactivateSPWeb.Size = new System.Drawing.Size(76, 20);
             this.btnDeactivateSPWeb.TabIndex = 2;
@@ -483,11 +501,13 @@ namespace FeatureAdmin.UserInterface
             // ActionWebCaption
             // 
             this.ActionWebCaption.AutoSize = true;
-            this.ActionWebCaption.Location = new System.Drawing.Point(106, 10);
+            this.ActionWebCaption.Location = new System.Drawing.Point(12, 57);
             this.ActionWebCaption.Name = "ActionWebCaption";
-            this.ActionWebCaption.Size = new System.Drawing.Size(87, 13);
+            this.ActionWebCaption.Size = new System.Drawing.Size(61, 26);
             this.ActionWebCaption.TabIndex = 1;
-            this.ActionWebCaption.Text = "In Selected Web";
+            this.ActionWebCaption.Text = "In Selected\r\nWeb";
+            this.ActionWebCaption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ActionWebCaption.Click += new System.EventHandler(this.ActionWebCaption_Click);
             // 
             // btnActivateSPWeb
             // 
@@ -502,11 +522,11 @@ namespace FeatureAdmin.UserInterface
             // btnViewActivations
             // 
             this.btnViewActivations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnViewActivations.Location = new System.Drawing.Point(111, 501);
+            this.btnViewActivations.Location = new System.Drawing.Point(204, 520);
             this.btnViewActivations.Name = "btnViewActivations";
-            this.btnViewActivations.Size = new System.Drawing.Size(228, 23);
+            this.btnViewActivations.Size = new System.Drawing.Size(179, 23);
             this.btnViewActivations.TabIndex = 25;
-            this.btnViewActivations.Text = "Review Activations of Selected Feature";
+            this.btnViewActivations.Text = "Activation details";
             this.btnViewActivations.UseVisualStyleBackColor = true;
             this.btnViewActivations.Click += new System.EventHandler(this.btnViewActivations_Click);
             // 
@@ -523,7 +543,7 @@ namespace FeatureAdmin.UserInterface
             this.gridFeatureDefinitions.Name = "gridFeatureDefinitions";
             this.gridFeatureDefinitions.ReadOnly = true;
             this.gridFeatureDefinitions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridFeatureDefinitions.Size = new System.Drawing.Size(533, 465);
+            this.gridFeatureDefinitions.Size = new System.Drawing.Size(754, 467);
             this.gridFeatureDefinitions.TabIndex = 24;
             this.gridFeatureDefinitions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridFeatureDefinitions_CellMouseDown);
             this.gridFeatureDefinitions.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.gridFeatureDefinitions_DataBindingComplete);
@@ -540,7 +560,7 @@ namespace FeatureAdmin.UserInterface
             this.RemoveFeatures.Location = new System.Drawing.Point(4, 22);
             this.RemoveFeatures.Name = "RemoveFeatures";
             this.RemoveFeatures.Padding = new System.Windows.Forms.Padding(3);
-            this.RemoveFeatures.Size = new System.Drawing.Size(442, 693);
+            this.RemoveFeatures.Size = new System.Drawing.Size(539, 693);
             this.RemoveFeatures.TabIndex = 0;
             this.RemoveFeatures.Text = "Remove / deactivate features in selected sites";
             this.RemoveFeatures.UseVisualStyleBackColor = true;
@@ -581,9 +601,12 @@ namespace FeatureAdmin.UserInterface
             // 
             // splitContainerCompleteMainframe.Panel2
             // 
+            this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.featureFilterBox);
+            this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.useForce);
             this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainerCompleteMainframe.Size = new System.Drawing.Size(1073, 728);
-            this.splitContainerCompleteMainframe.SplitterDistance = 508;
+            this.splitContainerCompleteMainframe.Panel2.Controls.Add(this.btnRefreshAllContent);
+            this.splitContainerCompleteMainframe.Size = new System.Drawing.Size(1204, 728);
+            this.splitContainerCompleteMainframe.SplitterDistance = 433;
             this.splitContainerCompleteMainframe.TabIndex = 19;
             // 
             // splitContainerLeftWindow
@@ -602,7 +625,7 @@ namespace FeatureAdmin.UserInterface
             // splitContainerLeftWindow.Panel2
             // 
             this.splitContainerLeftWindow.Panel2.Controls.Add(this.splitContainerLeftDownWebsAndLogs);
-            this.splitContainerLeftWindow.Size = new System.Drawing.Size(505, 725);
+            this.splitContainerLeftWindow.Size = new System.Drawing.Size(430, 725);
             this.splitContainerLeftWindow.SplitterDistance = 220;
             this.splitContainerLeftWindow.TabIndex = 13;
             // 
@@ -619,13 +642,12 @@ namespace FeatureAdmin.UserInterface
             // 
             this.splitContainerLeftUpperWebAppAndSiteColl.Panel1.Controls.Add(this.gridWebApplications);
             this.splitContainerLeftUpperWebAppAndSiteColl.Panel1.Controls.Add(this.lblWebApps);
-            this.splitContainerLeftUpperWebAppAndSiteColl.Panel1.Controls.Add(this.btnListWebApplications);
             // 
             // splitContainerLeftUpperWebAppAndSiteColl.Panel2
             // 
             this.splitContainerLeftUpperWebAppAndSiteColl.Panel2.Controls.Add(this.gridSiteCollections);
             this.splitContainerLeftUpperWebAppAndSiteColl.Panel2.Controls.Add(this.lblSiteCollections);
-            this.splitContainerLeftUpperWebAppAndSiteColl.Size = new System.Drawing.Size(498, 214);
+            this.splitContainerLeftUpperWebAppAndSiteColl.Size = new System.Drawing.Size(423, 214);
             this.splitContainerLeftUpperWebAppAndSiteColl.SplitterDistance = 105;
             this.splitContainerLeftUpperWebAppAndSiteColl.TabIndex = 0;
             // 
@@ -637,12 +659,12 @@ namespace FeatureAdmin.UserInterface
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gridWebApplications.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridWebApplications.Location = new System.Drawing.Point(0, 32);
+            this.gridWebApplications.Location = new System.Drawing.Point(0, 20);
             this.gridWebApplications.MultiSelect = false;
             this.gridWebApplications.Name = "gridWebApplications";
             this.gridWebApplications.ReadOnly = true;
             this.gridWebApplications.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridWebApplications.Size = new System.Drawing.Size(498, 69);
+            this.gridWebApplications.Size = new System.Drawing.Size(423, 81);
             this.gridWebApplications.TabIndex = 13;
             this.gridWebApplications.SelectionChanged += new System.EventHandler(this.gridWebApplications_SelectionChanged);
             // 
@@ -658,7 +680,7 @@ namespace FeatureAdmin.UserInterface
             this.gridSiteCollections.Name = "gridSiteCollections";
             this.gridSiteCollections.ReadOnly = true;
             this.gridSiteCollections.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridSiteCollections.Size = new System.Drawing.Size(498, 82);
+            this.gridSiteCollections.Size = new System.Drawing.Size(423, 82);
             this.gridSiteCollections.TabIndex = 9;
             this.gridSiteCollections.SelectionChanged += new System.EventHandler(this.gridSiteCollections_SelectionChanged);
             // 
@@ -678,10 +700,10 @@ namespace FeatureAdmin.UserInterface
             // 
             // splitContainerLeftDownWebsAndLogs.Panel2
             // 
-            this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.btnClearLog);
             this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.lblLog);
             this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.txtResult);
-            this.splitContainerLeftDownWebsAndLogs.Size = new System.Drawing.Size(498, 494);
+            this.splitContainerLeftDownWebsAndLogs.Panel2.Controls.Add(this.btnClearLog);
+            this.splitContainerLeftDownWebsAndLogs.Size = new System.Drawing.Size(423, 494);
             this.splitContainerLeftDownWebsAndLogs.SplitterDistance = 146;
             this.splitContainerLeftDownWebsAndLogs.TabIndex = 0;
             // 
@@ -697,26 +719,136 @@ namespace FeatureAdmin.UserInterface
             this.gridWebs.Name = "gridWebs";
             this.gridWebs.ReadOnly = true;
             this.gridWebs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridWebs.Size = new System.Drawing.Size(498, 212);
+            this.gridWebs.Size = new System.Drawing.Size(423, 212);
             this.gridWebs.TabIndex = 9;
             this.gridWebs.SelectionChanged += new System.EventHandler(this.gridWebs_SelectionChanged);
             // 
             // btnClearLog
             // 
             this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClearLog.Location = new System.Drawing.Point(405, 3);
+            this.btnClearLog.Location = new System.Drawing.Point(294, 3);
             this.btnClearLog.Name = "btnClearLog";
-            this.btnClearLog.Size = new System.Drawing.Size(90, 23);
+            this.btnClearLog.Size = new System.Drawing.Size(126, 23);
             this.btnClearLog.TabIndex = 19;
             this.btnClearLog.Text = "Clear Log";
             this.btnClearLog.UseVisualStyleBackColor = true;
             this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
             // 
+            // all
+            // 
+            this.all.AutoSize = true;
+            this.all.Checked = true;
+            this.all.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.all.Location = new System.Drawing.Point(17, 14);
+            this.all.Name = "all";
+            this.all.Size = new System.Drawing.Size(64, 17);
+            this.all.TabIndex = 31;
+            this.all.Text = "No Filter";
+            this.all.UseVisualStyleBackColor = true;
+            // 
+            // featureFilterBox
+            // 
+            this.featureFilterBox.Controls.Add(this.faulty);
+            this.featureFilterBox.Controls.Add(this.web);
+            this.featureFilterBox.Controls.Add(this.siCo);
+            this.featureFilterBox.Controls.Add(this.webApp);
+            this.featureFilterBox.Controls.Add(this.farm);
+            this.featureFilterBox.Controls.Add(this.all);
+            this.featureFilterBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.featureFilterBox.Location = new System.Drawing.Point(369, 7);
+            this.featureFilterBox.Name = "featureFilterBox";
+            this.featureFilterBox.Size = new System.Drawing.Size(386, 37);
+            this.featureFilterBox.TabIndex = 25;
+            this.featureFilterBox.TabStop = false;
+            this.featureFilterBox.Text = "Feature Filter";
+            // 
+            // farm
+            // 
+            this.farm.AutoSize = true;
+            this.farm.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.farm.Location = new System.Drawing.Point(87, 14);
+            this.farm.Name = "farm";
+            this.farm.Size = new System.Drawing.Size(48, 17);
+            this.farm.TabIndex = 32;
+            this.farm.Text = "Farm";
+            this.farm.UseVisualStyleBackColor = true;
+            // 
+            // webApp
+            // 
+            this.webApp.AutoSize = true;
+            this.webApp.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.webApp.Location = new System.Drawing.Point(141, 14);
+            this.webApp.Name = "webApp";
+            this.webApp.Size = new System.Drawing.Size(70, 17);
+            this.webApp.TabIndex = 33;
+            this.webApp.Text = "Web App";
+            this.webApp.UseVisualStyleBackColor = true;
+            // 
+            // siCo
+            // 
+            this.siCo.AutoSize = true;
+            this.siCo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.siCo.Location = new System.Drawing.Point(217, 14);
+            this.siCo.Name = "siCo";
+            this.siCo.Size = new System.Drawing.Size(47, 17);
+            this.siCo.TabIndex = 34;
+            this.siCo.Text = "SiCo";
+            this.siCo.UseVisualStyleBackColor = true;
+            // 
+            // web
+            // 
+            this.web.AutoSize = true;
+            this.web.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.web.Location = new System.Drawing.Point(270, 14);
+            this.web.Name = "web";
+            this.web.Size = new System.Drawing.Size(48, 17);
+            this.web.TabIndex = 35;
+            this.web.Text = "Web";
+            this.web.UseVisualStyleBackColor = true;
+            // 
+            // faulty
+            // 
+            this.faulty.AutoSize = true;
+            this.faulty.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.faulty.Location = new System.Drawing.Point(324, 14);
+            this.faulty.Name = "faulty";
+            this.faulty.Size = new System.Drawing.Size(53, 17);
+            this.faulty.TabIndex = 36;
+            this.faulty.Text = "Faulty";
+            this.faulty.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(9, 501);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(374, 13);
+            this.label1.TabIndex = 30;
+            this.label1.Text = "Perform the following actions on the selected Feature Definitions";
+            // 
+            // btnUpgrade
+            // 
+            this.btnUpgrade.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUpgrade.Location = new System.Drawing.Point(105, 521);
+            this.btnUpgrade.Name = "btnUpgrade";
+            this.btnUpgrade.Size = new System.Drawing.Size(76, 20);
+            this.btnUpgrade.TabIndex = 31;
+            this.btnUpgrade.Text = "Upgrade";
+            this.btnUpgrade.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(-4, 549);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(768, 104);
+            this.panel1.TabIndex = 32;
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1075, 730);
+            this.ClientSize = new System.Drawing.Size(1206, 730);
             this.Controls.Add(this.splitContainerCompleteMainframe);
             this.Name = "FrmMain";
             this.Text = "FeatureAdmin for SharePoint";
@@ -742,6 +874,7 @@ namespace FeatureAdmin.UserInterface
             this.splitContainerRightSiteCollFeaturesWebFeatures.ResumeLayout(false);
             this.splitContainerCompleteMainframe.Panel1.ResumeLayout(false);
             this.splitContainerCompleteMainframe.Panel2.ResumeLayout(false);
+            this.splitContainerCompleteMainframe.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerCompleteMainframe)).EndInit();
             this.splitContainerCompleteMainframe.ResumeLayout(false);
             this.splitContainerLeftWindow.Panel1.ResumeLayout(false);
@@ -763,6 +896,8 @@ namespace FeatureAdmin.UserInterface
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerLeftDownWebsAndLogs)).EndInit();
             this.splitContainerLeftDownWebsAndLogs.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridWebs)).EndInit();
+            this.featureFilterBox.ResumeLayout(false);
+            this.featureFilterBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -776,13 +911,11 @@ namespace FeatureAdmin.UserInterface
         private System.Windows.Forms.CheckedListBox clbSPWebFeatures;
         private System.Windows.Forms.Button btnRemoveFromWeb;
         private System.Windows.Forms.Label lblLog;
-        private System.Windows.Forms.Button btnListWebApplications;
+        private System.Windows.Forms.Button btnRefreshAllContent;
         private System.Windows.Forms.Label lblWebApps;
         private System.Windows.Forms.Label lblSiteCollections;
         private System.Windows.Forms.Label lblWebs;
         private System.Windows.Forms.Label lblFeatureDefinitions;
-
-        private System.Windows.Forms.Button btnReloadFDefs;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnRemoveFromSiteCollection;
         private System.Windows.Forms.Button btnRemoveFromWebApp;
@@ -820,7 +953,17 @@ namespace FeatureAdmin.UserInterface
         private System.Windows.Forms.DataGridView gridWebApplications;
         private System.Windows.Forms.DataGridView gridSiteCollections;
         private System.Windows.Forms.DataGridView gridWebs;
-    
+        private System.Windows.Forms.CheckBox useForce;
+        private System.Windows.Forms.Button btnUpgrade;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.GroupBox featureFilterBox;
+        private System.Windows.Forms.RadioButton faulty;
+        private System.Windows.Forms.RadioButton web;
+        private System.Windows.Forms.RadioButton siCo;
+        private System.Windows.Forms.RadioButton webApp;
+        private System.Windows.Forms.RadioButton farm;
+        private System.Windows.Forms.RadioButton all;
     }
 }
 

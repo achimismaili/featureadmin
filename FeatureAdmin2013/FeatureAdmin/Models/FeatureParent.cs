@@ -18,18 +18,24 @@ namespace FeatureAdmin.Models
         public SPFeatureScope Scope { get; private set; }
 
         /// <summary>
+        /// only available for Scope SiteCollection
+        /// </summary>
+        public Guid? ContentDatabaseId { get; private set; }
+
+        /// <summary>
         /// Only for Factory Methods of this class
         /// </summary>
         private FeatureParent()
         {
         }
 
-        public FeatureParent(string displayName, string url, Guid id, SPFeatureScope scope)
+        public FeatureParent(string displayName, string url, Guid id, SPFeatureScope scope, Guid? contentDatabaseId = null)
         {
             DisplayName = displayName;
             Url = url;
             Id = id;
             Scope = scope;
+            ContentDatabaseId = contentDatabaseId;
         }
 
         public static FeatureParent GetFeatureParent(SPWebService farmWebService)

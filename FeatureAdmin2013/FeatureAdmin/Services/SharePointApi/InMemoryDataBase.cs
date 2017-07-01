@@ -1,6 +1,7 @@
 ﻿using FeatureAdmin.Models;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,11 @@ namespace FeatureAdmin.Services.SharePointApi
         public Dictionary<Guid, List<FeatureParent>> SharePointParentHierarchy { get; private set; }
         public Guid FarmId { get; private set; }
 
+        public static class ConfigSettings
+        {
+            public static bool AlwaysUseForce { get; set; }
+        }
+
         private static InMemoryDataBase singletonInstance;
         /// <summary>
         /// SharePointDataBase as singleton
@@ -40,6 +46,107 @@ namespace FeatureAdmin.Services.SharePointApi
                 return singletonInstance;
             }
         }
+
+        public static void AddActivatedFeature(SPFeature feature)
+        {
+            if (feature == null)
+            {
+                return;
+            }
+
+            try
+            {
+                var activatedFeature = ActivatedFeature.GetActivatedFeature(feature);
+
+                // update activated features
+                singletonInstance.ActivatedFeatures.Add(activatedFeature);
+
+
+                // update featureDefinition (and its activated instances)
+                var featureDef = singletonInstance.FeatureDefinitions.FirstOrDefault(fd => fd.Id == activatedFeature.Id);
+
+                if (featureDef != null)
+                {
+                    // add activated feature to feature definition
+                    featureDef.ActivatedFeatures.Add(activatedFeature);
+                }
+                else
+                {
+                    // fyi - if we get here, we have most likely a group of faulty features ...
+
+                    // create feature definition and add features
+                    var newFeatureDef = FeatureDefinition.GetFeatureDefinition(activatedFeature);
+                    singletonInstance.FeatureDefinitions.Add(newFeatureDef);
+                    Log.Warning("Unexpected - Feature Definition of activated Feature was not available - please Reload");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error when trying to add new feature to InMemorySharePointDb", ex);
+            }
+
+        }
+
+        public static void RemoveDeactivatedFeature(Guid featureId, Guid parentId)
+        {
+            try
+            {
+                // update activated features
+                var deactivatedFeature = singletonInstance.ActivatedFeatures.FirstOrDefault(f => f.Id == featureId && f.Parent.Id == parentId);
+
+                if (deactivatedFeature != null)
+                {
+                    singletonInstance.ActivatedFeatures.Remove(deactivatedFeature);
+                }
+                else
+                {
+                    Log.Warning("Unexpected - Deactivated Feature was not found in existing cached list of activated features - please Reload");
+                }
+
+                // update featureDefinition (and its activated instances)
+                var featureDef = singletonInstance.FeatureDefinitions.FirstOrDefault(fd => fd.Id == featureId);
+
+                if (featureDef != null)
+                {
+                    // add activated feature to feature definition
+                    featureDef.ActivatedFeatures.Remove(deactivatedFeature);
+                }
+                else
+                {
+                    Log.Warning("Unexpected - Deactivated Feature was not found in the activated instances of existing cached feature definition list - please Reload");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error when trying to remove deactivated feature from InMemorySharePointDb", ex);
+            }
+
+        }
+
+        public static void RemoveUninstalledFeatureDefinition(Guid featureId)
+        {
+            try
+            {
+                // update featureDefinition list
+                var featureDef = singletonInstance.FeatureDefinitions.FirstOrDefault(fd => fd.Id == featureId);
+
+                if (featureDef != null)
+                {
+                    // add activated feature to feature definition
+                    singletonInstance.FeatureDefinitions.Remove(featureDef);
+                }
+                else
+                {
+                    Log.Warning("Unexpected - Feature Definition was not found in the cached feature definition list - please Reload");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error when trying to remove deactivated feature from InMemorySharePointDb", ex);
+            }
+
+        }
+
 
         /// <summary>
         /// private ctor, db can only be generated via static property
@@ -248,7 +355,7 @@ namespace FeatureAdmin.Services.SharePointApi
 
             //if (SharePointParentHierarchy.ContainsKey(parentOfThisParent))
             //{
-             SharePointParentHierarchy[parentOfThisParent].Add(parent);
+            SharePointParentHierarchy[parentOfThisParent].Add(parent);
             //}
 
 

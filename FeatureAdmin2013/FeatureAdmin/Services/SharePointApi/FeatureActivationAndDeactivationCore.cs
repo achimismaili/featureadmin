@@ -21,7 +21,11 @@ namespace FeatureAdmin.Services.SharePointApi
                 return featuresModifiedCounter;
             }
 
-            return ProcessSingleFeatureInFeatureCollection(farm.Features, featureId, activate, force, out exception);
+
+            featuresModifiedCounter = ProcessSingleFeatureInFeatureCollection(farm.Id, farm.Features, featureId, activate, force, out exception);
+
+            return featuresModifiedCounter;
+
         }
 
         public static int ProcessWebAppFeatureInWebApp(SPWebApplication webApp, Guid featureId, bool activate, bool force, out Exception exception)
@@ -35,7 +39,7 @@ namespace FeatureAdmin.Services.SharePointApi
                 return featuresModifiedCounter;
             }
 
-            return ProcessSingleFeatureInFeatureCollection(webApp.Features, featureId, activate, force, out exception);
+            return ProcessSingleFeatureInFeatureCollection(webApp.Id, webApp.Features, featureId, activate, force, out exception);
         }
 
         public static int ProcessSiteFeatureInSite(SPSite site, Guid featureId, bool activate, bool force, out Exception exception)
@@ -49,7 +53,7 @@ namespace FeatureAdmin.Services.SharePointApi
                 return featuresModifiedCounter;
             }
 
-            return ProcessSingleFeatureInFeatureCollection(site.Features, featureId, activate, force, out exception);
+            return ProcessSingleFeatureInFeatureCollection(site.ID, site.Features, featureId, activate, force, out exception);
         }
 
         public static int ProcessWebFeatureInWeb(SPWeb web, Guid featureId, bool activate, bool force, out Exception exception)
@@ -63,10 +67,10 @@ namespace FeatureAdmin.Services.SharePointApi
                 return featuresModifiedCounter;
             }
 
-            return ProcessSingleFeatureInFeatureCollection(web.Features, featureId, activate, force, out exception);
+            return ProcessSingleFeatureInFeatureCollection(web.ID, web.Features, featureId, activate, force, out exception);
         }
 
-        private static int ProcessSingleFeatureInFeatureCollection(SPFeatureCollection features, Guid featureId, bool activate, bool force, out Exception exception)
+        private static int ProcessSingleFeatureInFeatureCollection(Guid parentId, SPFeatureCollection features, Guid featureId, bool activate, bool force, out Exception exception)
         {
             exception = null;
             var featuresModifiedCounter = 0;
@@ -86,6 +90,7 @@ namespace FeatureAdmin.Services.SharePointApi
                     if (feature != null)
                     {
                         featuresModifiedCounter++;
+                        InMemoryDataBase.AddActivatedFeature(feature);
                     }
                 }
                 else
@@ -97,6 +102,7 @@ namespace FeatureAdmin.Services.SharePointApi
                     if (featuresActiveBefore > features.Count)
                     {
                         featuresModifiedCounter++;
+                        InMemoryDataBase.RemoveDeactivatedFeature(featureId, parentId);
                     }
                 }
             }

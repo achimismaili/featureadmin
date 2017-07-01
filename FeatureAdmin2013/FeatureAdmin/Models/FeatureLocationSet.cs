@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FeatureAdmin.Models
 {
-    public class FeatureLocationSet : Dictionary<Feature, List<Location>>
+    public class FeatureLocationSet : Dictionary<Feature, List<FeatureParent>>
     {
         private int _LocationCount = -1;
         public int GetTotalLocationCount()
@@ -12,7 +12,7 @@ namespace FeatureAdmin.Models
             if (_LocationCount == -1)
             {
                 _LocationCount = 0;
-                foreach (List<Location> list in this.Values)
+                foreach (List<FeatureParent> list in this.Values)
                 {
                     _LocationCount += list.Count;
                 }

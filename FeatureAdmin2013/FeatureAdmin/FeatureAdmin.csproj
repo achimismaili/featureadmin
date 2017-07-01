@@ -125,23 +125,21 @@
     <Compile Include="Common\FeatureActivationHelper.cs" />
     <Compile Include="Common\FeatureDeactivationHelper.cs" />
     <Compile Include="Common\FeatureDefinitionFactory.cs" />
+    <Compile Include="Common\GridConverter.cs" />
     <Compile Include="Common\StringHelpers.cs" />
     <Compile Include="Models\ActivatedFeature.cs" />
     <Compile Include="Models\FeatureDefinition.cs" />
     <Compile Include="Models\Feature.cs" />
-    <Compile Include="FeatureActivator.cs" />
     <Compile Include="FeatureChecker.cs" />
     <Compile Include="FeatureDatabase.cs" />
     <Compile Include="Models\FeatureLocationSet.cs" />
-    <Compile Include="FeatureManager.cs" />
     <Compile Include="Models\FeatureParent.cs" />
     <Compile Include="Models\FeatureSet.cs" />
-    <Compile Include="FeatureUninstaller.cs" />
     <Compile Include="Models\Interfaces\IFeatureDefinition.cs" />
+    <Compile Include="Models\Interfaces\IFeatureIdentifier.cs" />
     <Compile Include="Models\Interfaces\IFeatureParent.cs" />
     <Compile Include="Models\Interfaces\IActivatedFeature.cs" />
-    <Compile Include="Repository\ReadRepository.cs" />
-    <Compile Include="Repository\ChangeRepository.cs" />
+    <Compile Include="Repository\FeatureRepository.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\SharePointApi\FeatureActivationAndDeactivationBulk.cs" />
     <Compile Include="Services\SharePointApi\FarmRead.cs" />
@@ -156,14 +154,12 @@
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
     <Compile Include="UserInterface\GridColMgr.cs" />
-    <Compile Include="Models\Location.cs" />
     <Compile Include="UserInterface\LocationForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UserInterface\LocationForm.Designer.cs">
       <DependentUpon>LocationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LocationManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\PropertyComparer.cs" />

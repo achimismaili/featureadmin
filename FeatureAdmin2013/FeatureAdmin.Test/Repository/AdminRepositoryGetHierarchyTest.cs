@@ -14,7 +14,7 @@ namespace FeatureAdmin.Test.Repository
     /// </summary>
     public class AdminRepositoryGetHierarchyTest 
     {
-        private ReadRepository repository;
+        private FeatureRepository repository;
 
         private Guid webAppId;
         private Guid siCoActivatedId;
@@ -29,7 +29,7 @@ namespace FeatureAdmin.Test.Repository
         public AdminRepositoryGetHierarchyTest()
         {
             // Arrange
-            repository = new ReadRepository();
+            repository = new FeatureRepository();
 
             // SiCo Activated
             using (SPSite site = new SPSite(TestContent.SharePointContainers.SiCoActivated.Url))

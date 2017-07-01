@@ -30,7 +30,15 @@ namespace FeatureAdmin.Services.SharePointApi
         /// 
         /// The parameter featureDefinition is required for feature id and scope of the feature
         /// </remarks>
-        public static int ActivateAllFeaturesWithinSharePointContainer(IFeatureParent sharePointContainer, IEnumerable<IFeatureDefinition> featureDefinitions, bool force, out Exception exception)
+        public static int ActivateAllFeaturesWithinSharePointContainer(IFeatureParent sharePointContainer, IEnumerable<IFeatureIdentifier> featureDefinitions, bool force, out Exception exception)
+        {
+            return ProcessAllFeaturesWithinSharePointContainer(sharePointContainer, featureDefinitions, true, force, out exception);
+        }
+        public static int DeactivateAllFeaturesWithinSharePointContainer(IFeatureParent sharePointContainer, IEnumerable<IFeatureIdentifier> featureDefinitions, bool force, out Exception exception)
+        {
+            return ProcessAllFeaturesWithinSharePointContainer(sharePointContainer, featureDefinitions, false, force, out exception);
+        }
+        private static int ProcessAllFeaturesWithinSharePointContainer(IFeatureParent sharePointContainer, IEnumerable<IFeatureIdentifier> featureDefinitions, bool activate, bool force, out Exception exception)
         {
             var processingCounter = 0;
             exception = null;
@@ -57,26 +65,26 @@ namespace FeatureAdmin.Services.SharePointApi
             switch (activationLevel)
             {
                 case SPFeatureScope.Farm:
-                    processingCounter += ProcessAllFeaturesInFarm(farmFeatureIds, SPFeatureScope.Farm, true, force, out exception);
-                    processingCounter += ProcessAllFeaturesInFarm(webAppFeatureIds, SPFeatureScope.WebApplication, true, force, out exception);
-                    processingCounter += ProcessAllFeaturesInFarm(siteFeatureIds, SPFeatureScope.Site, true, force, out exception);
-                    processingCounter += ProcessAllFeaturesInFarm(webFeatureIds, SPFeatureScope.Web, true, force, out exception);
-                    processingCounter += ProcessAllFeaturesInFarm(invalidFeatureIds, SPFeatureScope.ScopeInvalid, true, force, out exception);
+                    processingCounter += ProcessAllFeaturesInFarm(farmFeatureIds, SPFeatureScope.Farm, activate, force, out exception);
+                    processingCounter += ProcessAllFeaturesInFarm(webAppFeatureIds, SPFeatureScope.WebApplication, activate, force, out exception);
+                    processingCounter += ProcessAllFeaturesInFarm(siteFeatureIds, SPFeatureScope.Site, activate, force, out exception);
+                    processingCounter += ProcessAllFeaturesInFarm(webFeatureIds, SPFeatureScope.Web, activate, force, out exception);
+                    processingCounter += ProcessAllFeaturesInFarm(invalidFeatureIds, SPFeatureScope.ScopeInvalid, activate, force, out exception);
                     break;
                 case SPFeatureScope.WebApplication:
-                    processingCounter += ProcessAllFeaturesInWebApp(sharePointContainer.Url , webAppFeatureIds, SPFeatureScope.WebApplication, true, force, out exception);
-                    processingCounter += ProcessAllFeaturesInWebApp(sharePointContainer.Url, siteFeatureIds, SPFeatureScope.Site, true, force, out exception);
-                    processingCounter += ProcessAllFeaturesInWebApp(sharePointContainer.Url, webFeatureIds, SPFeatureScope.Web, true, force, out exception);
-                    processingCounter += ProcessAllFeaturesInWebApp(sharePointContainer.Url, invalidFeatureIds, SPFeatureScope.ScopeInvalid, true, force, out exception);
+                    processingCounter += ProcessAllFeaturesInWebApp(sharePointContainer.Url , webAppFeatureIds, SPFeatureScope.WebApplication, activate, force, out exception);
+                    processingCounter += ProcessAllFeaturesInWebApp(sharePointContainer.Url, siteFeatureIds, SPFeatureScope.Site, activate, force, out exception);
+                    processingCounter += ProcessAllFeaturesInWebApp(sharePointContainer.Url, webFeatureIds, SPFeatureScope.Web, activate, force, out exception);
+                    processingCounter += ProcessAllFeaturesInWebApp(sharePointContainer.Url, invalidFeatureIds, SPFeatureScope.ScopeInvalid, activate, force, out exception);
                     break;
                 case SPFeatureScope.Site:
-                    processingCounter += ProcessAllFeaturesInSite(sharePointContainer.Url, siteFeatureIds, SPFeatureScope.Site, true, force, out exception);
-                    processingCounter += ProcessAllFeaturesInSite(sharePointContainer.Url, webFeatureIds, SPFeatureScope.Web, true, force, out exception);
-                    processingCounter += ProcessAllFeaturesInSite(sharePointContainer.Url, invalidFeatureIds, SPFeatureScope.ScopeInvalid, true, force, out exception);
+                    processingCounter += ProcessAllFeaturesInSite(sharePointContainer.Url, siteFeatureIds, SPFeatureScope.Site, activate, force, out exception);
+                    processingCounter += ProcessAllFeaturesInSite(sharePointContainer.Url, webFeatureIds, SPFeatureScope.Web, activate, force, out exception);
+                    processingCounter += ProcessAllFeaturesInSite(sharePointContainer.Url, invalidFeatureIds, SPFeatureScope.ScopeInvalid, activate, force, out exception);
                     break;
                 case SPFeatureScope.Web:
-                    processingCounter += ProcessAllFeaturesInWeb(sharePointContainer.Url, webFeatureIds, true, force, out exception);
-                    processingCounter += ProcessAllFeaturesInWeb(sharePointContainer.Url, invalidFeatureIds, true, force, out exception);
+                    processingCounter += ProcessAllFeaturesInWeb(sharePointContainer.Url, webFeatureIds, activate, force, out exception);
+                    processingCounter += ProcessAllFeaturesInWeb(sharePointContainer.Url, invalidFeatureIds, activate, force, out exception);
 
                     break;
                 default:

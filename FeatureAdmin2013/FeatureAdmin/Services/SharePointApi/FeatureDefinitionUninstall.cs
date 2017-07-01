@@ -26,6 +26,12 @@ namespace FeatureAdmin.Services.SharePointApi
             }
 #endif
                 processingCounter = featureDefinitionsBefore - featureDefinitions.Count;
+
+                if(processingCounter > 0)
+                {
+                    InMemoryDataBase.RemoveUninstalledFeatureDefinition(id);
+                }
+
             }
             catch (Exception ex)
             {
