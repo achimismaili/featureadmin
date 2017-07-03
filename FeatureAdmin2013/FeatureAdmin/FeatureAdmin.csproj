@@ -120,7 +120,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivationFinder.cs" />
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\FeatureActivationHelper.cs" />
     <Compile Include="Common\FeatureDeactivationHelper.cs" />
@@ -130,8 +129,6 @@
     <Compile Include="Models\ActivatedFeature.cs" />
     <Compile Include="Models\FeatureDefinition.cs" />
     <Compile Include="Models\Feature.cs" />
-    <Compile Include="FeatureChecker.cs" />
-    <Compile Include="FeatureDatabase.cs" />
     <Compile Include="Models\FeatureLocationSet.cs" />
     <Compile Include="Models\FeatureParent.cs" />
     <Compile Include="Models\FeatureSet.cs" />
@@ -147,42 +144,12 @@
     <Compile Include="Models\TemplateInfo.cs" />
     <Compile Include="Services\SharePointApi\FeatureDefinitionUninstall.cs" />
     <Compile Include="Services\SharePointApi\FeatureActivationAndDeactivationCore.cs" />
-    <Compile Include="UserInterface\FrmMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\FrmMain.Designer.cs">
-      <DependentUpon>FrmMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserInterface\GridColMgr.cs" />
-    <Compile Include="UserInterface\LocationForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\LocationForm.Designer.cs">
-      <DependentUpon>LocationForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\PropertyComparer.cs" />
-    <Compile Include="UserInterface\RemoveInvalidFeature.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserInterface\RemoveInvalidFeature.Designer.cs">
-      <DependentUpon>RemoveInvalidFeature.cs</DependentUpon>
-    </Compile>
     <Compile Include="Models\SortableBindingList.cs" />
-    <Compile Include="UserInterface\UiConfig.cs" />
-    <Compile Include="UserInterface\WaitCursor.cs" />
-    <Compile Include="WebAppEnumerator.cs" />
     <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UserInterface\FrmMain.resx">
-      <DependentUpon>FrmMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserInterface\LocationForm.resx">
-      <DependentUpon>LocationForm.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

@@ -135,6 +135,18 @@ namespace FeatureAdmin.Repository
             }
         }
 
+        public List<ActivatedFeature> GetActivatedFeatures(FeatureParent parent = null)
+        {
+            if (parent == null)
+            {
+                return db.ActivatedFeatures;
+            }
+            else
+            {
+                return db.ActivatedFeatures.Where(f => f.Parent.Id == parent.Id).ToList();
+            }
+        }
+
         /// <summary>
         /// Gets the Web Applications
         /// </summary>

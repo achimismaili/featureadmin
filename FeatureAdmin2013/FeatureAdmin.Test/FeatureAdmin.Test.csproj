@@ -76,7 +76,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ActivationFinderTest.cs" />
+    <Compile Include="Repository\GetActivatedFeaturesTest.cs" />
     <Compile Include="Models\ActivatedFeatureFactoryTest.cs" />
     <Compile Include="Models\FeatureParentFactoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -36,9 +36,9 @@ namespace FeatureAdmin
             // We could also check SPFarm.Local.CurrentUserIsAdministrator(true)
             // but it seems that non-farm admins are already trapped by SPFarm.Local == null
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new UserInterface.FrmMain());
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new UserInterface.FrmMain());
         }
     }
 }
