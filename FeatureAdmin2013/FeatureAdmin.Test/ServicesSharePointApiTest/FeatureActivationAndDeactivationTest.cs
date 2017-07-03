@@ -5,12 +5,15 @@ using FeatureAdmin.Test.TestContent.MockModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Automation.Runspaces;
 using Xunit;
 
 namespace FeatureAdmin.Test.ServicesSharePointApiTest
 {
-    public class FeatureActivationAndDeactivationTest
+    public class FeatureActivationAndDeactivationTest : IDisposable
     {
+        private const string appConfigKeyPowerShellScriptPath = "PowerShellScriptPath";
+
         [Fact]
         public void CanDeactivateAndActivateHealthyFeatures()
         {
@@ -102,6 +105,17 @@ namespace FeatureAdmin.Test.ServicesSharePointApiTest
 
             // Assert
             Assert.Equal(4, processingCounter);
+        }
+
+        public void Dispose()
+        {
+            var scriptFullPath = System.Configuration.ConfigurationManager.AppSettings[appConfigKeyPowerShellScriptPath];
+          
+            CommandParameter param = new CommandParameter(TestContent.SharePointContainers.WebApplication.Url);
+
+            var parameters = new List<CommandParameter>();
+            parameters.Add(param);
+            Helpers.ExecutePowerShell.RunScript(scriptFullPath, parameters);
         }
     }
 }

@@ -2,7 +2,8 @@
 <configuration>
   <appSettings>
     <!-- Make a copy of this App.Config and add your test web application name in here -->
-    <add key="WebAppUrl" value="http://contoso.com"/>
+     <add key="PowerShellScriptPath" value="C:\featureadmin\Scripts\resetTestContent.ps1"/>
+	<add key="WebAppUrl" value="http://contoso.com"/>
     <!-- ... -->
   </appSettings>
 </configuration>
