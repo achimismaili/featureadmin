@@ -1,6 +1,4 @@
-﻿using FeatureAdmin.Models;
-using FeatureAdmin.Repository;
-using FeatureAdmin.Services.SharePointApi;
+﻿using FeatureAdmin.Services.SharePointApi;
 using FeatureAdmin.Test.TestContent.MockModels;
 using System;
 using System.Collections.Generic;

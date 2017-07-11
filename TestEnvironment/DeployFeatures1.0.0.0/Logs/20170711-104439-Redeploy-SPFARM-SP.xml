@@ -1,0 +1,121 @@
+﻿<?xml version="1.0"?>
+<SPSD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="5.0.4.6440">
+  <Configuration ID="DEV">
+    <Settings>
+      <DeploymentRetries>3</DeploymentRetries>
+      <DeploymentTimeout>60000</DeploymentTimeout>
+      <RunOnMultipleServersInFarm>OnlyLocal</RunOnMultipleServersInFarm>
+      <WaitAfterDeployment>10000</WaitAfterDeployment>
+      <DisplayWizards>false</DisplayWizards>
+      <CreateULSLogfile>false</CreateULSLogfile>
+    </Settings>
+    <Restrictions>
+      <AllowGACDeployment>true</AllowGACDeployment>
+      <AllowCASPolicies>true</AllowCASPolicies>
+      <AllowFullTrustBinDeployment>false</AllowFullTrustBinDeployment>
+      <MinimalSharePointVersion>14.0.0.0</MinimalSharePointVersion>
+      <MinimalSharePointLicense>Foundation</MinimalSharePointLicense>
+    </Restrictions>
+    <Actions AfterDeploy="true" AfterRetract="true" AfterUpdate="true">
+      <RestartService Name="SPAdminV4" Force="false" AfterDeploy="true" AfterRetract="false" AfterUpdate="false" />
+      <RestartService Name="SPTimerV4" Force="false" AfterDeploy="true" AfterRetract="false" AfterUpdate="false" />
+      <RestartService Name="SPUserCodeV4" Force="false" AfterDeploy="true" AfterRetract="false" AfterUpdate="false" />
+      <WarmUpUrls AllWebApps="true" AllSites="true" AfterDeploy="true" AfterUpdate="true" />
+    </Actions>
+  </Configuration>
+  <Environment ID="Default">
+    <Variables ID="Default">
+      <Variable Name="UserID">DBI\achim</Variable>
+      <Variable Name="WebAppUrl">https://featuretest.dbi.local</Variable>
+      <Variable Name="SiteUrl">https://featuretest.dbi.local/sites/activated</Variable>
+      <Variable Name="SubWebUrl">https://featuretest.dbi.local/sites/activated/sub</Variable>
+      <Variable Name="SubSiblingWebUrl">https://featuretest.dbi.local/sites/activated/subsibling</Variable>
+      <Variable Name="SubSubWebUrl">https://featuretest.dbi.local/sites/activated/sub/subsub</Variable>
+      <Variable Name="LCID">1033</Variable>
+    </Variables>
+    <PreRequisiteSolutions ID="Default" />
+    <Solutions ID="Default" Force="true" Overwrite="false" />
+  </Environment>
+  <Extensions ID="Default">
+    <!-- Each extension has to be registered here with its own Extension node -->
+    <!-- An extension can also be registered multiple times with different ids, e.g. to execute the same tasks several times-->
+    <!-- You can add the entire extension configuration directly in here, but it is recommended to just reference a separate file -->
+    <!-- for ease if use and easy update. -->
+    <!-- Attributes -->
+    <!-- Required: ID="[Extension node ID]" used to find corresponding referenced node in external file -->
+    <!-- Required: Type="[Extension Type]" the type of the extension as defined in the extension manifest file in the Scripts/Extensions/<extension> folder -->
+    <!-- Optional: FilePath="[file path relative to this XML file]" Specify to replace the node with the same ID from the referenced file -->
+    <!-- <Extension ID="ExampleInstance1" Type="Example" FilePath="Extensions\Example.xml" /> -->
+    <!-- <Extension ID="BlockedFileExtensions" Type="BlockedFileExtensions" FilePath="Extensions\BlockedFileExtensions.xml" /> -->
+    <!-- <Extension ID="ContentTypeHub" Type="ContentTypeHub" FilePath="Extensions\ContentTypeHub.xml" /> -->
+    <!-- <Extension ID="CustomCrawlConnector" Type="CustomCrawlConnector" FilePath="Extensions\CustomCrawlConnector.xml" /> -->
+    <Extension ID="FeatureInstance1" Type="Features">
+      <Events>
+        <Event Name="AfterDeploy">Execute-FeaturesExtension</Event>
+      </Events>
+      <Data>
+        <Features>
+          <!-- configure multiple Features with different scopes -->
+          <Feature Name="DummyFeaturesFaulty14_FaultyFarm14">
+            <Urls>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local</Url>
+            </Urls>
+          </Feature>
+          <Feature Name="DummyFeaturesFaulty14_FaultyWebApp14">
+            <Urls>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local</Url>
+            </Urls>
+          </Feature>
+          <Feature Name="DummyFeaturesFaulty14_FaultySiCo14">
+            <Urls>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local/sites/activated</Url>
+            </Urls>
+          </Feature>
+          <Feature Name="DummyFeaturesFaulty14_FaultyWeb14">
+            <Urls>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local/sites/activated</Url>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local/sites/activated/sub</Url>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local/sites/activated/subsibling</Url>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local/sites/activated/sub/subsub</Url>
+            </Urls>
+          </Feature>
+          <Feature Name="DummyFeaturesHealthy14_HealthyFarm14">
+            <Urls>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local</Url>
+            </Urls>
+          </Feature>
+          <Feature Name="DummyFeaturesHealthy14_HealthyWebApp14">
+            <Urls>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local</Url>
+            </Urls>
+          </Feature>
+          <Feature Name="DummyFeaturesHealthy14_HealthySiCo14">
+            <Urls>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local/sites/activated</Url>
+            </Urls>
+          </Feature>
+          <Feature Name="DummyFeaturesHealthy14_HealthyWeb14">
+            <Urls>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local/sites/activated</Url>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local/sites/activated/sub</Url>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local/sites/activated/subsibling</Url>
+              <Url Action="Enable" Force="false">https://featuretest.dbi.local/sites/activated/sub/subsub</Url>
+            </Urls>
+          </Feature>
+        </Features>
+      </Data>
+    </Extension>
+    <!-- <Extension ID="LoggingConfiguration" Type="LoggingConfiguration" FilePath="Extensions\LoggingConfiguration.xml" /> -->
+    <!-- <Extension ID="ReGhostExtension" Type="ReGhost" FilePath="Extensions\ReGhost.xml" /> -->
+    <!-- <Extension ID="SecureStore" Type="SecureStore" FilePath="Extensions\SecureStore.xml" /> -->
+    <!-- <Extension ID="SearchSchema" Type="SearchSchema" FilePath="Extensions\SearchSchema.xml" />	 -->
+    <!-- <Extension ID="SiteStructure" Type="SiteStructure" FilePath="Extensions\SiteStructure.xml" /> -->
+    <!-- TODO: Site Permissions file is missing -->
+    <!-- <Extension ID="SitePermissions" Type="SiteStructure" FilePath="Extensions\SitePermissions.xml" /> -->
+    <!-- <Extension ID="TermsStoreConfiguration" Type="ManagedMetadata" FilePath="Extensions\TermsStoreConfiguration.xml" /> -->
+    <!-- <Extension ID="Terms" Type="ManagedMetadata" FilePath="Extensions\Terms.xml" /> -->
+    <!-- <Extension ID="SPSD.Extensions.Client.2010" Type="SPSD.Extensions.Client.2010" FilePath="Extensions\SPSD.Extensions.Client.2010.xml" /> -->
+    <!-- <Extension ID="SPSD.Extensions.Client.2013" Type="SPSD.Extensions.Client.2013" FilePath="Extensions\SPSD.Extensions.Client.2013.xml" /> -->
+    <!-- <Extension ID="SPSD.Extensions.Client.SPO" Type="SPSD.Extensions.Client.SPO" FilePath="Extensions\SPSD.Extensions.Client.SPO.xml" /> -->
+  </Extensions>
+</SPSD>

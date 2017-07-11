@@ -1,12 +1,55 @@
-﻿<Window x:Class="FeatureAdminForm.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FeatureAdminForm"
+        xmlns:actfeat ="clr-namespace:FeatureAdminForm.ActivatedFeatures"
+        xmlns:featdef ="clr-namespace:FeatureAdminForm.FeatureDefs"
+        xmlns:spcont ="clr-namespace:FeatureAdminForm.SharePointContainers"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" x:Class="FeatureAdminForm.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type actfeat:ActivatedFeatureListViewModel}">
+            <actfeat:ActivatedFeatureListView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type featdef:FeatureDefsListViewModel}">
+            <featdef:FeatureDefsListView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type spcont:SharePointContainerListViewModel}">
+            <spcont:SharePointContainerListView />
+        </DataTemplate>
+        <!--<DataTemplate DataType="{x:Type cust:AddEditCustomerViewModel}">
+            <cust:AddEditCustomerView />
+        </DataTemplate>-->
+    </Window.Resources>
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid x:Name="NavBar">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Content="Feature Definitions"
+                    Command="{Binding NavCommand}"
+                    CommandParameter="featdef"
+                    Grid.Column="0" />
+            <Button Content ="Activated Features"
+                    Command="{Binding NavCommand}"
+                    CommandParameter="actfeat"
+                    Grid.Column="2" />
+        </Grid>
+        <Grid x:Name="MainContent"
+              Grid.Row="1">
+            <ContentControl Content="{Binding CurrentViewModel}" />
+        </Grid>
     </Grid>
 </Window>

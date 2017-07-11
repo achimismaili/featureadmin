@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SPSD Version="5.0.4.6440">
+  <Extensions>
+    <!-- This represents the extension configuration of the specific instance "FeatureInstance1" of the extension of type "FeaturesExtension" -->
+    <Extension ID="FeatureInstance1" Type="Features">
+		<Events>
+			<Event Name="AfterDeploy">Execute-FeaturesExtension</Event>
+		</Events>
+		<Data>
+			<Features>
+				<!-- configure multiple Features with different scopes -->
+				<!--<Feature Name="DummyFeaturesFaulty_FaultyFarm">
+					<Urls>
+						<Url Action="Enable" Force="false">$(WebAppUrl)</Url>
+					</Urls>
+				</Feature>
+<Feature Name="DummyFeaturesFaulty_FaultyWebApp">
+					<Urls>
+						<Url Action="Enable" Force="false">$(WebAppUrl)</Url>
+					</Urls>
+				</Feature>
+<Feature Name="DummyFeaturesFaulty_FaultySiCo">
+					<Urls>
+						<Url Action="Enable" Force="false">$(WebAppUrl)</Url>
+					</Urls>
+				</Feature>
+<Feature Name="DummyFeaturesFaulty_FaultyWeb">
+					<Urls>
+						<Url Action="Enable" Force="false">$(WebAppUrl)</Url>
+						<Url Action="Enable" Force="false">$(SiteUrl)</Url>
+						<Url Action="Enable" Force="false">$(SubWebUrl)/sub/sub</Url>
+						<Url Action="Enable" Force="false">$(SubSiblingWebUrl)</Url>
+						<Url Action="Enable" Force="false">$(SubSubWebUrl)</Url>
+					</Urls>
+				</Feature>
+				<Feature Name="DummyFeaturesHealthy_HealthyFarm">
+					<Urls>
+						<Url Action="Enable" Force="false">$(WebAppUrl)</Url>
+					</Urls>
+				</Feature>
+<Feature Name="DummyFeaturesHealthy_HealthyWebApp">
+					<Urls>
+						<Url Action="Enable" Force="false">$(WebAppUrl)</Url>
+					</Urls>
+				</Feature>
+<Feature Name="DummyFeaturesHealthy_HealthySiCo">
+					<Urls>
+						<Url Action="Enable" Force="false">$(WebAppUrl)</Url>
+					</Urls>
+				</Feature>
+<Feature Name="DummyFeaturesHealthy_HealthyWeb">
+					<Urls>
+						<Url Action="Enable" Force="false">$(WebAppUrl)</Url>
+						<Url Action="Enable" Force="false">$(SiteUrl)</Url>
+						<Url Action="Enable" Force="false">$(SubWebUrl)/sub/sub</Url>
+						<Url Action="Enable" Force="false">$(SubSiblingWebUrl)</Url>
+						<Url Action="Enable" Force="false">$(SubSubWebUrl)</Url>
+					</Urls>
+				</Feature>-->
+				
+			</Features>
+		</Data>
+    </Extension>
+  </Extensions>
+</SPSD>
