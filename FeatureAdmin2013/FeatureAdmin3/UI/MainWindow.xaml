@@ -3,10 +3,33 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:details="clr-namespace:FeatureAdmin3.UI.Details"
+        xmlns:features="clr-namespace:FeatureAdmin3.UI.Features"
+        xmlns:log="clr-namespace:FeatureAdmin3.UI.Log"
+        xmlns:parents="clr-namespace:FeatureAdmin3.UI.Parents"
         xmlns:local="clr-namespace:FeatureAdmin3.UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Feature Admin 3 for SharePoint 2013" 
+        Height="640" 
+        Width="1200">
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type details:DetailsViewModel}">
+            <details:DetailsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type features:FeatureListViewModel}">
+            <features:FeatureListView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type log:LogListViewModel}">
+            <log:LogListView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type parents:ParentsListViewModel}">
+            <parents:ParentsListView />
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
-        
+        <ContentControl Content="{Binding CurrentViewModel}" />
     </Grid>
 </Window>
