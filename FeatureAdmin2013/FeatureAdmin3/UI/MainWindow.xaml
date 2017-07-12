@@ -30,6 +30,35 @@
         </DataTemplate>
     </Window.Resources>
     <Grid>
-        <ContentControl Content="{Binding CurrentViewModel}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid x:Name="MainContent"
+              Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ContentControl Content="{Binding CurrentViewModel}" 
+                            Grid.Column="0"/>
+        </Grid>
+        <Grid x:Name="Detail"
+              Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Content="Parents"
+                    Command="{Binding NavCommand}"
+                    CommandParameter="parents"
+                    Grid.Column="0" />
+            <Button Content="Features"
+                    Command="{Binding NavCommand}"
+                    CommandParameter="features"
+                    Grid.Column="2" />
+        </Grid>
     </Grid>
 </Window>
