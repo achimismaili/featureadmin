@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FeatureAdmin3
+namespace FeatureAdmin3.UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

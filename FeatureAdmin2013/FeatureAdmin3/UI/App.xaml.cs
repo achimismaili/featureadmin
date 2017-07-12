@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace FeatureAdmin3
+namespace FeatureAdmin3.UI
 {
     /// <summary>
     /// Interaction logic for App.xaml
