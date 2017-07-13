@@ -7,6 +7,7 @@
         xmlns:features="clr-namespace:FeatureAdmin3.UI.Features"
         xmlns:log="clr-namespace:FeatureAdmin3.UI.Log"
         xmlns:parents="clr-namespace:FeatureAdmin3.UI.Parents"
+        xmlns:ac="clr-namespace:FeatureAdmin3.UI.AdornedControl"
         xmlns:local="clr-namespace:FeatureAdmin3.UI"
         mc:Ignorable="d"
         Title="Feature Admin 3 for SharePoint 2013" 
@@ -29,36 +30,44 @@
             <parents:ParentsListView />
         </DataTemplate>
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid x:Name="MainContent"
+    <StackPanel>
+        <ac:AdornedControl x:Name="LoadingAdorner"
+		        >
+            <ac:AdornedControl.AdornerContent>
+                <ac:LoadingWait></ac:LoadingWait>
+            </ac:AdornedControl.AdornerContent>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid x:Name="MainContent"
               Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <ContentControl Content="{Binding CurrentViewModel}" 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ContentControl Content="{Binding CurrentViewModel}" 
                             Grid.Column="0"/>
-        </Grid>
-        <Grid x:Name="Detail"
+                </Grid>
+                <Grid x:Name="Detail"
               Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Button Content="Parents"
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Parents"
                     Command="{Binding NavCommand}"
                     CommandParameter="parents"
                     Grid.Column="0" />
-            <Button Content="Features"
+                    <Button Content="Features"
                     Command="{Binding NavCommand}"
                     CommandParameter="features"
                     Grid.Column="2" />
-        </Grid>
-    </Grid>
+                </Grid>
+            </Grid>
+        </ac:AdornedControl>
+    </StackPanel>
 </Window>
