@@ -7,6 +7,18 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <TextBlock Text="This is the ParentsListView" />
+        <DataGrid ItemsSource="{Binding Parents}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  Grid.Row="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding ScopeMatchCode }"
+                                    Width="*" />
+                <DataGridTextColumn Binding="{Binding DisplayName }"
+                                    Width="*" />
+                <DataGridTextColumn Binding="{Binding Url }"
+                                    Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

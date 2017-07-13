@@ -23,6 +23,26 @@ namespace FeatureAdmin.Models
         public Guid? ContentDatabaseId { get; private set; }
 
         /// <summary>
+        /// abbreviated scope to max 3 letters
+        /// </summary>
+        public string ScopeMatchCode { get {
+                switch (Scope)
+                {
+                    case SPFeatureScope.Farm:
+                        return "FRM";
+                    case SPFeatureScope.WebApplication:
+                        return "WA";
+                    case SPFeatureScope.Site:
+                        return "SC";
+                    case SPFeatureScope.Web:
+                        return "WEB";
+                    case SPFeatureScope.ScopeInvalid:
+                    default:
+                        return "ERR";
+                }
+            } }
+
+        /// <summary>
         /// Only for Factory Methods of this class
         /// </summary>
         private FeatureParent()

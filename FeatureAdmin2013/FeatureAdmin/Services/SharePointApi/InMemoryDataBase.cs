@@ -20,6 +20,8 @@ namespace FeatureAdmin.Services.SharePointApi
     {
         public List<ActivatedFeature> ActivatedFeatures { get; private set; }
         public List<FeatureDefinition> FeatureDefinitions { get; private set; }
+
+        public List<FeatureParent> Parents { get; private set; }
         public Dictionary<Guid, List<FeatureParent>> SharePointParentHierarchy { get; private set; }
         public Guid FarmId { get; private set; }
 
@@ -153,8 +155,14 @@ namespace FeatureAdmin.Services.SharePointApi
         /// </summary>
         private InMemoryDataBase()
         {
-            // Get feature definitions
+            ActivatedFeatures = new List<ActivatedFeature>();
+
+            Parents = new List<FeatureParent>();
+
+            SharePointParentHierarchy = new Dictionary<Guid, List<FeatureParent>>();
+
             FeatureDefinitions = LoadAllFeatureDefinitions();
+
 
             // Get activated features and build up SharePointParentHierarchy
             LoadAllActivatedFeaturesAndHierarchy();
@@ -168,9 +176,6 @@ namespace FeatureAdmin.Services.SharePointApi
         /// </summary>
         private void LoadAllActivatedFeaturesAndHierarchy()
         {
-            ActivatedFeatures = new List<ActivatedFeature>();
-
-            SharePointParentHierarchy = new Dictionary<Guid, List<FeatureParent>>();
 
             SPSecurity.RunWithElevatedPrivileges(delegate ()
             {
@@ -183,6 +188,7 @@ namespace FeatureAdmin.Services.SharePointApi
                 FarmId = parent.Id;
 
                 SharePointParentHierarchy.Add(FarmId, new List<FeatureParent>());
+                Parents.Add(parent);
 
                 if (farmFeatures != null)
                 {
@@ -204,7 +210,7 @@ namespace FeatureAdmin.Services.SharePointApi
                         var index = (adminApp.Features.Count == 1 && caIndex == 1) ? string.Empty : " " + caIndex.ToString();
                         var caParent = FeatureParent.GetFeatureParent(adminApp, "Central Admin" + index);
 
-                        AddParentToHierarchy(FarmId, caParent, true);
+                        AddParentToHierarchyAndParentsList(FarmId, caParent, true);
 
                         var adminFeatures = adminApp.Features;
 
@@ -236,7 +242,7 @@ namespace FeatureAdmin.Services.SharePointApi
                     {
                         var waAsParent = FeatureParent.GetFeatureParent(webApp);
 
-                        AddParentToHierarchy(FarmId, waAsParent, true);
+                        AddParentToHierarchyAndParentsList(FarmId, waAsParent, true);
 
                         var waFeatures = webApp.Features;
 
@@ -267,7 +273,7 @@ namespace FeatureAdmin.Services.SharePointApi
             {
                 var parent = FeatureParent.GetFeatureParent(site);
 
-                AddParentToHierarchy(webAppId, parent, true);
+                AddParentToHierarchyAndParentsList(webAppId, parent, true);
 
                 var siteFeatures = site.Features;
 
@@ -296,7 +302,7 @@ namespace FeatureAdmin.Services.SharePointApi
             {
                 var parent = FeatureParent.GetFeatureParent(web);
 
-                AddParentToHierarchy(SiteCollectionId, parent, false);
+                AddParentToHierarchyAndParentsList(SiteCollectionId, parent, false);
 
                 var webFeatures = web.Features;
 
@@ -346,12 +352,15 @@ namespace FeatureAdmin.Services.SharePointApi
         /// <param name="parentOfThisParent">the parent container of this parent in the sharepoint hierarchy</param>
         /// <param name="parent">SharePoint container to add to hierarchy</param>
         /// <param name="hasChildren">if this container itself has children, new entry is created in hierarchy collection</param>
-        private void AddParentToHierarchy(Guid parentOfThisParent, FeatureParent parent, bool hasChildren)
+        private void AddParentToHierarchyAndParentsList(Guid parentOfThisParent, FeatureParent parent, bool hasChildren)
         {
             if (parent == null)
             {
                 return;
             }
+
+            // add to parents list
+            Parents.Add(parent);
 
             //if (SharePointParentHierarchy.ContainsKey(parentOfThisParent))
             //{
