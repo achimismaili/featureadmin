@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace FeatureAdmin3.UI.Common
 {
-    public class RelayCommand : ICommand
+    public sealed class RelayCommand : ICommand
     {
         Action _TargetExecuteMethod;
         Func<bool> _TargetCanExecuteMethod;
@@ -54,7 +54,7 @@ namespace FeatureAdmin3.UI.Common
         #endregion
     }
 
-    public class RelayCommand<T> : ICommand
+    public sealed class RelayCommand<T> : ICommand
     {
         Action<T> _TargetExecuteMethod;
         Func<T, bool> _TargetCanExecuteMethod;
