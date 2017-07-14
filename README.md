@@ -3,7 +3,7 @@ SharePoint Feature Administration and Clean Up Tool to find and delete broken fe
 
 [Further Documentation](docs/Documentation.md)
 
-[Release Downloads](Releases)
+[Release Downloads](Releases) (attention! for feature administration, v. 2.4.8 is currently the best release, but if you are experiencing issues in removing faulty features, please use release 2.4.6 instead - we are working on a fixed version ...)
 
 [License: Microsoft Public License](License.md)
 
