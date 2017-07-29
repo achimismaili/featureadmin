@@ -14,21 +14,21 @@ namespace FeatureAdmin3.Repository
 {
     public class FeatureRepository : IFeatureRepository
     {
-        private InMemoryDataBase db;
+        private SingletonDb db;
 
-        public FeatureRepository()
+
+        public async Task<IFeatureRepository> Init()
         {
-            db = InMemoryDataBase.SingletonInstance;
+            db = await SingletonDb.SingletonAsync;
+            return this;
         }
 
-        public bool AlwaysUseForce {
-            get
-            {
-                return InMemoryDataBase.ConfigSettings.AlwaysUseForce;
-            }
-            set {
-                InMemoryDataBase.ConfigSettings.AlwaysUseForce = value;
-            } }
+        public async Task<IFeatureRepository> Reload()
+        {
+            var trueWhenDone = await SingletonDb.Singleton.InMemoryDb.ReloadAsync();
+
+            return this;
+        }
 
         public int ActivateFeaturesRecursive(IFeatureParent sharePointContainerLevel, IEnumerable<IFeatureDefinition> featureDefinitions, bool force)
         {
@@ -127,11 +127,11 @@ namespace FeatureAdmin3.Repository
         {
             if(scope == null)
             {
-                return db.FeatureDefinitions;
+                return db.InMemoryDb.FeatureDefinitions;
             }
             else
             {
-                return db.FeatureDefinitions.Where(fd => fd.Scope == scope.Value).ToList();
+                return db.InMemoryDb.FeatureDefinitions.Where(fd => fd.Scope == scope.Value).ToList();
             }
         }
 
@@ -139,11 +139,11 @@ namespace FeatureAdmin3.Repository
         {
             if (parent == null)
             {
-                return db.ActivatedFeatures;
+                return db.InMemoryDb.ActivatedFeatures;
             }
             else
             {
-                return db.ActivatedFeatures.Where(f => f.Parent.Id == parent.Id).ToList();
+                return db.InMemoryDb.ActivatedFeatures.Where(f => f.Parent.Id == parent.Id).ToList();
             }
         }
 
@@ -153,7 +153,7 @@ namespace FeatureAdmin3.Repository
         /// <returns></returns>
         private List<FeatureParent> GetSharePointWebApplications()
         {
-            return GetParentsChildren(db.FarmId);
+            return GetParentsChildren(db.InMemoryDb.FarmId);
         }
 
         /// <summary>
@@ -167,9 +167,9 @@ namespace FeatureAdmin3.Repository
 
         public List<FeatureParent> GetParentsChildren(Guid containerId)
         {
-            if(db.SharePointParentHierarchy.ContainsKey(containerId))
+            if(db.InMemoryDb.SharePointParentHierarchy.ContainsKey(containerId))
             {
-                return db.SharePointParentHierarchy[containerId];
+                return db.InMemoryDb.SharePointParentHierarchy[containerId];
             }
             else
             {
@@ -179,7 +179,7 @@ namespace FeatureAdmin3.Repository
 
         public List<FeatureParent> GetParents()
         {
-            return db.Parents;
+            return db.InMemoryDb.Parents;
         }
     }
 }

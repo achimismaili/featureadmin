@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using FeatureAdmin.Models;
 using FeatureAdmin.Models.Interfaces;
 using Microsoft.SharePoint;
+using System.Threading.Tasks;
 
 namespace FeatureAdmin3.Repository
 {
     public interface IFeatureRepository
     {
-        bool AlwaysUseForce { get; set; }
-
+        Task<IFeatureRepository> Init();
+        Task<IFeatureRepository> Reload();
         // get all parents tree
         List<FeatureParent> GetParents();
 

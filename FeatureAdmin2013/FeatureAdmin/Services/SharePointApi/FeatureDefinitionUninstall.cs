@@ -29,7 +29,7 @@ namespace FeatureAdmin.Services.SharePointApi
 
                 if(processingCounter > 0)
                 {
-                    InMemoryDataBase.RemoveUninstalledFeatureDefinition(id);
+                    SingletonDb.Singleton.InMemoryDb.RemoveUninstalledFeatureDefinition(id);
                 }
 
             }

@@ -90,7 +90,7 @@ namespace FeatureAdmin.Services.SharePointApi
                     if (feature != null)
                     {
                         featuresModifiedCounter++;
-                        InMemoryDataBase.AddActivatedFeature(feature);
+                        SingletonDb.Singleton.InMemoryDb.AddActivatedFeature(feature);
                     }
                 }
                 else
@@ -102,7 +102,7 @@ namespace FeatureAdmin.Services.SharePointApi
                     if (featuresActiveBefore > features.Count)
                     {
                         featuresModifiedCounter++;
-                        InMemoryDataBase.RemoveDeactivatedFeature(featureId, parentId);
+                        SingletonDb.Singleton.InMemoryDb.RemoveDeactivatedFeature(featureId, parentId);
                     }
                 }
             }

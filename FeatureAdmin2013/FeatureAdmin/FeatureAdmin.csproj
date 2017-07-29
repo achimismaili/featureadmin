@@ -162,6 +162,7 @@
     <Compile Include="Services\SharePointApi\FeatureActivationAndDeactivationBulk.cs" />
     <Compile Include="Services\SharePointApi\FarmRead.cs" />
     <Compile Include="Services\SharePointApi\InMemoryDataBase.cs" />
+    <Compile Include="Services\SharePointApi\SingletonDb.cs" />
     <Compile Include="Models\TemplateInfo.cs" />
     <Compile Include="Services\SharePointApi\FeatureDefinitionUninstall.cs" />
     <Compile Include="Services\SharePointApi\FeatureActivationAndDeactivationCore.cs" />

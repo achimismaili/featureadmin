@@ -8,8 +8,6 @@ namespace FeatureAdminForm.Services
 {
     public interface IFeatureRepository
     {
-        bool AlwaysUseForce { get; set; }
-
         int ActivateFeaturesRecursive(IFeatureParent sharePointContainerLevel, IEnumerable<IFeatureDefinition> featureDefinitions, bool force);
         int DeactivateFeatures(IEnumerable<IActivatedFeature> activatedFeatures, bool force);
         int DeactivateFeaturesRecursive(IFeatureParent sharePointContainerLevel, IEnumerable<IFeatureIdentifier> featureDefinitions, bool force);

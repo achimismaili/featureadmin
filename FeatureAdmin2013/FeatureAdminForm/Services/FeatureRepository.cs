@@ -18,17 +18,9 @@ namespace FeatureAdminForm.Services
 
         public FeatureRepository()
         {
-            db = InMemoryDataBase.SingletonInstance;
+            db = SingletonDb.Singleton.InMemoryDb;
         }
 
-        public bool AlwaysUseForce {
-            get
-            {
-                return InMemoryDataBase.ConfigSettings.AlwaysUseForce;
-            }
-            set {
-                InMemoryDataBase.ConfigSettings.AlwaysUseForce = value;
-            } }
 
         public int ActivateFeaturesRecursive(IFeatureParent sharePointContainerLevel, IEnumerable<IFeatureDefinition> featureDefinitions, bool force)
         {

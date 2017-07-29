@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FeatureAdmin3.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,25 @@ namespace FeatureAdmin3.UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private IFeatureRepository repo;
+
         public MainWindow()
+            :this(new FeatureRepository())
+        { }
+
+        public MainWindow(IFeatureRepository featureRepository)
         {
             InitializeComponent();
         }
+
+     private void ReloadRepository()
+        {
+            LoadingAdorner.IsAdornerVisible = true;
+            VisibleScreen.IsEnabled = false;
+            repo.Reload();
+            LoadingAdorner.IsAdornerVisible = false;
+            VisibleScreen.IsEnabled = true;
+        }
+
     }
 }
