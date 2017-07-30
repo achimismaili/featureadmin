@@ -34,7 +34,11 @@ namespace FeatureAdmin3.UI
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            LoadingAdorner.IsAdornerVisible = true;
+            VisibleScreen.IsEnabled = false;
             _viewModel.Load();
+            LoadingAdorner.IsAdornerVisible = false;
+            VisibleScreen.IsEnabled = true;
         }
     }
 }

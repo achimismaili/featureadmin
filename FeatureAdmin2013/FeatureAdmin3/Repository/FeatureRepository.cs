@@ -21,17 +21,16 @@ namespace FeatureAdmin3.Repository
             db = SingletonDb.Singleton;
         }
 
-        public async Task<IFeatureRepository> Init()
+        public void Init()
         {
-            db = await SingletonDb.SingletonAsync;
-            return this;
+            SingletonDb.Singleton.InMemoryDb.Load();
+            return;
         }
 
-        public async Task<IFeatureRepository> Reload()
+        public void Reload()
         {
-            var trueWhenDone = await SingletonDb.Singleton.InMemoryDb.LoadAsync();
-
-            return this;
+            SingletonDb.Singleton.InMemoryDb.Load();
+            return;
         }
 
         public int ActivateFeaturesRecursive(IFeatureParent sharePointContainerLevel, IEnumerable<IFeatureDefinition> featureDefinitions, bool force)
@@ -155,7 +154,7 @@ namespace FeatureAdmin3.Repository
         /// Gets the Web Applications
         /// </summary>
         /// <returns></returns>
-        private List<FeatureParent> GetSharePointWebApplications()
+        public List<FeatureParent> GetSharePointWebApplications()
         {
             return GetParentsChildren(db.InMemoryDb.FarmId);
         }

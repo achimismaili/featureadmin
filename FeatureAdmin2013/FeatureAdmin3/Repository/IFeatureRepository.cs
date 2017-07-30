@@ -9,8 +9,8 @@ namespace FeatureAdmin3.Repository
 {
     public interface IFeatureRepository
     {
-        Task<IFeatureRepository> Init();
-        Task<IFeatureRepository> Reload();
+        void Init();
+        void Reload();
         // get all parents tree
         List<FeatureParent> GetParents();
 

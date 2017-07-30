@@ -47,9 +47,9 @@ namespace FeatureAdmin.Test.TestContent
             }
             public static int TotalActivated = 3;
             public static Guid Id = new Guid("6a5615a2-4c44-40dd-ac9f-26cc45fb7e79");
-            public static string Name = "DummyFeaturesHealthy_HealthyWeb";
+            public static string Name = "DummyFeaturesHealthy15_HealthyWeb";
             public static SPFeatureScope Scope = Microsoft.SharePoint.SPFeatureScope.Web;
-            public static Version Version = new Version("1.0.0.0");
+            public static Version Version = new Version("3.0.0.0");
             public static bool Faulty = false;
             public static string Title = "Dummy Features Healthy Web";
         };
@@ -89,9 +89,9 @@ namespace FeatureAdmin.Test.TestContent
             }
             public static int TotalActivated = 1;
             public static Guid Id = new Guid("bdd4c395-4c92-4bf8-8c61-9d12349bb853");
-            public static string Name = "DummyFeaturesHealthy_HealthySiCo";
+            public static string Name = "DummyFeaturesHealthy15_HealthySiCo";
             public static SPFeatureScope Scope = Microsoft.SharePoint.SPFeatureScope.Site;
-            public static Version Version = new Version("1.0.0.0");
+            public static Version Version = new Version("3.0.0.0");
             public static bool Faulty = false;
             public const string Title = "Dummy Features Healthy SiCo";
         };
@@ -125,9 +125,9 @@ namespace FeatureAdmin.Test.TestContent
             }
             public static int TotalActivated = 1;
             public static Guid Id = new Guid("cb53cddc-4335-4560-bf29-f1a0c47f8e6a");
-            public static string Name = "DummyFeaturesHealthy_HealthyWebApp";
+            public static string Name = "DummyFeaturesHealthy15_HealthyWebApp";
             public static SPFeatureScope Scope = Microsoft.SharePoint.SPFeatureScope.WebApplication;
-            public static Version Version = new Version("1.0.0.0");
+            public static Version Version = new Version("3.0.0.0");
             public static bool Faulty = false;
             public const string Title = "Dummy Features Healthy WebApp";
         };
@@ -136,9 +136,9 @@ namespace FeatureAdmin.Test.TestContent
         {
             public static int TotalActivated = 1;
             public static Guid Id = new Guid("d2cb3620-aacb-459e-842d-dc09aea28828");
-            public static string Name = "DummyFeaturesHealthy_HealthyFarm";
+            public static string Name = "DummyFeaturesHealthy15_HealthyFarm";
             public static SPFeatureScope Scope = Microsoft.SharePoint.SPFeatureScope.Farm;
-            public static Version Version = new Version("1.0.0.0");
+            public static Version Version = new Version("3.0.0.0");
             public static bool Faulty = false;
             public const string Title = "Dummy Features Healthy Farm";
             public static MockFeatureDefinition GetMockFeatureDefinition()

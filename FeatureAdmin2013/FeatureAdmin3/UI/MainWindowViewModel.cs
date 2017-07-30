@@ -1,4 +1,5 @@
-﻿using FeatureAdmin3.UI.Common;
+﻿using FeatureAdmin3.Repository;
+using FeatureAdmin3.UI.Common;
 using FeatureAdmin3.UI.Details;
 using FeatureAdmin3.UI.Features;
 using FeatureAdmin3.UI.Log;
@@ -55,6 +56,8 @@ namespace FeatureAdmin3.UI
 
         public void Load()
         {
+            var repo = new FeatureRepository();
+            repo.Init();
             parentsListViewModel.Load();
             featureListViewModel.Load();
         }

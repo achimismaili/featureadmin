@@ -118,9 +118,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\FeatureAdminForm\FeatureAdminForm.csproj">
-      <Project>{9187c3e9-68c1-4228-8c1e-1f2a03d4d231}</Project>
-      <Name>FeatureAdminForm</Name>
+    <ProjectReference Include="..\FeatureAdmin3\FeatureAdmin3.csproj">
+      <Project>{E0B1BE38-D435-492E-A4BD-671BA7C40903}</Project>
+      <Name>FeatureAdmin3</Name>
     </ProjectReference>
     <ProjectReference Include="..\FeatureAdmin\FeatureAdmin.csproj">
       <Project>{28e3ed33-143a-45eb-894c-48f47c88490c}</Project>
