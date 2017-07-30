@@ -3,6 +3,7 @@ using FeatureAdmin3.UI.Details;
 using FeatureAdmin3.UI.Features;
 using FeatureAdmin3.UI.Log;
 using FeatureAdmin3.UI.Parents;
+using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,12 @@ namespace FeatureAdmin3.UI
     public class MainWindowViewModel : BindableBase
     {
         private DetailsViewModel detailsViewModel = new DetailsViewModel();
-        private FeatureListViewModel featureListViewModel = new FeatureListViewModel();
+        private IFeatureListViewModel featureListViewModel = new FeatureListViewModel();
         private LogListViewModel logListViewModel = new LogListViewModel();
-        private ParentsListViewModel parentsListViewModel = new ParentsListViewModel();
+        private IParentsListViewModel parentsListViewModel = new ParentsListViewModel();
 
-        private BindableBase currentViewModel;
-        public BindableBase CurrentViewModel
+        private IBindableBase currentViewModel;
+        public IBindableBase CurrentViewModel
         {
             get
             {
@@ -33,10 +34,10 @@ namespace FeatureAdmin3.UI
 
         public MainWindowViewModel()
         {
-            NavCommand = new RelayCommand<string>(OnNav);
+            NavCommand = new DelegateCommand<string>(OnNav);
         }
 
-        public RelayCommand<string> NavCommand { get; private set; }
+        public DelegateCommand<string> NavCommand { get; private set; }
 
         private void OnNav(string destination)
         {
@@ -52,5 +53,10 @@ namespace FeatureAdmin3.UI
             }
         }
 
+        public void Load()
+        {
+            parentsListViewModel.Load();
+            featureListViewModel.Load();
+        }
     }
 }

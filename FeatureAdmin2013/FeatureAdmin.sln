@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureAdminForm", "Feature
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureAdmin3", "FeatureAdmin3\FeatureAdmin3.csproj", "{E0B1BE38-D435-492E-A4BD-671BA7C40903}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureAdmin3.UITests", "FeatureAdmin3.UITests\FeatureAdmin3.UITests.csproj", "{519246B3-751E-4CC4-8D8F-65CBE570E4DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,18 @@ Global
 		{E0B1BE38-D435-492E-A4BD-671BA7C40903}.Release|x64.Build.0 = Release|Any CPU
 		{E0B1BE38-D435-492E-A4BD-671BA7C40903}.Release|x86.ActiveCfg = Release|Any CPU
 		{E0B1BE38-D435-492E-A4BD-671BA7C40903}.Release|x86.Build.0 = Release|Any CPU
+		{519246B3-751E-4CC4-8D8F-65CBE570E4DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{519246B3-751E-4CC4-8D8F-65CBE570E4DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{519246B3-751E-4CC4-8D8F-65CBE570E4DC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{519246B3-751E-4CC4-8D8F-65CBE570E4DC}.Debug|x64.Build.0 = Debug|Any CPU
+		{519246B3-751E-4CC4-8D8F-65CBE570E4DC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{519246B3-751E-4CC4-8D8F-65CBE570E4DC}.Debug|x86.Build.0 = Debug|Any CPU
+		{519246B3-751E-4CC4-8D8F-65CBE570E4DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{519246B3-751E-4CC4-8D8F-65CBE570E4DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{519246B3-751E-4CC4-8D8F-65CBE570E4DC}.Release|x64.ActiveCfg = Release|Any CPU
+		{519246B3-751E-4CC4-8D8F-65CBE570E4DC}.Release|x64.Build.0 = Release|Any CPU
+		{519246B3-751E-4CC4-8D8F-65CBE570E4DC}.Release|x86.ActiveCfg = Release|Any CPU
+		{519246B3-751E-4CC4-8D8F-65CBE570E4DC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

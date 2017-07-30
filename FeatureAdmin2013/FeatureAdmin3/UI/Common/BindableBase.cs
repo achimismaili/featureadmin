@@ -6,9 +6,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin3.UI
+namespace FeatureAdmin3.UI.Common
 {
-    public class BindableBase : INotifyPropertyChanged
+    public class BindableBase : INotifyPropertyChanged, IBindableBase
     {
         protected virtual void SetProperty<T>(ref T member, T val,
             [CallerMemberName] string propertyName = null)

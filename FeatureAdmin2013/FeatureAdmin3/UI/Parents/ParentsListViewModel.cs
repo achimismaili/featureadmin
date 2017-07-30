@@ -6,33 +6,47 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FeatureAdmin3.UI.Common;
+using Prism.Events;
 
 namespace FeatureAdmin3.UI.Parents
 {
-    class ParentsListViewModel : BindableBase
+    public interface IParentsListViewModel  : IBindableBase
+    {
+        void Load();
+    }
+    class ParentsListViewModel : BindableBase, IParentsListViewModel
     {
         private IFeatureRepository repo;
+        private IEventAggregator _eventAggregator;
 
         public ParentsListViewModel()
             :this(new FeatureRepository())
-        {}
+        {
+        }
 
         public ParentsListViewModel(IFeatureRepository featureRepository)
         {
             repo = featureRepository;
+            parents = new ObservableCollection<ParentItemViewModel>();
+
         }
 
-        private ObservableCollection<FeatureParent> parents;
-        public ObservableCollection<FeatureParent> Parents
+        private ObservableCollection<ParentItemViewModel> parents;
+        public ObservableCollection<ParentItemViewModel> Parents
         {
             get { return parents; }
             set { SetProperty(ref parents, value); }
         }
 
-        public void LoadParents()
+        public void Load()
         {
-            parents = new ObservableCollection<FeatureParent>(
-                repo.GetParents());
+            parents.Clear();
+            foreach (var p in repo.GetParents())
+            {
+                parents.Add(new ParentItemViewModel(
+                  p.Id, p.Url, _eventAggregator));
+            }
         }
     }
 }

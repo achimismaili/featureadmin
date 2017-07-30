@@ -13,7 +13,7 @@
         <i:EventTrigger EventName="Loaded">
             <ei:CallMethodAction 
                 TargetObject="{Binding}"
-                MethodName="LoadFeatures"
+                MethodName="Load"
                 />
         </i:EventTrigger>
     </i:Interaction.Triggers>

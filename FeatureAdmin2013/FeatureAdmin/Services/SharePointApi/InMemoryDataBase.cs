@@ -19,7 +19,7 @@ namespace FeatureAdmin.Services.SharePointApi
         public List<FeatureParent> Parents { get; private set; }
         public Dictionary<Guid, List<FeatureParent>> SharePointParentHierarchy { get; private set; }
 
-        public bool Reload()
+        public bool Load()
         {
             this.ActivatedFeatures = new List<ActivatedFeature>();
 
@@ -38,11 +38,11 @@ namespace FeatureAdmin.Services.SharePointApi
             return true;
         }
 
-        public async Task<bool> ReloadAsync()
+        public async Task<bool> LoadAsync()
         {
             var trueWhenDone = await Task.Run<bool>(() =>
             {
-               return Reload();
+               return Load();
             });
 
             return trueWhenDone;
@@ -50,7 +50,13 @@ namespace FeatureAdmin.Services.SharePointApi
 
         public InMemoryDataBase()
         {
-            this.Reload();
+            this.ActivatedFeatures = new List<ActivatedFeature>();
+
+            this.Parents = new List<FeatureParent>();
+
+            this.SharePointParentHierarchy = new Dictionary<Guid, List<FeatureParent>>();
+
+            this.FeatureDefinitions = new List<FeatureDefinition>();
         }
 
         public void AddActivatedFeature(SPFeature feature)

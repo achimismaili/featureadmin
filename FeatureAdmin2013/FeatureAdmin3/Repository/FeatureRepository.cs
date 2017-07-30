@@ -16,6 +16,10 @@ namespace FeatureAdmin3.Repository
     {
         private SingletonDb db;
 
+        public FeatureRepository()
+        {
+            db = SingletonDb.Singleton;
+        }
 
         public async Task<IFeatureRepository> Init()
         {
@@ -25,7 +29,7 @@ namespace FeatureAdmin3.Repository
 
         public async Task<IFeatureRepository> Reload()
         {
-            var trueWhenDone = await SingletonDb.Singleton.InMemoryDb.ReloadAsync();
+            var trueWhenDone = await SingletonDb.Singleton.InMemoryDb.LoadAsync();
 
             return this;
         }

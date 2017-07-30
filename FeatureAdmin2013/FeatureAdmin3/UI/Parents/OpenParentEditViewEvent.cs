@@ -1,13 +1,13 @@
-﻿using FeatureAdmin3.UI.Common;
+﻿using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin3.UI.Details
+namespace FeatureAdmin3.UI.Parents
 {
-    class DetailsViewModel : BindableBase
+    public class OpenParentEditViewEvent : PubSubEvent<Guid>
     {
     }
 }

@@ -21,25 +21,20 @@ namespace FeatureAdmin3.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IFeatureRepository repo;
+        private MainWindowViewModel _viewModel;
 
-        public MainWindow()
-            :this(new FeatureRepository())
-        { }
-
-        public MainWindow(IFeatureRepository featureRepository)
+        public MainWindow(MainWindowViewModel viewModel)
         {
             InitializeComponent();
+            this.Loaded += MainWindow_Loaded;
+
+            _viewModel = viewModel;
+            DataContext = _viewModel;
         }
 
-     private void ReloadRepository()
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadingAdorner.IsAdornerVisible = true;
-            VisibleScreen.IsEnabled = false;
-            repo.Reload();
-            LoadingAdorner.IsAdornerVisible = false;
-            VisibleScreen.IsEnabled = true;
+            _viewModel.Load();
         }
-
     }
 }
