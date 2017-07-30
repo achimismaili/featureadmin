@@ -20,9 +20,17 @@ namespace FA.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        MainViewModel _viewModel;
+        public MainWindow(MainViewModel viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            this.DataContext = viewModel;
+        }
+
+        private void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.Reload();
         }
     }
 }

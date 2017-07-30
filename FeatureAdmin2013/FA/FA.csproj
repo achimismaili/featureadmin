@@ -16,7 +16,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -42,6 +42,7 @@
       <HintPath>..\packages\Autofac.4.6.1\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL" />
     <Reference Include="Prism, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Core.6.3.0\lib\net45\Prism.dll</HintPath>
       <Private>True</Private>
@@ -74,6 +75,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SharePoint\FarmRead.cs" />
+    <Compile Include="SharePoint\FeatureActivationAndDeactivationBulk.cs" />
+    <Compile Include="SharePoint\FeatureActivationAndDeactivationCore.cs" />
+    <Compile Include="SharePoint\FeatureDefinitionUninstall.cs" />
     <Compile Include="UI\MainViewModel.cs" />
     <Compile Include="UI\Startup\BootStrapper.cs" />
     <Page Include="UI\MainWindow.xaml">
@@ -116,6 +121,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="UI\App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FeatureAdmin\FeatureAdmin.csproj">
+      <Project>{28e3ed33-143a-45eb-894c-48f47c88490c}</Project>
+      <Name>FeatureAdmin</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

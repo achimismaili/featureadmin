@@ -5,8 +5,55 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FA.UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="480" Width="640">
     <Grid>
-        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Input Section -->
+            <TextBlock Grid.Row="0" Grid.Column="0"
+                       Text="Iterations: "
+            />
+
+            <TextBox Grid.Row="0" Grid.Column="1"
+                     Name="InputTextBox"
+                     Text="{Binding Iterations}"
+           />
+
+            <!-- Progress Section -->
+            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2"
+                         Name="MainProgressBar"
+                         Value="{Binding ProgressPercentage}"
+                         VerticalAlignment="Center" Height="20" />
+
+            <!-- Output Section -->
+            <TextBlock Grid.Row="2" Grid.Column="0"
+                       Text="Output: "
+                 />
+
+            <TextBox Grid.Row="2" Grid.Column="1"
+                     Name="OutputTextBox"
+                     Text="{Binding Output}"
+              />
+
+            <!-- Buttons -->
+            <StackPanel Grid.Row="3" Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" >
+                <Button Name="StartButton" Content="Start"
+                        IsEnabled="{Binding StartEnabled}"
+                        Click="StartButton_Click"/>
+
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

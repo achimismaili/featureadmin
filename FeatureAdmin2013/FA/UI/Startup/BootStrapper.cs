@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using FA.SharePoint;
 using Prism.Events;
 
 namespace FA.UI.Startup
@@ -18,22 +19,22 @@ namespace FA.UI.Startup
       builder.RegisterType<MainWindow>().AsSelf();
       builder.RegisterType<MainViewModel>().AsSelf();
 
-      //builder.RegisterType<FriendEditViewModel>()
-      //  .As<IFriendEditViewModel>();
+            //builder.RegisterType<FeatureRepository>()
+            //  .As<IFeatureRepository>();
 
-      //builder.RegisterType<NavigationViewModel>()
-      //  .As<INavigationViewModel>();
+            //builder.RegisterType<NavigationViewModel>()
+            //  .As<INavigationViewModel>();
 
-      //builder.RegisterType<FriendDataProvider>()
-      //  .As<IFriendDataProvider>();
+            //builder.RegisterType<FriendDataProvider>()
+            //  .As<IFriendDataProvider>();
 
-      //builder.RegisterType<NavigationDataProvider>()
-      //  .As<INavigationDataProvider>();
+            //builder.RegisterType<NavigationDataProvider>()
+            //  .As<INavigationDataProvider>();
 
-      //builder.RegisterType<FileDataService>()
-      //  .As<IDataService>();
+            //builder.RegisterType<FileDataService>()
+            //  .As<IDataService>();
 
-      return builder.Build();
+            return builder.Build();
     }
   }
 }
