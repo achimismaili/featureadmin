@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="FA.UI.LogInterface.LogControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FA.UI.LogInterface"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="CopyClipBoard" Click="click_CopyToClipboard" Margin="5" >Copy log to clipboard</Button>
+            <Button x:Name="Clear" Click="click_Clear" Margin="5" >Clear log</Button>
+        </StackPanel>
+        <ScrollViewer x:Name="logScrollViewer" ScrollViewer.HorizontalScrollBarVisibility="Auto" Grid.Row="1">
+            <TextBox x:Name="LogBox" TextChanged="LogBox_TextChanged" />
+        </ScrollViewer>
+    </Grid>
+</UserControl>

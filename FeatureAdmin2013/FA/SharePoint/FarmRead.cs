@@ -1,4 +1,4 @@
-﻿using FeatureAdmin.Models;
+﻿using FA.Models;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using System;

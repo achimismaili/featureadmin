@@ -3,57 +3,62 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:log="clr-namespace:FA.UI.LogInterface"
         xmlns:local="clr-namespace:FA.UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="480" Width="640">
+        Title="MainWindow" Height="700" Width="996">
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-            <!-- Input Section -->
-            <TextBlock Grid.Row="0" Grid.Column="0"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- Input Section -->
+        <TextBlock Grid.Row="0" Grid.Column="0"
                        Text="Iterations: "
             />
 
-            <TextBox Grid.Row="0" Grid.Column="1"
+        <TextBox Grid.Row="0" Grid.Column="1"
                      Name="InputTextBox"
-                     Text="{Binding Iterations}"
+                     Text="{Binding Iterations}" Margin="0,0,16,0"
            />
 
-            <!-- Progress Section -->
-            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2"
+        <!-- Progress Section -->
+        <ProgressBar Grid.Row="0"  Grid.Column="2"
                          Name="MainProgressBar"
                          Value="{Binding ProgressPercentage}"
-                         VerticalAlignment="Center" Height="20" />
+                         VerticalAlignment="Center" Height="20" Margin="0,46" />
 
-            <!-- Output Section -->
-            <TextBlock Grid.Row="2" Grid.Column="0"
+        <!-- Output Section -->
+        <TextBlock Grid.Row="2" Grid.Column="0"
                        Text="Output: "
                  />
 
-            <TextBox Grid.Row="2" Grid.Column="1"
+        <TextBox Grid.Row="2" Grid.Column="1"
                      Name="OutputTextBox"
-                     Text="{Binding Output}"
+                     Text="{Binding Output}" Grid.ColumnSpan="2"
               />
 
-            <!-- Buttons -->
-            <StackPanel Grid.Row="3" Grid.ColumnSpan="2"
+        <!-- Buttons -->
+        <StackPanel Grid.Row="3"
                         Orientation="Horizontal"
-                        VerticalAlignment="Center" HorizontalAlignment="Center" >
-                <Button Name="StartButton" Content="Start"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" Margin="17,46,154,47" Grid.Column="1" Height="20" Width="30" >
+            <Button Name="StartButton" Content="Start"
                         IsEnabled="{Binding StartEnabled}"
                         Click="StartButton_Click"/>
 
-            </StackPanel>
-        </Grid>
+        </StackPanel>
+
+        <log:LogControl Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" x:Name="logUserControl" ></log:LogControl>
+        <Button x:Name="logTest" Content="Test Logging" Grid.Column="1" HorizontalAlignment="Left" Margin="227,73,0,0" Grid.Row="3" VerticalAlignment="Top" Width="75" Click="click_LogTest"/>
     </Grid>
 </Window>

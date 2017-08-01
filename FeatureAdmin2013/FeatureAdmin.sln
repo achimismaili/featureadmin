@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureAdmin3.UITests", "Fe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FA", "FA\FA.csproj", "{1935D612-81B5-421B-A5FE-04314FA92600}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FA.UITests", "FA.UITests\FA.UITests.csproj", "{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +91,18 @@ Global
 		{1935D612-81B5-421B-A5FE-04314FA92600}.Release|x64.Build.0 = Release|Any CPU
 		{1935D612-81B5-421B-A5FE-04314FA92600}.Release|x86.ActiveCfg = Release|Any CPU
 		{1935D612-81B5-421B-A5FE-04314FA92600}.Release|x86.Build.0 = Release|Any CPU
+		{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}.Debug|x64.Build.0 = Debug|Any CPU
+		{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}.Debug|x86.Build.0 = Debug|Any CPU
+		{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}.Release|Any CPU.Build.0 = Release|Any CPU
+		{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}.Release|x64.ActiveCfg = Release|Any CPU
+		{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}.Release|x64.Build.0 = Release|Any CPU
+		{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}.Release|x86.ActiveCfg = Release|Any CPU
+		{954D5C2D-79C6-4CD5-8B9D-1E92052F8434}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

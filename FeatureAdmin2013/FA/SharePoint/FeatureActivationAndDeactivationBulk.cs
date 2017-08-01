@@ -1,5 +1,5 @@
-﻿using FeatureAdmin.Models;
-using FeatureAdmin.Models.Interfaces;
+﻿using FA.Models;
+using FA.Models.Interfaces;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using System;

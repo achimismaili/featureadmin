@@ -1,24 +1,36 @@
-﻿using FA.SharePoint;
-using FeatureAdmin.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FA.Models;
+using FA.SharePoint;
+using FA.UI.Features;
+using FA.UI.Locations;
+
 
 namespace FA.UI
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : FA.UI.BaseClasses.ViewModelBase
     {
         #region Fields
+        private IFeaturesListViewModel _featuresListViewModel;
+        private ILocationsListViewModel _locationsListViewModel;
+
 
         private BackgroundWorker backgroundWorker;
         private int iterations = 50;
         private int progressPercentage = 0;
         private string output;
         private bool loadEnabled = true;
+
+        //private IFeatureViewModel _selectedFeatureDefinition;
+
+        //private ILocationViewModel _selectedLocation;
+
+
 
         #endregion
 
@@ -34,7 +46,7 @@ namespace FA.UI
                 if (iterations != value)
                 {
                     iterations = value;
-                    RaisePropertyChanged("Iterations");
+                    OnPropertyChanged("Iterations");
                 }
             }
         }
@@ -47,7 +59,7 @@ namespace FA.UI
                 if (progressPercentage != value)
                 {
                     progressPercentage = value;
-                    RaisePropertyChanged("ProgressPercentage");
+                    OnPropertyChanged("ProgressPercentage");
                 }
             }
         }
@@ -60,7 +72,7 @@ namespace FA.UI
                 if (output != value)
                 {
                     output = value;
-                    RaisePropertyChanged("Output");
+                    OnPropertyChanged("Output");
                 }
             }
         }
@@ -73,15 +85,21 @@ namespace FA.UI
                 if (loadEnabled != value)
                 {
                     loadEnabled = value;
-                    RaisePropertyChanged("LoadEnabled");
+                    OnPropertyChanged("LoadEnabled");
                 }
             }
         }
 
         #endregion Bindable Properties
 
-        public MainViewModel()
+        public MainViewModel(
+            IFeaturesListViewModel featuresListViewModel,
+            ILocationsListViewModel locationsListViewModel
+            )
         {
+            _featuresListViewModel = featuresListViewModel;
+            _locationsListViewModel = locationsListViewModel;
+
             backgroundWorker = new BackgroundWorker();
             // Background Process
             backgroundWorker.DoWork += backgroundWorker_DoWorkGetFeatureDefinitions;
@@ -92,16 +110,20 @@ namespace FA.UI
             backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
 
         }
-
-        internal void Reload()
+        
+        public void Load()
         {
+
+            loadEnabled = false;
+
+            _featuresListViewModel.Load();
+
             if (!backgroundWorker.IsBusy)
             {
                 backgroundWorker.RunWorkerAsync();
             }
 
-            LoadEnabled = !backgroundWorker.IsBusy;
-            Output = string.Empty;
+            LoadEnabled = true;
         }
 
         #region BackgroundWorker Events
@@ -164,17 +186,6 @@ namespace FA.UI
         {
             ProgressPercentage = e.ProgressPercentage;
             Output = (string)e.UserState;
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

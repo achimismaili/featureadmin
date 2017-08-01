@@ -75,12 +75,41 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\Constants.cs" />
+    <Compile Include="Models\ActivatedFeature.cs" />
+    <Compile Include="Models\FeatureDefinition.cs" />
+    <Compile Include="Models\FeatureParent.cs" />
+    <Compile Include="Models\Interfaces\IActivatedFeature.cs" />
+    <Compile Include="Models\Interfaces\IFeatureDefinition.cs" />
+    <Compile Include="Models\Interfaces\IFeatureIdentifier.cs" />
+    <Compile Include="Models\Interfaces\IFeatureParent.cs" />
     <Compile Include="SharePoint\FarmRead.cs" />
     <Compile Include="SharePoint\FeatureActivationAndDeactivationBulk.cs" />
     <Compile Include="SharePoint\FeatureActivationAndDeactivationCore.cs" />
     <Compile Include="SharePoint\FeatureDefinitionUninstall.cs" />
+    <Compile Include="UI\BaseClasses\ViewModelBase.cs" />
+    <Compile Include="UI\Events\FeatureActivatedEvent.cs" />
+    <Compile Include="UI\Events\FeatureUninstalledEvent.cs" />
+    <Compile Include="UI\Events\FeatureDeactivatedEvent.cs" />
+    <Compile Include="UI\Events\LocationsLoadedEvent.cs" />
+    <Compile Include="UI\Features\FeaturesListViewModel.cs" />
+    <Compile Include="UI\Features\FeatureViewModel.cs" />
+    <Compile Include="UI\Features\IFeaturesListViewModel.cs" />
+    <Compile Include="UI\Features\IFeatureViewModel.cs" />
+    <Compile Include="UI\Locations\ILocationViewModel.cs" />
+    <Compile Include="UI\Locations\ILocationsListViewModel.cs" />
+    <Compile Include="UI\Locations\LocationViewModel.cs" />
+    <Compile Include="UI\Locations\LocationsListViewModel.cs" />
+    <Compile Include="UI\LogInterface\ControlWriter.cs" />
+    <Compile Include="UI\LogInterface\LogControl.xaml.cs">
+      <DependentUpon>LogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\MainViewModel.cs" />
     <Compile Include="UI\Startup\BootStrapper.cs" />
+    <Page Include="UI\LogInterface\LogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -122,12 +151,7 @@
   <ItemGroup>
     <None Include="UI\App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FeatureAdmin\FeatureAdmin.csproj">
-      <Project>{28e3ed33-143a-45eb-894c-48f47c88490c}</Project>
-      <Name>FeatureAdmin</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

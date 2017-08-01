@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,13 +25,25 @@ namespace FA.UI
         public MainWindow(MainViewModel viewModel)
         {
             InitializeComponent();
+            this.Loaded += MainWindow_Loaded;
+
             _viewModel = viewModel;
             this.DataContext = viewModel;
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            _viewModel.Reload();
+            _viewModel.Load();
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            _viewModel.Load();
+        }
+
+        private void click_LogTest(object sender, RoutedEventArgs e)
+        {
+            Log.Warning("It is now {Now}", DateTime.Now.ToShortTimeString());
         }
     }
 }
