@@ -19,7 +19,8 @@ namespace FA.UI.LogInterface
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
-                           .WriteTo.TextWriter(logWriter)
+                           .WriteTo.TextWriter(logWriter, outputTemplate:
+        "{Timestamp:HH:mm:ss} [{Level:u3}] {Message}{NewLine}{Exception}")
                            .CreateLogger();
             Log.Debug("This is a log entry asdfasdf ...");
         }
