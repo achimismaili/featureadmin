@@ -24,6 +24,7 @@ namespace FA.UI.Locations
             ILocationsRepository locationsRepository,
             IEventAggregator eventAggregator)
         {
+            Locations = new ObservableCollection<ILocationViewModel>();
             _eventAggregator = eventAggregator;
             _locationsRepository = locationsRepository;
             _backgroundWorker = new BackgroundWorker();
@@ -52,7 +53,7 @@ namespace FA.UI.Locations
         // Runs on Background Thread
         private void backgroundWorker_DoWorkGetLocations(object sender, DoWorkEventArgs e)
         {
-            var result = new ObservableCollection<ILocationViewModel>();
+            var result = new List<LocationViewModel>();
 
             var waCount = 0;
             var waCaCount = 0;
@@ -105,7 +106,7 @@ namespace FA.UI.Locations
             // here, after getting farm and web apps, we are at 10 %
             Log.Information(string.Format("Found {0} Content Web Application(s) and {1} Central Administration in farm",
                 waCount - waCaCount, waCaCount));
-            double deltaWebAppPercentage = ((float)1 / (float)waCount);
+            double deltaWebAppPercentage = ((float)1 / (float)waCount) * 90;
 
             // Getting Sites and Webs of Central Admin
             if (webAppCa != null & webAppCa.Count > 0)
@@ -179,7 +180,15 @@ namespace FA.UI.Locations
             }
             else
             {
-                Locations = e.Result as ObservableCollection<ILocationViewModel>;
+                var loadedLocations = e.Result as List<LocationViewModel>;
+
+                if (loadedLocations != null && loadedLocations.Any())
+                {
+                    foreach (LocationViewModel l in loadedLocations)
+                    {
+                        Locations.Add(l);
+                    }
+                }
             }
         }
 

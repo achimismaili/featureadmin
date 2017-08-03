@@ -17,8 +17,6 @@ namespace FA.UI
     public class MainViewModel : FA.UI.BaseClasses.ViewModelBase
     {
         #region Fields
-        private IFeaturesListViewModel _featuresListViewModel;
-        private ILocationsListViewModel _locationsListViewModel;
 
         private int iterations = 50;
         private int progressPercentage = 0;
@@ -33,8 +31,9 @@ namespace FA.UI
 
         #region Bindable Properties
 
-        public ObservableCollection<FeatureDefinition> FeatureDefinitions;
-        public ObservableCollection<FeatureParent> Parents;
+        public IFeaturesListViewModel FeaturesListViewModel { get; private set; }
+        public ILocationsListViewModel LocationsListViewModel { get; private set; }
+
         public int Iterations
         {
             get { return iterations; }
@@ -95,8 +94,8 @@ namespace FA.UI
             IEventAggregator eventAggregator
             )
         {
-            _featuresListViewModel = featuresListViewModel;
-            _locationsListViewModel = locationsListViewModel;
+            FeaturesListViewModel = featuresListViewModel;
+            LocationsListViewModel = locationsListViewModel;
 
             eventAggregator.GetEvent<SetProgressBarEvent>().Subscribe(OnSetProgressBar);
             eventAggregator.GetEvent<SetStatusBarEvent>().Subscribe(OnSetStatusBar);
@@ -117,8 +116,8 @@ namespace FA.UI
             ProgressPercentage = 0;
             LoadingBusy = true;
             
-            _featuresListViewModel.Load();
-            _locationsListViewModel.Load();
+            FeaturesListViewModel.Load();
+            LocationsListViewModel.Load();
 
             // set progress to 100% and delete status message
             ProgressPercentage = 100;

@@ -51,6 +51,14 @@
                     Click="click_LogTest"/>
             </StackPanel>
 
+            <locations:LocationsListView Grid.Row="1" Grid.Column="0"
+                                         DataContext="{Binding LocationsListViewModel}"
+                                          ></locations:LocationsListView>
+
+            <features:FeaturesListView Grid.Row="1" Grid.Column="1"
+                                         DataContext="{Binding FeaturesListViewModel}"
+                                          ></features:FeaturesListView>
+
             <log:LogControl Grid.Row="1" Grid.Column="2" x:Name="logUserControl" ></log:LogControl>
         </Grid>
         <!--Status Bar-->

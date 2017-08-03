@@ -24,6 +24,7 @@ namespace FA.UI.Features
             IFeaturesRepository featuresRepository,
             IEventAggregator eventAggregator)
         {
+            Features = new ObservableCollection<IFeatureViewModel>();
             _eventAggregator = eventAggregator;
             _featuresRepository = featuresRepository;
             // Background Process
@@ -52,30 +53,23 @@ namespace FA.UI.Features
         {
             BackgroundWorker worker = sender as BackgroundWorker;
 
-            var spDefs = _featuresRepository.FeatureDefiniitions;
-
-            var result = ConvertToViewModelObservableCollection(spDefs);
-
-            e.Result = result;
+            e.Result = _featuresRepository.FeatureDefiniitions;
         }
 
-        private ObservableCollection<IFeatureViewModel> ConvertToViewModelObservableCollection(List<IFeatureDefinition> spDefs)
+        private void PopulateObservableCollection(List<IFeatureDefinition> spDefs)
         {
-            var vmList = new ObservableCollection<IFeatureViewModel>();
-
             if (spDefs == null)
             {
-                return vmList;
+                return;
             }
 
             foreach (IFeatureDefinition fd in spDefs)
             {
                 var featureViewModel = new FeatureViewModel(fd);
-                vmList.Add(featureViewModel);
+                this.Features.Add(featureViewModel);
             }
 
-
-            return vmList;
+            return;
         }
 
         // Runs on UI Thread
@@ -96,7 +90,10 @@ namespace FA.UI.Features
                 _eventAggregator.GetEvent<SetProgressBarEvent>()
                .Publish(5);
 
-                Features = e.Result as ObservableCollection<IFeatureViewModel>;
+                var rawFeatures = e.Result as List<IFeatureDefinition>;
+
+                PopulateObservableCollection(rawFeatures);
+
                 Log.Information("{0} feature definitions loaded from farm.", Features.Count);
                 
             }
