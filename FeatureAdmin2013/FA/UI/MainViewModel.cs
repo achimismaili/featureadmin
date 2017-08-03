@@ -23,8 +23,8 @@ namespace FA.UI
         private BackgroundWorker backgroundWorker;
         private int iterations = 50;
         private int progressPercentage = 0;
-        private string output;
-        private bool loadEnabled = true;
+        private string status;
+        private bool loadingBusy = false;
 
         //private IFeatureViewModel _selectedFeatureDefinition;
 
@@ -64,27 +64,27 @@ namespace FA.UI
             }
         }
 
-        public string Output
+        public string Status
         {
-            get { return output; }
+            get { return status; }
             set
             {
-                if (output != value)
+                if (status != value)
                 {
-                    output = value;
-                    OnPropertyChanged("Output");
+                    status = value;
+                    OnPropertyChanged("Status");
                 }
             }
         }
 
-        public bool LoadEnabled
+        public bool LoadingBusy
         {
-            get { return loadEnabled; }
+            get { return loadingBusy; }
             set
             {
-                if (loadEnabled != value)
+                if (loadingBusy != value)
                 {
-                    loadEnabled = value;
+                    loadingBusy = value;
                     OnPropertyChanged("LoadEnabled");
                 }
             }
@@ -113,17 +113,14 @@ namespace FA.UI
         
         public void Load()
         {
-
-            loadEnabled = false;
+            LoadingBusy = true;
+            Status = "Loading SharePoint Features ...";
 
             _featuresListViewModel.Load();
 
-            if (!backgroundWorker.IsBusy)
-            {
-                backgroundWorker.RunWorkerAsync();
-            }
+            
 
-            LoadEnabled = true;
+            LoadingBusy = false;
         }
 
         #region BackgroundWorker Events
@@ -164,19 +161,19 @@ namespace FA.UI
         {
             if (e.Error != null)
             {
-                Output = e.Error.Message;
+                Status  = e.Error.Message;
             }
             else if (e.Cancelled)
             {
-                Output = "Cancelled";
+                Status = "Cancelled";
             }
             else
             {
                 FeatureDefinitions = e.Result as ObservableCollection<FeatureDefinition>;
-                Output = FeatureDefinitions[0].Name;
+                Status = FeatureDefinitions[0].Name;
                 ProgressPercentage = 0;
             }
-            LoadEnabled = !backgroundWorker.IsBusy;
+            LoadingBusy = !backgroundWorker.IsBusy;
 
         }
 
@@ -185,7 +182,7 @@ namespace FA.UI
             ProgressChangedEventArgs e)
         {
             ProgressPercentage = e.ProgressPercentage;
-            Output = (string)e.UserState;
+            Status = (string)e.UserState;
         }
 
         #endregion

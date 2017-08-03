@@ -22,7 +22,7 @@ namespace FA.UI.LogInterface
                            .WriteTo.TextWriter(logWriter, outputTemplate:
         "{Timestamp:HH:mm:ss} [{Level:u3}] {Message}{NewLine}{Exception}")
                            .CreateLogger();
-            Log.Debug("This is a log entry asdfasdf ...");
+            LogStartedMessageWithDate();
         }
 
         private void LogBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -40,6 +40,12 @@ namespace FA.UI.LogInterface
         private void click_Clear(object sender, RoutedEventArgs e)
         {
             LogBox.Clear();
+            LogStartedMessageWithDate();
+        }
+
+        private void LogStartedMessageWithDate()
+        {
+            logWriter.WriteLine("Log started on {0}", System.DateTime.Now.ToShortDateString());
         }
     }
 }

@@ -9,8 +9,9 @@
         mc:Ignorable="d"
         Title="Feature Admin 3 for SharePoint 2013" Height="700" Width="996"
                     TitleCaps="False"  
+                    ResizeMode="CanResizeWithGrip"
                     GlowBrush="{DynamicResource AccentColorBrush}"
-                      Icon="Resources/featureadmin48.png"
+                    Icon="Resources/featureadmin48.png"
                       >
     <controls:MetroWindow.IconTemplate>
         <DataTemplate>
@@ -18,6 +19,11 @@
         </DataTemplate>
     </controls:MetroWindow.IconTemplate>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -28,8 +34,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
 
@@ -43,16 +48,9 @@
                      Text="{Binding Iterations}" Margin="0,0,16,0"
            />
 
-        <!-- Progress Section -->
-        <ProgressBar Grid.Row="0"  Grid.Column="2"
-                         Name="MainProgressBar"
-                         Value="{Binding ProgressPercentage}"
-                         VerticalAlignment="Center" Height="20" Margin="0,46" />
+        
 
-        <!-- Output Section -->
-        <TextBlock Grid.Row="2" Grid.Column="0"
-                       Text="Output: "
-                 />
+        
 
         <TextBox Grid.Row="2" Grid.Column="1"
                      Name="OutputTextBox"
@@ -60,21 +58,43 @@
               />
 
         <!-- Buttons -->
-        <StackPanel Grid.Row="3"
+        <StackPanel Grid.Column="1" Grid.Row="3"
                         Orientation="Horizontal"
-           Grid.Column="1"  >
-            <Button Name="StartButton" Content="Start"
-                        IsEnabled="{Binding StartEnabled}"
+             >
+            <Button Name="StartButton" Content="Load"
+                    Margin="5"
+                        IsEnabled="{Binding LoadingBusy.Equals(false)}"
                         Click="StartButton_Click"/>
-
+            <Button x:Name="logTest" 
+                    Content="Test Logging" 
+                    Margin="5"
+                    Click="click_LogTest"/>
         </StackPanel>
 
         <log:LogControl Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" x:Name="logUserControl" ></log:LogControl>
-        <Button x:Name="logTest" Content="Test Logging" Grid.Column="1" HorizontalAlignment="Left" Margin="227,73,0,0" Grid.Row="3" VerticalAlignment="Top" Width="75" Click="click_LogTest"/>
-        <StatusBar Grid.Row="4" Grid.ColumnSpan="5">
-            <StatusBarItem>ScoreKeeper</StatusBarItem>
-            <Separator Style="{StaticResource MetroStatusBarSeparator}"></Separator>
-            <StatusBarItem>Some status message</StatusBarItem>
+        </Grid>
+        <StatusBar Grid.Row="1" >
+            <StatusBarItem MinWidth="110">
+                <!-- Progress Section -->
+                <ProgressBar 
+                    Name="progressBarStatus"
+                    Value="{Binding ProgressPercentage}"
+                    VerticalAlignment="Center" 
+                    MinWidth="100"
+                    Margin="10 5" 
+                    />
+            </StatusBarItem>
+            <Separator 
+                Style="{StaticResource MetroStatusBarSeparator}"></Separator>
+            <StatusBarItem>
+                <!-- Output Section -->
+                <TextBlock
+                       Name="textStatus"
+                    Text="{Binding Status}"
+                    VerticalAlignment="Center" 
+                    Margin="10 5" 
+                 />
+            </StatusBarItem>
         </StatusBar>
     </Grid>
 </controls:MetroWindow>
