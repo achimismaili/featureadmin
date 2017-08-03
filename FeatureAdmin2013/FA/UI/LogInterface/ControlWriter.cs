@@ -19,7 +19,17 @@ namespace FA.UI.LogInterface
 
         public override void Write(string value)
         {
-            textbox.Text += value;
+            if (textbox.Dispatcher.CheckAccess())
+            {
+                textbox.Text += value;
+            }
+            else
+            {
+                textbox.Dispatcher.Invoke(() =>
+                {
+                    textbox.Text += value;
+                });
+            }
         }
         public override Encoding Encoding
         {

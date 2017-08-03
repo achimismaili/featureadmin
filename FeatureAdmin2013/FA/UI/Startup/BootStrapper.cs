@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using FA.Models;
+using FA.Models.Interfaces;
 using FA.SharePoint;
 using FA.UI.Features;
 using FA.UI.Locations;
@@ -21,20 +23,32 @@ namespace FA.UI.Startup
       builder.RegisterType<MainWindow>().AsSelf();
       builder.RegisterType<MainViewModel>().AsSelf();
 
-            builder.RegisterType<FeaturesListViewModel>()
-              .As<IFeaturesListViewModel>();
+            builder.RegisterType<FeatureViewModel>()
+              .As<IFeatureViewModel>();
 
+            builder.RegisterType<FeaturesListViewModel>()
+            .As<IFeaturesListViewModel>();
+
+            builder.RegisterType<FeaturesRepository>()
+             .As<IFeaturesRepository>();
+
+            builder.RegisterType<FeatureDefinition>()
+             .As<IFeatureDefinition>();
+
+            builder.RegisterType<ActivatedFeature>()
+             .As<IActivatedFeature>();
+
+            builder.RegisterType<LocationViewModel>()
+              .As<ILocationViewModel>();
+            
             builder.RegisterType<LocationsListViewModel>()
               .As<ILocationsListViewModel>();
 
-            //builder.RegisterType<FriendDataProvider>()
-            //  .As<IFriendDataProvider>();
+            builder.RegisterType<LocationsRepository>()
+             .As<ILocationsRepository>();
 
-            //builder.RegisterType<NavigationDataProvider>()
-            //  .As<INavigationDataProvider>();
-
-            //builder.RegisterType<FileDataService>()
-            //  .As<IDataService>();
+            builder.RegisterType<FeatureParent>()
+              .As<IFeatureParent>();
 
             return builder.Build();
     }

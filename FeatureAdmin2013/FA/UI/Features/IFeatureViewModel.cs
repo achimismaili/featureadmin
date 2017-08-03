@@ -1,14 +1,9 @@
-﻿using FA.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FA.Models.Interfaces;
 
 namespace FA.UI.Features
 {
     public interface IFeatureViewModel
     {
-        FeatureDefinition Feature { get; }
+        IFeatureDefinition Feature { get; }
     }
 }

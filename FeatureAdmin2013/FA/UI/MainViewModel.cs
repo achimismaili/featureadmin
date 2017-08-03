@@ -9,7 +9,8 @@ using FA.Models;
 using FA.SharePoint;
 using FA.UI.Features;
 using FA.UI.Locations;
-
+using Prism.Events;
+using FA.UI.Events;
 
 namespace FA.UI
 {
@@ -19,8 +20,6 @@ namespace FA.UI
         private IFeaturesListViewModel _featuresListViewModel;
         private ILocationsListViewModel _locationsListViewModel;
 
-
-        private BackgroundWorker backgroundWorker;
         private int iterations = 50;
         private int progressPercentage = 0;
         private string status;
@@ -29,8 +28,6 @@ namespace FA.UI
         //private IFeatureViewModel _selectedFeatureDefinition;
 
         //private ILocationViewModel _selectedLocation;
-
-
 
         #endregion
 
@@ -94,97 +91,44 @@ namespace FA.UI
 
         public MainViewModel(
             IFeaturesListViewModel featuresListViewModel,
-            ILocationsListViewModel locationsListViewModel
+            ILocationsListViewModel locationsListViewModel,
+            IEventAggregator eventAggregator
             )
         {
             _featuresListViewModel = featuresListViewModel;
             _locationsListViewModel = locationsListViewModel;
 
-            backgroundWorker = new BackgroundWorker();
-            // Background Process
-            backgroundWorker.DoWork += backgroundWorker_DoWorkGetFeatureDefinitions;
-            backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
-
-            // Progress
-            backgroundWorker.WorkerReportsProgress = true;
-            backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
-
+            eventAggregator.GetEvent<SetProgressBarEvent>().Subscribe(OnSetProgressBar);
+            eventAggregator.GetEvent<SetStatusBarEvent>().Subscribe(OnSetStatusBar);
         }
-        
+
+        private void OnSetStatusBar(string status)
+        {
+            Status = status;
+        }
+
+        private void OnSetProgressBar(int percentage)
+        {
+            ProgressPercentage = percentage;
+        }
+
         public void Load()
         {
+            ProgressPercentage = 0;
             LoadingBusy = true;
-            Status = "Loading SharePoint Features ...";
-
-            _featuresListViewModel.Load();
-
             
+            _featuresListViewModel.Load();
+            _locationsListViewModel.Load();
+
+            // set progress to 100% and delete status message
+            ProgressPercentage = 100;
+            Status = "";
+            // TODO (optional) add an asynchronous wait here to show 100% and 'finished' status message for a few additional seconds
 
             LoadingBusy = false;
+            
         }
 
-        #region BackgroundWorker Events
-
-        // Runs on Background Thread
-        private void backgroundWorker_DoWorkGetFeatureDefinitions(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
-            // int result = 0;
-
-            //foreach (var current in processor)
-            //{
-            //    if (worker != null)
-            //    {
-
-            //        if (worker.WorkerReportsProgress)
-            //        {
-            //            int percentageComplete =
-            //                (int)((float)current / (float)iterations * 100);
-            //            string progressMessage =
-            //                string.Format("Iteration {0} of {1}", current, iterations);
-            //            worker.ReportProgress(percentageComplete, progressMessage);
-            //        }
-            //    }
-            //    result = current;
-            //}
-
-            var spDefs = FarmRead.GetFeatureDefinitionCollection();
-
-            var result = new ObservableCollection<FeatureDefinition>(FeatureDefinition.GetFeatureDefinition(spDefs));
-
-            e.Result = result;
-        }
-
-        // Runs on UI Thread
-        private void backgroundWorker_RunWorkerCompleted(object sender,
-            RunWorkerCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                Status  = e.Error.Message;
-            }
-            else if (e.Cancelled)
-            {
-                Status = "Cancelled";
-            }
-            else
-            {
-                FeatureDefinitions = e.Result as ObservableCollection<FeatureDefinition>;
-                Status = FeatureDefinitions[0].Name;
-                ProgressPercentage = 0;
-            }
-            LoadingBusy = !backgroundWorker.IsBusy;
-
-        }
-
-        // Runs on UI Thread
-        private void backgroundWorker_ProgressChanged(object sender,
-            ProgressChangedEventArgs e)
-        {
-            ProgressPercentage = e.ProgressPercentage;
-            Status = (string)e.UserState;
-        }
-
-        #endregion
+     
     }
 }

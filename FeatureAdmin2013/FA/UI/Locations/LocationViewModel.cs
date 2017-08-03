@@ -1,18 +1,15 @@
-﻿using FA.Models;
+﻿using FA.Models.Interfaces;
 using FA.UI.BaseClasses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FA.UI.Locations
 {
     public class LocationViewModel: ViewModelBase,  ILocationViewModel
     {
+        public LocationViewModel(IFeatureParent location)
+        {
+            Location = location;
+        }
 
-
-
-        public FeatureParent Location { get; private set; }
+        public IFeatureParent Location { get; private set; }
     }
 }

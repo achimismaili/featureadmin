@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:features="clr-namespace:FA.UI.Features"
+        xmlns:locations="clr-namespace:FA.UI.Locations"
         xmlns:log="clr-namespace:FA.UI.LogInterface"
         xmlns:local="clr-namespace:FA.UI"
         mc:Ignorable="d"
@@ -31,13 +33,12 @@
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <!-- Buttons -->
-            <StackPanel Grid.Column="1" Grid.Row="3"
+            <StackPanel Grid.Column="0" Grid.Row="0"
                         Orientation="Horizontal"
              >
                 <Button Name="StartButton" Content="Load"
@@ -50,14 +51,16 @@
                     Click="click_LogTest"/>
             </StackPanel>
 
-            <log:LogControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" x:Name="logUserControl" ></log:LogControl>
+            <log:LogControl Grid.Row="1" Grid.Column="2" x:Name="logUserControl" ></log:LogControl>
         </Grid>
+        <!--Status Bar-->
         <StatusBar Grid.Row="1" >
             <StatusBarItem MinWidth="110">
                 <!-- Progress Section -->
                 <controls:MetroProgressBar 
                     Name="progressBarStatus"
                     Value="{Binding ProgressPercentage}"
+                    Visibility="{Binding LoadingBusy}"
                     VerticalAlignment="Center" 
                     MinWidth="100"
                     Margin="10 5" 

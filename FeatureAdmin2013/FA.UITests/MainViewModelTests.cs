@@ -54,8 +54,10 @@ namespace FA.UITests
             _eventAggregatorMock.Setup(ea => ea.GetEvent<FeatureUninstalledEvent>())
                 .Returns(_featureUninstalledEvent);
 
-            _viewModel = new MainViewModel(_featureListViewModelMock.Object,
-                _locationsListViewModelMock.Object);
+            _viewModel = new MainViewModel(
+                _featureListViewModelMock.Object,
+                _locationsListViewModelMock.Object,
+                _eventAggregatorMock.Object);
         }
 
         [Fact]

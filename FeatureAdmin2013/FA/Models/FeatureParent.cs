@@ -1,6 +1,8 @@
 ﻿using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
+using Serilog;
 using System;
+using System.Collections.Generic;
 
 namespace FA.Models
 {
@@ -9,9 +11,15 @@ namespace FA.Models
         public string DisplayName { get; private set; }
         public Guid Id { get; private set; }
 
+        public int ChildCount { get; set; }
+
         public string Url { get; private set; }
 
         public SPFeatureScope Scope { get; private set; }
+
+        public List<FeatureParent> ChildLocations { get; private set; }
+
+        public List<ActivatedFeature> ActivatedFeatures { get; private set; }
 
         /// <summary>
         /// only available for Scope SiteCollection
@@ -43,6 +51,8 @@ namespace FA.Models
         /// </summary>
         private FeatureParent()
         {
+            ChildLocations = new List<FeatureParent>();
+            // ActivatedFeatures = new List<ActivatedFeature>();
         }
 
         public FeatureParent(string displayName, string url, Guid id, SPFeatureScope scope, Guid? contentDatabaseId = null)
@@ -56,29 +66,43 @@ namespace FA.Models
 
         public static FeatureParent GetFeatureParent(SPWebService farmWebService)
         {
+            FeatureParent p = null;
             try
             {
                 if (farmWebService == null)
                 {
                     return GetFeatureParentUndefined();
                 }
-                var p = new FeatureParent()
+                p = new FeatureParent()
                 {
                     DisplayName = "Farm",
                     Url = "Farm",
                     Id = farmWebService.Id,
                     Scope = SPFeatureScope.Farm
                 };
-                return p;
             }
             catch (Exception ex)
             {
+                Log.Error("Error when trying to get Farm object.", ex);
                 return GetFeatureParentUndefined(ex.Message);
             }
+
+            try
+            {
+                var farmFeatures = farmWebService.Features;
+                p.ActivatedFeatures = ActivatedFeature.MapSpFeatureToActivatedFeature(farmFeatures, p);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error when trying to load Farm features.", ex);
+            }
+            return p;
         }
 
         public static FeatureParent GetFeatureParent(SPSite siCo)
         {
+            FeatureParent p = null;
+            string locationUrl = string.Empty;
             try
             {
                 if (siCo == null)
@@ -86,23 +110,48 @@ namespace FA.Models
                     return GetFeatureParentUndefined();
                 }
 
-                var p = new FeatureParent()
+                locationUrl = siCo.Url;
+
+                p = new FeatureParent()
                 {
                     DisplayName = siCo.RootWeb.Title,
-                    Url = siCo.Url,
+                    Url = locationUrl,
                     Id = siCo.ID,
                     Scope = SPFeatureScope.Site
                 };
-                return p;
             }
             catch (Exception ex)
             {
+                Log.Error(
+                    string.Format(
+                        "Error when trying to get SiteCollection {0}.",
+                        locationUrl
+                        ),
+                    ex);
                 return GetFeatureParentUndefined(ex.Message);
             }
+
+            try
+            {
+                var features = siCo.Features;
+                p.ActivatedFeatures = ActivatedFeature.MapSpFeatureToActivatedFeature(features, p);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(
+                    string.Format(
+                        "Error when trying to load features from {0}.",
+                        locationUrl
+                        ),
+                    ex);
+            }
+            return p;
         }
 
         public static FeatureParent GetFeatureParent(SPWeb web)
         {
+            FeatureParent p = null;
+            string locationUrl = string.Empty;
             try
             {
                 if (web == null)
@@ -110,23 +159,49 @@ namespace FA.Models
                     return GetFeatureParentUndefined();
                 }
 
-                var p = new FeatureParent()
+                locationUrl = web.Url;
+
+                p = new FeatureParent()
                 {
                     DisplayName = web.Title, // + " (" + web.Name + ")",
-                    Url = web.Url,
+                    Url = locationUrl,
                     Id = web.ID,
                     Scope = SPFeatureScope.Web
                 };
-                return p;
             }
             catch (Exception ex)
             {
+                Log.Error(
+                   string.Format(
+                       "Error when trying to get web {0}.",
+                       locationUrl
+                       ),
+                   ex);
                 return GetFeatureParentUndefined(ex.Message);
             }
+
+            try
+            {
+                var features = web.Features;
+                p.ActivatedFeatures = ActivatedFeature.MapSpFeatureToActivatedFeature(features, p);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(
+                    string.Format(
+                        "Error when trying to load features from web {0}.",
+                        locationUrl
+                        ),
+                    ex);
+            }
+            return p;
+
         }
 
         public static FeatureParent GetFeatureParent(SPWebApplication webApp, string name = "")
         {
+            FeatureParent p = null;
+            string locationUrl = string.Empty;
             try
             {
                 if (webApp == null)
@@ -134,19 +209,42 @@ namespace FA.Models
                     return GetFeatureParentUndefined();
                 }
 
-                var p = new FeatureParent()
+                locationUrl = webApp.GetResponseUri(SPUrlZone.Default).ToString();
+
+                p = new FeatureParent()
                 {
                     DisplayName = string.IsNullOrEmpty(name) ? webApp.Name : name , // + " (" + web.Name + ")",
-                    Url = webApp.GetResponseUri(SPUrlZone.Default).ToString(),
+                    Url = locationUrl,
                     Id = webApp.Id,
                     Scope = SPFeatureScope.WebApplication
                 };
-                return p;
             }
             catch (Exception ex)
             {
+                Log.Error(
+                   string.Format(
+                       "Error when trying to get web app {0}.",
+                       locationUrl
+                       ),
+                   ex);
                 return GetFeatureParentUndefined(ex.Message);
             }
+
+            try
+            {
+                var features = webApp.Features;
+                p.ActivatedFeatures = ActivatedFeature.MapSpFeatureToActivatedFeature(features, p);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(
+                    string.Format(
+                        "Error when trying to load features from web app {0}.",
+                        locationUrl
+                        ),
+                    ex);
+            }
+            return p;
         }
 
         public static FeatureParent GetFeatureParentUndefined(string displayName = "")
@@ -156,7 +254,8 @@ namespace FA.Models
                 DisplayName = string.IsNullOrEmpty(displayName) ? "undefined" : displayName,
                 Url = "undefined",
                 Id = Guid.Empty,
-                Scope = SPFeatureScope.ScopeInvalid
+                Scope = SPFeatureScope.ScopeInvalid,
+                ActivatedFeatures = new List<ActivatedFeature>()
             };
             return p;
         }
@@ -232,7 +331,6 @@ namespace FA.Models
             }
 
             return GetFeatureParentUndefined();
-            
         }
     }
 }

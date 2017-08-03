@@ -95,17 +95,29 @@
     <Compile Include="SharePoint\FeatureActivationAndDeactivationBulk.cs" />
     <Compile Include="SharePoint\FeatureActivationAndDeactivationCore.cs" />
     <Compile Include="SharePoint\FeatureDefinitionUninstall.cs" />
+    <Compile Include="SharePoint\IFeaturesRepository.cs" />
+    <Compile Include="SharePoint\ILocationsRepository.cs" />
+    <Compile Include="SharePoint\FeaturesRepository.cs" />
+    <Compile Include="SharePoint\LocationsRepository.cs" />
     <Compile Include="UI\BaseClasses\ViewModelBase.cs" />
     <Compile Include="UI\Events\FeatureActivatedEvent.cs" />
     <Compile Include="UI\Events\FeatureUninstalledEvent.cs" />
     <Compile Include="UI\Events\FeatureDeactivatedEvent.cs" />
+    <Compile Include="UI\Events\SetStatusBarEvent.cs" />
+    <Compile Include="UI\Events\SetProgressBarEvent.cs" />
     <Compile Include="UI\Events\LocationsLoadedEvent.cs" />
+    <Compile Include="UI\Features\FeaturesListView.xaml.cs">
+      <DependentUpon>FeaturesListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Features\FeaturesListViewModel.cs" />
     <Compile Include="UI\Features\FeatureViewModel.cs" />
     <Compile Include="UI\Features\IFeaturesListViewModel.cs" />
     <Compile Include="UI\Features\IFeatureViewModel.cs" />
     <Compile Include="UI\Locations\ILocationViewModel.cs" />
     <Compile Include="UI\Locations\ILocationsListViewModel.cs" />
+    <Compile Include="UI\Locations\LocationsListView.xaml.cs">
+      <DependentUpon>LocationsListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Locations\LocationViewModel.cs" />
     <Compile Include="UI\Locations\LocationsListViewModel.cs" />
     <Compile Include="UI\LogInterface\ControlWriter.cs" />
@@ -121,6 +133,14 @@
     <Page Include="Resources\IconsNonShared.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Features\FeaturesListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Locations\LocationsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\LogInterface\LogControl.xaml">
       <SubType>Designer</SubType>

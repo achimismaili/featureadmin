@@ -5,11 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FA.Models.Interfaces;
 
 namespace FA.UI.Features
 {
     public class FeatureViewModel : ViewModelBase, IFeatureViewModel
     {
-        public FeatureDefinition Feature { get; private set; }
+        public FeatureViewModel(IFeatureDefinition fd)
+        {
+            Feature = fd;
+        }
+        public IFeatureDefinition Feature { get; private set; }
+
     }
 }

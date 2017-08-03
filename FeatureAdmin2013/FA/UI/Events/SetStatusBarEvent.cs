@@ -1,5 +1,4 @@
 ﻿using FA.Models;
-using FA.Models.Interfaces;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FA.UI.Events
 {
-    public class LocationsLoadedEvent : PubSubEvent<IEnumerable<IFeatureParent>>
+    public class SetStatusBarEvent : PubSubEvent<string>
     {
     }
 }

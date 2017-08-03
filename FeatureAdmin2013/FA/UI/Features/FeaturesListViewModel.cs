@@ -8,33 +8,42 @@ using System.Threading.Tasks;
 using FA.Models;
 using FA.SharePoint;
 using FA.Models.Interfaces;
+using Serilog;
+using Prism.Events;
+using FA.UI.Events;
 
 namespace FA.UI.Features
 {
     public class FeaturesListViewModel : FA.UI.BaseClasses.ViewModelBase, IFeaturesListViewModel
     {
-        private BackgroundWorker backgroundWorker;
+        private BackgroundWorker _backgroundWorker;
+        private IEventAggregator _eventAggregator;
+        private IFeaturesRepository _featuresRepository;
 
-        public FeaturesListViewModel()
+        public FeaturesListViewModel(
+            IFeaturesRepository featuresRepository,
+            IEventAggregator eventAggregator)
         {
-            backgroundWorker = new BackgroundWorker();
+            _eventAggregator = eventAggregator;
+            _featuresRepository = featuresRepository;
             // Background Process
-            backgroundWorker.DoWork += backgroundWorker_DoWorkGetFeatureDefinitions;
-            backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
-
-            // Progress
-            backgroundWorker.WorkerReportsProgress = true;
-            backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
+            _backgroundWorker = new BackgroundWorker();
+            _backgroundWorker.DoWork += backgroundWorker_DoWorkGetFeatureDefinitions;
+            _backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
         }
-
 
         public void Load()
         {
-            if (!backgroundWorker.IsBusy)
+            _eventAggregator.GetEvent<SetStatusBarEvent>()
+                    .Publish("Loading Feature Definitions ...");
+
+            if (!_backgroundWorker.IsBusy)
             {
-                backgroundWorker.RunWorkerAsync();
+                _backgroundWorker.RunWorkerAsync();
             }
         }
+
+        public ObservableCollection<IFeatureViewModel> Features { get; private set; }
 
         #region BackgroundWorker Events
 
@@ -42,30 +51,31 @@ namespace FA.UI.Features
         private void backgroundWorker_DoWorkGetFeatureDefinitions(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
-            // int result = 0;
 
-            //foreach (var current in processor)
-            //{
-            //    if (worker != null)
-            //    {
+            var spDefs = _featuresRepository.FeatureDefiniitions;
 
-            //        if (worker.WorkerReportsProgress)
-            //        {
-            //            int percentageComplete =
-            //                (int)((float)current / (float)iterations * 100);
-            //            string progressMessage =
-            //                string.Format("Iteration {0} of {1}", current, iterations);
-            //            worker.ReportProgress(percentageComplete, progressMessage);
-            //        }
-            //    }
-            //    result = current;
-            //}
-
-            var spDefs = FarmRead.GetFeatureDefinitionCollection();
-
-            var result = new ObservableCollection<FeatureDefinition>(FeatureDefinition.GetFeatureDefinition(spDefs));
+            var result = ConvertToViewModelObservableCollection(spDefs);
 
             e.Result = result;
+        }
+
+        private ObservableCollection<IFeatureViewModel> ConvertToViewModelObservableCollection(List<IFeatureDefinition> spDefs)
+        {
+            var vmList = new ObservableCollection<IFeatureViewModel>();
+
+            if (spDefs == null)
+            {
+                return vmList;
+            }
+
+            foreach (IFeatureDefinition fd in spDefs)
+            {
+                var featureViewModel = new FeatureViewModel(fd);
+                vmList.Add(featureViewModel);
+            }
+
+
+            return vmList;
         }
 
         // Runs on UI Thread
@@ -74,30 +84,24 @@ namespace FA.UI.Features
         {
             if (e.Error != null)
             {
-               // Output = e.Error.Message;
+              Log.Error( e.Error.Message);
             }
             else if (e.Cancelled)
             {
-              //  Output = "Cancelled";
+              Log.Warning( "Loading feature definitions cancelled");
             }
             else
             {
-                Features = e.Result as ObservableCollection<IFeatureViewModel>;
+                // hard code 5% as progress, when feature definitions of a farm are loaded
+                _eventAggregator.GetEvent<SetProgressBarEvent>()
+               .Publish(5);
 
-                // ProgressPercentage = 0;
+                Features = e.Result as ObservableCollection<IFeatureViewModel>;
+                Log.Information("{0} feature definitions loaded from farm.", Features.Count);
+                
             }
         }
 
-        // Runs on UI Thread
-        private void backgroundWorker_ProgressChanged(object sender,
-            ProgressChangedEventArgs e)
-        {
-            // ProgressPercentage = e.ProgressPercentage;
-            // Output = (string)e.UserState;
-        }
-
-        #endregion
-
-        public ObservableCollection<IFeatureViewModel> Features { get; private set; }
+        #endregion BackgroundWorker Events
     }
 }

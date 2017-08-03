@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint;
+﻿using FA.Models.Interfaces;
+using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using System;
 using System.Collections.Generic;
@@ -205,14 +206,14 @@ namespace FA.Models
         /// </summary>
         /// <param name="definitions">list of SPFeatureDefinitions</param>
         /// <returns>list of FeatureDefinitions</returns>
-        public static List<FeatureDefinition> GetFeatureDefinition(SPFeatureDefinitionCollection definitions)
+        public static List<IFeatureDefinition> GetFeatureDefinition(SPFeatureDefinitionCollection definitions)
         {
             if (definitions == null)
             {
                 throw new ArgumentNullException("Parameter definitions must not be null!");
             }
 
-            List<FeatureDefinition> fDefs = new List<FeatureDefinition>();
+            var fDefs = new List<IFeatureDefinition>();
 
             foreach (SPFeatureDefinition spfd in definitions)
             {
