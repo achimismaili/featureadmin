@@ -24,59 +24,38 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-
-        <!-- Input Section -->
-        <TextBlock Grid.Row="0" Grid.Column="0"
-                       Text="Iterations: "
-            />
-
-        <TextBox Grid.Row="0" Grid.Column="1"
-                     Name="InputTextBox"
-                     Text="{Binding Iterations}" Margin="0,0,16,0"
-           />
-
-        
-
-        
-
-        <TextBox Grid.Row="2" Grid.Column="1"
-                     Name="OutputTextBox"
-                     Text="{Binding Output}" Grid.ColumnSpan="2"
-              />
-
-        <!-- Buttons -->
-        <StackPanel Grid.Column="1" Grid.Row="3"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <!-- Buttons -->
+            <StackPanel Grid.Column="1" Grid.Row="3"
                         Orientation="Horizontal"
              >
-            <Button Name="StartButton" Content="Load"
+                <Button Name="StartButton" Content="Load"
                     Margin="5"
                         IsEnabled="{Binding LoadingBusy.Equals(false)}"
                         Click="StartButton_Click"/>
-            <Button x:Name="logTest" 
+                <Button x:Name="logTest" 
                     Content="Test Logging" 
                     Margin="5"
                     Click="click_LogTest"/>
-        </StackPanel>
+            </StackPanel>
 
-        <log:LogControl Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" x:Name="logUserControl" ></log:LogControl>
+            <log:LogControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" x:Name="logUserControl" ></log:LogControl>
         </Grid>
         <StatusBar Grid.Row="1" >
             <StatusBarItem MinWidth="110">
                 <!-- Progress Section -->
-                <ProgressBar 
+                <controls:MetroProgressBar 
                     Name="progressBarStatus"
                     Value="{Binding ProgressPercentage}"
                     VerticalAlignment="Center" 
