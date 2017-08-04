@@ -11,6 +11,9 @@ using FA.UI.Features;
 using FA.UI.Locations;
 using Prism.Events;
 using FA.UI.Events;
+using System.Windows.Input;
+using Prism.Commands;
+using System.Windows;
 
 namespace FA.UI
 {
@@ -21,7 +24,8 @@ namespace FA.UI
         private int iterations = 50;
         private int progressPercentage = 0;
         private string status;
-        private bool loadingBusy = false;
+        private bool reloadButtonEnabled = false;
+        private Visibility progressBarVisibility;
 
         //private IFeatureViewModel _selectedFeatureDefinition;
 
@@ -34,6 +38,7 @@ namespace FA.UI
         public IFeaturesListViewModel FeaturesListViewModel { get; private set; }
         public ILocationsListViewModel LocationsListViewModel { get; private set; }
 
+        public ICommand ReloadCommand { get; private set; }
         public int Iterations
         {
             get { return iterations; }
@@ -54,6 +59,9 @@ namespace FA.UI
             {
                 if (progressPercentage != value)
                 {
+                    // set loading busy to true, if percentage is not 100%
+                    ReloadButtonEnabled = (value >=100);
+                    ProgressBarVisibility = (value >= 100) ? Visibility .Hidden : Visibility.Visible;
                     progressPercentage = value;
                     OnPropertyChanged("ProgressPercentage");
                 }
@@ -73,15 +81,28 @@ namespace FA.UI
             }
         }
 
-        public bool LoadingBusy
+        public bool ReloadButtonEnabled
         {
-            get { return loadingBusy; }
+            get { return reloadButtonEnabled; }
             set
             {
-                if (loadingBusy != value)
+                if (reloadButtonEnabled != value)
                 {
-                    loadingBusy = value;
-                    OnPropertyChanged("LoadEnabled");
+                    reloadButtonEnabled = value;
+                    OnPropertyChanged("ReloadButtonEnabled");
+                }
+            }
+        }
+
+        public Visibility ProgressBarVisibility
+        {
+            get { return progressBarVisibility; }
+            set
+            {
+                if (progressBarVisibility != value)
+                {
+                    progressBarVisibility = value;
+                    OnPropertyChanged("ProgressBarVisibility");
                 }
             }
         }
@@ -99,6 +120,8 @@ namespace FA.UI
 
             eventAggregator.GetEvent<SetProgressBarEvent>().Subscribe(OnSetProgressBar);
             eventAggregator.GetEvent<SetStatusBarEvent>().Subscribe(OnSetStatusBar);
+
+            ReloadCommand = new DelegateCommand(Load);
         }
 
         private void OnSetStatusBar(string status)
@@ -113,21 +136,13 @@ namespace FA.UI
 
         public void Load()
         {
+            ReloadButtonEnabled = false;
             ProgressPercentage = 0;
-            LoadingBusy = true;
-            
+            ProgressBarVisibility = Visibility.Visible;
+
             FeaturesListViewModel.Load();
+
             LocationsListViewModel.Load();
-
-            // set progress to 100% and delete status message
-            ProgressPercentage = 100;
-            Status = "";
-            // TODO (optional) add an asynchronous wait here to show 100% and 'finished' status message for a few additional seconds
-
-            LoadingBusy = false;
-            
         }
-
-     
     }
 }

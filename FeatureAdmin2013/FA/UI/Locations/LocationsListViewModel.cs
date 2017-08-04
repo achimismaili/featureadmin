@@ -30,11 +30,11 @@ namespace FA.UI.Locations
             _backgroundWorker = new BackgroundWorker();
             // Background Process
             _backgroundWorker.DoWork += backgroundWorker_DoWorkGetLocations;
-            _backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
+            _backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompletedLocations;
 
             // Progress
             _backgroundWorker.WorkerReportsProgress = true;
-            _backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
+            _backgroundWorker.ProgressChanged += backgroundWorker_ProgressChangedLocations;
         }
 
         public ObservableCollection<ILocationViewModel> Locations { get; private set; }
@@ -44,8 +44,10 @@ namespace FA.UI.Locations
         {
             if (!_backgroundWorker.IsBusy)
             {
+                Locations.Clear();
                 _backgroundWorker.RunWorkerAsync();
             }
+            return;
         }
 
         #region BackgroundWorker Events
@@ -64,23 +66,19 @@ namespace FA.UI.Locations
 
             string reportProgress;
             BackgroundWorker worker = sender as BackgroundWorker;
-            
 
-            // Farm 5%
-            if (worker != null && worker.WorkerReportsProgress)
-            {
-                reportProgress = string.Format("Loading Farm ...");
-                worker.ReportProgress(5, reportProgress);
-            }
+
+            // Farm 
             var farm = _locationsRepository.Farm;
-
-
-            // Getting CA
             if (worker != null && worker.WorkerReportsProgress)
             {
-                reportProgress = string.Format("Loading Central Administration ...");
+                reportProgress = string.Format(
+                    "Loaded Farm '{0}'",
+                    farm.DisplayName);
                 worker.ReportProgress(6, reportProgress);
             }
+
+            // Getting CA
             var webAppCa = _locationsRepository.GetWebApplicationsAdmin;
 
             if (webAppCa != null & webAppCa.Count > 0)
@@ -90,11 +88,6 @@ namespace FA.UI.Locations
             }
 
             // Getting Web Apps
-            if (worker != null && worker.WorkerReportsProgress)
-            {
-                reportProgress = string.Format("Loading Content Web Applications ...");
-                worker.ReportProgress(7, reportProgress);
-            }
             var webApps = _locationsRepository.GetWebApplicationsContent;
 
             if (webApps != null & webApps.Count > 0)
@@ -104,8 +97,16 @@ namespace FA.UI.Locations
 
             farm.ChildCount = waCount;
             // here, after getting farm and web apps, we are at 10 %
-            Log.Information(string.Format("Found {0} Content Web Application(s) and {1} Central Administration in farm",
-                waCount - waCaCount, waCaCount));
+            if (worker != null && worker.WorkerReportsProgress)
+            {
+                reportProgress = string.Format(
+                    "Loaded {0} Content Web Application(s) \nand {1} Central Administration in farm",
+                    waCount - waCaCount, waCaCount);
+                worker.ReportProgress(10, reportProgress);
+            }
+
+
+            // Log.Information(
             double deltaWebAppPercentage = ((float)1 / (float)waCount) * 90;
 
             // Getting Sites and Webs of Central Admin
@@ -113,11 +114,7 @@ namespace FA.UI.Locations
             {
                 foreach (FeatureParent wa in webAppCa)
                 {
-                    if (worker != null && worker.WorkerReportsProgress)
-                    {
-                        reportProgress = string.Format("Loading Sites from Central Administration '{0}'", wa.DisplayName);
-                        worker.ReportProgress(currentPercentage, reportProgress);
-                    }
+                    currentPercentage += (int)deltaWebAppPercentage;
                     farm.ChildLocations.Add(wa);
                     if (wa.ChildCount > 0)
                     {
@@ -125,12 +122,16 @@ namespace FA.UI.Locations
 
                         // float deltaSitePercentage = ((float)1 / (float)fp.ChildCount);
 
-                        // tbd
-                        Log.Information(string.Format("Loaded {0} Site Collections from Central Administration '{1}'",
-                            wa.ChildCount, wa.DisplayName));
+                        if (worker != null && worker.WorkerReportsProgress)
+                        {
+                            reportProgress = string.Format(
+                                "Loaded {1} Sites in Central Administration '{0}'",
+                                wa.DisplayName,
+                               wa.ChildCount);
+                            worker.ReportProgress(currentPercentage, reportProgress);
+                        }
                     }
                     result.Add(new LocationViewModel(wa));
-                    currentPercentage += (int)deltaWebAppPercentage;
                 }
             }
 
@@ -139,35 +140,41 @@ namespace FA.UI.Locations
             {
                 foreach (FeatureParent wa in webApps)
                 {
-                    if (worker != null && worker.WorkerReportsProgress)
-                    {
-                        reportProgress = string.Format("Loading Sites from Web Application '{0}'", wa.DisplayName);
-                        worker.ReportProgress(currentPercentage, reportProgress);
-                    }
+                    currentPercentage += (int)deltaWebAppPercentage;
                     farm.ChildLocations.Add(wa);
                     if (wa.ChildCount > 0)
                     {
                         // Get SiteCollections and webs
-
+                        System.Threading.Thread.Sleep(1000);
                         // float deltaSitePercentage = ((float)1 / (float)fp.ChildCount);
 
                         // tbd
-                        Log.Information(string.Format("Loaded {0} Site Collections from Web Application '{1}'",
-                           wa.ChildCount, wa.DisplayName));
-                    }
 
+                        if (worker != null && worker.WorkerReportsProgress)
+                        {
+                            reportProgress = string.Format(
+                                "Loaded {1} Sites in Web Application '{0}'",
+                                wa.DisplayName,
+                                wa.ChildCount);
+                            worker.ReportProgress(currentPercentage, reportProgress);
+                        }
+                    }
                     result.Add(new LocationViewModel(wa));
-                    currentPercentage += (int)deltaWebAppPercentage;
                 }
             }
 
             result.Add(new LocationViewModel(farm));
-           
+
+            if (worker != null && worker.WorkerReportsProgress)
+            {
+                worker.ReportProgress(100, string.Empty);
+            }
+
             e.Result = result;
         }
 
         // Runs on UI Thread
-        private void backgroundWorker_RunWorkerCompleted(object sender,
+        private void backgroundWorker_RunWorkerCompletedLocations(object sender,
             RunWorkerCompletedEventArgs e)
         {
             if (e.Error != null)
@@ -193,14 +200,20 @@ namespace FA.UI.Locations
         }
 
         // Runs on UI Thread
-        private void backgroundWorker_ProgressChanged(object sender,
+        private void backgroundWorker_ProgressChangedLocations(object sender,
             ProgressChangedEventArgs e)
         {
             _eventAggregator.GetEvent<SetProgressBarEvent>()
                 .Publish(e.ProgressPercentage);
 
+            var msg = e.UserState as string;
+
             _eventAggregator.GetEvent<SetStatusBarEvent>()
-                .Publish(e.UserState as string);
+                .Publish(msg);
+            if (!string.IsNullOrEmpty(msg))
+            {
+                Log.Information(msg);
+            }
         }
         #endregion BackgroundWorker Events
     }

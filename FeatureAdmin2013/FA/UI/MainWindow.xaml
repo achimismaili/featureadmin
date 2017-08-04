@@ -41,10 +41,11 @@
             <StackPanel Grid.Column="0" Grid.Row="0"
                         Orientation="Horizontal"
              >
-                <Button Name="StartButton" Content="Load"
+                <Button Name="StartButton" Content="Reload"
                     Margin="5"
-                        IsEnabled="{Binding LoadingBusy.Equals(false)}"
-                        Click="StartButton_Click"/>
+                        Command="{Binding ReloadCommand}"
+                        IsEnabled="{Binding ReloadButtonEnabled}"
+                        />
                 <Button x:Name="logTest" 
                     Content="Test Logging" 
                     Margin="5"
@@ -68,7 +69,7 @@
                 <controls:MetroProgressBar 
                     Name="progressBarStatus"
                     Value="{Binding ProgressPercentage}"
-                    Visibility="{Binding LoadingBusy}"
+                    Visibility="{Binding ProgressBarVisibility}"
                     VerticalAlignment="Center" 
                     MinWidth="100"
                     Margin="10 5" 

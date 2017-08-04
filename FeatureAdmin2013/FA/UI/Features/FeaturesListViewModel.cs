@@ -30,18 +30,21 @@ namespace FA.UI.Features
             // Background Process
             _backgroundWorker = new BackgroundWorker();
             _backgroundWorker.DoWork += backgroundWorker_DoWorkGetFeatureDefinitions;
-            _backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
+            _backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompletedFeatures;
         }
 
         public void Load()
         {
             _eventAggregator.GetEvent<SetStatusBarEvent>()
                     .Publish("Loading Feature Definitions ...");
-
+            
             if (!_backgroundWorker.IsBusy)
             {
+                Features.Clear();
                 _backgroundWorker.RunWorkerAsync();
             }
+
+            return;
         }
 
         public ObservableCollection<IFeatureViewModel> Features { get; private set; }
@@ -73,7 +76,7 @@ namespace FA.UI.Features
         }
 
         // Runs on UI Thread
-        private void backgroundWorker_RunWorkerCompleted(object sender,
+        private void backgroundWorker_RunWorkerCompletedFeatures(object sender,
             RunWorkerCompletedEventArgs e)
         {
             if (e.Error != null)
@@ -86,15 +89,21 @@ namespace FA.UI.Features
             }
             else
             {
-                // hard code 5% as progress, when feature definitions of a farm are loaded
-                _eventAggregator.GetEvent<SetProgressBarEvent>()
-               .Publish(5);
 
                 var rawFeatures = e.Result as List<IFeatureDefinition>;
 
                 PopulateObservableCollection(rawFeatures);
 
-                Log.Information("{0} feature definitions loaded from farm.", Features.Count);
+                // hard code 5% as progress, when feature definitions of a farm are loaded
+                _eventAggregator.GetEvent<SetProgressBarEvent>()
+               .Publish(5);
+
+                var msg = string.Format("Loaded {0} Feature Definitions", Features.Count);
+
+                _eventAggregator.GetEvent<SetStatusBarEvent>()
+                .Publish(msg);
+
+                Log.Information(msg);
                 
             }
         }

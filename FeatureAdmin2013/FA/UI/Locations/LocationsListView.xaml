@@ -16,10 +16,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Button Content="Reload"
-                    Command="{Binding Reload}"
-                    Grid.Column="0"
-                    HorizontalAlignment="Left" />
+       
         <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right"
                         Grid.Column="1">
