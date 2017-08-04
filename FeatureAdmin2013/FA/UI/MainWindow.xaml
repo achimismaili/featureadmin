@@ -28,7 +28,9 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3" />
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
@@ -55,12 +57,12 @@
             <locations:LocationsListView Grid.Row="1" Grid.Column="0"
                                          DataContext="{Binding LocationsListViewModel}"
                                           ></locations:LocationsListView>
-
-            <features:FeaturesListView Grid.Row="1" Grid.Column="1"
+            <GridSplitter Grid.RowSpan="2" Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+            <features:FeaturesListView Grid.Row="1" Grid.Column="2"
                                          DataContext="{Binding FeaturesListViewModel}"
                                           ></features:FeaturesListView>
-
-            <log:LogControl Grid.Row="1" Grid.Column="2" x:Name="logUserControl" ></log:LogControl>
+            <GridSplitter Grid.RowSpan="2" Grid.Column="3" Width="3" HorizontalAlignment="Stretch" />
+            <log:LogControl Grid.Row="1" Grid.Column="4" x:Name="logUserControl" ></log:LogControl>
         </Grid>
         <!--Status Bar-->
         <StatusBar Grid.Row="1" >
