@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Feature Admin Tool")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Feature Admin Tool for SharePoint")]
+[assembly: AssemblyDescription("Manage SharePoint features, identify and clean up orphaned features")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Achim Ismaili")]
-[assembly: AssemblyProduct("FA")]
+[assembly: AssemblyProduct("Feature Admin Tool for SharePoint")]
 [assembly: AssemblyCopyright("Copyright © Achim Ismaili 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
