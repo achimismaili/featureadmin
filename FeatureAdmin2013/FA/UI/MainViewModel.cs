@@ -44,11 +44,7 @@ namespace FA.UI
             get { return iterations; }
             set
             {
-                if (iterations != value)
-                {
-                    iterations = value;
-                    OnPropertyChanged("Iterations");
-                }
+                SetProperty(ref iterations, value);
             }
         }
 
@@ -59,11 +55,10 @@ namespace FA.UI
             {
                 if (progressPercentage != value)
                 {
-                    // set loading busy to true, if percentage is not 100%
-                    ReloadButtonEnabled = (value >=100);
-                    ProgressBarVisibility = (value >= 100) ? Visibility .Hidden : Visibility.Visible;
-                    progressPercentage = value;
-                    OnPropertyChanged("ProgressPercentage");
+                    SetProperty(ref progressPercentage, value);
+                    // check, if other properties also have to be checked ...
+                    ReloadButtonEnabled = (value >= 100);
+                    ProgressBarVisibility = (value >= 100) ? Visibility.Hidden : Visibility.Visible;
                 }
             }
         }
@@ -73,11 +68,7 @@ namespace FA.UI
             get { return status; }
             set
             {
-                if (status != value)
-                {
-                    status = value;
-                    OnPropertyChanged("Status");
-                }
+                SetProperty(ref status, value);
             }
         }
 
@@ -86,11 +77,7 @@ namespace FA.UI
             get { return reloadButtonEnabled; }
             set
             {
-                if (reloadButtonEnabled != value)
-                {
-                    reloadButtonEnabled = value;
-                    OnPropertyChanged("ReloadButtonEnabled");
-                }
+                SetProperty(ref reloadButtonEnabled, value);
             }
         }
 
@@ -99,11 +86,7 @@ namespace FA.UI
             get { return progressBarVisibility; }
             set
             {
-                if (progressBarVisibility != value)
-                {
-                    progressBarVisibility = value;
-                    OnPropertyChanged("ProgressBarVisibility");
-                }
+                SetProperty(ref progressBarVisibility, value);
             }
         }
 
