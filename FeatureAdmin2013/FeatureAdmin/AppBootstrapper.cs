@@ -2,7 +2,7 @@
 
 namespace FeatureAdmin
 {
-    public class AppBootstrapper : CaliburnMetroCompositionBootstrapper<AppViewModel>
+    public class AppBootstrapper : CaliburnMetroCompositionBootstrapper<ViewModels.AppViewModel>
     {
     }
 }

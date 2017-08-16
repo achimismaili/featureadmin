@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin
+namespace FeatureAdmin.ViewModels
 {
     [Export(typeof(AppViewModel))]
     public class AppViewModel : PropertyChangedBase, IHaveDisplayName

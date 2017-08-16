@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FeatureAdmin
+namespace FeatureAdmin.Views
 {
     /// <summary>
     /// Interaction logic for AppView.xaml

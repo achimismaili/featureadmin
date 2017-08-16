@@ -1,4 +1,4 @@
-﻿<controls:MetroWindow x:Class="FeatureAdmin.MainWindowContainer"
+﻿<controls:MetroWindow x:Class="FeatureAdmin.Views.MainWindowContainer"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
@@ -9,7 +9,7 @@
                       ResizeMode="CanResizeWithGrip"
                       TitleCaps="False"
                     GlowBrush="{DynamicResource AccentColorBrush}"
-    Icon="Resources/featureadmin48.png"
+    Icon="../Resources/featureadmin48.png"
             >
     <Window.Resources>
         <ResourceDictionary>
@@ -26,7 +26,7 @@
     </Window.Resources>
     <controls:MetroWindow.IconTemplate>
         <DataTemplate>
-            <Image Source="Resources/featureadmin-transparent48.png"></Image>
+            <Image Source="../Resources/featureadmin-transparent48.png"></Image>
         </DataTemplate>
     </controls:MetroWindow.IconTemplate>
     <controls:MetroWindow.Flyouts>

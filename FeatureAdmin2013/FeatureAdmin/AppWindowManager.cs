@@ -12,10 +12,10 @@ namespace FeatureAdmin
         {
             if (windowIsView)
             {
-                return view as MainWindowContainer;
+                return view as Views.MainWindowContainer;
             }
 
-            return new MainWindowContainer
+            return new Views.MainWindowContainer
             {
                 Content = view
             };

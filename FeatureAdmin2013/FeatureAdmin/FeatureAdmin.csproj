@@ -80,10 +80,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="MainWindowContainer.xaml.cs">
+    <Compile Include="Views\MainWindowContainer.xaml.cs">
       <DependentUpon>MainWindowContainer.xaml</DependentUpon>
     </Compile>
-    <Page Include="AppView.xaml">
+    <Page Include="Views\AppView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -92,10 +92,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppBootstrapper.cs" />
-    <Compile Include="AppView.xaml.cs">
+    <Compile Include="Views\AppView.xaml.cs">
       <DependentUpon>AppView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AppViewModel.cs" />
+    <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="AppWindowManager.cs" />
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -105,7 +105,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MainWindowContainer.xaml">
+    <Page Include="Views\MainWindowContainer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -145,10 +145,7 @@
   <ItemGroup>
     <Resource Include="Resources\Entypo-license.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModel\" />
-    <Folder Include="View\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\featureadmin-transparent48.png" />
     <Resource Include="Resources\featureadmin48.ico" />

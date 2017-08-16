@@ -1,4 +1,4 @@
-﻿namespace FeatureAdmin
+﻿namespace FeatureAdmin.Views
 {
     /// <summary>
     /// Interaction logic for MainWindowContainer.xaml
