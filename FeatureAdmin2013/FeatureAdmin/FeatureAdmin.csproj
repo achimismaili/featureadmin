@@ -86,6 +86,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\Constants.cs" />
     <Compile Include="Views\MainWindowContainer.xaml.cs">
       <DependentUpon>MainWindowContainer.xaml</DependentUpon>
     </Compile>
@@ -159,6 +160,7 @@
     <Resource Include="Resources\featureadmin48.ico" />
     <Resource Include="Resources\featureadmin48.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.2.0.0\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.2.0.0\build\dotnet\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FA.Models
 {
-    public class ActivatedFeature : Interfaces.IActivatedFeature
+    public class ActivatedFeatureFactory
     {
         /// <summary>
         /// corresponding SharePoint SPFeature to this class instance

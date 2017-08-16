@@ -84,13 +84,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\Constants.cs" />
-    <Compile Include="Models\ActivatedFeature.cs" />
-    <Compile Include="Models\FeatureDefinition.cs" />
-    <Compile Include="Models\FeatureParent.cs" />
-    <Compile Include="Models\Interfaces\IActivatedFeature.cs" />
-    <Compile Include="Models\Interfaces\IFeatureDefinition.cs" />
-    <Compile Include="Models\Interfaces\IFeatureIdentifier.cs" />
-    <Compile Include="Models\Interfaces\IFeatureParent.cs" />
     <Compile Include="SharePoint\FarmRead.cs" />
     <Compile Include="SharePoint\FeatureActivationAndDeactivationBulk.cs" />
     <Compile Include="SharePoint\FeatureActivationAndDeactivationCore.cs" />
