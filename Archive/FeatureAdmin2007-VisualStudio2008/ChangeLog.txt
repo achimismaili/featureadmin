@@ -1,0 +1,43 @@
+FeatureAdmin2007 ChangeLog
+  - this file is intended for developers
+  - chronological; newest info at bottom
+
+Feb, 2013 - Perry
+Fixed VS2008 source to compile
+Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
+Fix Find Activated Feature to correctly find web application scoped features
+Fix control anchoring so main form can be enlarged
+Add spver class to encapsulate SharePoint version
+Backported check in Program.cs that SPFarm.Local exists
+Factored code to find activated features into new ActivationFinder class
+Add reference to Microsoft.SharePoint.Search in order to set CopyLocal to false (so it doesn't copy it to bin folder)
+Record & log exception messages when FeatureManager enumerates exceptions
+
+** Feb 24, 2013 - RELEASE v 2.3: "FeatureAdmin for MOSS 2007 - v2.3" **
+
+Nov, 2014 - Perry
+Fix resizing anchoring on main form
+New "Find All Activations" and "Load All Activation Data" buttons
+
+Dec, 2014 -- Perry
+A bunch of work on activation
+
+Apr, 2015 -- Perry
+Populate main title version numbers dynamically
+
+** Feb 4, 2016 - RELEASE v 2.4.6: "FeatureAdmin for MOSS 2007 - v2.4.6" **
+
+Feb, 2016 -- Perry
+Fixed ChangeLog (this) to be chronological from top to bottom
+FeatureDatabase: (Backported from FeatureAdmin2013)
+  More careful exception handling
+  & use feature definition DisplayName when feature definition GetTitle throws exception
+
+March, 2016 -- Perry
+Rework preprocessor definitions (SP2007, SP2010, SP2013) so they are inclusive
+Enhance feature deactivation traversals with better exception & logging
+  and add prompt to choose whether to use Force flag
+Replace (left-hand) webapp, site, and web lists with grids
+Upgraded WebAppEnumerator to return list of WebAppInfo (to include Admin flag)
+
+** Mar 10, 2016 - RELEASE v 2.4.8: "FeatureAdmin for MOSS 2007 - v2.4.8" **
