@@ -87,7 +87,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\Constants.cs" />
-    <Compile Include="Messages\Progress.cs" />
     <Compile Include="Views\ActivatedFeaturesListView.xaml.cs">
       <DependentUpon>ActivatedFeaturesListView.xaml</DependentUpon>
     </Compile>
@@ -233,6 +232,9 @@
       <Project>{de7fac0c-782b-4ba1-b1b8-3101955fc888}</Project>
       <Name>FeatureAdmin.SampleData</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Messages\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.2.0.0\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.2.0.0\build\dotnet\Fody.targets')" />
