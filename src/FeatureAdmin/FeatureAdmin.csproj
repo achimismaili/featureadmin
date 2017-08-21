@@ -87,6 +87,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\Constants.cs" />
+    <Compile Include="Messages\Progress.cs" />
     <Compile Include="Views\ActivatedFeaturesListView.xaml.cs">
       <DependentUpon>ActivatedFeaturesListView.xaml</DependentUpon>
     </Compile>

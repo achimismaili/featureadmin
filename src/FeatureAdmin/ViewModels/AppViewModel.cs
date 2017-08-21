@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FeatureAdmin.Core.Contracts.Repositories;
 
 namespace FeatureAdmin.ViewModels
 {
@@ -13,9 +14,20 @@ namespace FeatureAdmin.ViewModels
     {
         private string _displayName = "Feature Admin 3 for SharePoint 2013";
 
+        private IEventAggregator _eventAggregator;
+        private ISharePointRepositoryRead _readRepository;
+        private ISharePointRepositoryCommand _commandRepository;
+
         [ImportingConstructor]
-        public AppViewModel()
+        public AppViewModel(IEventAggregator eventAggregator,
+         ISharePointRepositoryRead readRepository,
+         ISharePointRepositoryCommand commandRepository)
         {
+            _eventAggregator = eventAggregator;
+            _eventAggregator.Subscribe(this);
+
+            _readRepository = readRepository;
+            _commandRepository = commandRepository;
         }
 
         public string DisplayName
@@ -24,7 +36,7 @@ namespace FeatureAdmin.ViewModels
             set { _displayName = value; }
         }
 
-        
+
 
         public void OpenSettings()
         {
