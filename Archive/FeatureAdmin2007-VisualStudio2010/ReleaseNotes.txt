@@ -1,0 +1,18 @@
+FeatureAdmin 2007 Release Notes by version
+  - this file is intended for end users
+
+WARNING - There are two active branches of the SP2007 code
+  BOTH should be updated with any changes
+  See also the peer branch "FeatureAdmin2007-VisualStudio2008-deprecated"
+
+version 2.3 (Feb 24th 2013): "FeatureAdmin for MOSS 2007 - v2.3"
+BugFixes:
+- Trapped & logged Access Denied exceptions in Find Faulty Feature (so it doesn't crash)
+- Fix Find Activated Feature to correctly find web application scoped features
+- Fix control anchoring so main form can be enlarged
+
+version 2.4 (Not yet released)
+New "Find All Activations" and "Load All Activation Data" buttons
+Allow user to resize areas of windows (backported from FeatureAdmin2010&2013)
+
+WARNING - this project is outdated compared to FeatureAdmin2007-VisualStudio2008
