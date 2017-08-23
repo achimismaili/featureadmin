@@ -44,6 +44,7 @@
     <Compile Include="Factories\FeatureDefinitionFactory.cs" />
     <Compile Include="Factories\FeatureParentFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\SharePointRepositoryRead.cs" />
     <Compile Include="SharePointApi\FarmRead.cs" />
     <Compile Include="SharePointApi\FeatureActivationAndDeactivationBulk.cs" />
     <Compile Include="SharePointApi\FeatureActivationAndDeactivationCore.cs" />
@@ -53,8 +54,12 @@
     <Compile Include="SharePointApi\ILocationsRepository.cs" />
     <Compile Include="SharePointApi\LocationsRepository.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Repositories\" />
+    <ProjectReference Include="..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
+      <Project>{4CEC2E98-5A3B-4793-B606-A5250D046F02}</Project>
+      <Name>FeatureAdmin.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

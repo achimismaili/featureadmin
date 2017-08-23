@@ -40,11 +40,16 @@ namespace FeatureAdmin.Tests
                         _commandRepository.Object);
         }
 
+        /// <summary>
+        /// Test to make sure subscribe was called on the event aggregator at least once
+        /// see also https://stackoverflow.com/questions/15591723/caliburn-micro-unit-test
+        /// </summary>
         [Fact]
         public void Test_SubscribedToEventAggregator()
         {
-            // Test to make sure subscribe was called on the event aggregator at least once
             _eventAggregator.Verify(x => x.Subscribe(_mainVM));
         }
+
+
     }
 }
