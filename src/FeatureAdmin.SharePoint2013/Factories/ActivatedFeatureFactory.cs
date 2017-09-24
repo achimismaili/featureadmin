@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint;
+﻿using FeatureAdmin.Core.Models;
+using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using System;
 using System.Collections.Generic;

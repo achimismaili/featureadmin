@@ -10,21 +10,21 @@ namespace FeatureAdmin.SharePoint2013.SharePointApi
 {
     public class LocationsRepository : ILocationsRepository
     {
-        public FeatureParent Farm
+        public Location Farm
         {
             get
             {
                 var farm = FarmRead.GetFarm();
 
-                return FeatureParent.GetFeatureParent(farm);
+                return GetLocation(farm);
             }
         }
 
-        public List<FeatureParent> GetWebApplicationsAdmin
+        public List<Location> GetWebApplicationsAdmin
         {
             get
             {
-                var wapps = new List<FeatureParent>();
+                var wapps = new List<Location>();
 
                 // get CA web app
                 var adminWebApps = FarmRead.GetWebApplicationsAdmin();
@@ -32,7 +32,7 @@ namespace FeatureAdmin.SharePoint2013.SharePointApi
                 foreach (SPWebApplication adminApp in adminWebApps)
                 {
                     var index = (adminWebApps.Count == 1) ? string.Empty : " " + caIndex.ToString();
-                    var caParent = FeatureParent.GetFeatureParent(adminApp, "Central Admin" + index);
+                    var caParent = Location.GetLocation(adminApp, "Central Admin" + index);
                     caParent.ChildCount = adminApp.Sites.Count;
                     wapps.Add(caParent);
                 }
@@ -41,17 +41,17 @@ namespace FeatureAdmin.SharePoint2013.SharePointApi
             }
         }
 
-        public List<FeatureParent> GetWebApplicationsContent
+        public List<Location> GetWebApplicationsContent
         {
             get
             {
-                var wapps = new List<FeatureParent>();
+                var wapps = new List<Location>();
 
                 var contentWebApps = FarmRead.GetWebApplicationsContent();
 
                 foreach (SPWebApplication webApp in contentWebApps)
                 {
-                        var waAsParent = FeatureParent.GetFeatureParent(webApp);
+                        var waAsParent = Location.GetLocation(webApp);
                     waAsParent.ChildCount = webApp.Sites.Count;
                     wapps.Add(waAsParent);
                 }
