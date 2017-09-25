@@ -7,32 +7,60 @@ namespace FeatureAdmin.Core.Models
 {
     public class FeatureDefinition : IFeatureDefinition
     {
-        public FeatureDefinition(
-            Guid definitionId,
-            string title,
-            string name,
-            Scope scope,
-            int compatibilityLevel,
-            Version definitionVersion,
-            bool faulty
-            )
+        private FeatureDefinition()
         {
-            DefinitionId = definitionId;
-            Title = title;
-            Name = name;
-            Scope = scope;
-            CompatibilityLevel = compatibilityLevel;
-            DefinitionVersion = DefinitionVersion;
-            Faulty = faulty;
+            Properties = new Dictionary<string, string>();
         }
 
-        public Guid DefinitionId { get; private set; }
-        public string Title { get; private set; }
-        public string Name { get; private set; }
-        public Scope Scope { get; private set; }
-        public ICollection<Guid> ActivatedFeatures { get; set; }
+        public Guid Id { get; private set; }
         public int CompatibilityLevel { get; private set; }
-        public Version DefinitionVersion { get; private set; }
+        public string Description { get; private set; }
+        public string DisplayName { get; private set; }
         public bool Faulty { get; private set; }
+        public bool Hidden { get; private set; }
+        public string Name { get; private set; }
+        public Dictionary<string, string> Properties { get; private set; }
+        public Scope Scope { get; private set; }
+        public Guid SolutionId { get; private set; }
+        public string Title { get; private set; }
+        public string UIVersion { get; private set; }
+        public Version Version { get; private set; }
+
+
+        public static FeatureDefinition GetFeatureDefinition(
+             Guid id,
+             int compatibilityLevel,
+             string description,
+             string displayName,
+             bool faulty,
+             bool hidden,
+             string name,
+             Dictionary<string, string> properties,
+             Scope scope,
+             string title,
+             Guid solutionId,
+             string uIVersion,
+             Version version
+            )
+        {
+            var featureDefinition = new FeatureDefinition()
+            {
+                Id = id,
+                CompatibilityLevel = compatibilityLevel,
+                Description = description,
+                DisplayName = displayName,
+                Faulty = faulty,
+                Hidden = hidden,
+                Name = name,
+                Properties = properties,
+                Scope = scope,
+                Title = title,
+                SolutionId = solutionId,
+                UIVersion = uIVersion,
+                Version = version
+            };
+            return featureDefinition;
+        }
+
     }
 }

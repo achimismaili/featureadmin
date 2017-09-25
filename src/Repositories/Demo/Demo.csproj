@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DE7FAC0C-782B-4BA1-B1B8-3101955FC888}</ProjectGuid>
+    <ProjectGuid>{E4A06935-054F-446A-B2AF-996DC615D775}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FeatureAdmin.SampleData</RootNamespace>
-    <AssemblyName>FeatureAdmin.SampleData</AssemblyName>
+    <RootNamespace>FeatureAdmin.Repositories.Demo</RootNamespace>
+    <AssemblyName>FeatureAdmin.Repositories.Demo</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,16 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features.cs" />
+    <Compile Include="DemoRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Locations.cs" />
-    <Compile Include="SampleActivatedFeatures.cs" />
-    <Compile Include="SampleLocationHierarchy.cs" />
-    <Compile Include="StandardFeatureDefinitions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
-      <Project>{4cec2e98-5a3b-4793-b606-a5250d046f02}</Project>
+    <ProjectReference Include="..\..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
+      <Project>{4CEC2E98-5A3B-4793-B606-A5250D046F02}</Project>
       <Name>FeatureAdmin.Core</Name>
     </ProjectReference>
   </ItemGroup>

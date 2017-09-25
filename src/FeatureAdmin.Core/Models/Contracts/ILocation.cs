@@ -10,8 +10,6 @@ namespace FeatureAdmin.Core.Models.Contracts
         string DisplayName { get; }
         Scope Scope { get; }
         string Url { get; }
-        ICollection<Guid> ChildLocations { get; set; }
-        ICollection<Guid> ActivatedFeatures { get; }
-        int ChildCount { get; set; }
+        Guid Parent { get; }
     }
 }

@@ -1,17 +1,23 @@
-﻿using System;
+﻿using FeatureAdmin.Core.Models.Enums;
+using System;
+using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models.Contracts
 {
+    /// <summary>
+    /// Feature Model
+    /// </summary>
+    /// <remarks>
+    /// see also https://msdn.microsoft.com/en-us/library/microsoft.sharepoint.spfeature_members.aspx
+    /// </remarks>
     public interface IActivatedFeature 
     {
         // identifier based on parent, feature-definition and compatibility level
-        Tuple<Guid,Guid> ParentFeatureComp { get; }
         Guid FeatureId { get; }
         Guid LocationId { get; }
-        int CompatibilityLevel { get; }
-        string Name { get; }
         DateTime TimeActivated { get; }
         Version Version { get; }
+        Dictionary<string,string> Properties { get; }
         bool Faulty { get; }
     }
 }

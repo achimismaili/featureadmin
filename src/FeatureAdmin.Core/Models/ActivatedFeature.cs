@@ -1,36 +1,51 @@
 ﻿using FeatureAdmin.Core.Models.Contracts;
+using FeatureAdmin.Core.Models.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
-    public class ActivatedFeature : IActivatedFeature 
+    public class ActivatedFeature : IActivatedFeature
     {
-        public ActivatedFeature(
-            Guid featureId,
-            Guid locationId,
-            int compatibilityLevel,
-            string name,
-            DateTime timeActivated,
-            Version version,
-            bool faulty
-            )
+        private ActivatedFeature()
         {
-            ParentFeatureComp = new Tuple<Guid, Guid>(featureId, locationId);
-            FeatureId = featureId;
-            LocationId = locationId;
-            CompatibilityLevel = compatibilityLevel;
-            Name = name;
-            Faulty = faulty;
+
         }
 
-        // identifier based on parent, feature-definition and compatibility level
-        public Tuple<Guid,Guid> ParentFeatureComp { get; private set; }
         public Guid FeatureId { get; private set; }
+
         public Guid LocationId { get; private set; }
-        public int CompatibilityLevel { get; private set; }
-        public string Name { get; private set; }
-        public DateTime TimeActivated { get; private set; }
-        public Version Version { get; private set; }
+
+
         public bool Faulty { get; private set; }
+
+        public Dictionary<string, string> Properties { get; private set; } = new Dictionary<string, string>();
+
+        public DateTime TimeActivated { get; private set; }
+
+        public Version Version { get; private set; }
+
+        public static ActivatedFeature GetActivatedFeature(
+                Guid featureId,
+                Guid locationId,
+                bool faulty,
+                Dictionary<string, string> properties,
+                DateTime timeActivated,
+                Version version
+            )
+        {
+            var activatedFeature = new ActivatedFeature()
+            {
+                FeatureId = featureId,
+                LocationId = locationId,
+                Faulty = faulty,
+
+                Properties = properties,
+                TimeActivated = timeActivated,
+                Version = version
+            };
+
+            return activatedFeature;
+        }
     }
 }

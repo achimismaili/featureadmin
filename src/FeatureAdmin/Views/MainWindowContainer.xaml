@@ -29,7 +29,7 @@
             <Image Source="../Resources/featureadmin-transparent48.png"></Image>
         </DataTemplate>
     </controls:MetroWindow.IconTemplate>
-    <controls:MetroWindow.Flyouts>
+    <!--<controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
             <controls:Flyout Header="Bakery" Background="#9f000000" Position="Right">
                 <StackPanel>
@@ -39,7 +39,7 @@
                 </StackPanel>
             </controls:Flyout>
         </controls:FlyoutsControl>
-    </controls:MetroWindow.Flyouts>
+    </controls:MetroWindow.Flyouts>-->
     <Grid>
     </Grid>
 </controls:MetroWindow>

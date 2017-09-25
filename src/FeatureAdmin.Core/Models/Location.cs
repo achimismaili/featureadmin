@@ -1,5 +1,6 @@
 ﻿using FeatureAdmin.Core.Models.Contracts;
 using FeatureAdmin.Core.Models.Enums;
+using FeatureAdmin.Core.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 
@@ -7,67 +8,58 @@ namespace FeatureAdmin.Core.Models
 {
     public class Location : ILocation
     {
-        public Location(
-            Guid id,
-            string displayName,
-            Scope scope,
-            string url,
-            ICollection<Guid> activatedFeatures,
-            int childCount
-            ) : this(id, displayName, scope, url,
-                activatedFeatures, null, childCount)
-        {}
-
-        public Location(
-    Guid id,
-    string displayName,
-    Scope scope,
-    string url,
-    ICollection<Guid> activatedFeatures,
-    ICollection<Guid> childLocations
-    ) : this(id, displayName, scope, url,
-        activatedFeatures, childLocations, 0)
+        private Location()
         {
-            ChildCount = childLocations == null ? 0 : childLocations.Count;
+
         }
-
-        private Location(
-            Guid id, 
-            string displayName,
-            Scope scope,
-            string url,
-            ICollection<Guid> activatedFeatures,
-            ICollection<Guid> childLocations,
-            int childCount
-            )
-        {
-            Id = id;
-            DisplayName = displayName;
-            Scope = scope;
-            Url = url;
-            ChildLocations = childLocations ?? new List<Guid>();
-            ActivatedFeatures = activatedFeatures ?? new List<Guid>();
-            ChildCount = childCount;
-        }
-
-
 
         public Guid Id { get; private set; }
         public string DisplayName { get; private set; }
+        public Guid Parent { get; private set; }
         public Scope Scope { get; private set; }
         public string Url { get; private set; }
-        public ICollection<Guid> ChildLocations { get
+
+
+        public static Location GetFarm(Guid farmId)
+        {
+            var location = new Location()
             {
-                return ChildLocations;
-            }
-            set
-            {
-                ChildLocations = value;
-                ChildCount = ChildLocations == null ? 0 : ChildLocations.Count;
-            }
+                Id = farmId,
+                DisplayName = "Farm",
+                Url = "Farm",
+                Parent = Guid.Empty,
+                Scope = Scope.Farm
+            };
+            return location;
         }
 
-        public ICollection<Guid> ActivatedFeatures { get; private set; }
-        public int ChildCount { get; set; }
+        public static Location GetLocation(Guid id, string displayName, Guid parent, Scope scope, string url)
+        {
+
+            var location = new Location()
+            {
+                Id = id,
+                DisplayName = displayName,
+                Parent = parent,
+                Scope = scope,
+                Url = url
+            };
+            return location;
+        }
+
+        public static Location GetLocationUndefined(Guid id, Guid parent, string displayName = "undefined", Scope? scope = Scope.ScopeInvalid, string url = "undefined")
+        {
+            var location = new Location()
+            {
+                Id = id,
+                DisplayName = displayName,
+                Url = url,
+                Parent = parent,
+                Scope = scope == null ? Scope.ScopeInvalid : scope.Value
+            };
+            return location;
+        }
+
+
     }
 }

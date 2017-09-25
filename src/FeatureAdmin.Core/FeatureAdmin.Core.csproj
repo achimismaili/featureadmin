@@ -47,8 +47,7 @@
     <Compile Include="Models\ActivatedFeature.cs" />
     <Compile Include="Models\FeatureDefinition.cs" />
     <Compile Include="Models\Location.cs" />
-    <Compile Include="Repositories\ISharePointRepositoryCommand.cs" />
-    <Compile Include="Repositories\ISharePointRepositoryRead.cs" />
+    <Compile Include="Repositories\Contracts\IRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
