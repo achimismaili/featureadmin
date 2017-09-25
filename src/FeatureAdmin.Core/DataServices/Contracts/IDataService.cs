@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin.Core.Repositories.Contracts
+namespace FeatureAdmin.Core.DataServices.Contracts
 {
-    public interface IRepository
+    public interface IDataService
     {
-        void LoadFarm();
+        IEnumerable<IFeatureDefinition> FeatureDefinitions { get; }
+        IEnumerable<ILocation> Locations { get; }
+        IEnumerable<IActivatedFeature> ActivatedFeatures { get; }
 
         Task<int> ActivateAllFeaturesWithinSharePointContainerAsync(ILocation sharePointContainer, IEnumerable<Guid> featureDefinitions, bool force, out Exception exception);
 

@@ -19,7 +19,7 @@ namespace FeatureAdmin.Tests
         // You can mock the other interfaces:
         Mock<IWindowManager> _windowManager;
         Mock<IEventAggregator> _eventAggregator;
-        Mock<IRepository> _repository;
+        Mock<IDataService> _repository;
 
         public AppViewModelTests()
         {
@@ -29,7 +29,7 @@ namespace FeatureAdmin.Tests
             // Mock the event aggregator
             _eventAggregator = new Mock<IEventAggregator>();
 
-            _repository = new Mock<IRepository>();
+            _repository = new Mock<IDataService>();
           
             // Create the main VM injecting the mocked interfaces
             // Mocking interfaces is always good as there is a lot of freedom

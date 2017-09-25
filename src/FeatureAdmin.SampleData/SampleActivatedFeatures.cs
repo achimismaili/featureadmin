@@ -1,4 +1,5 @@
 ﻿using FeatureAdmin.Core.Models;
+using FeatureAdmin.Core.Models.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace FeatureAdmin.SampleData
 {
     public static class SampleActivatedFeatures
     {
-        public static List<ActivatedFeature> GetActivatedFeatures(IEnumerable<Location> locations)
+        public static List<ActivatedFeature> GetActivatedFeatures(IEnumerable<ILocation> locations)
         {
             var featureList = new List<ActivatedFeature>();
 

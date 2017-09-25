@@ -1,6 +1,5 @@
 ﻿using FeatureAdmin.Core.Models.Contracts;
 using FeatureAdmin.Core.Models.Enums;
-using FeatureAdmin.Core.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 

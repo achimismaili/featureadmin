@@ -40,13 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoRepository.cs" />
+    <Compile Include="DemoDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
       <Project>{4CEC2E98-5A3B-4793-B606-A5250D046F02}</Project>
       <Name>FeatureAdmin.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FeatureAdmin.SampleData\FeatureAdmin.SampleData.csproj">
+      <Project>{de7fac0c-782b-4ba1-b1b8-3101955fc888}</Project>
+      <Name>FeatureAdmin.SampleData</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

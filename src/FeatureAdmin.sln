@@ -29,9 +29,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureAdmin.Core", "Featur
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ToBeRefactored", "ToBeRefactored", "{A0A4B964-AB7A-43D1-8922-0326FF3DA62A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Repositories\Demo\Demo.csproj", "{E4A06935-054F-446A-B2AF-996DC615D775}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataServices", "DataServices", "{32AB58CA-90B1-455F-AE6B-563D0844DC99}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repositories", "Repositories", "{32AB58CA-90B1-455F-AE6B-563D0844DC99}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "DataServices\Demo\Demo.csproj", "{E4A06935-054F-446A-B2AF-996DC615D775}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

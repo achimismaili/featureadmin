@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataServices\Contracts\IServiceWrapper.cs" />
     <Compile Include="Models\Contracts\IActivatedFeature.cs" />
     <Compile Include="Models\Contracts\IFeatureDefinition.cs" />
     <Compile Include="Models\Contracts\ILocation.cs" />
@@ -47,7 +48,7 @@
     <Compile Include="Models\ActivatedFeature.cs" />
     <Compile Include="Models\FeatureDefinition.cs" />
     <Compile Include="Models\Location.cs" />
-    <Compile Include="Repositories\Contracts\IRepository.cs" />
+    <Compile Include="DataServices\Contracts\IDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

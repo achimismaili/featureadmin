@@ -4,13 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FeatureAdmin.Core.Models.Contracts;
-using FeatureAdmin.Core.Repositories;
-using FeatureAdmin.Core.Repositories.Contracts;
+using FeatureAdmin.Core.DataServices.Contracts;
 
-namespace FeatureAdmin.Repositories.Demo
+namespace FeatureAdmin.DataServices.Demo
 {
-    public class DemoRepository : IRepository
+    public class DemoDataService : IDataService
     {
+        public IEnumerable<IActivatedFeature> ActivatedFeatures
+        {
+            get
+            {
+                return SampleData.SampleActivatedFeatures.GetActivatedFeatures(Locations);
+            }
+        }
+
+        public IEnumerable<IFeatureDefinition> FeatureDefinitions
+        {
+            get
+            {
+                return SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions();
+            }
+        }
+
+        public IEnumerable<ILocation> Locations
+        {
+            get
+            {
+                return SampleData.SampleLocationHierarchy.GetAllLocations();
+            }
+        }
+
         public Task<int> ActivateAllFeaturesWithinSharePointContainerAsync(ILocation sharePointContainer, IEnumerable<Guid> featureDefinitions, bool force, out Exception exception)
         {
             throw new NotImplementedException();
