@@ -5,7 +5,6 @@ using System.ComponentModel.Composition;
 
 namespace FeatureAdmin
 {
-    [Export(typeof(IWindowManager))]
     public class AppWindowManager : MetroWindowManager
     {
         public override MetroWindow CreateCustomWindow(object view, bool windowIsView)

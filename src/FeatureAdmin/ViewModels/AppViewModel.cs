@@ -12,7 +12,7 @@ using FeatureAdmin.Service;
 
 namespace FeatureAdmin.ViewModels
 {
-    [Export(typeof(AppViewModel))]
+
     public class AppViewModel : PropertyChangedBase, IHaveDisplayName
     {
         private string _displayName = "Feature Admin 3 for SharePoint 2013";
@@ -21,17 +21,16 @@ namespace FeatureAdmin.ViewModels
 
         public IWindowManager WM;
 
-        [ImportingConstructor]
-        public AppViewModel(IWindowManager wm)
+        public AppViewModel()
         {
-            WM = wm;
-            LocationList = new LocationListViewModel();
+            // WM = wm;
+          //  LocationList = new LocationListViewModel();
 
         //_eventAggregator = eventAggregator;
         //    _eventAggregator.Subscribe(this);
         }
 
-    public LocationListViewModel LocationList { get; }
+    // public LocationListViewModel LocationList { get; }
 
     
     public string DisplayName

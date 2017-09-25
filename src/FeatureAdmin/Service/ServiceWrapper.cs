@@ -11,7 +11,6 @@ using System.ComponentModel.Composition;
 
 namespace FeatureAdmin.Service
 {
-    [Export(typeof(IServiceWrapper))]
     public class ServiceWrapper : PropertyChangedBase, IServiceWrapper
     {
         private ObservableCollection<IActivatedFeature> activatedFeatures;

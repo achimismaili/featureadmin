@@ -1,35 +1,31 @@
-﻿using Caliburn.Metro;
+﻿using Autofac;
+using Caliburn.Metro.Autofac;
 using Caliburn.Micro;
 using FeatureAdmin.Core.DataServices.Contracts;
+using FeatureAdmin.Core.Models;
+using FeatureAdmin.Core.Models.Contracts;
 using FeatureAdmin.ViewModels;
 
 namespace FeatureAdmin
 {
-    public class AppBootstrapper : CaliburnMetroCompositionBootstrapper<ViewModels.AppViewModel>
+    public class AppBootstrapper : CaliburnMetroAutofacBootstrapper<ViewModels.AppViewModel>
     {
-        private SimpleContainer container;
-
-        protected override void Configure()
+        protected override void ConfigureContainer(ContainerBuilder builder)
         {
-            base.Configure();
+            builder.RegisterType<AppWindowManager>().As<IWindowManager>().SingleInstance();
+            builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
+            // builder.RegisterType<Service.ServiceWrapper>().As<IServiceWrapper>().SingleInstance();
+            // builder.RegisterType<DataServices.Demo.DemoDataService>().As<IDataService>().SingleInstance();
 
-            container = new SimpleContainer();
+            //builder.RegisterType<ActivatedFeature>().As<IActivatedFeature>().InstancePerDependency();
+            //builder.RegisterType<FeatureDefinition>().As<IFeatureDefinition>().InstancePerDependency();
+            //builder.RegisterType<Location>().As<ILocation>().InstancePerDependency();
 
-            container.Instance(container);
-
-            container
-                .Singleton<IWindowManager, WindowManager>()
-                  .Singleton<IServiceWrapper, Service.ServiceWrapper>()
-                .Singleton<IDataService, DataServices.Demo.DemoDataService>()
-                .Singleton<IEventAggregator, EventAggregator>();
-
-            container
-                .PerRequest<Core.Models.Contracts.IActivatedFeature, Core.Models.ActivatedFeature>()
-                .PerRequest<Core.Models.Contracts.IFeatureDefinition, Core.Models.FeatureDefinition>()
-                .PerRequest<Core.Models.Contracts.ILocation, Core.Models.Location>()
-                .PerRequest<LocationListViewModel>()
-                ;
-
+            var assembly = typeof(AppViewModel).Assembly;
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(item => item.Name.EndsWith("ViewModel") && item.IsAbstract == false)
+                .AsSelf()
+                .SingleInstance();
         }
     }
 }

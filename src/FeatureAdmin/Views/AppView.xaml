@@ -65,6 +65,5 @@
             x:Name="statusBar"
             Grid.Row="2"
             ></local:StatusBarView>
-       
     </Grid>
 </UserControl>
