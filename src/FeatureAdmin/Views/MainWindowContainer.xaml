@@ -9,7 +9,7 @@
                       ResizeMode="CanResizeWithGrip"
                       TitleCaps="False"
                     GlowBrush="{DynamicResource AccentColorBrush}"
-    Icon="../Resources/featureadmin48.png"
+    Icon="../Resources/fa-logo-48.png"
             >
     <Window.Resources>
         <ResourceDictionary>
@@ -26,7 +26,7 @@
     </Window.Resources>
     <controls:MetroWindow.IconTemplate>
         <DataTemplate>
-            <Image Source="../Resources/featureadmin-transparent48.png"></Image>
+            <Image Source="../Resources/fa-logo-gray-48.png"></Image>
         </DataTemplate>
     </controls:MetroWindow.IconTemplate>
     <!--<controls:MetroWindow.Flyouts>
