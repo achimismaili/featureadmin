@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using FeatureAdmin.Core.DataServices.Contracts;
 using System.Collections.ObjectModel;
 using FeatureAdmin.Core.Models;
-using FeatureAdmin.Service;
+using FeatureAdmin.Services;
 
 namespace FeatureAdmin.ViewModels
 {
@@ -17,28 +17,40 @@ namespace FeatureAdmin.ViewModels
     {
         private string _displayName = "Feature Admin 3 for SharePoint 2013";
 
-        private IEventAggregator _eventAggregator;
+        private IEventAggregator eventAggregator;
 
-        public IWindowManager WM;
+        private IServiceWrapper dataService;
 
-        public AppViewModel()
+        public AppViewModel(IEventAggregator eventAggregator, IServiceWrapper dataService)
         {
-            // WM = wm;
-          //  LocationList = new LocationListViewModel();
+            LocationList = new LocationListViewModel(dataService);
 
-        //_eventAggregator = eventAggregator;
-        //    _eventAggregator.Subscribe(this);
+            this.eventAggregator = eventAggregator;
+            this.eventAggregator.Subscribe(this);
+
+            Maus = "piep1";
         }
 
-    // public LocationListViewModel LocationList { get; }
+        public LocationListViewModel LocationList { get; }
 
-    
-    public string DisplayName
+
+        public string DisplayName
         {
             get { return _displayName; }
             set { _displayName = value; }
         }
 
+        private string maus;
+
+        public string Maus
+        {
+            get { return maus; }
+            set
+            {
+                maus = value;
+                NotifyOfPropertyChange(() => Maus);
+            }
+        }
 
 
         public void OpenSettings()

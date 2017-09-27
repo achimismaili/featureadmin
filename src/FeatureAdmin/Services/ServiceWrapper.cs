@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using FeatureAdmin.Core.DataServices.Contracts;
 using System.ComponentModel.Composition;
 
-namespace FeatureAdmin.Service
+namespace FeatureAdmin.Services
 {
     public class ServiceWrapper : PropertyChangedBase, IServiceWrapper
     {

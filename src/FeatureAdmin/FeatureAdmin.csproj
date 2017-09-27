@@ -118,7 +118,7 @@
     <Compile Include="Caliburn.Metro.Autofac\CaliburnMetroAutofacBootstrapper.cs" />
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Caliburn.Metro.Autofac\EventAggregationAutoSubscriptionModule.cs" />
-    <Compile Include="Service\ServiceWrapper.cs" />
+    <Compile Include="Services\ServiceWrapper.cs" />
     <Compile Include="ViewModels\LocationListViewModel.cs" />
     <Compile Include="Views\ActivatedFeaturesListView.xaml.cs">
       <DependentUpon>ActivatedFeaturesListView.xaml</DependentUpon>
@@ -257,9 +257,13 @@
     <Resource Include="Resources\featureadmin48.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataServices\Demo\Demo.csproj">
+    <ProjectReference Include="..\Backends\Demo\Demo.csproj">
       <Project>{e4a06935-054f-446a-b2af-996dc615d775}</Project>
       <Name>Demo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FeatureAdmin.Actor\FeatureAdmin.Actor.csproj">
+      <Project>{e2d2ed97-db0a-4fea-93a5-e8ba9d5b9062}</Project>
+      <Name>FeatureAdmin.Actor</Name>
     </ProjectReference>
     <ProjectReference Include="..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
       <Project>{4cec2e98-5a3b-4793-b606-a5250d046f02}</Project>

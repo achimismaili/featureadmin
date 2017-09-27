@@ -14,12 +14,12 @@ namespace FeatureAdmin
         {
             builder.RegisterType<AppWindowManager>().As<IWindowManager>().SingleInstance();
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
-            // builder.RegisterType<Service.ServiceWrapper>().As<IServiceWrapper>().SingleInstance();
-            // builder.RegisterType<DataServices.Demo.DemoDataService>().As<IDataService>().SingleInstance();
+            builder.RegisterType<Services.ServiceWrapper>().As<IServiceWrapper>().SingleInstance();
+            builder.RegisterType<Backends.Demo.Services.DataService>().As<IDataService>().SingleInstance();
 
-            //builder.RegisterType<ActivatedFeature>().As<IActivatedFeature>().InstancePerDependency();
-            //builder.RegisterType<FeatureDefinition>().As<IFeatureDefinition>().InstancePerDependency();
-            //builder.RegisterType<Location>().As<ILocation>().InstancePerDependency();
+            builder.RegisterType<ActivatedFeature>().As<IActivatedFeature>().InstancePerDependency();
+            builder.RegisterType<FeatureDefinition>().As<IFeatureDefinition>().InstancePerDependency();
+            builder.RegisterType<Location>().As<ILocation>().InstancePerDependency();
 
             var assembly = typeof(AppViewModel).Assembly;
             builder.RegisterAssemblyTypes(assembly)

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using FeatureAdmin.Core.Models.Contracts;
 using FeatureAdmin.Core.DataServices.Contracts;
 
-namespace FeatureAdmin.DataServices.Demo
+namespace FeatureAdmin.Backends.Demo.Services
 {
-    public class DemoDataService : IDataService
+    public class DataService : IDataService
     {
         public IEnumerable<IActivatedFeature> ActivatedFeatures
         {

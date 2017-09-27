@@ -7,8 +7,8 @@
     <ProjectGuid>{E4A06935-054F-446A-B2AF-996DC615D775}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FeatureAdmin.Repositories.Demo</RootNamespace>
-    <AssemblyName>FeatureAdmin.Repositories.Demo</AssemblyName>
+    <RootNamespace>FeatureAdmin.Backends.Demo</RootNamespace>
+    <AssemblyName>FeatureAdmin.Backends.Demo</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -42,7 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoDataService.cs" />
+    <Compile Include="Factories\SharePointLocationFactory.cs" />
+    <Compile Include="Services\DataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
