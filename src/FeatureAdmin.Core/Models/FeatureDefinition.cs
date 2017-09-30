@@ -1,12 +1,11 @@
-﻿using FeatureAdmin.Core.Models.Contracts;
-using FeatureAdmin.Core.Models.Enums;
+﻿using FeatureAdmin.Core.Models.Enums;
 using System;
 using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
-    public class FeatureDefinition : IFeatureDefinition
-    {
+    public class FeatureDefinition
+    { 
         private FeatureDefinition()
         {
             Properties = new Dictionary<string, string>();
@@ -25,7 +24,6 @@ namespace FeatureAdmin.Core.Models
         public string Title { get; private set; }
         public string UIVersion { get; private set; }
         public Version Version { get; private set; }
-
 
         public static FeatureDefinition GetFeatureDefinition(
              Guid id,

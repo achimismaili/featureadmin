@@ -1,5 +1,4 @@
 ﻿using FeatureAdmin.Core.Models;
-using FeatureAdmin.Core.Models.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +9,7 @@ namespace FeatureAdmin.SampleData
 {
     public static class SampleActivatedFeatures
     {
-        public static List<ActivatedFeature> GetActivatedFeatures(IEnumerable<ILocation> locations)
+        public static List<ActivatedFeature> GetActivatedFeatures(IEnumerable<Location> locations)
         {
             var featureList = new List<ActivatedFeature>();
 
@@ -50,7 +49,7 @@ namespace FeatureAdmin.SampleData
                     if (rand.Next(1, 101) <= 80)
                     {
                         var feature = ActivatedFeature.GetActivatedFeature(
-                            fd.Id, l.Id, false, null, DateTime.Now.AddMonths(-6).AddDays(-15), fd.Version);
+                            fd.Id, l.Id, fd, false, null, DateTime.Now.AddMonths(-6).AddDays(-15), fd.Version);
                         featureList.Add(feature);
                     }
                 }

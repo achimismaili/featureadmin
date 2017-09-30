@@ -118,7 +118,6 @@
     <Compile Include="Caliburn.Metro.Autofac\CaliburnMetroAutofacBootstrapper.cs" />
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Caliburn.Metro.Autofac\EventAggregationAutoSubscriptionModule.cs" />
-    <Compile Include="Services\ServiceWrapper.cs" />
     <Compile Include="ViewModels\LocationListViewModel.cs" />
     <Compile Include="Views\ActivatedFeaturesListView.xaml.cs">
       <DependentUpon>ActivatedFeaturesListView.xaml</DependentUpon>

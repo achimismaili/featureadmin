@@ -1,14 +1,4 @@
 ﻿using Caliburn.Micro;
-using System.ComponentModel.Composition;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FeatureAdmin.Core.DataServices.Contracts;
-using System.Collections.ObjectModel;
-using FeatureAdmin.Core.Models;
-using FeatureAdmin.Services;
 
 namespace FeatureAdmin.ViewModels
 {
@@ -19,11 +9,9 @@ namespace FeatureAdmin.ViewModels
 
         private IEventAggregator eventAggregator;
 
-        private IServiceWrapper dataService;
-
-        public AppViewModel(IEventAggregator eventAggregator, IServiceWrapper dataService)
+        public AppViewModel(IEventAggregator eventAggregator)
         {
-            LocationList = new LocationListViewModel(dataService);
+            //LocationList = new LocationListViewModel(dataService);
 
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);

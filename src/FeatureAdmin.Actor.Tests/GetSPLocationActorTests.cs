@@ -5,21 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-
 using FeatureAdmin.Actor.Actors;
-using FeatureAdmin.Core.SharePointFactories;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Models.Enums;
+using Akka.Actor;
+using FeatureAdmin.Backends.Services;
 
 namespace FeatureAdmin.Actor.Tests
 {
     public class GetSPLocationActorTests : TestKit
     {
-        private GetSPLocationActor actor;
+        private DemoDataService dataService;
+        private LoadActor actor;
         public GetSPLocationActorTests()
         {
-            var splf = new Backends.Demo.Factories.SharePointLocationFactory();
-            actor = new GetSPLocationActor(splf);
+            dataService = new DemoDataService();
+            actor = new LoadActor(dataService);
         }
 
         [Fact]
@@ -28,7 +29,18 @@ namespace FeatureAdmin.Actor.Tests
             var undefinedLocation = Location.GetLocationUndefined(Guid.Empty, Guid.Empty);
             actor.GetLocation(undefinedLocation);
 
-            Assert.Equal(Scope.ScopeInvalid, actor.SPLocation.Scope);
+            Assert.Equal(Core.Models.Enums.Scope.ScopeInvalid, actor.Location.Scope);
         }
+
+        //[Fact]
+        //public void ShouldReceiveInitialLocationMessage()
+        //{
+        //    IActorRef actor = ActorOf<LoadActor>(dataService);
+
+        //    var undefinedLocation = Location.GetLocationUndefined(Guid.Empty, Guid.Empty);
+        //    actor.GetLocation(undefinedLocation);
+
+        //    Assert.Equal(Core.Models.Enums.Scope.ScopeInvalid, actor.SPLocation.Scope);
+        //}
     }
 }

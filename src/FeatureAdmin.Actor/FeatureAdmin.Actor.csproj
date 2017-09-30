@@ -52,8 +52,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActorSystemReference.cs" />
     <Compile Include="Actors\DummyActor.cs" />
-    <Compile Include="Actors\GetSPLocationActor.cs" />
+    <Compile Include="Actors\LoadActor.cs" />
     <Compile Include="Messages\FeatureActivationMessage.cs" />
     <Compile Include="Messages\FeatureReadResultMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

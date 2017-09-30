@@ -42,8 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Services\IServiceWrapper.cs" />
-    <Compile Include="Factories\SharePointLocationFactoryBase.cs" />
     <Compile Include="Models\IActivatedFeature.cs" />
     <Compile Include="Models\IFeatureDefinition.cs" />
     <Compile Include="Models\ILocation.cs" />
@@ -53,10 +51,7 @@
     <Compile Include="Models\FeatureDefinition.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Services\IDataService.cs" />
-    <Compile Include="Models\SPObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Factories\ISharePointFeatureFactory.cs" />
-    <Compile Include="Factories\ISharePointLocationFactory.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

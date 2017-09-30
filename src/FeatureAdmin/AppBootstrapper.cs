@@ -1,9 +1,7 @@
 ﻿using Autofac;
 using Caliburn.Metro.Autofac;
 using Caliburn.Micro;
-using FeatureAdmin.Core.DataServices.Contracts;
-using FeatureAdmin.Core.Models;
-using FeatureAdmin.Core.Models.Contracts;
+using FeatureAdmin.Core.Services;
 using FeatureAdmin.ViewModels;
 
 namespace FeatureAdmin
@@ -14,12 +12,7 @@ namespace FeatureAdmin
         {
             builder.RegisterType<AppWindowManager>().As<IWindowManager>().SingleInstance();
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
-            builder.RegisterType<Services.ServiceWrapper>().As<IServiceWrapper>().SingleInstance();
-            builder.RegisterType<Backends.Demo.Services.DataService>().As<IDataService>().SingleInstance();
-
-            builder.RegisterType<ActivatedFeature>().As<IActivatedFeature>().InstancePerDependency();
-            builder.RegisterType<FeatureDefinition>().As<IFeatureDefinition>().InstancePerDependency();
-            builder.RegisterType<Location>().As<ILocation>().InstancePerDependency();
+            builder.RegisterType<Backends.Services.DemoDataService>().As<IDataService>().SingleInstance();
 
             var assembly = typeof(AppViewModel).Assembly;
             builder.RegisterAssemblyTypes(assembly)

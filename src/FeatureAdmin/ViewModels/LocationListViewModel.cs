@@ -1,20 +1,12 @@
 ﻿using Caliburn.Micro;
-using FeatureAdmin.Core.DataServices.Contracts;
-using FeatureAdmin.Core.Models;
-using FeatureAdmin.Core.Models.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FeatureAdmin.Core.Services;
 
 namespace FeatureAdmin.ViewModels
 {
     public class LocationListViewModel : Screen
     {
-        public IServiceWrapper DataService;
-        public LocationListViewModel(IServiceWrapper dataService)
+        public IDataService DataService;
+        public LocationListViewModel(IDataService dataService)
         {
             DataService = dataService;
             Maus = "piep";

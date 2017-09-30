@@ -1,24 +1,18 @@
-﻿using FeatureAdmin.Core.Models.Contracts;
-using System;
+﻿using FeatureAdmin.Core.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FeatureAdmin.Core.DataServices.Contracts
+namespace FeatureAdmin.Core.Services
 {
     public interface IDataService
     {
-        IEnumerable<IFeatureDefinition> FeatureDefinitions { get; }
-        IEnumerable<ILocation> Locations { get; }
-        IEnumerable<IActivatedFeature> ActivatedFeatures { get; }
+        IEnumerable<FeatureDefinition> LoadFeatureDefinitions();
 
-        Task<int> ActivateAllFeaturesWithinSharePointContainerAsync(ILocation sharePointContainer, IEnumerable<Guid> featureDefinitions, bool force, out Exception exception);
+        Location ReLoadLocation(Location location);
 
-        Task<int> DeactivateAllFeaturesWithinSharePointContainerAsync(ILocation sharePointContainer, IEnumerable<Guid> featureDefinitions, bool force, out Exception exception);
+        //int FeatureToggle(Models.SPObject location, bool add, Guid featureId, bool force);
+        //int FeatureUninstall(Guid featureId, bool force);
 
-        Task<int> DeactivateAllFeaturesAsync(IEnumerable<IActivatedFeature> features, bool force, out Exception exception);
+        //int FeatureUpdate(Models.SPObject location, bool add, Guid featureId, bool force);
 
-        Task<int> UninstallAsync(Guid featureDefinitionId, int compatibilityLevel, bool force, out Exception exception);
     }
 }

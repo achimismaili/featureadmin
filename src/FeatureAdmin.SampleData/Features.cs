@@ -50,6 +50,7 @@ namespace FeatureAdmin.SampleData
                 return ActivatedFeature.GetActivatedFeature(
                        Id,
                        Locations.ActivatedRootWeb.Guid,
+                       FeatureDefinitionHealthyWeb15,
                        Faulty, null, DateTime.Now,
                        Version
                        );
@@ -89,6 +90,7 @@ namespace FeatureAdmin.SampleData
                 return ActivatedFeature.GetActivatedFeature(
                        Id,
                        Locations.ActivatedRootWeb.Guid,
+                       FeatureDefinitionHealthySiCo15,
                        Faulty, null, DateTime.Now,
                        Version
                        );
@@ -128,6 +130,7 @@ namespace FeatureAdmin.SampleData
                 return ActivatedFeature.GetActivatedFeature(
                        Id,
                        Locations.ActivatedRootWeb.Guid,
+                       FeatureDefinitionHealthyWebApp15,
                        Faulty, null, DateTime.Now,
                        Version
                        );
@@ -167,6 +170,7 @@ namespace FeatureAdmin.SampleData
                 return ActivatedFeature.GetActivatedFeature(
                        Id,
                        Locations.ActivatedRootWeb.Guid,
+                       FeatureDefinitionHealthyFarm15,
                        Faulty, null, DateTime.Now,
                        Version
                        );
@@ -206,6 +210,7 @@ namespace FeatureAdmin.SampleData
                 return ActivatedFeature.GetActivatedFeature(
                         Id,
                         Locations.ActivatedRootWeb.Guid,
+                        FeatureDefinitionFaultyWeb15,
                         Faulty, null, DateTime.Now,
                         Version
                         );
@@ -245,6 +250,7 @@ namespace FeatureAdmin.SampleData
                 return ActivatedFeature.GetActivatedFeature(
                         Id,
                         Locations.ActivatedRootWeb.Guid,
+                        FeatureDefinitionFaultySite15,
                         Faulty, null, DateTime.Now,
                         Version
                         );
