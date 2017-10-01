@@ -5,10 +5,9 @@ namespace FeatureAdmin.ViewModels
 {
     public class LocationListViewModel : Screen
     {
-        public IDataService DataService;
-        public LocationListViewModel(IDataService dataService)
+        //public IDataService DataService;
+        public LocationListViewModel()
         {
-            DataService = dataService;
             Maus = "piep";
         }
 

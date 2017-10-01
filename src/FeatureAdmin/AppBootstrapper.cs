@@ -19,6 +19,8 @@ namespace FeatureAdmin
                 .Where(item => item.Name.EndsWith("ViewModel") && item.IsAbstract == false)
                 .AsSelf()
                 .SingleInstance();
+
+            builder.RegisterType<LocationListViewModel>().InstancePerLifetimeScope();
         }
     }
 }

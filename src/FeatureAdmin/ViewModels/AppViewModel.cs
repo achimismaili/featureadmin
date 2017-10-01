@@ -7,20 +7,28 @@ namespace FeatureAdmin.ViewModels
     {
         private string _displayName = "Feature Admin 3 for SharePoint 2013";
 
+        //private IActorRef loadFeatureDefinitionActorRef;
+        //private IActorRef loadLocationActorRef;
+        //private IActorRef featureToggleActorRef;
+
+        private bool _isSettingsFlyoutOpen;
         private IEventAggregator eventAggregator;
+
+
+
+        private string maus;
 
         public AppViewModel(IEventAggregator eventAggregator)
         {
-            //LocationList = new LocationListViewModel(dataService);
+            LocationList = new LocationListViewModel();
 
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
 
             Maus = "piep1";
+
+            InitializeActors();
         }
-
-        public LocationListViewModel LocationList { get; }
-
 
         public string DisplayName
         {
@@ -28,7 +36,17 @@ namespace FeatureAdmin.ViewModels
             set { _displayName = value; }
         }
 
-        private string maus;
+        public bool IsSettingsFlyoutOpen
+        {
+            get { return _isSettingsFlyoutOpen; }
+            set
+            {
+                _isSettingsFlyoutOpen = value;
+                NotifyOfPropertyChange(() => IsSettingsFlyoutOpen);
+            }
+        }
+
+        public LocationListViewModel LocationList { get; }
 
         public string Maus
         {
@@ -40,22 +58,24 @@ namespace FeatureAdmin.ViewModels
             }
         }
 
-
         public void OpenSettings()
         {
             IsSettingsFlyoutOpen = true;
         }
 
-        private bool _isSettingsFlyoutOpen;
-
-        public bool IsSettingsFlyoutOpen
+        private void InitializeActors()
         {
-            get { return _isSettingsFlyoutOpen; }
-            set
-            {
-                _isSettingsFlyoutOpen = value;
-                NotifyOfPropertyChange(() => IsSettingsFlyoutOpen);
-            }
+         //   loadFeatureDefinitionActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new LoadActor())); 
+         //loadLocationActorRef;
+         //featureToggleActorRef;
+
+        //_chartingActorRef =
+        //        ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new LineChartingActor(PlotModel)));
+
+        //    _stocksCoordinatorActorRef =
+        //        ActorSystemReference.ActorSystem.ActorOf(
+        //            Props.Create(() => new StocksCoordinatorActor(
+        //                _chartingActorRef)), "StocksCoordinator");
         }
     }
 }
