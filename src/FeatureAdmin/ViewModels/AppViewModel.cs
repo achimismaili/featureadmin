@@ -20,7 +20,7 @@ namespace FeatureAdmin.ViewModels
 
         public AppViewModel(IEventAggregator eventAggregator)
         {
-            LocationList = new LocationListViewModel();
+            LocationList = new LocationListViewModel(eventAggregator);
 
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);

@@ -1,25 +1,25 @@
 ﻿using Caliburn.Micro;
-using FeatureAdmin.Core.Services;
+using FeatureAdmin.Core.Models;
+using System.Collections.ObjectModel;
 
 namespace FeatureAdmin.ViewModels
 {
     public class LocationListViewModel : Screen
     {
-        //public IDataService DataService;
-        public LocationListViewModel()
+        private IEventAggregator eventAggregator;
+        private ObservableCollection<Location> Locations;
+        public LocationListViewModel(IEventAggregator eventAggregator)
         {
-            Maus = "piep";
-        }
+                Locations = new ObservableCollection<Location>();
 
-        private string maus;
-        public string Maus
-        {
-            get { return maus; }
-            set
-            {
-                maus = value;
-                NotifyOfPropertyChange(() => Maus);
+                this.eventAggregator = eventAggregator;
+                this.eventAggregator.Subscribe(this);
             }
-        }
+
+        //public void Handle(SimpleMessage message)
+        //{
+        //    Messages.Add(message);
+        //}
+
     }
 }
