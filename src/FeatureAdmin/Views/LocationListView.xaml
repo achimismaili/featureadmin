@@ -8,15 +8,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Background="LightBlue">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="Maus"
-            Grid.Row="1" Grid.Column="0" />
+        <DataGrid x:Name="Locations"
+            Grid.Row="1"/>
     </Grid>
 </UserControl>

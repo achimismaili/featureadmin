@@ -1,4 +1,8 @@
 ﻿using Akka.Actor;
+using Autofac;
+using FeatureAdmin.Actor.Actors;
+using FeatureAdmin.Backends.Services;
+using FeatureAdmin.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Actor
 {
-    static class ActorSystemReference
+    public static class ActorSystemReference
     {
         public static ActorSystem ActorSystem { get; private set; }
 
@@ -20,11 +24,13 @@ namespace FeatureAdmin.Actor
         {
             ActorSystem = ActorSystem.Create("FeatureAdminActorSystem");
 
-            //var container = new StandardKernel();
-            //container.Bind<IStockPriceServiceGateway>().To<RandomStockPriceServiceGateway>();
-            //container.Bind<StockPriceLookupActor>().ToSelf();
 
-            //IDependencyResolver resolver = new NinjectDependencyResolver(container, ActorSystem);
+            //// Setup Autofac
+            //ContainerBuilder builder = new ContainerBuilder();
+            //builder.RegisterType<DemoDataService>().As<IDataService>();
+            //builder.RegisterType<LoadActor>();
+
+            //IContainer container = builder.Build();
         }
     }
 }

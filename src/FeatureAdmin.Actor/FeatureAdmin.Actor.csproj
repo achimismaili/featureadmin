@@ -34,6 +34,18 @@
       <HintPath>..\packages\Akka.1.3.1\lib\net45\Akka.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Akka.DI.AutoFac, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Akka.DI.AutoFac.1.3.0\lib\net45\Akka.DI.AutoFac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Akka.DI.Core, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Akka.DI.Core.1.3.0\lib\net45\Akka.DI.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Autofac, Version=4.6.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.6.1\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -63,6 +75,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Backends\Demo\Demo.csproj">
+      <Project>{E4A06935-054F-446A-B2AF-996DC615D775}</Project>
+      <Name>Demo</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
       <Project>{4CEC2E98-5A3B-4793-B606-A5250D046F02}</Project>
       <Name>FeatureAdmin.Core</Name>
