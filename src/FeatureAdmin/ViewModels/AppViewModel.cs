@@ -2,9 +2,11 @@
 using Caliburn.Micro;
 using FeatureAdmin.Actor;
 using FeatureAdmin.Actor.Actors;
+using FeatureAdmin.Actor.Messages;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Services;
 using System;
+using System.Collections.ObjectModel;
 
 namespace FeatureAdmin.ViewModels
 {
@@ -13,9 +15,8 @@ namespace FeatureAdmin.ViewModels
     {
         private string _displayName = "Feature Admin 3 for SharePoint 2013";
 
-        private IActorRef loadFeatureDefinitionActorRef;
-        private IActorRef loadLocationActorRef;
-        private IActorRef featureToggleActorRef;
+        private IActorRef viewModelSyncActorRef;
+        private IActorRef taskManagerActorRef;
 
         private bool _isSettingsFlyoutOpen;
         private readonly IEventAggregator eventAggregator;
@@ -23,23 +24,23 @@ namespace FeatureAdmin.ViewModels
 
 
         private string maus;
-        private readonly IDataService dataService;
 
-        public AppViewModel(IEventAggregator eventAggregator, IDataService dataService)
+        public AppViewModel(IEventAggregator eventAggregator)
         {
-
+            Locations = new ObservableCollection<Location>();
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
 
             Maus = "piep1";
 
             LocationList = new LocationListViewModel(eventAggregator);
-            this.dataService = dataService;
 
             InitializeActors();
 
-            loadLocationActorRef.Tell(Location.GetFarm(Guid.Empty));
+            taskManagerActorRef.Tell( new LoadTaskMessage(Location.GetFarm(Guid.Empty)));
         }
+
+        public ObservableCollection<Location> Locations;
 
         public string DisplayName
         {
@@ -77,7 +78,9 @@ namespace FeatureAdmin.ViewModels
         private void InitializeActors()
         {
             //   loadFeatureDefinitionActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new LoadActor())); 
-            loadLocationActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new LoadActor(dataService)));
+            viewModelSyncActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new ViewModelSyncActor(Locations)));
+            
+            taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new TaskManagerActor(viewModelSyncActorRef)));
             //featureToggleActorRef;
 
             //_chartingActorRef =

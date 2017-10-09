@@ -65,10 +65,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActorSystemReference.cs" />
-    <Compile Include="Actors\DummyActor.cs" />
-    <Compile Include="Actors\LoadActor.cs" />
+    <Compile Include="Actors\ILocationActor.cs" />
+    <Compile Include="Actors\LocationViewModelSyncActor.cs" />
+    <Compile Include="Actors\TaskManagerActor.cs" />
+    <Compile Include="Actors\ViewModelSyncActor.cs" />
+    <Compile Include="Messages\AddLocationMessage.cs" />
     <Compile Include="Messages\FeatureActivationMessage.cs" />
     <Compile Include="Messages\FeatureReadResultMessage.cs" />
+    <Compile Include="Messages\LoadLocationMessage.cs" />
+    <Compile Include="Messages\LoadTaskMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

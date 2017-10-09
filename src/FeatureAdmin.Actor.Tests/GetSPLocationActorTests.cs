@@ -27,7 +27,7 @@ namespace FeatureAdmin.Actor.Tests
         public void ShouldHandleGetLocation()
         {
             var undefinedLocation = Location.GetLocationUndefined(Guid.Empty, Guid.Empty);
-            actor.GetLocation(undefinedLocation);
+            actor.LoadLocation(undefinedLocation);
 
             Assert.Equal(Core.Models.Enums.Scope.ScopeInvalid, actor.Location.Scope);
         }
