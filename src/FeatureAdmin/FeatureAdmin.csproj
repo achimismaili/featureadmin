@@ -134,11 +134,16 @@
     <Compile Include="Caliburn.Metro.Autofac\CaliburnMetroAutofacBootstrapper.cs" />
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Caliburn.Metro.Autofac\EventAggregationAutoSubscriptionModule.cs" />
+    <Compile Include="Messages\LoadCommand.cs" />
     <Compile Include="Messages\LocationAdd.cs" />
+    <Compile Include="ViewModels\CommandViewModel.cs" />
+    <Compile Include="ViewModels\FeatureDefinitionViewModel.cs" />
+    <Compile Include="ViewModels\FeatureDefinitionListViewModel.cs" />
+    <Compile Include="ViewModels\LocationViewModel.cs" />
+    <Compile Include="ViewModels\StatusBarViewModel.cs" />
+    <Compile Include="ViewModels\LogViewModel.cs" />
+    <Compile Include="ViewModels\NavigationBarViewModel.cs" />
     <Compile Include="ViewModels\LocationListViewModel.cs" />
-    <Compile Include="Views\ActivatedFeaturesListView.xaml.cs">
-      <DependentUpon>ActivatedFeaturesListView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\CommandView.xaml.cs">
       <DependentUpon>CommandView.xaml</DependentUpon>
     </Compile>
@@ -166,10 +171,6 @@
     <Compile Include="Views\StatusBarView.xaml.cs">
       <DependentUpon>StatusBarView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\ActivatedFeaturesListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\AppView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

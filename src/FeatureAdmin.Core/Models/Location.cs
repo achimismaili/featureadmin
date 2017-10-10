@@ -19,6 +19,10 @@ namespace FeatureAdmin.Core.Models
         public Scope Scope { get; private set; }
         public string Url { get; private set; }
 
+        public static Location GetDummyFarmForLoadCommand()
+        {
+            return GetFarm(Guid.Empty);
+        }
         public static Location GetFarm(Guid farmId)
         {
             var location = new Location()

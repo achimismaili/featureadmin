@@ -13,10 +13,9 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
-        <local:NavigationBarView 
-            x:Name="navigationBar"
+        <ContentControl cal:View.Model="{Binding NavigationBarVm}"
             Grid.Row="0"
-            ></local:NavigationBarView>
+            ></ContentControl>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -31,38 +30,27 @@
             </Grid.RowDefinitions>
 
             <!-- List Row-->
-            <ContentControl cal:View.Model="{Binding LocationList}"
+            <ContentControl cal:View.Model="{Binding LocationListVm}"
             Grid.Row="0" Grid.Column="0" />
-            <local:FeatureDefinitionListView 
-            x:Name="featureDefinitionList"
-            Grid.Row="0" Grid.Column="1"
-            ></local:FeatureDefinitionListView>
-            <local:LogView 
-            x:Name="log"
-            Grid.Row="0" Grid.Column="3"
-            ></local:LogView>
-
+            <ContentControl cal:View.Model="{Binding FeatureDefinitionListVm}"
+           Grid.Row="0" Grid.Column="1"
+            ></ContentControl>
+            <ContentControl cal:View.Model="{Binding LogVm}"
+           Grid.Row="0" Grid.Column="3"
+            ></ContentControl>
             <!--Detail Row-->
-            <local:LocationView 
-            x:Name="location"
-            Grid.Row="1" Grid.Column="0"
-            ></local:LocationView>
-            <local:FeatureDefinitionView 
-            x:Name="featureDefinition"
-            Grid.Row="1" Grid.Column="1"
-            ></local:FeatureDefinitionView>
-            <local:CommandView 
-            x:Name="command"
-            Grid.Row="1" Grid.Column="3"
-            ></local:CommandView>
-            <TextBox x:Name="Maus"
-                Grid.Row="2" Grid.Column="0"
-           Grid.ColumnSpan="3"
-                      />
+            <ContentControl cal:View.Model="{Binding LocationVm}"
+           Grid.Row="1" Grid.Column="0"
+            ></ContentControl>
+            <ContentControl cal:View.Model="{Binding FeatureDefinitionVm}"
+           Grid.Row="1" Grid.Column="1"
+            ></ContentControl>
+            <ContentControl cal:View.Model="{Binding CommandVm}"
+           Grid.Row="1" Grid.Column="2"
+            ></ContentControl>
         </Grid>
-        <local:StatusBarView 
-            x:Name="statusBar"
-            Grid.Row="2"
-            ></local:StatusBarView>
+        <ContentControl cal:View.Model="{Binding StatusBarVm}"
+           Grid.Row="2"
+            ></ContentControl>
     </Grid>
 </UserControl>

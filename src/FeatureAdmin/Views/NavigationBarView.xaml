@@ -8,8 +8,8 @@
              d:DesignHeight="30" d:DesignWidth="900">
     <Grid Background="Orange">
         <StackPanel Orientation="Horizontal">
-            <Button x:Name="Reload" 
-                    Margin="5">Click to reload</Button>
+            <Button x:Name="ReLoadFarm" 
+                    Margin="5">Reload farm</Button>
             <CheckBox x:Name="Force" 
                     Margin="5" >Enable "Force" on Feature manipulation</CheckBox>
         </StackPanel>

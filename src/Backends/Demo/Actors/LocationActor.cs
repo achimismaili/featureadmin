@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Akka.Event;
 using FeatureAdmin.Backends.Messages;
 using FeatureAdmin.Core.Services;
 using System;
@@ -12,8 +13,9 @@ namespace FeatureAdmin.Backends.Actors
     public class LocationActor: ReceiveActor
         {
             private readonly IDataService dataService;
+        private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
 
-            public LocationActor(IDataService dataService)
+        public LocationActor(IDataService dataService)
             {
                 this.dataService = dataService;
 
@@ -22,7 +24,8 @@ namespace FeatureAdmin.Backends.Actors
 
             private void LookupLocation(LookUpLocationMessage message)
             {
-                var location = dataService.ReLoadLocation(message.Location);
+            _log.Debug("Entered LocationActor-LookupLocation");
+            var location = dataService.ReLoadLocation(message.Location);
 
                 Sender.Tell(new LookedUpLocationMessage(location));
             }

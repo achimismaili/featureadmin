@@ -1,5 +1,6 @@
 ﻿using Akka.Actor;
 using Akka.DI.Core;
+using Akka.Event;
 using FeatureAdmin.Backends.Messages;
 using FeatureAdmin.Core.Models;
 using System;
@@ -16,6 +17,7 @@ namespace FeatureAdmin.Backends.Actors
 
         private readonly IActorRef _locationActorChild;
         private readonly IActorRef viewModelSyncActor;
+        private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
 
         private Location location;
         public LocationManagerActor(IActorRef viewModelSyncActor)
@@ -26,7 +28,7 @@ namespace FeatureAdmin.Backends.Actors
 
             this.viewModelSyncActor = viewModelSyncActor;
 
-            Receive<LoadLocationMessage>(message => _locationActorChild.Tell(message));
+            Receive<LoadLocationMessage>(message => LoadLocation(message));
 
             Receive<LookedUpLocationMessage>(
                 message =>
@@ -35,12 +37,16 @@ namespace FeatureAdmin.Backends.Actors
 
                     var stockPriceMessage = new LocationLoadedMessage(location);
 
-                    foreach (var subscriber in _subscribers)
-                    {
-                        subscriber.Tell(stockPriceMessage);
-                    }
+                    viewModelSyncActor.Tell(stockPriceMessage);
                 }
                 );
+        }
+
+        private void LoadLocation(LoadLocationMessage message)
+        {
+            _log.Debug("Entered LocationManager-LoadLocation");
+            _locationActorChild.Tell(
+                new LookUpLocationMessage(message.Location));
         }
     }
 }

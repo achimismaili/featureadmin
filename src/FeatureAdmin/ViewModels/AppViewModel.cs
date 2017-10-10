@@ -5,42 +5,43 @@ using FeatureAdmin.Actor.Actors;
 using FeatureAdmin.Actor.Messages;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Services;
+using FeatureAdmin.Messages;
 using System;
 using System.Collections.ObjectModel;
 
 namespace FeatureAdmin.ViewModels
 {
 
-    public class AppViewModel : PropertyChangedBase, IHaveDisplayName
+    public class AppViewModel : PropertyChangedBase, IHaveDisplayName, Caliburn.Micro.IHandle<LoadCommand>
     {
+        public ObservableCollection<Location> Locations;
+        private readonly IEventAggregator eventAggregator;
         private string _displayName = "Feature Admin 3 for SharePoint 2013";
 
-        private IActorRef viewModelSyncActorRef;
         private IActorRef taskManagerActorRef;
-
-        private bool _isSettingsFlyoutOpen;
-        private readonly IEventAggregator eventAggregator;
-
-
-
-        private string maus;
-
+        private IActorRef viewModelSyncActorRef;
         public AppViewModel(IEventAggregator eventAggregator)
         {
             Locations = new ObservableCollection<Location>();
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
 
-            Maus = "piep1";
+            FeatureDefinitionVm = new FeatureDefinitionViewModel(eventAggregator);
 
-            LocationList = new LocationListViewModel(eventAggregator);
+            FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator);
+
+            LocationVm = new LocationViewModel(eventAggregator);
+            LocationListVm = new LocationListViewModel(eventAggregator);
+            LogVm = new LogViewModel(eventAggregator);
+
+            NavigationBarVm = new NavigationBarViewModel(eventAggregator);
+            StatusBarVm = new StatusBarViewModel(eventAggregator);
 
             InitializeActors();
 
-            taskManagerActorRef.Tell( new LoadTaskMessage(Location.GetFarm(Guid.Empty)));
+            Handle(new LoadCommand(Location.GetFarm(Guid.Empty)));
         }
-
-        public ObservableCollection<Location> Locations;
+        public CommandViewModel CommandVm { get; private set; }
 
         public string DisplayName
         {
@@ -48,38 +49,26 @@ namespace FeatureAdmin.ViewModels
             set { _displayName = value; }
         }
 
-        public bool IsSettingsFlyoutOpen
-        {
-            get { return _isSettingsFlyoutOpen; }
-            set
-            {
-                _isSettingsFlyoutOpen = value;
-                NotifyOfPropertyChange(() => IsSettingsFlyoutOpen);
-            }
-        }
+        public FeatureDefinitionViewModel FeatureDefinitionVm { get; private set; }
 
-        public LocationListViewModel LocationList { get; }
+        public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
 
-        public string Maus
-        {
-            get { return maus; }
-            set
-            {
-                maus = value;
-                NotifyOfPropertyChange(() => Maus);
-            }
-        }
+        public LocationViewModel LocationVm { get; private set; }
+        public LocationListViewModel LocationListVm { get; private set; }
+        public LogViewModel LogVm { get; private set; }
 
-        public void OpenSettings()
+        public NavigationBarViewModel NavigationBarVm { get; private set; }
+        public StatusBarViewModel StatusBarVm { get; private set; }
+        public void Handle(LoadCommand loadCommand)
         {
-            IsSettingsFlyoutOpen = true;
+            taskManagerActorRef.Tell(new LoadTaskMessage(loadCommand.Location));
         }
 
         private void InitializeActors()
         {
             //   loadFeatureDefinitionActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new LoadActor())); 
             viewModelSyncActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new ViewModelSyncActor(Locations)));
-            
+
             taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new TaskManagerActor(viewModelSyncActorRef)));
             //featureToggleActorRef;
 

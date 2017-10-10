@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Akka.Event;
 using FeatureAdmin.Actor.Messages;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace FeatureAdmin.Actor.Actors
         private IActorRef viewModelSyncActorRef;
 
         private readonly Dictionary<Guid, IActorRef> locationActors;
+        private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
 
         public TaskManagerActor(IActorRef viewModelSyncActorRef)
         {
@@ -23,6 +25,7 @@ namespace FeatureAdmin.Actor.Actors
 
         private void LoadTask(LoadTaskMessage message)
         {
+            _log.Debug("Entered TaskManager-LoadTask");
             if (message == null || message.Location == null)
             {
                 // TODO Log
@@ -41,6 +44,8 @@ namespace FeatureAdmin.Actor.Actors
                                      locationId.ToString());
 
                 locationActors.Add(locationId, newLocationActor);
+
+                newLocationActor.Tell(new LoadLocationMessage(message.Location));
             }
 
             locationActors[locationId].Tell(new LoadLocationMessage(message.Location));
