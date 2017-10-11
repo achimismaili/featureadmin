@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin.Backends.Messages
+namespace FeatureAdmin.Core.Messages
 {
-    public class LoadLocationMessage 
+    public class LocationQuery
     {
-        public LoadLocationMessage(Location location)
+        public LocationQuery(Location location)
         {
             Location = location;
         }

@@ -1,17 +1,11 @@
 ﻿using Akka.Actor;
 using Akka.DI.AutoFac;
 using Autofac;
-using FeatureAdmin.Actor.Actors;
 using FeatureAdmin.Backends.Actors;
 using FeatureAdmin.Backends.Services;
 using FeatureAdmin.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FeatureAdmin.Actor
+namespace FeatureAdmin
 {
     public static class ActorSystemReference
     {

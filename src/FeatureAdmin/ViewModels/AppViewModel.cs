@@ -1,20 +1,17 @@
 ﻿using Akka.Actor;
 using Caliburn.Micro;
-using FeatureAdmin.Actor;
-using FeatureAdmin.Actor.Actors;
-using FeatureAdmin.Actor.Messages;
+using FeatureAdmin.Actors;
+using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
-using FeatureAdmin.Core.Services;
 using FeatureAdmin.Messages;
 using System;
-using System.Collections.ObjectModel;
 
 namespace FeatureAdmin.ViewModels
 {
 
     public class AppViewModel : PropertyChangedBase, IHaveDisplayName, Caliburn.Micro.IHandle<LoadCommand>
     {
-        public ObservableCollection<Location> Locations;
+        
         private readonly IEventAggregator eventAggregator;
         private string _displayName = "Feature Admin 3 for SharePoint 2013";
 
@@ -22,7 +19,7 @@ namespace FeatureAdmin.ViewModels
         private IActorRef viewModelSyncActorRef;
         public AppViewModel(IEventAggregator eventAggregator)
         {
-            Locations = new ObservableCollection<Location>();
+            
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
 
@@ -61,13 +58,13 @@ namespace FeatureAdmin.ViewModels
         public StatusBarViewModel StatusBarVm { get; private set; }
         public void Handle(LoadCommand loadCommand)
         {
-            taskManagerActorRef.Tell(new LoadTaskMessage(loadCommand.Location));
+            taskManagerActorRef.Tell(new LocationQuery(loadCommand.Location));
         }
 
         private void InitializeActors()
         {
             //   loadFeatureDefinitionActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new LoadActor())); 
-            viewModelSyncActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new ViewModelSyncActor(Locations)));
+            viewModelSyncActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new ViewModelSyncActor(eventAggregator)));
 
             taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new TaskManagerActor(viewModelSyncActorRef)));
             //featureToggleActorRef;

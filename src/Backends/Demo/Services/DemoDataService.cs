@@ -43,10 +43,6 @@ namespace FeatureAdmin.Backends.Services
             {
                 children = new List<Location>();
             }
-
-            location.ActivatedFeataures = features;
-            location.ChildLocations = children;
-
             return location;
         }
     }

@@ -10,9 +10,6 @@ namespace FeatureAdmin.Core.Models
         {
 
         }
-
-        public IEnumerable<ActivatedFeature> ActivatedFeataures { get; set; }
-        public IEnumerable<Location> ChildLocations { get; set; }
         public string DisplayName { get; private set; }
         public Guid Id { get; private set; }
         public Guid Parent { get; private set; }

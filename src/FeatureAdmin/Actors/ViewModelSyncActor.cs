@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using FeatureAdmin.Core.Models;
 using System.Collections.ObjectModel;
 using FeatureAdmin.Core.Messages;
+using Caliburn.Micro;
 
-namespace FeatureAdmin.Actor.Actors
+namespace FeatureAdmin.Actors
 {
     public class ViewModelSyncActor : ReceiveActor
     {
@@ -23,21 +24,7 @@ namespace FeatureAdmin.Actor.Actors
         }
         private void AddLocation(LocationUpdated message)
         {
-            if (message == null || message.Location == null)
-            {
-                //TODO log
-                return;
-            }
-
-            var locationToAdd = message.Location;
-            if (locations.Any(l => l.Id == locationToAdd.Id))
-            {
-                var existingLocation = locations.FirstOrDefault(l => l.Id == locationToAdd.Id);
-                locations.Remove(existingLocation);
-            }
-
-            locations.Add(locationToAdd);
-
+            eventAggregator.PublishOnUIThread(message);
         }
     }
 }

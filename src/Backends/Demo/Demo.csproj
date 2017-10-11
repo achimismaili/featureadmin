@@ -60,10 +60,6 @@
   <ItemGroup>
     <Compile Include="Actors\LocationActor.cs" />
     <Compile Include="Actors\LocationManagerActor.cs" />
-    <Compile Include="Messages\LocationLoadedMessage.cs" />
-    <Compile Include="Messages\LoadLocationMessage.cs" />
-    <Compile Include="Messages\LookedUpLocationMessage.cs" />
-    <Compile Include="Messages\LookUpLocationMessage.cs" />
     <Compile Include="Services\DemoDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

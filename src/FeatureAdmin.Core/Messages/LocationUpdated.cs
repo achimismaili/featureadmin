@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin.Actor.Messages
+namespace FeatureAdmin.Core.Messages
 {
-    public class AddLocationMessage 
+    public class LocationUpdated
     {
-        public AddLocationMessage(Location location)
+        public LocationUpdated(Location location)
         {
             Location = location;
         }
-        public Location Location { get; set; }
+        public Location Location { get; private set; }
     }
 }

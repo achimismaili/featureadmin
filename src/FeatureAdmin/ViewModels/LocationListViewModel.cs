@@ -1,40 +1,46 @@
 ﻿using Caliburn.Micro;
+using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class LocationListViewModel : Screen
+    public class LocationListViewModel : Screen, IHandle<LocationUpdated>
     {
+        public ObservableCollection<Location> Locations { get; private set; }
+
         private IEventAggregator eventAggregator;
-        public ObservableCollection<Location> Locations;
+
         public LocationListViewModel(IEventAggregator eventAggregator)
         {
+
                 Locations = new ObservableCollection<Location>();
 
                 this.eventAggregator = eventAggregator;
                 this.eventAggregator.Subscribe(this);
             }
 
-        public void Handle(LocationAdd location)
+        public void Handle(LocationUpdated message)
         {
-            if (location == null)
+            if (message == null || message.Location == null)
             {
+                //TODO log
                 return;
             }
 
-            var existingLocation = Locations.FirstOrDefault(l => l.Id == location.Id);
-
-            if (existingLocation != null)
+            var locationToAdd = message.Location;
+            if (Locations.Any(l => l.Id == locationToAdd.Id))
             {
+                var existingLocation = Locations.FirstOrDefault(l => l.Id == locationToAdd.Id);
                 Locations.Remove(existingLocation);
             }
 
-            Locations.Add(location);
-        }
+            Locations.Add(locationToAdd);
 
+        }
     }
 }
