@@ -6,7 +6,12 @@
              xmlns:local="clr-namespace:FeatureAdmin.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Background="LightYellow">
-            
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <DataGrid x:Name="FeatureDefinitions"
+            Grid.Row="1"/>
     </Grid>
 </UserControl>

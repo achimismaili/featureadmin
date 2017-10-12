@@ -7,9 +7,9 @@
              xmlns:local="clr-namespace:FeatureAdmin.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Background="LightBlue">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <DataGrid x:Name="Locations"

@@ -19,10 +19,16 @@ namespace FeatureAdmin.Actors
         {
             this.eventAggregator = eventAggregator;
 
-            Receive<LocationUpdated>(message => AddLocation(message));
+            Receive<LocationUpdated>(message => LocationUpdated(message));
+            Receive<FeatureDefinitionUpdated>(message => FeatureDefinitionUpdated(message));
 
         }
-        private void AddLocation(LocationUpdated message)
+        private void LocationUpdated(LocationUpdated message)
+        {
+            eventAggregator.PublishOnUIThread(message);
+        }
+
+        private void FeatureDefinitionUpdated(FeatureDefinitionUpdated message)
         {
             eventAggregator.PublishOnUIThread(message);
         }

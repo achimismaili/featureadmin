@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Messages
 {
-    public class LoadCommand
+    public class LoadLocationCommand
     {
-        public LoadCommand(SPLocation spLocation)
+        public LoadLocationCommand(SPLocation spLocation)
         {
             SPLocation = spLocation;
         }

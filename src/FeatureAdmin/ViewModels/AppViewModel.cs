@@ -9,7 +9,10 @@ using System;
 namespace FeatureAdmin.ViewModels
 {
 
-    public class AppViewModel : PropertyChangedBase, IHaveDisplayName, Caliburn.Micro.IHandle<LoadCommand>
+    public class AppViewModel : PropertyChangedBase, 
+        IHaveDisplayName, 
+        Caliburn.Micro.IHandle<LoadLocationCommand>,
+        Caliburn.Micro.IHandle<LoadFeatureDefinitionCommand>
     {
         
         private readonly IEventAggregator eventAggregator;
@@ -36,7 +39,7 @@ namespace FeatureAdmin.ViewModels
 
             InitializeActors();
 
-            Handle(new LoadCommand(SPLocation.GetDummyFarmForLoadCommand()));
+            InitializeFarmLoad();
         }
         public CommandViewModel CommandVm { get; private set; }
 
@@ -56,7 +59,7 @@ namespace FeatureAdmin.ViewModels
 
         public NavigationBarViewModel NavigationBarVm { get; private set; }
         public StatusBarViewModel StatusBarVm { get; private set; }
-        public void Handle(LoadCommand loadCommand)
+        public void Handle(LoadLocationCommand loadCommand)
         {
             taskManagerActorRef.Tell(new LoadLocationQuery(loadCommand.SPLocation));
         }
@@ -76,6 +79,19 @@ namespace FeatureAdmin.ViewModels
             //        ActorSystemReference.ActorSystem.ActorOf(
             //            Props.Create(() => new StocksCoordinatorActor(
             //                _chartingActorRef)), "StocksCoordinator");
+        }
+
+        public void Handle(LoadFeatureDefinitionCommand message)
+        {
+            taskManagerActorRef.Tell(new LoadFeatureDefinitionQuery());
+        }
+
+        public void InitializeFarmLoad()
+        {
+            
+
+                Handle(new LoadFeatureDefinitionCommand());
+            Handle(new LoadLocationCommand(SPLocation.GetDummyFarmForLoadCommand()));
         }
     }
 }

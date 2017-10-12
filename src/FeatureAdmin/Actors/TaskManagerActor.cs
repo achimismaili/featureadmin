@@ -12,7 +12,7 @@ namespace FeatureAdmin.Actors
     public class TaskManagerActor : ReceiveActor
     {
         private IActorRef viewModelSyncActorRef;
-
+        private readonly IActorRef featureDefinitionActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
 
@@ -20,9 +20,23 @@ namespace FeatureAdmin.Actors
         {
             locationActors = new Dictionary<Guid, IActorRef>();
             this.viewModelSyncActorRef = viewModelSyncActorRef;
-             Receive<LoadLocationQuery>(message => LoadTask(message));
+
+            featureDefinitionActor =
+                    Context.ActorOf(
+                        Props.Create(() => new Backends.Actors.FeatureDefinitionManagerActor(viewModelSyncActorRef)),
+                                     "FeatureDefinitionManagerActor");
+
+
+            Receive<LoadLocationQuery>(message => LoadTask(message));
 
             Receive<LocationUpdated>(message => LocationUpdated(message));
+
+            Receive<LoadFeatureDefinitionQuery>(message => LoadFeatureDefinitions(message));
+        }
+
+        private void LoadFeatureDefinitions(LoadFeatureDefinitionQuery message)
+        {
+            featureDefinitionActor.Tell(message);
         }
 
         private void LoadTask(LoadLocationQuery message)

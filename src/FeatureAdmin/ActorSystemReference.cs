@@ -38,8 +38,8 @@ namespace FeatureAdmin
             //// Setup Autofac
             ContainerBuilder builder = new ContainerBuilder();
     builder.RegisterType<DemoDataService>().As<IDataService>();
-            builder.RegisterType<LocationManagerActor>();
             builder.RegisterType<LocationActor>();
+            builder.RegisterType<FeatureDefinitionActor>();
 
             IContainer container = builder.Build();
 
