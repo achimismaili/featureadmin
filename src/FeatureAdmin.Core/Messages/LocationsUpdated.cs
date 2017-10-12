@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Core.Messages
 {
-    public class LocationQuery
+    public class LocationsUpdated
     {
-        public LocationQuery(Location location)
+        public LocationsUpdated(IEnumerable<SPLocation> spLocations)
         {
-            Location = location;
+            SPLocations = spLocations;
         }
-        public Location Location { get; private set; }
+        public IEnumerable<SPLocation> SPLocations { get; private set; }
     }
 }

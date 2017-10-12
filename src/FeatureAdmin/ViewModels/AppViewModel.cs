@@ -36,7 +36,7 @@ namespace FeatureAdmin.ViewModels
 
             InitializeActors();
 
-            Handle(new LoadCommand(Location.GetFarm(Guid.Empty)));
+            Handle(new LoadCommand(SPLocation.GetDummyFarmForLoadCommand()));
         }
         public CommandViewModel CommandVm { get; private set; }
 
@@ -58,7 +58,7 @@ namespace FeatureAdmin.ViewModels
         public StatusBarViewModel StatusBarVm { get; private set; }
         public void Handle(LoadCommand loadCommand)
         {
-            taskManagerActorRef.Tell(new LocationQuery(loadCommand.Location));
+            taskManagerActorRef.Tell(new LoadLocationQuery(loadCommand.SPLocation));
         }
 
         private void InitializeActors()

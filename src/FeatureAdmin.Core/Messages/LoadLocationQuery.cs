@@ -5,15 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin.Messages
+namespace FeatureAdmin.Core.Messages
 {
-    public class LoadCommand
+    public class LoadLocationQuery
     {
-        public LoadCommand(SPLocation spLocation)
+        public LoadLocationQuery(SPLocation spLocation)
         {
             SPLocation = spLocation;
         }
-
         public SPLocation SPLocation { get; private set; }
     }
 }

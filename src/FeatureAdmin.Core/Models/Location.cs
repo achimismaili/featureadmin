@@ -4,59 +4,50 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
-    public class Location 
+    public class Location
     {
-        protected Location()
+        protected Location(Guid id, string displayName, Guid parent, Scope scope, string url)
         {
-
+            Id = id;
+            DisplayName = displayName;
+            Parent = parent;
+            Scope = scope;
+            Url = url;
         }
-        public string DisplayName { get; private set; }
-        public Guid Id { get; private set; }
-        public Guid Parent { get; private set; }
-        public Scope Scope { get; private set; }
-        public string Url { get; private set; }
 
-        public static Location GetDummyFarmForLoadCommand()
+        public bool CanHaveChildren
         {
-            return GetFarm(Guid.Empty);
+            get
+            {
+                return (Scope != Scope.Web && Scope != Scope.ScopeInvalid);
+            }
         }
+        public string DisplayName { get; protected set; }
+        public Guid Id { get; protected set; }
+        public Guid Parent { get; protected set; }
+        public Scope Scope { get; protected set; }
+        public string Url { get; protected set; }
+
         public static Location GetFarm(Guid farmId)
         {
-            var location = new Location()
-            {
-                Id = farmId,
-                DisplayName = "Farm",
-                Url = "Farm",
-                Parent = Guid.Empty,
-                Scope = Scope.Farm
-            };
+            var location = new Location(farmId,
+               "Farm",
+               Guid.Empty,
+               Scope.Farm,
+               "Farm");
+
             return location;
         }
 
         public static Location GetLocation(Guid id, string displayName, Guid parent, Scope scope, string url)
         {
-
-            var location = new Location()
-            {
-                Id = id,
-                DisplayName = displayName,
-                Parent = parent,
-                Scope = scope,
-                Url = url
-            };
+            var location = new Location(id, displayName, parent, scope, url);
             return location;
         }
 
         public static Location GetLocationUndefined(Guid id, Guid parent, string displayName = "undefined", Scope? scope = Scope.ScopeInvalid, string url = "undefined")
         {
-            var location = new Location()
-            {
-                Id = id,
-                DisplayName = displayName,
-                Url = url,
-                Parent = parent,
-                Scope = scope == null ? Scope.ScopeInvalid : scope.Value
-            };
+            var location = new Location(id, displayName, parent, scope == null ? Scope.ScopeInvalid : scope.Value, url);
             return location;
         }
 

@@ -42,7 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Messages\LocationQuery.cs" />
+    <Compile Include="Messages\LoadChildLocationsQuery.cs" />
+    <Compile Include="Messages\LoadLocationQuery.cs" />
+    <Compile Include="Messages\LocationsUpdated.cs" />
     <Compile Include="Messages\LocationUpdated.cs" />
     <Compile Include="Models\IActivatedFeature.cs" />
     <Compile Include="Models\IFeatureDefinition.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="Models\Enums\SPObjectType.cs" />
     <Compile Include="Models\FeatureDefinition.cs" />
     <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\SPLocation.cs" />
     <Compile Include="Services\IDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

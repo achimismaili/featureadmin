@@ -9,10 +9,16 @@ namespace FeatureAdmin.Core.Messages
 {
     public class LocationUpdated
     {
-        public LocationUpdated(Location location)
+        public LocationUpdated(SPLocation spLocation)
         {
-            Location = location;
+            SPLocation = spLocation;
         }
-        public Location Location { get; private set; }
+        public Location Location { get
+            {
+                return SPLocation as Location;
+            }
+        }
+
+        public SPLocation SPLocation { get; private set; }
     }
 }

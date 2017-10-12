@@ -20,19 +20,21 @@ namespace FeatureAdmin.Actors
         {
             locationActors = new Dictionary<Guid, IActorRef>();
             this.viewModelSyncActorRef = viewModelSyncActorRef;
-             Receive<LocationQuery>(message => LoadTask(message));
+             Receive<LoadLocationQuery>(message => LoadTask(message));
+
+            Receive<LocationUpdated>(message => LocationUpdated(message));
         }
 
-        private void LoadTask(LocationQuery message)
+        private void LoadTask(LoadLocationQuery message)
         {
             _log.Debug("Entered TaskManager-LoadTask");
-            if (message == null || message.Location == null)
+            if (message == null || message.SPLocation == null)
             {
-                // TODO Log
+                _log.Error("LoadTask message or location was null");
                 return;
             }
 
-            var locationId = message.Location.Id;
+            var locationId = message.SPLocation.Id;
 
             bool locationActorNeedsCreating = !locationActors.ContainsKey(locationId);
 
@@ -40,7 +42,7 @@ namespace FeatureAdmin.Actors
             {
                 IActorRef newLocationActor =
                     Context.ActorOf(
-                        Props.Create(() => new Backends.Actors.LocationManagerActor(viewModelSyncActorRef)),
+                        Props.Create(() => new Backends.Actors.LocationManagerActor(viewModelSyncActorRef, locationId)),
                                      locationId.ToString());
 
                 locationActors.Add(locationId, newLocationActor);
@@ -49,6 +51,22 @@ namespace FeatureAdmin.Actors
             }
 
             locationActors[locationId].Tell(message);
+        }
+
+        /// <summary>
+        /// This message is received from a location manager actor when child location is loaded. 
+        /// this method will send a load task to the correctly responsible actor 
+        /// </summary>
+        /// <param name="message"></param>
+        private void LocationUpdated(LocationUpdated message)
+        {
+            if (message == null || message.Location == null)
+            {
+                _log.Error("empty LocationUpdated message returned!");
+                return;
+            }
+
+            LoadTask(new LoadLocationQuery(message.SPLocation));
         }
     }
 }
