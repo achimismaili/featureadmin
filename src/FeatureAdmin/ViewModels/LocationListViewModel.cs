@@ -24,6 +24,8 @@ namespace FeatureAdmin.ViewModels
             Locations = allLocations;
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
+
+            ScopeFilterAll = true;
         }
 
         public void Handle(LocationUpdated message)
@@ -42,6 +44,7 @@ namespace FeatureAdmin.ViewModels
             }
 
             allLocations.Add(locationToAdd);
+            FilterResults();
         }
         private bool scopeFilterAll;
 
@@ -168,6 +171,7 @@ namespace FeatureAdmin.ViewModels
         public void ClearSearchCommand()
         {
             SearchInput = null;
+            ScopeFilterAll = true;
         }
     }
 }

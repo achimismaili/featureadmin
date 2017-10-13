@@ -34,7 +34,7 @@
             <StackPanel Orientation="Horizontal"
                         Grid.Row="1">
                 <TextBlock Text="Scope Filter:" />
-                <RadioButton GroupName="ScopeFilter" x:Name="ScopeFilterAll" IsChecked="True">
+                <RadioButton GroupName="ScopeFilter" x:Name="ScopeFilterAll" >
                     <TextBlock Text="All" />
                 </RadioButton>
                 <RadioButton GroupName="ScopeFilter" x:Name="ScopeFilterFarm" >
