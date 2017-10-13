@@ -14,22 +14,41 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Content="F+WA"
-                    x:Name="FilterWA"
-                    Grid.Column="0"
-                    HorizontalAlignment="Left" />
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right"
-                        Grid.Column="1">
+                        Grid.Row="0">
                 <Label Content="Search:" />
                 <TextBox Text="{Binding SearchInput, UpdateSourceTrigger=PropertyChanged}"
                          Width="150" />
                 <Button Content="X"
                         x:Name="ClearSearchCommand" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="1">
+                <TextBlock Text="Scope Filter:" />
+                <RadioButton GroupName="ScopeFilter" x:Name="ScopeFilterAll" IsChecked="True">
+                    <TextBlock Text="All" />
+                </RadioButton>
+                <RadioButton GroupName="ScopeFilter" x:Name="ScopeFilterFarm" >
+                    <TextBlock Text="F" />
+                </RadioButton>
+                <RadioButton GroupName="ScopeFilter" x:Name="ScopeFilterWebApp" >
+                    <TextBlock Text="WA" />
+                </RadioButton>
+                <RadioButton GroupName="ScopeFilter" x:Name="ScopeFilterSite" >
+                    <TextBlock Text="S" />
+                </RadioButton>
+                <RadioButton GroupName="ScopeFilter" x:Name="ScopeFilterWeb" >
+                    <TextBlock Text="W" />
+                </RadioButton>
             </StackPanel>
         </Grid>
         <DataGrid x:Name="Locations"
