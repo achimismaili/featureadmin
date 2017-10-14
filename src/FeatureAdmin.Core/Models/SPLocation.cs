@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
@@ -14,7 +15,7 @@ namespace FeatureAdmin.Core.Models
 
         public static SPLocation GetDummyFarmForLoadCommand()
         {
-            var farmDummy = GetFarm(Guid.Empty);
+            var farmDummy = GetFarm(Guid.Empty, new List<Guid>());
             return ToSPLocation(farmDummy);
         }
 

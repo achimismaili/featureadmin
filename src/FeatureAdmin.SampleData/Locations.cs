@@ -2,9 +2,6 @@
 using FeatureAdmin.Core.Models.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FeatureAdmin.SampleData
 {
@@ -18,7 +15,7 @@ namespace FeatureAdmin.SampleData
             {
                 get
                 {
-                    return Location.GetFarm(Guid);
+                    return Location.GetFarm(Guid, new List<Guid>());
                 }
             }
         }
@@ -34,7 +31,7 @@ namespace FeatureAdmin.SampleData
                 get
                 {
                     return Location.GetLocation(
-                        Guid, DisplayName, TestFarm.Guid, Scope, Url);
+                        Guid, DisplayName, TestFarm.Guid, Scope, Url, new List<Guid>());
                 }
             }
 
@@ -53,7 +50,7 @@ namespace FeatureAdmin.SampleData
                     var af = new List<Guid>();
                     af.Add(Features.HealthySite.Id);
                     return Location.GetLocation(
-                        Guid, DisplayName, WebApp.Guid, Scope, Url);
+                        Guid, DisplayName, WebApp.Guid, Scope, Url, new List<Guid>());
                 }
             }
 
@@ -72,7 +69,7 @@ namespace FeatureAdmin.SampleData
                     var af = new List<Guid>();
                     af.Add(Features.HealthyWeb.Id);
                     return Location.GetLocation(
-                        Guid, DisplayName, ActivatedSite.Guid, Scope, Url);
+                        Guid, DisplayName, ActivatedSite.Guid, Scope, Url, new List<Guid>());
                 }
             }
         }
