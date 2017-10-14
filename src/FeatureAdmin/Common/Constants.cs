@@ -1,13 +1,25 @@
-﻿using System;
+﻿using FeatureAdmin.Core.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FA.Common
+namespace FeatureAdmin.Common
 {
     public static class Constants
     {
+        public static class Search
+        {
+            public static IEnumerable<Scope> ScopeFilterList = new List<Scope>()
+            {
+                Scope.Farm,
+                Scope.WebApplication,
+                Scope.Site,
+                Scope.Web,
+                Scope.ScopeInvalid
+            };
+        }
         public static class Text
         {
             public static string FeatureAdminTitle = string.Format(

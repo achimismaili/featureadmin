@@ -147,6 +147,8 @@
     <Compile Include="Caliburn.Metro.Autofac\EventAggregationAutoSubscriptionModule.cs" />
     <Compile Include="Messages\LoadFeatureDefinitionCommand.cs" />
     <Compile Include="Messages\LoadLocationCommand.cs" />
+    <Compile Include="Messages\FeatureDefinitionSelected.cs" />
+    <Compile Include="Messages\LocationSelected.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionListViewModel.cs" />
@@ -314,6 +316,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="fa-logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UIModels\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

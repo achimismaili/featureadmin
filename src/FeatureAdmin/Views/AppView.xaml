@@ -8,9 +8,9 @@
              >
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <ContentControl cal:View.Model="{Binding NavigationBarVm}"
@@ -19,14 +19,13 @@
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="3*"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="3*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- List Row-->
@@ -42,9 +41,6 @@
             <ContentControl cal:View.Model="{Binding LocationVm}"
            Grid.Row="1" Grid.Column="0"
             ></ContentControl>
-            <DataGrid x:Name="Locations"
-                Grid.Row="1" Grid.Column="0"
-                />
             <ContentControl cal:View.Model="{Binding FeatureDefinitionVm}"
            Grid.Row="1" Grid.Column="1"
             ></ContentControl>

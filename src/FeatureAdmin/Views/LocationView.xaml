@@ -7,7 +7,50 @@
              xmlns:local="clr-namespace:FeatureAdmin.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Background="Yellow">
-            
+    <Grid Background="LightGray">
+        <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Label Content="Title:" 
+               Margin="5"
+               Grid.Row="0" Grid.Column="0" />
+        <TextBlock x:Name="Name" 
+               Margin="5"
+               Grid.Row="0" Grid.Column="1" />
+        <Label Content="Scope:" 
+               Margin="5"
+               Grid.Row="1" Grid.Column="0" />
+        <TextBlock x:Name="Location_Scope" 
+               Margin="5"
+               Grid.Row="1" Grid.Column="1" />
+        <Label Content="Url:" 
+               Margin="5"
+               Grid.Row="2" Grid.Column="0" />
+        <TextBlock x:Name="Location_Url" 
+               Margin="5"
+               Grid.Row="2" Grid.Column="1" />
+        <Label Content="Id:" 
+               Margin="5"
+               Grid.Row="3" Grid.Column="0" />
+        <TextBlock x:Name="Location_Id" 
+               Margin="5"
+               Grid.Row="3" Grid.Column="1" />
+        <Label Content="Child Locations:" 
+               Margin="5"
+               Grid.Row="4" Grid.Column="0" />
+        <Label Content="Activated Features:"
+               Margin="5"
+               Grid.Row="4" Grid.Column="1" />
     </Grid>
 </UserControl>

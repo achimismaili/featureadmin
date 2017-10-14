@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System;
 using FeatureAdmin.Core.Models.Enums;
-
 namespace FeatureAdmin.ViewModels
 {
     public class LocationListViewModel : Screen, IHandle<LocationUpdated>
@@ -25,7 +24,21 @@ namespace FeatureAdmin.ViewModels
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
 
-            ScopeFilterAll = true;
+            ScopeFilters = new ObservableCollection<Scope>(Common.Constants.Search.ScopeFilterList);
+        }
+
+        private Location selectedLocation;
+        public Location SelectedLocation
+        {
+            get
+            {
+                return selectedLocation;
+            }
+            set
+            {
+                selectedLocation = value;
+                eventAggregator.BeginPublishOnUIThread(new LocationSelected(selectedLocation));
+            }
         }
 
         public void Handle(LocationUpdated message)
@@ -46,89 +59,30 @@ namespace FeatureAdmin.ViewModels
             allLocations.Add(locationToAdd);
             FilterResults();
         }
-        private bool scopeFilterAll;
 
-        private bool scopeFilterFarm;
-        private bool scopeFilterWebApp;
-        private bool scopeFilterSite;
-        private bool scopeFilterWeb;
-        public bool ScopeFilterAll { get {
-                return scopeFilterAll;
-            } set
-            {
-                scopeFilterAll = value;
-                if (scopeFilterAll)
-                {
-                    scopeFilter = null;
-                    FilterResults();
-                }
-            } }
-        public bool ScopeFilterFarm 
+        public ObservableCollection<Scope> ScopeFilters { get; private set; }
+
+        private Scope? selectedScopeFilter;
+        public Scope? SelectedScopeFilter
         {
-            get
-            {
-                return scopeFilterFarm;
-            }
+            get { return selectedScopeFilter; }
             set
             {
-                scopeFilterFarm = value;
-                if (scopeFilterFarm)
-                {
-                    scopeFilter = Scope.Farm;
-                    FilterResults();
-                }
-            }
-        }
-        public bool ScopeFilterWebApp
-        {
-            get
-            {
-                return scopeFilterWebApp;
-            }
-            set
-            {
-                scopeFilterWebApp = value;
-                if (scopeFilterWebApp)
-                {
-                    scopeFilter = Scope.WebApplication;
-                    FilterResults();
-                }
-            }
-        }
-        public bool ScopeFilterSite
-        {
-            get
-            {
-                return scopeFilterSite;
-            }
-            set
-            {
-                scopeFilterSite = value;
-                if (scopeFilterSite)
-                {
-                    scopeFilter = Scope.Site;
-                    FilterResults();
-                }
-            }
-        }
-        public bool ScopeFilterWeb
-        {
-            get
-            {
-                return scopeFilterWeb;
-            }
-            set
-            {
-                scopeFilterWeb = value;
-                if (scopeFilterWeb)
-                {
-                    scopeFilter = Scope.Web;
-                    FilterResults();
-                }
+                selectedScopeFilter = value;
+                FilterResults();
             }
         }
 
-        private Scope? scopeFilter;
+        private string idFilter;
+        public string IdFilter
+        {
+            get { return idFilter; }
+            set
+            {
+                idFilter = value;
+                FilterResults();
+            }
+        }
 
         private string searchInput;
         public string SearchInput
@@ -144,34 +98,39 @@ namespace FeatureAdmin.ViewModels
         protected void FilterResults()
         {
             IEnumerable<Location> searchResult;
-            if (scopeFilter == null)
+
+            Guid idGuid;
+            Guid.TryParse(idFilter, out idGuid);
+            if (string.IsNullOrEmpty(idFilter))
             {
-                searchResult = allLocations; ;
+                searchResult = allLocations;
             }
             else
             {
-                searchResult = 
-                    allLocations.Where(l => l.Scope == scopeFilter.Value);
+                searchResult =
+                    allLocations.Where(l => l.Id == idGuid);
             }
 
-            if (string.IsNullOrWhiteSpace(searchInput) )
+            if (SelectedScopeFilter != null)
             {
-                Locations = new ObservableCollection<Location>(searchResult);
+                searchResult =
+                    searchResult.Where(l => l.Scope == SelectedScopeFilter.Value);
             }
-            else
+
+            if (!string.IsNullOrWhiteSpace(searchInput))
             {
                 var lowerCaseSearchInput = searchInput.ToLower();
-                Locations = new ObservableCollection<Location>(
+                searchResult = 
                     searchResult.Where(l => l.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
-                    l.Url.ToLower().Contains(lowerCaseSearchInput)));
+                    l.Url.ToLower().Contains(lowerCaseSearchInput));
             }
-            return;
+            Locations = new ObservableCollection<Location>(searchResult);
         }
 
         public void ClearSearchCommand()
         {
             SearchInput = null;
-            ScopeFilterAll = true;
+            //ScopeFilter = ScopeFilter.All;
         }
     }
 }
