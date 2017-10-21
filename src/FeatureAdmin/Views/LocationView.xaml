@@ -1,12 +1,13 @@
 ﻿<UserControl x:Class="FeatureAdmin.Views.LocationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FeatureAdmin.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             >
     <Grid Background="LightGray">
         <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -20,6 +21,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <Label Content="Title:" 
@@ -28,6 +30,14 @@
         <TextBlock x:Name="Name" 
                Margin="5"
                Grid.Row="0" Grid.Column="1" />
+        <Button x:Name="CopyTitle"
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+               FontFamily="/Resources/#Entypo"
+                FontSize="25"
+                Height="30" Width="30"
+                Margin="5"
+                Grid.Row="0" Grid.Column="2">n</Button>
         <Label Content="Scope:" 
                Margin="5"
                Grid.Row="1" Grid.Column="0" />
@@ -39,18 +49,49 @@
                Grid.Row="2" Grid.Column="0" />
         <TextBlock x:Name="Location_Url" 
                Margin="5"
-               Grid.Row="2" Grid.Column="1" />
+               Grid.Row="2" Grid.Column="1" /> 
+        <Button x:Name="CopyUrl"
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+                FontFamily="/Resources/#Entypo"
+                FontSize="25"
+                Height="30" Width="30"
+                Margin="5"
+                Grid.Row="2" Grid.Column="2">n</Button>
         <Label Content="Id:" 
                Margin="5"
                Grid.Row="3" Grid.Column="0" />
         <TextBlock x:Name="Location_Id" 
                Margin="5"
                Grid.Row="3" Grid.Column="1" />
+        <Button x:Name="CopyId"
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+                FontFamily="/Resources/#Entypo"
+                FontSize="25"
+                Height="30" Width="30"
+                Margin="5"
+                Grid.Row="3" Grid.Column="2">n</Button>
+        <StackPanel 
+            Grid.Row="4" 
+            Orientation="Horizontal"
+            Grid.ColumnSpan="3">
+            <Button x:Name="FilterLocation"
+                Style="{DynamicResource AccentedSquareButtonStyle}"
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+
+                Margin="5" >Set as Location Filter</Button>
+            <Button x:Name="FilterFeature"
+                Style="{DynamicResource AccentedSquareButtonStyle}"
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+               
+                Margin="5" >Set as Feature Filter</Button>
+        </StackPanel>
         <Label Content="Child Locations:" 
                Margin="5"
-               Grid.Row="4" Grid.Column="0" />
+               Grid.Row="5" Grid.Column="0" />
         <Label Content="Activated Features:"
                Margin="5"
-               Grid.Row="4" Grid.Column="1" />
+               Grid.Row="5" Grid.Column="1" />
     </Grid>
 </UserControl>

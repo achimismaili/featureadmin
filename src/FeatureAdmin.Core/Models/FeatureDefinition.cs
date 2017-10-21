@@ -12,6 +12,7 @@ namespace FeatureAdmin.Core.Models
         }
 
         public Guid Id { get; private set; }
+        public IReadOnlyCollection<ActivatedFeature> ActivatedFeatures { get; protected set; }
         public int CompatibilityLevel { get; private set; }
         public string Description { get; private set; }
         public string DisplayName { get; private set; }
@@ -22,6 +23,31 @@ namespace FeatureAdmin.Core.Models
         public Scope Scope { get; private set; }
         public Guid SolutionId { get; private set; }
         public string Title { get; private set; }
+
+        /// <summary>
+        /// adds or removes an activated feature to the list of activated features
+        /// </summary>
+        /// <param name="featureDefinition">feature definition, which will be returned with changed feature-list</param>
+        /// <param name="activatedFeature">feature to add or remove</param>
+        /// <param name="add">adds if true, removes if false</param>
+        /// <returns>feature definition with changed activatedfeatures list</returns>
+        public static FeatureDefinition ToggleActivatedFeature(FeatureDefinition featureDefinition, ActivatedFeature activatedFeature, bool add)
+        {
+            
+            var activatedFeatures = new List<ActivatedFeature>(featureDefinition.ActivatedFeatures);
+
+            if (add)
+            {
+                activatedFeatures.Add(activatedFeature);
+            }
+            else
+            {
+                activatedFeatures.Remove(activatedFeature);
+            }
+
+            featureDefinition.ActivatedFeatures = activatedFeatures.AsReadOnly();
+            return featureDefinition;
+        }
         public string UIVersion { get; private set; }
         public Version Version { get; private set; }
 
