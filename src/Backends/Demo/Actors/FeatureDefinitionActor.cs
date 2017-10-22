@@ -41,7 +41,7 @@ namespace FeatureAdmin.Backends.Actors
             foreach (FeatureDefinition fd in farmFeatureDefinitions)
             {
 
-                Sender.Tell(new FeatureDefinitionUpdated(fd));
+                Sender.Tell(new ItemUpdated<FeatureDefinition>(fd));
             }
         }
     }

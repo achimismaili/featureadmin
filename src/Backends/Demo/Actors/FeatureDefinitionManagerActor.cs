@@ -25,7 +25,7 @@ namespace FeatureAdmin.Backends.Actors
 
             Receive<LoadFeatureDefinitionQuery>(message => LoadFeatureDefinitions(message));
 
-            Receive<FeatureDefinitionUpdated>(message => FeatureDefinitionUpdated(message));
+            Receive<ItemUpdated<FeatureDefinition>>(message => FeatureDefinitionUpdated(message));
         }
 
         private void LoadFeatureDefinitions(LoadFeatureDefinitionQuery message)
@@ -35,7 +35,7 @@ namespace FeatureAdmin.Backends.Actors
             featureDefinitionActorChild.Tell(message);
         }
 
-        private void FeatureDefinitionUpdated(FeatureDefinitionUpdated message)
+        private void FeatureDefinitionUpdated(ItemUpdated<FeatureDefinition> message)
         {
                 viewModelSyncActor.Tell(message);
         }

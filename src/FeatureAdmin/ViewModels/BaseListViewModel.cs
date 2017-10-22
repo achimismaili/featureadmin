@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : Screen, IHandle<ItemUpdated<T>>, IHandle<SetSearchFilter<Location>> where T : BaseItem
+    public abstract class BaseListViewModel<T> : Screen, IHandle<ItemUpdated<T>>, IHandle<SetSearchFilter<T>> where T : BaseItem
     {
         private ObservableCollection<T> allItems { get; set; }
 
@@ -133,13 +133,7 @@ namespace FeatureAdmin.ViewModels
             Items = new ObservableCollection<T>(searchResult);
         }
 
-        public void ClearSearchCommand()
-        {
-            SearchInput = null;
-            //ScopeFilter = ScopeFilter.All;
-        }
-
-        public void Handle(SetSearchFilter<Location> message)
+        public void Handle(SetSearchFilter<T> message)
         {
             if (message == null)
             {

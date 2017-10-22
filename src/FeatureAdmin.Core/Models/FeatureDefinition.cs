@@ -9,6 +9,7 @@ namespace FeatureAdmin.Core.Models
         private FeatureDefinition()
         {
             Properties = new Dictionary<string, string>();
+            ActivatedFeatures = new List<ActivatedFeature>().AsReadOnly();
         }
 
         

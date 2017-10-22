@@ -46,7 +46,6 @@
     <Compile Include="Messages\LoadFeatureDefinitionQuery.cs" />
     <Compile Include="Messages\LoadLocationQuery.cs" />
     <Compile Include="Messages\LocationsUpdated.cs" />
-    <Compile Include="Messages\FeatureDefinitionUpdated.cs" />
     <Compile Include="Messages\ItemUpdated.cs" />
     <Compile Include="Models\BaseItem.cs" />
     <Compile Include="Models\IActivatedFeature.cs" />

@@ -11,5 +11,20 @@ namespace FeatureAdmin.ViewModels
         { 
             }
 
+        public void CopyTitle()
+        {
+            copyToClipBoard(Item.Title);
+        }
+
+        public void CopyName()
+        {
+            copyToClipBoard(Item.DisplayName);
+        }
+
+        public void CopyId()
+        {
+            copyToClipBoard(Item.Id.ToString());
+        }
+
     }
 }
