@@ -9,37 +9,27 @@ using System.Windows;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class LocationViewModel : BaseDetailViewModel, IHandle<ItemSelected<Location>>
+    public class LocationViewModel : BaseDetailViewModel<Location>
     {
-        public Location Location { get; set; }
-
-        
-
         public LocationViewModel(IEventAggregator eventAggregator)
             :base(eventAggregator)
         {
             
         }
 
-        public void Handle(ItemSelected<Location> message)
-        {
-            Location = message.Item;
-            ItemSelected = message.Item != null;
-        }
-
         public void CopyTitle()
         {
-            copyToClipBoard(Location.DisplayName);
+            copyToClipBoard(Item.DisplayName);
         }
 
         public void CopyUrl()
         {
-            copyToClipBoard(Location.Url);
+            copyToClipBoard(Item.Url);
         }
 
         public void CopyId()
         {
-            copyToClipBoard(Location.Id.ToString());
+            copyToClipBoard(Item.Id.ToString());
         }
     }
 }

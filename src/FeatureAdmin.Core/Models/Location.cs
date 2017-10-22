@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
-    public class Location
+    public class Location : BaseItem
     {
         protected Location(Guid id, string displayName, Guid parent, Scope scope, string url)
             :this (id, displayName, parent, scope, url, new List<Guid>())
@@ -30,8 +30,7 @@ namespace FeatureAdmin.Core.Models
         }
 
         public IReadOnlyCollection<Guid> ActivatedFeatures { get; protected set; }
-        public string DisplayName { get; protected set; }
-        public Guid Id { get; protected set; }
+                
         public Guid Parent { get; protected set; }
         public Scope Scope { get; protected set; }
         public string Url { get; protected set; }

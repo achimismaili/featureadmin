@@ -9,7 +9,7 @@ using System;
 using FeatureAdmin.Core.Models.Enums;
 namespace FeatureAdmin.ViewModels
 {
-    public class LocationListViewModel : Screen, IHandle<LocationUpdated>
+    public class LocationListViewModel : Screen, IHandle<LocationUpdated>, IHandle<SetSearchFilter<Location>>
     {
         private ObservableCollection<Location> allLocations { get; set; }
         public ObservableCollection<Location> Locations { get; private set; }
@@ -128,6 +128,25 @@ namespace FeatureAdmin.ViewModels
         {
             SearchInput = null;
             //ScopeFilter = ScopeFilter.All;
+        }
+
+        public void Handle(SetSearchFilter<Location> message)
+        {
+            if (message == null)
+            {
+                return;
+            };
+
+            if (message.SetQuery)
+            {
+                SearchInput = message.SearchQuery;
+            }
+
+            if (message.SetScope)
+            {
+                SelectedScopeFilter = message.SearchScope;
+            }
+
         }
     }
 }

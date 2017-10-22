@@ -48,6 +48,7 @@
     <Compile Include="Messages\LocationsUpdated.cs" />
     <Compile Include="Messages\FeatureDefinitionUpdated.cs" />
     <Compile Include="Messages\LocationUpdated.cs" />
+    <Compile Include="Models\BaseItem.cs" />
     <Compile Include="Models\IActivatedFeature.cs" />
     <Compile Include="Models\IFeatureDefinition.cs" />
     <Compile Include="Models\ILocation.cs" />

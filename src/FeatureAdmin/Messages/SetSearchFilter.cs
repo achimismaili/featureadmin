@@ -21,7 +21,7 @@ namespace FeatureAdmin.Messages
         {
             SearchQuery = searchQuery;
             SearchScope = searchScope;
-            SetQuery = SetQuery;
+            SetQuery = setQuery;
             SetScope = setScope;
         }
 

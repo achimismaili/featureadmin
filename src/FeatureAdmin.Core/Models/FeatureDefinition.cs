@@ -4,18 +4,18 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
-    public class FeatureDefinition
+    public class FeatureDefinition : BaseItem
     { 
         private FeatureDefinition()
         {
             Properties = new Dictionary<string, string>();
         }
 
-        public Guid Id { get; private set; }
+        
         public IReadOnlyCollection<ActivatedFeature> ActivatedFeatures { get; protected set; }
         public int CompatibilityLevel { get; private set; }
         public string Description { get; private set; }
-        public string DisplayName { get; private set; }
+        
         public bool Faulty { get; private set; }
         public bool Hidden { get; private set; }
         public string Name { get; private set; }

@@ -58,13 +58,13 @@
             <Label Content="Scope:" 
                Margin="5"
                Grid.Row="1" Grid.Column="0" />
-            <TextBlock x:Name="Location_Scope" 
+            <TextBlock x:Name="Item_Scope" 
                Margin="5"
                Grid.Row="1" Grid.Column="1" />
             <Label Content="Url:" 
                Margin="5"
                Grid.Row="2" Grid.Column="0" />
-            <TextBlock x:Name="Location_Url" 
+            <TextBlock x:Name="Item_Url" 
                Margin="5"
                Grid.Row="2" Grid.Column="1" />
             <Button x:Name="CopyUrl"
@@ -78,7 +78,7 @@
             <Label Content="Id:" 
                Margin="5"
                Grid.Row="3" Grid.Column="0" />
-            <TextBlock x:Name="Location_Id" 
+            <TextBlock x:Name="Item_Id" 
                Margin="5"
                Grid.Row="3" Grid.Column="1" />
             <Button x:Name="CopyId"
@@ -97,12 +97,12 @@
                 Style="{DynamicResource AccentedSquareButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
 
-                Margin="5" >Set as filter location plus children</Button>
+                Margin="5" >Set as location filter with children</Button>
                 <Button x:Name="FilterFeature"
                 Style="{DynamicResource AccentedSquareButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
                
-                Margin="5" >Set as Feature Filter</Button>
+                Margin="5" >Set as feature filter</Button>
             </StackPanel>
             <Label Content="Child Locations:" 
                Margin="5"
