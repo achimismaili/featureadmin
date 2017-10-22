@@ -42,12 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messages\Tasks\NewTask.cs" />
+    <Compile Include="Messages\Tasks\TaskUpdate.cs" />
     <Compile Include="Messages\LoadChildLocationsQuery.cs" />
     <Compile Include="Messages\LoadFeatureDefinitionQuery.cs" />
     <Compile Include="Messages\LoadLocationQuery.cs" />
     <Compile Include="Messages\LocationsUpdated.cs" />
     <Compile Include="Messages\ItemUpdated.cs" />
     <Compile Include="Models\BaseItem.cs" />
+    <Compile Include="Models\Enums\TaskType.cs" />
+    <Compile Include="Models\LogTask.cs" />
+    <Compile Include="Models\Enums\LogTaskStatus.cs" />
     <Compile Include="Models\IActivatedFeature.cs" />
     <Compile Include="Models\IFeatureDefinition.cs" />
     <Compile Include="Models\ILocation.cs" />
