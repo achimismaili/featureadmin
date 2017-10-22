@@ -53,13 +53,16 @@
 		</Grid>
         <DataGrid x:Name="Locations"
                   Margin="5"
-                  AutoGenerateColumns="False"
+                  AutoGenerateColumns="True"
+                  SelectionMode="Single" 
+                  SelectionUnit="FullRow"
 			Grid.Row="1"
 		    CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding DisplayName}" Header="Title" />
-                <DataGridTextColumn Binding="{Binding Scope}" Header="Scope" />
-                <DataGridTextColumn Binding="{Binding Url}" Header="Url" />
+                <!-- set mode to one way, because two way was causing issues, when selected item was 'clicked on' again ... -->
+                <DataGridTextColumn Binding="{Binding DisplayName,Mode=OneWay}" Header="Title" />
+                <DataGridTextColumn Binding="{Binding Scope,Mode=OneWay}" Header="Scope" />
+                <DataGridTextColumn Binding="{Binding Url,Mode=OneWay}" Header="Url" />
             </DataGrid.Columns>
         </DataGrid>
 	</Grid>

@@ -4,33 +4,49 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:comm="clr-namespace:FeatureAdmin.Common"
              xmlns:local="clr-namespace:FeatureAdmin.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              >
-    <Grid Background="LightGray">
-        <Grid.RowDefinitions>
+    <UserControl.Resources>
+        <comm:NegatableBooleanToVisibilityConverter x:Key="VisConverter" />
+        <comm:NegatableBooleanToVisibilityConverter x:Key="NegVisConverter"
+                                                    Negate="True" />
+    </UserControl.Resources>
+    <StackPanel>
+        <Label Content="Please select a location."
+            FontSize="36"
+           Margin="5"
+           HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+           Visibility="{Binding ItemSelected, Converter={StaticResource NegVisConverter}}"
+           />
+        <Grid Background="LightGray"
+          Visibility="{Binding ItemSelected, Converter={StaticResource VisConverter}}"
+          >
+            <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-        <Label Content="Title:" 
+            <Label Content="Title:" 
                Margin="5"
                Grid.Row="0" Grid.Column="0" />
-        <TextBlock x:Name="Name" 
+            <TextBlock x:Name="Name" 
                Margin="5"
                Grid.Row="0" Grid.Column="1" />
-        <Button x:Name="CopyTitle"
+            <Button x:Name="CopyTitle"
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
                FontFamily="/Resources/#Entypo"
@@ -38,19 +54,19 @@
                 Height="30" Width="30"
                 Margin="5"
                 Grid.Row="0" Grid.Column="2">n</Button>
-        <Label Content="Scope:" 
+            <Label Content="Scope:" 
                Margin="5"
                Grid.Row="1" Grid.Column="0" />
-        <TextBlock x:Name="Location_Scope" 
+            <TextBlock x:Name="Location_Scope" 
                Margin="5"
                Grid.Row="1" Grid.Column="1" />
-        <Label Content="Url:" 
+            <Label Content="Url:" 
                Margin="5"
                Grid.Row="2" Grid.Column="0" />
-        <TextBlock x:Name="Location_Url" 
+            <TextBlock x:Name="Location_Url" 
                Margin="5"
-               Grid.Row="2" Grid.Column="1" /> 
-        <Button x:Name="CopyUrl"
+               Grid.Row="2" Grid.Column="1" />
+            <Button x:Name="CopyUrl"
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
                 FontFamily="/Resources/#Entypo"
@@ -58,13 +74,13 @@
                 Height="30" Width="30"
                 Margin="5"
                 Grid.Row="2" Grid.Column="2">n</Button>
-        <Label Content="Id:" 
+            <Label Content="Id:" 
                Margin="5"
                Grid.Row="3" Grid.Column="0" />
-        <TextBlock x:Name="Location_Id" 
+            <TextBlock x:Name="Location_Id" 
                Margin="5"
                Grid.Row="3" Grid.Column="1" />
-        <Button x:Name="CopyId"
+            <Button x:Name="CopyId"
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
                 FontFamily="/Resources/#Entypo"
@@ -72,26 +88,27 @@
                 Height="30" Width="30"
                 Margin="5"
                 Grid.Row="3" Grid.Column="2">n</Button>
-        <StackPanel 
+            <StackPanel 
             Grid.Row="4" 
             Orientation="Horizontal"
             Grid.ColumnSpan="3">
-            <Button x:Name="FilterLocation"
+                <Button x:Name="FilterLocation"
                 Style="{DynamicResource AccentedSquareButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
 
                 Margin="5" >Set as Location Filter</Button>
-            <Button x:Name="FilterFeature"
+                <Button x:Name="FilterFeature"
                 Style="{DynamicResource AccentedSquareButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
                
                 Margin="5" >Set as Feature Filter</Button>
-        </StackPanel>
-        <Label Content="Child Locations:" 
+            </StackPanel>
+            <Label Content="Child Locations:" 
                Margin="5"
                Grid.Row="5" Grid.Column="0" />
-        <Label Content="Activated Features:"
+            <Label Content="Activated Features:"
                Margin="5"
                Grid.Row="5" Grid.Column="1" />
-    </Grid>
+        </Grid>
+    </StackPanel>
 </UserControl>

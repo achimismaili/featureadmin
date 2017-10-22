@@ -1,20 +1,30 @@
 ﻿using Caliburn.Micro;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class FeatureDefinitionViewModel : Screen
+    public class FeatureDefinitionViewModel : BaseDetailViewModel, IHandle<FeatureDefinitionSelected>
     {
-        private IEventAggregator eventAggregator;
-       
+        public FeatureDefinition FeatureDefinition { get; set; }
+
         public FeatureDefinitionViewModel(IEventAggregator eventAggregator)
-        {
-                this.eventAggregator = eventAggregator;
-                this.eventAggregator.Subscribe(this);
+         : base(eventAggregator)
+        { 
             }
+
+        public string Name
+        {
+            get
+            {
+                return FeatureDefinition == null ? "Please select a Feature" : FeatureDefinition.DisplayName;
+            }
+        }
+
+        public void Handle(FeatureDefinitionSelected message)
+        {
+            FeatureDefinition = message.FeatureDefinition;
+            ItemSelected = message.FeatureDefinition != null;
+        }
     }
 }
