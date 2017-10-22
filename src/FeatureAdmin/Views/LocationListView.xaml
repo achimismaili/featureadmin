@@ -43,7 +43,7 @@
 		</Grid>
         <DataGrid x:Name="Locations"
                   Margin="5"
-                  AutoGenerateColumns="True"
+                  AutoGenerateColumns="False"
                   SelectionMode="Single" 
                   SelectionUnit="FullRow"
 			Grid.Row="1"
