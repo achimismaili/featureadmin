@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class LocationViewModel : BaseDetailViewModel, IHandle<LocationSelected>
+    public class LocationViewModel : BaseDetailViewModel, IHandle<ItemSelected<Location>>
     {
         public Location Location { get; set; }
 
@@ -21,10 +21,10 @@ namespace FeatureAdmin.ViewModels
             
         }
 
-        public void Handle(LocationSelected message)
+        public void Handle(ItemSelected<Location> message)
         {
-            Location = message.Location;
-            ItemSelected = message.Location != null;
+            Location = message.Item;
+            ItemSelected = message.Item != null;
         }
 
         public void CopyTitle()

@@ -4,7 +4,7 @@ using FeatureAdmin.Messages;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class FeatureDefinitionViewModel : BaseDetailViewModel, IHandle<FeatureDefinitionSelected>
+    public class FeatureDefinitionViewModel : BaseDetailViewModel, IHandle<ItemSelected<FeatureDefinition>>
     {
         public FeatureDefinition FeatureDefinition { get; set; }
 
@@ -21,10 +21,10 @@ namespace FeatureAdmin.ViewModels
             }
         }
 
-        public void Handle(FeatureDefinitionSelected message)
+        public void Handle(ItemSelected<FeatureDefinition> message)
         {
-            FeatureDefinition = message.FeatureDefinition;
-            ItemSelected = message.FeatureDefinition != null;
+            FeatureDefinition = message.Item;
+            ItemSelected = message.Item != null;
         }
     }
 }

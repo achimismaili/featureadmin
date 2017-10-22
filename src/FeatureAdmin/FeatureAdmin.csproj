@@ -146,10 +146,9 @@
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Caliburn.Metro.Autofac\EventAggregationAutoSubscriptionModule.cs" />
     <Compile Include="Common\NegatableBooleanToVisibilityConverter.cs" />
-    <Compile Include="Messages\LoadFeatureDefinitionCommand.cs" />
-    <Compile Include="Messages\LoadLocationCommand.cs" />
-    <Compile Include="Messages\FeatureDefinitionSelected.cs" />
-    <Compile Include="Messages\LocationSelected.cs" />
+    <Compile Include="Messages\SetSearchFilter.cs" />
+    <Compile Include="Messages\LoadItem.cs" />
+    <Compile Include="Messages\ItemSelected.cs" />
     <Compile Include="ViewModels\LocationViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionViewModel.cs" />

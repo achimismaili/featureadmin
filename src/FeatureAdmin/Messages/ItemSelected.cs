@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Messages
 {
-    public class LocationSelected
+    public class ItemSelected<T>  where T: class
     {
-        public Location Location { get; }
+        public T Item { get; }
 
-        public LocationSelected(Location location)
+        public ItemSelected(T item)
         {
-            this.Location = location;
+            this.Item = item;
         }
     }
 }

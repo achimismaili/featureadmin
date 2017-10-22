@@ -37,7 +37,7 @@ namespace FeatureAdmin.ViewModels
             set
             {
                 selectedLocation = value;
-                eventAggregator.BeginPublishOnUIThread(new LocationSelected(selectedLocation));
+                eventAggregator.BeginPublishOnUIThread(new ItemSelected<Location>(selectedLocation));
             }
         }
 

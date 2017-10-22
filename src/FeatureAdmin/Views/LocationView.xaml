@@ -17,7 +17,7 @@
     </UserControl.Resources>
     <StackPanel>
         <Label Content="Please select a location."
-            FontSize="36"
+            FontSize="16"
            Margin="5"
            HorizontalAlignment="Center"
             VerticalAlignment="Center"
@@ -97,7 +97,7 @@
                 Style="{DynamicResource AccentedSquareButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
 
-                Margin="5" >Set as Location Filter</Button>
+                Margin="5" >Set as filter location plus children</Button>
                 <Button x:Name="FilterFeature"
                 Style="{DynamicResource AccentedSquareButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
