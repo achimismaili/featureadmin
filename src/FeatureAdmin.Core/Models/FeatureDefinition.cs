@@ -20,7 +20,6 @@ namespace FeatureAdmin.Core.Models
         public bool Hidden { get; private set; }
         public string Name { get; private set; }
         public Dictionary<string, string> Properties { get; private set; }
-        public Scope Scope { get; private set; }
         public Guid SolutionId { get; private set; }
         public string Title { get; private set; }
 

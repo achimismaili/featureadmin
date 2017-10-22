@@ -32,7 +32,6 @@ namespace FeatureAdmin.Core.Models
         public IReadOnlyCollection<Guid> ActivatedFeatures { get; protected set; }
                 
         public Guid Parent { get; protected set; }
-        public Scope Scope { get; protected set; }
         public string Url { get; protected set; }
 
         public static Location GetFarm(Guid farmId, IEnumerable<Guid> activatedFeatures)

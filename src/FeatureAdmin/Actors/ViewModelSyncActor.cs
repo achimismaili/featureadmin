@@ -19,16 +19,23 @@ namespace FeatureAdmin.Actors
         {
             this.eventAggregator = eventAggregator;
 
-            Receive<LocationUpdated>(message => LocationUpdated(message));
-            Receive<FeatureDefinitionUpdated>(message => FeatureDefinitionUpdated(message));
+            Receive<ItemUpdated<SPLocation>>(message => LocationUpdated(message));
+            Receive<ItemUpdated<FeatureDefinition>>(message => FeatureDefinitionUpdated(message));
 
         }
-        private void LocationUpdated(LocationUpdated message)
+        private void LocationUpdated(ItemUpdated<SPLocation> message)
         {
-            eventAggregator.PublishOnUIThread(message);
+            if (message == null)
+            {
+                // TODO Log exception / catch null argument exception for message
+                throw new ArgumentNullException("LocationUpdated - Did not expect null message!");
+            }
+
+            var location = message.Item as Location;
+            eventAggregator.PublishOnUIThread(new ItemUpdated<Location>(location));
         }
 
-        private void FeatureDefinitionUpdated(FeatureDefinitionUpdated message)
+        private void FeatureDefinitionUpdated(ItemUpdated<FeatureDefinition> message)
         {
             eventAggregator.PublishOnUIThread(message);
         }

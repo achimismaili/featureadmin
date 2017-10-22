@@ -149,6 +149,7 @@
     <Compile Include="Messages\SetSearchFilter.cs" />
     <Compile Include="Messages\LoadItem.cs" />
     <Compile Include="Messages\ItemSelected.cs" />
+    <Compile Include="ViewModels\BaseListViewModel.cs" />
     <Compile Include="ViewModels\LocationViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionViewModel.cs" />

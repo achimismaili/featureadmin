@@ -28,14 +28,14 @@ namespace FeatureAdmin.ViewModels
         public void FilterLocation()
         {
             //TODO check Item for null
-            var searchFilter = new SetSearchFilter<Location>(Item.Id.ToString());
+            var searchFilter = new SetSearchFilter<Location>(Item.Id.ToString(), null);
             eventAggregator.BeginPublishOnUIThread(searchFilter);
         }
 
         public void FilterFeature()
         {
             //TODO check Item for null
-            var searchFilter = new SetSearchFilter<FeatureDefinition>(Item.Id.ToString());
+            var searchFilter = new SetSearchFilter<FeatureDefinition>(Item.Id.ToString(), null);
             eventAggregator.BeginPublishOnUIThread(searchFilter);
         }
 

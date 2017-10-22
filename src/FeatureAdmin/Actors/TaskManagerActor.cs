@@ -1,6 +1,7 @@
 ﻿using Akka.Actor;
 using Akka.Event;
 using FeatureAdmin.Core.Messages;
+using FeatureAdmin.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace FeatureAdmin.Actors
 
             Receive<LoadLocationQuery>(message => LoadTask(message));
 
-            Receive<LocationUpdated>(message => LocationUpdated(message));
+            Receive<ItemUpdated<SPLocation>>(message => LocationUpdated(message));
 
             Receive<LoadFeatureDefinitionQuery>(message => LoadFeatureDefinitions(message));
         }
@@ -72,15 +73,15 @@ namespace FeatureAdmin.Actors
         /// this method will send a load task to the correctly responsible actor 
         /// </summary>
         /// <param name="message"></param>
-        private void LocationUpdated(LocationUpdated message)
+        private void LocationUpdated(ItemUpdated<SPLocation> message)
         {
-            if (message == null || message.Location == null)
+            if (message == null || message.Item == null)
             {
                 _log.Error("empty LocationUpdated message returned!");
                 return;
             }
 
-            LoadTask(new LoadLocationQuery(message.SPLocation));
+            LoadTask(new LoadLocationQuery(message.Item));
         }
     }
 }

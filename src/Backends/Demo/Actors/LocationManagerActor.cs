@@ -28,7 +28,7 @@ namespace FeatureAdmin.Backends.Actors
 
             Receive<LoadLocationQuery>(message => LoadLocation(message));
 
-            Receive<LocationUpdated>(message => LocationUpdated(message));
+            Receive<ItemUpdated<SPLocation>>(message => LocationUpdated(message));
         }
 
         private void LoadLocation(LoadLocationQuery message)
@@ -38,17 +38,17 @@ namespace FeatureAdmin.Backends.Actors
             _locationActorChild.Tell(message);
         }
 
-        private void LocationUpdated(LocationUpdated message)
+        private void LocationUpdated(ItemUpdated<SPLocation> message)
         {
-            if (message == null || message.Location == null)
+            if (message == null || message.Item == null)
             {
                 _log.Error("empty LocationUpdated message returned!");
                 return;
             }
 
-            if (message.Location.Id == myLocation ||
-                !message.Location.CanHaveChildren ||
-                (myLocation == Guid.Empty && message.Location.Scope == Core.Models.Enums.Scope.Farm)
+            if (message.Item.Id == myLocation ||
+                !message.Item.CanHaveChildren ||
+                (myLocation == Guid.Empty && message.Item.Scope == Core.Models.Enums.Scope.Farm)
                 )
 
                 // report loaded location to viewmodelsync actor , if this is mylocation or if this location cannot have children

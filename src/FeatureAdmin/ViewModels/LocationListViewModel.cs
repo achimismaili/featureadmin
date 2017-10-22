@@ -9,144 +9,36 @@ using System;
 using FeatureAdmin.Core.Models.Enums;
 namespace FeatureAdmin.ViewModels
 {
-    public class LocationListViewModel : Screen, IHandle<LocationUpdated>, IHandle<SetSearchFilter<Location>>
+    public class LocationListViewModel : BaseListViewModel<Location>
     {
-        private ObservableCollection<Location> allLocations { get; set; }
-        public ObservableCollection<Location> Locations { get; private set; }
-
-        private IEventAggregator eventAggregator;
-
         public LocationListViewModel(IEventAggregator eventAggregator)
+            : base(eventAggregator)
         {
-
-            allLocations = new ObservableCollection<Location>();
-            Locations = allLocations;
-            this.eventAggregator = eventAggregator;
-            this.eventAggregator.Subscribe(this);
-
-            ScopeFilters = new ObservableCollection<Scope>(Common.Constants.Search.ScopeFilterList);
         }
 
-        private Location selectedLocation;
-        public Location SelectedLocation
+        /// <summary>
+        /// custom guid search in items for derived class
+        /// </summary>
+        /// <param name="guid">the guid to search for</param>
+        /// <returns>all items that contain a guid in Id, parent or activated features</returns>
+        protected override Func<Location, bool> GetSearchForGuid(Guid guid)
         {
-            get
-            {
-                return selectedLocation;
-            }
-            set
-            {
-                selectedLocation = value;
-                eventAggregator.BeginPublishOnUIThread(new ItemSelected<Location>(selectedLocation));
-            }
-        }
+            // see also https://stackoverflow.com/questions/34220256/how-to-call-method-function-in-where-clause-of-a-linq-query-as-ienumerable-objec
+            return l => l.Id == guid
+                       || l.Parent == guid
+                       || l.ActivatedFeatures.Contains(guid);
+    }
 
-        public void Handle(LocationUpdated message)
+        /// <summary>
+        /// custom search in items for derived class
+        /// </summary>
+        /// <param name="searchString">the search string (already in lower case)</param>
+        /// <returns>returns function for searching in items</returns>
+        /// <remarks>search string is expected to be already lower case (provided by base class)</remarks>
+        protected override Func<Location, bool> GetSearchForString(string searchString)
         {
-            if (message == null || message.Location == null)
-            {
-                //TODO log
-                return;
-            }
-
-            var locationToAdd = message.Location;
-            if (allLocations.Any(l => l.Id == locationToAdd.Id))
-            {
-                var existingLocation = allLocations.FirstOrDefault(l => l.Id == locationToAdd.Id);
-                allLocations.Remove(existingLocation);
-            }
-
-            allLocations.Add(locationToAdd);
-            FilterResults();
-        }
-
-        public ObservableCollection<Scope> ScopeFilters { get; private set; }
-
-        private Scope? selectedScopeFilter;
-        public Scope? SelectedScopeFilter
-        {
-            get { return selectedScopeFilter; }
-            set
-            {
-                selectedScopeFilter = value;
-                FilterResults();
-            }
-        }
-
-        private string searchInput;
-        public string SearchInput
-        {
-            get { return searchInput; }
-            set
-            {
-                searchInput = value;
-                FilterResults();
-            }
-        }
-
-        protected void FilterResults()
-        {
-            IEnumerable<Location> searchResult;
-
-            if (string.IsNullOrEmpty(searchInput))
-            {
-                searchResult = allLocations;
-            }
-            else 
-            {
-                Guid idGuid;
-                Guid.TryParse(searchInput, out idGuid);
-
-                // if searchInput is not a guid, seachstring will always be a guid.empty
-                // to also catch, if user intentionally wants to search for guid empty, this is checked here, too
-                if (searchInput.Equals(Guid.Empty.ToString()) || idGuid != Guid.Empty)
-                {
-                   searchResult = allLocations.Where(l => l.Id == idGuid
-                   || l.Parent == idGuid
-                   || l.ActivatedFeatures.Contains(idGuid));
-                }
-                else
-                {
-                    var lowerCaseSearchInput = searchInput.ToLower();
-                    searchResult =
-                        allLocations.Where(l => l.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
-                        l.Url.ToLower().Contains(lowerCaseSearchInput));
-                }
-                   
-            }
-
-            if (SelectedScopeFilter != null)
-            {
-                searchResult =
-                    searchResult.Where(l => l.Scope == SelectedScopeFilter.Value);
-            }
-
-            Locations = new ObservableCollection<Location>(searchResult);
-        }
-
-        public void ClearSearchCommand()
-        {
-            SearchInput = null;
-            //ScopeFilter = ScopeFilter.All;
-        }
-
-        public void Handle(SetSearchFilter<Location> message)
-        {
-            if (message == null)
-            {
-                return;
-            };
-
-            if (message.SetQuery)
-            {
-                SearchInput = message.SearchQuery;
-            }
-
-            if (message.SetScope)
-            {
-                SelectedScopeFilter = message.SearchScope;
-            }
-
+            return l => l.DisplayName.ToLower().Contains(searchString) ||
+                            l.Url.ToLower().Contains(searchString);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace FeatureAdmin.Backends.Actors
                 location = dataService.LoadLocation(message.SPLocation);
             }
 
-            Sender.Tell(new LocationUpdated(location));
+            Sender.Tell(new ItemUpdated<SPLocation>(location));
 
             if (location.CanHaveChildren)
             {
@@ -55,7 +55,7 @@ namespace FeatureAdmin.Backends.Actors
                 {
                     foreach (SPLocation l in children)
                     {
-                        Sender.Tell(new LocationUpdated(l));
+                        Sender.Tell(new ItemUpdated<SPLocation>(l));
                     }
                 }
             }

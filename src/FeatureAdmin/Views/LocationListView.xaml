@@ -41,7 +41,7 @@
 				Grid.Row="1" Grid.Column="1">
             </ComboBox>
 		</Grid>
-        <DataGrid x:Name="Locations"
+        <DataGrid x:Name="Items"
                   Margin="5"
                   AutoGenerateColumns="False"
                   SelectionMode="Single" 
