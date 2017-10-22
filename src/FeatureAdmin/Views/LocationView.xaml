@@ -9,6 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              >
+    <!-- d:DataContext="{d:DesignInstance viewModels:LocationViewModel}" -->
     <UserControl.Resources>
         <comm:NegatableBooleanToVisibilityConverter x:Key="VisConverter" />
         <comm:NegatableBooleanToVisibilityConverter x:Key="NegVisConverter"
@@ -43,7 +44,7 @@
             <Label Content="Title:" 
                Margin="5"
                Grid.Row="0" Grid.Column="0" />
-            <TextBlock x:Name="Name" 
+            <TextBlock x:Name="DisplayName" 
                Margin="5"
                Grid.Row="0" Grid.Column="1" />
             <Button x:Name="CopyTitle"

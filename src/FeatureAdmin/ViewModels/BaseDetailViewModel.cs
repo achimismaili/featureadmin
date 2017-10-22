@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using System.Windows;
 
 namespace FeatureAdmin.ViewModels
 {
@@ -15,6 +16,9 @@ namespace FeatureAdmin.ViewModels
             this.eventAggregator.Subscribe(this);
         }
 
-        
+        protected void copyToClipBoard(string textToCopy)
+        {
+            Clipboard.SetText(textToCopy);
+        }
     }
 }

@@ -14,8 +14,7 @@
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
+			<Grid.RowDefinitions>			
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
@@ -31,24 +30,15 @@
 					controls:TextBoxHelper.ClearTextButton="True"
 					Margin="5,2"
                      Grid.Row="0" Grid.Column="1" />
-			<Label Content="Guid filter:"
-                   HorizontalAlignment="Left"
-                   Margin="5,2"
-				   Grid.Row="1" Grid.Column="0" />
-			<TextBox x:Name="IdFilter"
-						 controls:TextBoxHelper.ClearTextButton="True"
-					 controls:TextBoxHelper.Watermark="Filter for Location, parent or active feature"
-					 Margin="5,2"
-                     Grid.Row="1" Grid.Column="1" />
-			<Label Content="Scope Filter:"
+		   <Label Content="Scope Filter:"
                    HorizontalAlignment="Left"
                        Margin="5,2"
-						   Grid.Row="2" Grid.Column="0" />
+						   Grid.Row="1" Grid.Column="0" />
             <ComboBox x:Name="ScopeFilters"
 				Margin="5,2"
 				IsEditable="True"
 				controls:TextBoxHelper.ClearTextButton="True"
-				Grid.Row="2" Grid.Column="1">
+				Grid.Row="1" Grid.Column="1">
             </ComboBox>
 		</Grid>
         <DataGrid x:Name="Locations"

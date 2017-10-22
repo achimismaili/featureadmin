@@ -26,5 +26,20 @@ namespace FeatureAdmin.ViewModels
             Location = message.Location;
             ItemSelected = message.Location != null;
         }
+
+        public void CopyTitle()
+        {
+            copyToClipBoard(Location.DisplayName);
+        }
+
+        public void CopyUrl()
+        {
+            copyToClipBoard(Location.Url);
+        }
+
+        public void CopyId()
+        {
+            copyToClipBoard(Location.Id.ToString());
+        }
     }
 }

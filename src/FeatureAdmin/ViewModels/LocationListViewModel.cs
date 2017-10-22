@@ -73,17 +73,6 @@ namespace FeatureAdmin.ViewModels
             }
         }
 
-        private string idFilter;
-        public string IdFilter
-        {
-            get { return idFilter; }
-            set
-            {
-                idFilter = value;
-                FilterResults();
-            }
-        }
-
         private string searchInput;
         public string SearchInput
         {
@@ -99,16 +88,31 @@ namespace FeatureAdmin.ViewModels
         {
             IEnumerable<Location> searchResult;
 
-            Guid idGuid;
-            Guid.TryParse(idFilter, out idGuid);
-            if (string.IsNullOrEmpty(idFilter))
+            if (string.IsNullOrEmpty(searchInput))
             {
                 searchResult = allLocations;
             }
-            else
+            else 
             {
-                searchResult =
-                    allLocations.Where(l => l.Id == idGuid);
+                Guid idGuid;
+                Guid.TryParse(searchInput, out idGuid);
+
+                // if searchInput is not a guid, seachstring will always be a guid.empty
+                // to also catch, if user intentionally wants to search for guid empty, this is checked here, too
+                if (searchInput.Equals(Guid.Empty.ToString()) || idGuid != Guid.Empty)
+                {
+                   searchResult = allLocations.Where(l => l.Id == idGuid
+                   || l.Parent == idGuid
+                   || l.ActivatedFeatures.Contains(idGuid));
+                }
+                else
+                {
+                    var lowerCaseSearchInput = searchInput.ToLower();
+                    searchResult =
+                        allLocations.Where(l => l.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
+                        l.Url.ToLower().Contains(lowerCaseSearchInput));
+                }
+                   
             }
 
             if (SelectedScopeFilter != null)
@@ -117,13 +121,6 @@ namespace FeatureAdmin.ViewModels
                     searchResult.Where(l => l.Scope == SelectedScopeFilter.Value);
             }
 
-            if (!string.IsNullOrWhiteSpace(searchInput))
-            {
-                var lowerCaseSearchInput = searchInput.ToLower();
-                searchResult = 
-                    searchResult.Where(l => l.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
-                    l.Url.ToLower().Contains(lowerCaseSearchInput));
-            }
             Locations = new ObservableCollection<Location>(searchResult);
         }
 
