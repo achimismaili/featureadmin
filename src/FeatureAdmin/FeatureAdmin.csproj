@@ -149,29 +149,27 @@
     <Compile Include="Messages\SetSearchFilter.cs" />
     <Compile Include="Messages\LoadItem.cs" />
     <Compile Include="Messages\ItemSelected.cs" />
-    <Compile Include="ViewModels\Activity\ActivationActivityViewModel.cs" />
-    <Compile Include="ViewModels\Activity\UpgradeActivityViewModel.cs" />
-    <Compile Include="ViewModels\Activity\TaskActivityViewModel.cs" />
-    <Compile Include="ViewModels\Activity\ActivityBaseViewModel.cs" />
-    <Compile Include="ViewModels\LeftNavViewModel.cs" />
+    <Compile Include="UIModels\IWorkSpace.cs" />
+    <Compile Include="ViewModels\WorkSpaces\ActivationViewModel.cs" />
+    <Compile Include="ViewModels\WorkSpaces\UpgradeViewModel.cs" />
+    <Compile Include="ViewModels\WorkSpaces\TaskViewModel.cs" />
     <Compile Include="ViewModels\BaseListViewModel.cs" />
     <Compile Include="ViewModels\LocationViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionListViewModel.cs" />
     <Compile Include="ViewModels\BaseDetailViewModel.cs" />
-    <Compile Include="ViewModels\LogLeftNavItemViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />
     <Compile Include="ViewModels\NavigationBarViewModel.cs" />
     <Compile Include="ViewModels\LocationListViewModel.cs" />
-    <Compile Include="Views\Activity\TaskActivityView.xaml.cs">
-      <DependentUpon>TaskActivityView.xaml</DependentUpon>
+    <Compile Include="Views\WorkSpaces\TaskView.xaml.cs">
+      <DependentUpon>TaskView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Activity\UpgradeActivityView.xaml.cs">
-      <DependentUpon>UpgradeActivityView.xaml</DependentUpon>
+    <Compile Include="Views\WorkSpaces\UpgradeView.xaml.cs">
+      <DependentUpon>UpgradeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Activity\ActivationActivityView.xaml.cs">
-      <DependentUpon>ActivationActivityView.xaml</DependentUpon>
+    <Compile Include="Views\WorkSpaces\ActivationView.xaml.cs">
+      <DependentUpon>ActivationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CommandView.xaml.cs">
       <DependentUpon>CommandView.xaml</DependentUpon>
@@ -188,9 +186,6 @@
     <Compile Include="Views\LocationView.xaml.cs">
       <DependentUpon>LocationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LeftNavView.xaml.cs">
-      <DependentUpon>LeftNavView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\MainWindowContainer.xaml.cs">
       <DependentUpon>MainWindowContainer.xaml</DependentUpon>
     </Compile>
@@ -200,15 +195,15 @@
     <Compile Include="Views\StatusBarView.xaml.cs">
       <DependentUpon>StatusBarView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\Activity\TaskActivityView.xaml">
+    <Page Include="Views\WorkSpaces\TaskView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Activity\UpgradeActivityView.xaml">
+    <Page Include="Views\WorkSpaces\UpgradeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Activity\ActivationActivityView.xaml">
+    <Page Include="Views\WorkSpaces\ActivationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -251,10 +246,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LocationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\LeftNavView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -345,9 +336,7 @@
   <ItemGroup>
     <Resource Include="fa-logo.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UIModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

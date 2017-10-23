@@ -4,12 +4,13 @@ using FeatureAdmin.Actors;
 using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
+using FeatureAdmin.UIModels;
 using System;
 
 namespace FeatureAdmin.ViewModels
 {
 
-    public class AppViewModel : PropertyChangedBase, 
+    public class AppViewModel : Conductor<IWorkSpace>.Collection.OneActive, 
         IHaveDisplayName, 
         Caliburn.Micro.IHandle<LoadItem<SPLocation>>,
         Caliburn.Micro.IHandle<LoadItem<FeatureDefinition>>
@@ -32,15 +33,26 @@ namespace FeatureAdmin.ViewModels
 
             LocationVm = new LocationViewModel(eventAggregator);
             LocationListVm = new LocationListViewModel(eventAggregator);
-            LeftNavVm = new LeftNavViewModel(eventAggregator);
-
+            
             NavigationBarVm = new NavigationBarViewModel(eventAggregator);
             StatusBarVm = new StatusBarViewModel(eventAggregator);
+
+            ActivationVm = new WorkSpaces.ActivationViewModel(
+                FeatureDefinitionVm,
+                FeatureDefinitionListVm,
+                LocationVm,
+                LocationListVm                
+                );
 
             InitializeActors();
 
             InitializeFarmLoad();
+
+            ActivateItem(ActivationVm);
         }
+
+        public WorkSpaces.ActivationViewModel ActivationVm { get; set; }
+
         public CommandViewModel CommandVm { get; private set; }
 
         public string DisplayName
@@ -55,8 +67,7 @@ namespace FeatureAdmin.ViewModels
 
         public LocationViewModel LocationVm { get; private set; }
         public LocationListViewModel LocationListVm { get; private set; }
-        public LeftNavViewModel LeftNavVm { get; private set; }
-
+       
         public NavigationBarViewModel NavigationBarVm { get; private set; }
         public StatusBarViewModel StatusBarVm { get; private set; }
         public void Handle(LoadItem<SPLocation> loadCommand)
