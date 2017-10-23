@@ -32,7 +32,7 @@ namespace FeatureAdmin.ViewModels
 
             LocationVm = new LocationViewModel(eventAggregator);
             LocationListVm = new LocationListViewModel(eventAggregator);
-            LogVm = new LogViewModel(eventAggregator);
+            LeftNavVm = new LeftNavViewModel(eventAggregator);
 
             NavigationBarVm = new NavigationBarViewModel(eventAggregator);
             StatusBarVm = new StatusBarViewModel(eventAggregator);
@@ -55,7 +55,7 @@ namespace FeatureAdmin.ViewModels
 
         public LocationViewModel LocationVm { get; private set; }
         public LocationListViewModel LocationListVm { get; private set; }
-        public LogViewModel LogVm { get; private set; }
+        public LeftNavViewModel LeftNavVm { get; private set; }
 
         public NavigationBarViewModel NavigationBarVm { get; private set; }
         public StatusBarViewModel StatusBarVm { get; private set; }

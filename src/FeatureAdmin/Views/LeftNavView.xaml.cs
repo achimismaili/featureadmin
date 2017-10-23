@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace FeatureAdmin.Views
 {
     /// <summary>
-    /// Interaction logic for LogView.xaml
+    /// Interaction logic for LeftNavView.xaml
     /// </summary>
-    public partial class LogView : UserControl
+    public partial class LeftNavView : UserControl
     {
-        public LogView()
+        public LeftNavView()
         {
             InitializeComponent();
         }
