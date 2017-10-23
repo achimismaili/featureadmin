@@ -8,48 +8,59 @@
              xmlns:local="clr-namespace:FeatureAdmin.Views.WorkSpaces"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-        <Grid >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="2*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="5"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <TextBlock x:Name="DisplayName" 
-                   Grid.Column="0" Grid.Row="0"
-                       Margin="5"
-                       FontSize="14" FontWeight="SemiBold" />
 
-        <GridSplitter Grid.Row="1" Grid.Column="0" 
+        <!-- Location -->
+        <Label Content="Locations"
+            Grid.Column="0" Grid.Row="0"
+                FontSize="{DynamicResource DialogTitleFontSize}"
+                   FontFamily="{DynamicResource HeaderFontFamily}"
+                   Foreground="{DynamicResource GrayBrush1}"
+               Background="LightGray" />
+
+        <ContentControl cal:View.Model="{Binding LocationListVm}"
+            Grid.Row="1" Grid.Column="0" />
+
+        <GridSplitter Grid.Row="2" Grid.Column="0" 
                           Grid.ColumnSpan="3" 
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
 
-        <!-- Location -->
-            <ContentControl cal:View.Model="{Binding LocationListVm}"
-            Grid.Row="1" Grid.Column="0" />
-
-
-            <ContentControl cal:View.Model="{Binding LocationVm}"
+        <ContentControl cal:View.Model="{Binding LocationVm}"
            Grid.Row="3" Grid.Column="0"
             ></ContentControl>
+
 
         <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="4" 
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
 
         <!-- Feature -->
-            <ContentControl cal:View.Model="{Binding FeatureDefinitionListVm}"
+        <Label Content="Features"
+            Grid.Row="0" Grid.Column="2" 
+               FontSize="{DynamicResource DialogTitleFontSize}"
+                   FontFamily="{DynamicResource HeaderFontFamily}"
+                   Foreground="{DynamicResource GrayBrush1}"
+               Background="#33F0A30A"
+               />
+
+        <ContentControl cal:View.Model="{Binding FeatureDefinitionListVm}"
            Grid.Row="1" Grid.Column="2"
             ></ContentControl>
-            <ContentControl cal:View.Model="{Binding FeatureDefinitionVm}"
+        <ContentControl cal:View.Model="{Binding FeatureDefinitionVm}"
            Grid.Row="3" Grid.Column="2"
             ></ContentControl>
-        </Grid>
+    </Grid>
 </UserControl>

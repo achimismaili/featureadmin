@@ -37,18 +37,20 @@
                     <DataTemplate>
                         <Button cal:Message.Attach="Show"
 						        Margin="8">
-                            <TextBlock Text="{Binding DisplayName, Mode=OneWay}"
+                            <TextBlock 
+                                FontSize="15"
+                                Text="{Binding DisplayName, Mode=OneWay}"
 									           HorizontalAlignment="Center" />
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-
-
-
+            
             <GridSplitter Grid.Column="1" 
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
+            
+            <!-- Active WorkSpace -->
             <ContentControl x:Name="ActiveItem"
                          Grid.Column="2"  />
         </Grid>
