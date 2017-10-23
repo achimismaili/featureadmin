@@ -19,11 +19,11 @@
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*"/>
@@ -31,43 +31,44 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Location -->
-            <ContentControl cal:View.Model="{Binding LocationListVm}"
-            Grid.Row="0" Grid.Column="0" />
-
+            <!-- Left Navigation -->
+            <ContentControl cal:View.Model="{Binding LeftNavVm}"
+           Grid.Row="0" Grid.Column="0"
+            ></ContentControl>
+            
             <GridSplitter Grid.Row="1" Grid.Column="0" 
                           Grid.ColumnSpan="5" 
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
-
-            <ContentControl cal:View.Model="{Binding LocationVm}"
+            
+            <ContentControl cal:View.Model="{Binding CommandVm}"
            Grid.Row="2" Grid.Column="0"
             ></ContentControl>
 
-            <GridSplitter Grid.Column="1" Grid.RowSpan="3" 
+            <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" 
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"/>
+
+            <!-- Location -->
+            <ContentControl cal:View.Model="{Binding LocationListVm}"
+            Grid.Row="0" Grid.Column="2" />
+
+
+            <ContentControl cal:View.Model="{Binding LocationVm}"
+           Grid.Row="2" Grid.Column="2"
+            ></ContentControl>
+
+             <GridSplitter Grid.Column="3" Grid.RowSpan="3" 
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
 
             <!-- Feature -->
             <ContentControl cal:View.Model="{Binding FeatureDefinitionListVm}"
-           Grid.Row="0" Grid.Column="2"
-            ></ContentControl>
-            <ContentControl cal:View.Model="{Binding FeatureDefinitionVm}"
-           Grid.Row="2" Grid.Column="2"
-            ></ContentControl>
-
-            <GridSplitter Grid.Column="3" Grid.RowSpan="3" 
-                          VerticalAlignment="Stretch"
-                          HorizontalAlignment="Stretch"/>
-            
-            <!-- Left Navigation -->
-            <ContentControl cal:View.Model="{Binding LeftNavVm}"
            Grid.Row="0" Grid.Column="4"
             ></ContentControl>
-            <ContentControl cal:View.Model="{Binding CommandVm}"
+            <ContentControl cal:View.Model="{Binding FeatureDefinitionVm}"
            Grid.Row="2" Grid.Column="4"
             ></ContentControl>
-
         </Grid>
         <ContentControl cal:View.Model="{Binding StatusBarVm}"
            Grid.Row="2"

@@ -7,17 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
-        <Ellipse Grid.Column="0" Width="48" Height="48" Fill="AliceBlue" Margin="0,0,12,0" VerticalAlignment="Top" />
-
-        <StackPanel Grid.Column="1">
-            <TextBlock x:Name="DisplayName" FontSize="16" FontWeight="SemiBold" />
-            <!--<TextBlock x:Name="DisplayNamex"/>-->
-        </StackPanel>
-
+        <TextBlock x:Name="DisplayName" 
+                       Margin="5"
+                       FontSize="14" FontWeight="SemiBold" />
     </Grid>
 </UserControl>

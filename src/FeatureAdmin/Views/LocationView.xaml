@@ -45,7 +45,7 @@
                 <Label Content="Title:" 
                Margin="5"
                Grid.Row="0" Grid.Column="0" />
-                <TextBlock x:Name="DisplayName" 
+                <TextBlock x:Name="Item_DisplayName" 
                Margin="5"
                Grid.Row="0" Grid.Column="1" />
                 <Button x:Name="CopyTitle"
@@ -98,12 +98,12 @@
                 Style="{DynamicResource AccentedSquareButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
 
-                Margin="5" >Set as location filter with children</Button>
+                Margin="5" >Filter this location &amp; children</Button>
                     <Button x:Name="FilterFeature"
                 Style="{DynamicResource AccentedSquareButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
                
-                Margin="5" >Set as feature filter</Button>
+                Margin="5" >Filter active features</Button>
                 </StackPanel>
                 <Label Content="Child Locations:" 
                Margin="5"

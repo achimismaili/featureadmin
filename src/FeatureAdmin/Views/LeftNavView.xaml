@@ -24,7 +24,7 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,12">
             <TextBlock Text="Selected:"  Margin="0,0,6,0"/>
-            <TextBlock x:Name="SelectedActivity_Title"/>
+            <TextBlock x:Name="SelectedActivity_DisplayName"/>
         </StackPanel>
     </Grid>
 </UserControl>
