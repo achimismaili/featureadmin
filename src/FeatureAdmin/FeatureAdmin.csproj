@@ -162,6 +162,12 @@
     <Compile Include="ViewModels\StatusBarViewModel.cs" />
     <Compile Include="ViewModels\NavigationBarViewModel.cs" />
     <Compile Include="ViewModels\LocationListViewModel.cs" />
+    <Compile Include="Views\ActivatedFeatureListView.xaml.cs">
+      <DependentUpon>ActivatedFeatureListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ActivatedFeatureView.xaml.cs">
+      <DependentUpon>ActivatedFeatureView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\WorkSpaces\TaskView.xaml.cs">
       <DependentUpon>TaskView.xaml</DependentUpon>
     </Compile>
@@ -195,6 +201,14 @@
     <Compile Include="Views\StatusBarView.xaml.cs">
       <DependentUpon>StatusBarView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\ActivatedFeatureListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ActivatedFeatureView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\WorkSpaces\TaskView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

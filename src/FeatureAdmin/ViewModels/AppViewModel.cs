@@ -17,13 +17,13 @@ namespace FeatureAdmin.ViewModels
     {
         
         private readonly IEventAggregator eventAggregator;
-        private string _displayName = "Feature Admin 3 for SharePoint 2013";
 
         private IActorRef taskManagerActorRef;
         private IActorRef viewModelSyncActorRef;
         public AppViewModel(IEventAggregator eventAggregator)
         {
-            
+            DisplayName = "Feature Admin 3 for SharePoint 2013";
+
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
 
@@ -37,29 +37,24 @@ namespace FeatureAdmin.ViewModels
             NavigationBarVm = new NavigationBarViewModel(eventAggregator);
             StatusBarVm = new StatusBarViewModel(eventAggregator);
 
-            ActivationVm = new WorkSpaces.ActivationViewModel(
-                FeatureDefinitionVm,
-                FeatureDefinitionListVm,
-                LocationVm,
-                LocationListVm                
-                );
+            ActivationVm = new WorkSpaces.ActivationViewModel();
+
+            ActivateItem(ActivationVm);
+
+            UpgradeVm = new WorkSpaces.UpgradeViewModel();
+
+            Items.Add(UpgradeVm);
 
             InitializeActors();
 
             InitializeFarmLoad();
 
-            ActivateItem(ActivationVm);
+            
         }
 
         public WorkSpaces.ActivationViewModel ActivationVm { get; set; }
-
+        public WorkSpaces.UpgradeViewModel UpgradeVm { get; set; }
         public CommandViewModel CommandVm { get; private set; }
-
-        public string DisplayName
-        {
-            get { return _displayName; }
-            set { _displayName = value; }
-        }
 
         public FeatureDefinitionViewModel FeatureDefinitionVm { get; private set; }
 

@@ -5,19 +5,17 @@ namespace FeatureAdmin.ViewModels.WorkSpaces
 {
     public class ActivationViewModel : Screen, IWorkSpace
     {
-        public ActivationViewModel(
-            FeatureDefinitionViewModel featureDefinitionVm,
-             FeatureDefinitionListViewModel featureDefinitionListVm,
-             LocationViewModel locationVm,
-             LocationListViewModel locationListVm
-            )
+        public ActivationViewModel()
         {
             DisplayName = "Activation";
+        }
 
-            FeatureDefinitionVm = featureDefinitionVm;
-            FeatureDefinitionListVm = featureDefinitionListVm;
-            LocationVm = locationVm;
-            LocationListVm = locationListVm;
+        protected override void OnInitialize()
+        {
+            FeatureDefinitionVm = ((AppViewModel)Parent).FeatureDefinitionVm;
+            FeatureDefinitionListVm = ((AppViewModel)Parent).FeatureDefinitionListVm;
+            LocationVm = ((AppViewModel)Parent).LocationVm;
+            LocationListVm = ((AppViewModel)Parent).LocationListVm;
         }
 
         public void Show()
