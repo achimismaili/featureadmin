@@ -14,7 +14,7 @@ namespace FeatureAdmin.ViewModels.WorkSpaces
         {
             FeatureDefinitionVm = ((AppViewModel)Parent).FeatureDefinitionVm;
             FeatureDefinitionListVm = ((AppViewModel)Parent).FeatureDefinitionListVm;
-            LocationVm = ((AppViewModel)Parent).LocationVm;
+            // LocationVm = ((AppViewModel)Parent).LocationVm;
             LocationListVm = ((AppViewModel)Parent).LocationListVm;
         }
 
@@ -27,7 +27,7 @@ namespace FeatureAdmin.ViewModels.WorkSpaces
 
         public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
 
-        public LocationViewModel LocationVm { get; private set; }
+        // public LocationViewModel LocationVm { get; private set; }
         public LocationListViewModel LocationListVm { get; private set; }
     }
 }

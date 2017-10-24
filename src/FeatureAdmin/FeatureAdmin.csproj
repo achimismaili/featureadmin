@@ -150,10 +150,11 @@
     <Compile Include="Messages\LoadItem.cs" />
     <Compile Include="Messages\ItemSelected.cs" />
     <Compile Include="UIModels\IWorkSpace.cs" />
+    <Compile Include="ViewModels\BaseListViewModel.cs" />
     <Compile Include="ViewModels\WorkSpaces\ActivationViewModel.cs" />
     <Compile Include="ViewModels\WorkSpaces\UpgradeViewModel.cs" />
     <Compile Include="ViewModels\WorkSpaces\TaskViewModel.cs" />
-    <Compile Include="ViewModels\BaseListViewModel.cs" />
+    <Compile Include="ViewModels\BaseListViewModelOld.cs" />
     <Compile Include="ViewModels\LocationViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionViewModel.cs" />

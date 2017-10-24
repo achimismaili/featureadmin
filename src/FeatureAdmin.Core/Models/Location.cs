@@ -6,6 +6,10 @@ namespace FeatureAdmin.Core.Models
 {
     public class Location : BaseItem
     {
+        protected Location()
+        {
+
+        }
         protected Location(Guid id, string displayName, Guid parent, Scope scope, string url)
             :this (id, displayName, parent, scope, url, new List<Guid>())
         {

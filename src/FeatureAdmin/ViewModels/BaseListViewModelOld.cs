@@ -11,21 +11,35 @@ using System.Linq.Expressions;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : Conductor<T>.Collection.OneActive, IHandle<ItemUpdated<T>>, IHandle<SetSearchFilter<Location>> where T : LocationViewModel
+    public abstract class BaseListViewModelOld<T> : Conductor<T>.Collection.OneActive, IHandle<ItemUpdated<T>>, IHandle<SetSearchFilter<T>> where T : BaseItem
     {
         // The filtered Items
         public ObservableCollection<T> SearchResultItems { get; private set; }
 
         private IEventAggregator eventAggregator;
 
-        public BaseListViewModel(IEventAggregator eventAggregator)
+        public BaseListViewModelOld(IEventAggregator eventAggregator)
         {
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
             ScopeFilters = new ObservableCollection<Scope>(Common.Constants.Search.ScopeFilterList);
             SearchResultItems = new ObservableCollection<T>(); 
         }
-      
+
+        private T selectedItem;
+        public T SelectedItem
+        {
+            get
+            {
+                return selectedItem;
+            }
+            set
+            {
+                selectedItem = value;
+                eventAggregator.BeginPublishOnUIThread(new ItemSelected<T>(selectedItem));
+            }
+        }
+
         public void Handle(ItemUpdated<T> message)
         {
             if (message == null || message.Item == null)
@@ -114,7 +128,7 @@ namespace FeatureAdmin.ViewModels
             SearchResultItems = new ObservableCollection<T>(searchResult);
         }
 
-        public void Handle(SetSearchFilter<Location> message)
+        public void Handle(SetSearchFilter<T> message)
         {
             if (message == null)
             {

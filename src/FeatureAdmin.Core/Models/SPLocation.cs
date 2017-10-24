@@ -23,6 +23,7 @@ namespace FeatureAdmin.Core.Models
         {
             return GetSPLocation(location, null, true);
         }
+
         public static SPLocation GetSPLocation(
             Location location,
             object spLocationObject,

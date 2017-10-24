@@ -6,30 +6,59 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System;
 using System.Windows;
+using FeatureAdmin.Core.Models.Enums;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class LocationViewModel : BaseDetailViewModel<Location>
+    public class LocationViewModel : BaseItem,  IHandle<ItemSelected<Location>>
     {
-        public LocationViewModel(IEventAggregator eventAggregator)
-            :base(eventAggregator)
+        public LocationViewModel(Location location)
+    {
+            Item = location; 
+    }
+
+        public new Guid Id { get {
+                return Item.Id;
+            } }
+
+        public new string DisplayName
         {
-            
+            get
+            {
+                return Item.DisplayName;
+            }
         }
+
+        public new Scope  Scope
+        {
+            get
+            {
+                return Item.Scope;
+            }
+        }
+
+        public bool ItemSelected { get; set; } = false;
+        public Location Item { get; protected set; }
 
         public void CopyTitle()
         {
-            copyToClipBoard(Item.DisplayName);
+            MessageBox.Show(Item.DisplayName);
         }
 
         public void CopyUrl()
         {
-            copyToClipBoard(Item.Url);
+            MessageBox.Show(Item.Url);
         }
 
         public void CopyId()
         {
-            copyToClipBoard(Item.Id.ToString());
+            MessageBox.Show(Item.Id.ToString());
+        }
+
+        public void Handle(ItemSelected<Location> message)
+        {
+            Item = message.Item;
+            ItemSelected = message.Item != null;
         }
     }
 }

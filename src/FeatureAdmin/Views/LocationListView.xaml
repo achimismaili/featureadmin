@@ -11,8 +11,10 @@
     <Grid Background="LightGray">
         <Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
-		</Grid.RowDefinitions>
+			<RowDefinition Height="2*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 		<Grid>
 			<Grid.RowDefinitions>			
 				<RowDefinition Height="Auto" />
@@ -55,5 +57,13 @@
                 <DataGridTextColumn Binding="{Binding Url,Mode=OneWay}" Header="Url" />
             </DataGrid.Columns>
         </DataGrid>
-	</Grid>
+
+        <GridSplitter Grid.Row="2" 
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"/>
+
+        <!-- Active WorkSpace -->
+        <ContentControl x:Name="ActiveItem"
+                          Grid.Row="3"   />
+    </Grid>
 </UserControl>

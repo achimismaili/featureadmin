@@ -8,6 +8,7 @@ using FeatureAdmin.Core.Models;
 using System.Collections.ObjectModel;
 using FeatureAdmin.Core.Messages;
 using Caliburn.Micro;
+using FeatureAdmin.ViewModels;
 
 namespace FeatureAdmin.Actors
 {
@@ -25,14 +26,14 @@ namespace FeatureAdmin.Actors
         }
         private void LocationUpdated(ItemUpdated<SPLocation> message)
         {
-            if (message == null)
+            if (message == null || message.Item == null)
             {
                 // TODO Log exception / catch null argument exception for message
                 throw new ArgumentNullException("LocationUpdated - Did not expect null message!");
             }
 
-            var location = message.Item as Location;
-            eventAggregator.PublishOnUIThread(new ItemUpdated<Location>(location));
+            var location = new LocationViewModel(message.Item);
+            eventAggregator.PublishOnUIThread(new ItemUpdated<LocationViewModel>(location));
         }
 
         private void FeatureDefinitionUpdated(ItemUpdated<FeatureDefinition> message)

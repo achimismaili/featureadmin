@@ -31,7 +31,7 @@ namespace FeatureAdmin.ViewModels
 
             FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator);
 
-            LocationVm = new LocationViewModel(eventAggregator);
+            // LocationVm = new LocationViewModel(eventAggregator);
             LocationListVm = new LocationListViewModel(eventAggregator);
             
             NavigationBarVm = new NavigationBarViewModel(eventAggregator);

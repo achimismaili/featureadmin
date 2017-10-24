@@ -9,7 +9,7 @@ using System;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>
+    public class FeatureDefinitionListViewModel : BaseListViewModelOld<FeatureDefinition>
     {
         public FeatureDefinitionListViewModel(IEventAggregator eventAggregator)
          : base(eventAggregator)
