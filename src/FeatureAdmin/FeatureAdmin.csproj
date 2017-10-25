@@ -155,11 +155,8 @@
     <Compile Include="ViewModels\WorkSpaces\UpgradeViewModel.cs" />
     <Compile Include="ViewModels\WorkSpaces\TaskViewModel.cs" />
     <Compile Include="ViewModels\BaseListViewModelOld.cs" />
-    <Compile Include="ViewModels\LocationViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
-    <Compile Include="ViewModels\FeatureDefinitionViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionListViewModel.cs" />
-    <Compile Include="ViewModels\BaseDetailViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />
     <Compile Include="ViewModels\NavigationBarViewModel.cs" />
     <Compile Include="ViewModels\LocationListViewModel.cs" />
@@ -189,9 +186,6 @@
     </Compile>
     <Compile Include="Views\LocationListView.xaml.cs">
       <DependentUpon>LocationListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\LocationView.xaml.cs">
-      <DependentUpon>LocationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindowContainer.xaml.cs">
       <DependentUpon>MainWindowContainer.xaml</DependentUpon>
@@ -257,10 +251,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LocationListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\LocationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

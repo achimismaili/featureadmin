@@ -16,8 +16,6 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="5"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -33,17 +31,8 @@
         <ContentControl cal:View.Model="{Binding LocationListVm}"
             Grid.Row="1" Grid.Column="0" />
 
-        <!--<GridSplitter Grid.Row="2" Grid.Column="0" 
-                          Grid.ColumnSpan="3" 
-                          VerticalAlignment="Stretch"
-                          HorizontalAlignment="Stretch"/>
-
-        <ContentControl cal:View.Model="{Binding LocationVm}"
-           Grid.Row="3" Grid.Column="0"
-            ></ContentControl>-->
-
-
-        <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="4" 
+        
+        <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" 
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
 
@@ -59,8 +48,10 @@
         <ContentControl cal:View.Model="{Binding FeatureDefinitionListVm}"
            Grid.Row="1" Grid.Column="2"
             ></ContentControl>
-        <ContentControl cal:View.Model="{Binding FeatureDefinitionVm}"
+        
+        
+        <!--<ContentControl cal:View.Model="{Binding FeatureDefinitionVm}"
            Grid.Row="3" Grid.Column="2"
-            ></ContentControl>
+            ></ContentControl>-->
     </Grid>
 </UserControl>

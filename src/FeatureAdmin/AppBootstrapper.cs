@@ -21,9 +21,7 @@ namespace FeatureAdmin
             //    .SingleInstance();
 
             builder.RegisterType<LocationListViewModel>().SingleInstance();
-            builder.RegisterType<LocationViewModel>().SingleInstance();
             builder.RegisterType<FeatureDefinitionListViewModel>().SingleInstance();
-            builder.RegisterType<FeatureDefinitionViewModel>().SingleInstance();
             // builder.RegisterType<NavigationBarViewModel>().InstancePerRequest();
         }
     }

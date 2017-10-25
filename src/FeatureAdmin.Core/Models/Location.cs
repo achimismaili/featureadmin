@@ -1,28 +1,37 @@
 ﻿using FeatureAdmin.Core.Models.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FeatureAdmin.Core.Models
 {
     public class Location : BaseItem
     {
+        protected List<Guid> features { get; set; }
+
         protected Location()
         {
+           this.features = new List<Guid>();
 
         }
+
         protected Location(Guid id, string displayName, Guid parent, Scope scope, string url)
             :this (id, displayName, parent, scope, url, new List<Guid>())
         {
         }
 
         protected Location(Guid id, string displayName, Guid parent, Scope scope, string url, IEnumerable<Guid> activatedFeatures)
+           : this()
         {
             Id = id;
             DisplayName = displayName;
             Parent = parent;
             Scope = scope;
             Url = url;
-            ActivatedFeatures = (IReadOnlyCollection<Guid>)activatedFeatures;
+            if (activatedFeatures != null && activatedFeatures.Any())
+            {
+                this.features.AddRange(activatedFeatures);
+            }
         }
 
         public bool CanHaveChildren
@@ -33,7 +42,11 @@ namespace FeatureAdmin.Core.Models
             }
         }
 
-        public IReadOnlyCollection<Guid> ActivatedFeatures { get; protected set; }
+        public IReadOnlyCollection<Guid> ActivatedFeatures { get
+            {
+                return null; // activatedFeatures.AsReadOnly();
+            }
+        }
                 
         public Guid Parent { get; protected set; }
         public string Url { get; protected set; }
@@ -44,34 +57,28 @@ namespace FeatureAdmin.Core.Models
                "Farm",
                Guid.Empty,
                Scope.Farm,
-               "Farm");
+               "Farm",
+               activatedFeatures);
 
             return location;
         }
 
         /// <summary>
-        /// adds or removes an activated feature to the list of activated features
+        /// adds or removes an activated feature 
         /// </summary>
-        /// <param name="location">location, which will be returned with changed feature-list</param>
         /// <param name="featureId">feature Guid</param>
         /// <param name="add">adds if true, removes if false</param>
         /// <returns>location with changed activatedfeatures list</returns>
-        public static Location ToggleActivatedFeature(Location location, Guid featureId, bool add)
+        public void ToggleActivatedFeature(Guid featureId, bool add)
         {
-            var l = new Location(location.Id, location.DisplayName, location.Parent, location.Scope, location.Url);
-            var activatedFeatures = new List<Guid>(location.ActivatedFeatures);
-
             if (add)
             {
-                activatedFeatures.Add(featureId);
+                features.Add(featureId);
             }
             else
             {
-                activatedFeatures.Remove(featureId);
+                features.Remove(featureId);
             }
-            
-            l.ActivatedFeatures = activatedFeatures.AsReadOnly();
-            return l;
         }
 
         public static Location GetLocation(Guid id, string displayName, Guid parent, Scope scope, string url, IEnumerable<Guid> activatedFeatures)

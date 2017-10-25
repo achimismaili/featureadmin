@@ -27,8 +27,8 @@ namespace FeatureAdmin.Actors
                 throw new ArgumentNullException("LocationUpdated - Did not expect null message!");
             }
 
-            var location = new LocationViewModel(message.Item);
-            eventAggregator.PublishOnUIThread(new ItemUpdated<LocationViewModel>(location));
+            var location =  message.Item.ToLocation();
+            eventAggregator.PublishOnUIThread(new ItemUpdated<Location>(location));
         }
 
         private void FeatureDefinitionUpdated(ItemUpdated<FeatureDefinition> message)

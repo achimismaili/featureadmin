@@ -27,11 +27,8 @@ namespace FeatureAdmin.ViewModels
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
 
-            FeatureDefinitionVm = new FeatureDefinitionViewModel(eventAggregator);
-
             FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator);
 
-            // LocationVm = new LocationViewModel(eventAggregator);
             LocationListVm = new LocationListViewModel(eventAggregator);
             
             NavigationBarVm = new NavigationBarViewModel(eventAggregator);
@@ -56,11 +53,8 @@ namespace FeatureAdmin.ViewModels
         public WorkSpaces.UpgradeViewModel UpgradeVm { get; set; }
         public CommandViewModel CommandVm { get; private set; }
 
-        public FeatureDefinitionViewModel FeatureDefinitionVm { get; private set; }
-
         public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
 
-        public LocationViewModel LocationVm { get; private set; }
         public LocationListViewModel LocationListVm { get; private set; }
        
         public NavigationBarViewModel NavigationBarVm { get; private set; }

@@ -8,10 +8,11 @@ using System.Linq;
 using System;
 using FeatureAdmin.Core.Models.Enums;
 using System.Linq.Expressions;
+using System.Windows;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : Conductor<T>.Collection.OneActive, IHandle<ItemUpdated<T>>, IHandle<SetSearchFilter<Location>> where T : LocationViewModel
+    public abstract class BaseListViewModel<T> : Conductor<T>.Collection.OneActive, IHandle<ItemUpdated<T>>, IHandle<SetSearchFilter<T>> where T : BaseItem
     {
         // The filtered Items
         public ObservableCollection<T> SearchResultItems { get; private set; }
@@ -23,9 +24,9 @@ namespace FeatureAdmin.ViewModels
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
             ScopeFilters = new ObservableCollection<Scope>(Common.Constants.Search.ScopeFilterList);
-            SearchResultItems = new ObservableCollection<T>(); 
+            SearchResultItems = new ObservableCollection<T>();
         }
-      
+
         public void Handle(ItemUpdated<T> message)
         {
             if (message == null || message.Item == null)
@@ -114,7 +115,7 @@ namespace FeatureAdmin.ViewModels
             SearchResultItems = new ObservableCollection<T>(searchResult);
         }
 
-        public void Handle(SetSearchFilter<Location> message)
+        public void Handle(SetSearchFilter<T> message)
         {
             if (message == null)
             {
@@ -131,6 +132,36 @@ namespace FeatureAdmin.ViewModels
                 SelectedScopeFilter = message.SearchScope;
             }
 
+        }
+
+        public void FilterThis()
+        {
+            var searchFilter = new SetSearchFilter<T>(
+                ActiveItem == null ? string.Empty : ActiveItem.Id.ToString(), null);
+            Handle(searchFilter);
+        }
+
+        public void FilterLocation()
+        {
+            var searchFilter = new SetSearchFilter<Location>(
+                ActiveItem == null ? string.Empty : ActiveItem.Id.ToString(), null);
+            eventAggregator.BeginPublishOnUIThread(searchFilter);
+        }
+
+        public void FilterFeature()
+        {
+            var searchFilter = new SetSearchFilter<FeatureDefinition>(
+
+                ActiveItem == null ? string.Empty : ActiveItem.Id.ToString(), null);
+            eventAggregator.BeginPublishOnUIThread(searchFilter);
+        }
+
+        public void CopyToClipBoard(string textToCopy)
+        {
+            if (!string.IsNullOrEmpty(textToCopy))
+            {
+                Clipboard.SetText(textToCopy);
+            }
         }
     }
 }

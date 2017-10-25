@@ -34,6 +34,15 @@ namespace FeatureAdmin.Core.Models
             return spLocation;
         }
 
+        public Location ToLocation()
+        {
+
+            var location = Location.GetLocation(Id, DisplayName, Parent, Scope, Url, features);
+
+            return location;
+        }
+
+
         public object SPLocationObject { get; private set; }
 
         public bool RequiresUpdate { get; private set; } = true;
