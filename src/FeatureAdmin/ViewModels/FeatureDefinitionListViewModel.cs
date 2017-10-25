@@ -1,15 +1,11 @@
 ﻿using Caliburn.Micro;
-using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
-using FeatureAdmin.Messages;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class FeatureDefinitionListViewModel : BaseListViewModelOld<FeatureDefinition>
+    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>
     {
         public FeatureDefinitionListViewModel(IEventAggregator eventAggregator)
          : base(eventAggregator)

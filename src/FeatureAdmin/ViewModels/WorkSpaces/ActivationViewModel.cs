@@ -12,7 +12,8 @@ namespace FeatureAdmin.ViewModels.WorkSpaces
 
         protected override void OnInitialize()
         {
-           
+
+            FeatureDefinitionListVm = ((AppViewModel)Parent).FeatureDefinitionListVm;
             LocationListVm = ((AppViewModel)Parent).LocationListVm;
         }
 
@@ -21,7 +22,7 @@ namespace FeatureAdmin.ViewModels.WorkSpaces
             ((IConductor)Parent).ActivateItem(this);
         }
 
-        // public LocationViewModel LocationVm { get; private set; }
+        public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
         public LocationListViewModel LocationListVm { get; private set; }
     }
 }

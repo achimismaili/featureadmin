@@ -1,12 +1,8 @@
 ﻿using Caliburn.Micro;
-using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
-using FeatureAdmin.Messages;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System;
-using FeatureAdmin.Core.Models.Enums;
+using System.Linq;
+
 namespace FeatureAdmin.ViewModels
 {
     public class LocationListViewModel : BaseListViewModel<Location>
@@ -26,8 +22,8 @@ namespace FeatureAdmin.ViewModels
         {
             // see also https://stackoverflow.com/questions/34220256/how-to-call-method-function-in-where-clause-of-a-linq-query-as-ienumerable-objec
             return l => l.Id == guid
-                       || l.Parent == guid;
-                       // || l.ActivatedFeatures.Any(f => f == guid);
+                       || l.Parent == guid
+                       || l.ActivatedFeatures.Any(f => f == guid);
         }
 
         /// <summary>

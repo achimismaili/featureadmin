@@ -44,7 +44,7 @@ namespace FeatureAdmin.Core.Models
 
         public IReadOnlyCollection<Guid> ActivatedFeatures { get
             {
-                return null; // activatedFeatures.AsReadOnly();
+                return features.AsReadOnly();
             }
         }
                 

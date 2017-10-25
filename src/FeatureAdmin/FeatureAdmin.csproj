@@ -181,9 +181,6 @@
     <Compile Include="Views\FeatureDefinitionListView.xaml.cs">
       <DependentUpon>FeatureDefinitionListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FeatureDefinitionView.xaml.cs">
-      <DependentUpon>FeatureDefinitionView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\LocationListView.xaml.cs">
       <DependentUpon>LocationListView.xaml</DependentUpon>
     </Compile>
@@ -243,10 +240,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FeatureDefinitionListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\FeatureDefinitionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

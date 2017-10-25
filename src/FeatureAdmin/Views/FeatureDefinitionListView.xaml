@@ -5,12 +5,20 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
 			 xmlns:cal="http://www.caliburnproject.org"
+             xmlns:comm="clr-namespace:FeatureAdmin.Common"
 			 xmlns:local="clr-namespace:FeatureAdmin.Views"
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Background="#33F0A30A" >
+    <UserControl.Resources>
+        <comm:NegatableBooleanToVisibilityConverter x:Key="VisConverter" />
+        <comm:NegatableBooleanToVisibilityConverter x:Key="NegVisConverter"
+                                                    Negate="True" />
+    </UserControl.Resources>
+    <Grid Background="#33F0A30A">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="5" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid>
@@ -55,5 +63,104 @@
                 <DataGridTextColumn Binding="{Binding Title,Mode=OneWay}" Header="Title" />
             </DataGrid.Columns>
         </DataGrid>
+
+        <GridSplitter Grid.Row="2" 
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"/>
+
+        <!-- Active WorkSpace -->
+        <ScrollViewer Grid.Row="3" >
+            <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Name:" 
+               
+               Grid.Row="0" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_DisplayName" 
+           Padding="5"
+               Grid.Row="0" Grid.Column="1" />
+                    <Button Name="CopyName"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_DisplayName)"
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+               FontFamily="/Resources/#Entypo"
+                FontSize="25"
+                Height="30" Width="30"
+      
+                Grid.Row="0" Grid.Column="2">n</Button>
+                    <Label Content="Scope:" 
+
+               Grid.Row="1" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_Scope" 
+       Padding="5"
+               Grid.Row="1" Grid.Column="1" />
+                    <Label Content="Title:" 
+           
+               Grid.Row="2" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_Title" 
+            Padding="5"
+               Grid.Row="2" Grid.Column="1" />
+                    <Button Name="CopyTitle"
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Title)"
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+                FontFamily="/Resources/#Entypo"
+                FontSize="25"
+                Height="30" Width="30"
+       
+                Grid.Row="2" Grid.Column="2">n</Button>
+                    <Label Content="Id:" 
+        
+               Grid.Row="3" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_Id" 
+  Padding="5"
+               Grid.Row="3" Grid.Column="1" />
+                    <Button Name="CopyId"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Id)"
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+                FontFamily="/Resources/#Entypo"
+                FontSize="25"
+                Height="30" Width="30"
+
+                Grid.Row="3" Grid.Column="2">n</Button>
+                    <StackPanel 
+            Grid.Row="4" 
+            Orientation="Horizontal"
+            Grid.ColumnSpan="3">
+                        <Button Name="FilterLocation"
+                Style="{DynamicResource AccentedSquareButtonStyle}"
+                           
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+                            cal:Message.Attach="FilterLocation"
+                            >"Filter this location &amp; children</Button>
+                        <Button Name="FilterFeatures"
+                            Margin="5,0,0,0"
+                Style="{DynamicResource AccentedSquareButtonStyle}"
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+               cal:Message.Attach="FilterThis"
+               >Filter active features</Button>
+                    </StackPanel>
+                    <Label Content="Compatibility:"
+               
+               Grid.Row="5" Grid.Column="0" />
+                    <TextBlock x:Name="Item_CompatibilityLevel"
+               Padding="5"
+               Grid.Row="5" Grid.Column="1" />
+                </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>
