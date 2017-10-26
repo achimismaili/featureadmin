@@ -5,9 +5,11 @@ namespace FeatureAdmin.ViewModels.WorkSpaces
 {
     public class UpgradeViewModel : Screen, IWorkSpace
     {
-        public UpgradeViewModel()
+        private IEventAggregator eventAggregator;
+        public UpgradeViewModel(IEventAggregator eventAggregator)
         {
             DisplayName = "Upgrade";
+            this.eventAggregator = eventAggregator;
         }
 
         protected override void OnInitialize()

@@ -27,18 +27,15 @@ namespace FeatureAdmin.ViewModels
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
 
-            FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator);
-
-            LocationListVm = new LocationListViewModel(eventAggregator);
-            
             NavigationBarVm = new NavigationBarViewModel(eventAggregator);
             StatusBarVm = new StatusBarViewModel(eventAggregator);
 
-            ActivationVm = new WorkSpaces.ActivationViewModel();
+            ActivationVm = new WorkSpaces.ActivationViewModel(eventAggregator);
+            UpgradeVm = new WorkSpaces.UpgradeViewModel(eventAggregator);
 
             ActivateItem(ActivationVm);
 
-            UpgradeVm = new WorkSpaces.UpgradeViewModel();
+            
 
             Items.Add(UpgradeVm);
 

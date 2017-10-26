@@ -5,16 +5,19 @@ namespace FeatureAdmin.ViewModels.WorkSpaces
 {
     public class ActivationViewModel : Screen, IWorkSpace
     {
-        public ActivationViewModel()
+        private readonly IEventAggregator eventAggregator;
+
+        public ActivationViewModel(IEventAggregator eventAggregator)
         {
             DisplayName = "Activation";
+            this.eventAggregator = eventAggregator;
         }
 
         protected override void OnInitialize()
         {
+            FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator);
 
-            FeatureDefinitionListVm = ((AppViewModel)Parent).FeatureDefinitionListVm;
-            LocationListVm = ((AppViewModel)Parent).LocationListVm;
+            LocationListVm = new LocationListViewModel(eventAggregator);
         }
 
         public void Show()
