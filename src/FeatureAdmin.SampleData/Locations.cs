@@ -15,7 +15,7 @@ namespace FeatureAdmin.SampleData
             {
                 get
                 {
-                    return Location.GetFarm(Guid, new List<Guid>());
+                    return Location.GetFarm(Guid, new List<ActivatedFeature>());
                 }
             }
         }
@@ -31,7 +31,7 @@ namespace FeatureAdmin.SampleData
                 get
                 {
                     return Location.GetLocation(
-                        Guid, DisplayName, TestFarm.Guid, Scope, Url, new List<Guid>());
+                        Guid, DisplayName, TestFarm.Guid, Scope, Url, new List<ActivatedFeature>());
                 }
             }
 
@@ -50,7 +50,7 @@ namespace FeatureAdmin.SampleData
                     var af = new List<Guid>();
                     af.Add(Features.HealthySite.Id);
                     return Location.GetLocation(
-                        Guid, DisplayName, WebApp.Guid, Scope, Url, new List<Guid>());
+                        Guid, DisplayName, WebApp.Guid, Scope, Url, new List<ActivatedFeature>());
                 }
             }
 
@@ -69,7 +69,7 @@ namespace FeatureAdmin.SampleData
                     var af = new List<Guid>();
                     af.Add(Features.HealthyWeb.Id);
                     return Location.GetLocation(
-                        Guid, DisplayName, ActivatedSite.Guid, Scope, Url, new List<Guid>());
+                        Guid, DisplayName, ActivatedSite.Guid, Scope, Url, new List<ActivatedFeature>());
                 }
             }
         }

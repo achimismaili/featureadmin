@@ -23,7 +23,7 @@ namespace FeatureAdmin.ViewModels
             // see also https://stackoverflow.com/questions/34220256/how-to-call-method-function-in-where-clause-of-a-linq-query-as-ienumerable-objec
             return l => l.Id == guid
                        || l.Parent == guid
-                       || l.ActivatedFeatures.Any(f => f == guid);
+                       || l.ActivatedFeatures.Any(f => f.FeatureId == guid);
         }
 
         /// <summary>

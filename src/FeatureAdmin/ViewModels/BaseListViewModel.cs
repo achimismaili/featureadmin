@@ -153,8 +153,16 @@ namespace FeatureAdmin.ViewModels
                     searchResult.Where(l => l.Scope == SelectedScopeFilter.Value);
             }
 
+            var activeItemCache = ActiveItem;
+
             Items.Clear();
             Items.AddRange(searchResult);
+
+            if (activeItemCache != null && Items.Contains(activeItemCache))
+            {
+                ActivateItem(activeItemCache);
+            }
+
         }
 
         // Searching for results can be different in derived types

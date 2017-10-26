@@ -7,30 +7,31 @@ namespace FeatureAdmin.Core.Models
 {
     public class Location : BaseItem
     {
-        protected List<Guid> features { get; set; }
+        protected List<ActivatedFeature> activatedFeatures { get; set; }
 
         protected Location()
         {
-           this.features = new List<Guid>();
+           this.activatedFeatures = new List<ActivatedFeature>();
 
         }
 
         protected Location(Guid id, string displayName, Guid parent, Scope scope, string url)
-            :this (id, displayName, parent, scope, url, new List<Guid>())
-        {
-        }
-
-        protected Location(Guid id, string displayName, Guid parent, Scope scope, string url, IEnumerable<Guid> activatedFeatures)
-           : this()
+            : this()
         {
             Id = id;
             DisplayName = displayName;
             Parent = parent;
             Scope = scope;
             Url = url;
+        }
+
+        protected Location(Guid id, string displayName, Guid parent, Scope scope, string url, IEnumerable<ActivatedFeature> activatedFeatures)
+            : this(id, displayName, parent, scope, url)
+        {
+           
             if (activatedFeatures != null && activatedFeatures.Any())
             {
-                this.features.AddRange(activatedFeatures);
+                this.activatedFeatures.AddRange(activatedFeatures);
             }
         }
 
@@ -42,16 +43,16 @@ namespace FeatureAdmin.Core.Models
             }
         }
 
-        public IReadOnlyCollection<Guid> ActivatedFeatures { get
+        public IReadOnlyCollection<ActivatedFeature> ActivatedFeatures { get
             {
-                return features.AsReadOnly();
+                return activatedFeatures.AsReadOnly();
             }
         }
                 
         public Guid Parent { get; protected set; }
         public string Url { get; protected set; }
 
-        public static Location GetFarm(Guid farmId, IEnumerable<Guid> activatedFeatures)
+        public static Location GetFarm(Guid farmId, IEnumerable<ActivatedFeature> activatedFeatures)
         {
             var location = new Location(farmId,
                "Farm",
@@ -66,22 +67,22 @@ namespace FeatureAdmin.Core.Models
         /// <summary>
         /// adds or removes an activated feature 
         /// </summary>
-        /// <param name="featureId">feature Guid</param>
+        /// <param name="feature">feature Guid</param>
         /// <param name="add">adds if true, removes if false</param>
         /// <returns>location with changed activatedfeatures list</returns>
-        public void ToggleActivatedFeature(Guid featureId, bool add)
+        public void ToggleActivatedFeature(ActivatedFeature feature, bool add)
         {
             if (add)
             {
-                features.Add(featureId);
+                activatedFeatures.Add(feature);
             }
             else
             {
-                features.Remove(featureId);
+                activatedFeatures.Remove(feature);
             }
         }
 
-        public static Location GetLocation(Guid id, string displayName, Guid parent, Scope scope, string url, IEnumerable<Guid> activatedFeatures)
+        public static Location GetLocation(Guid id, string displayName, Guid parent, Scope scope, string url, IEnumerable<ActivatedFeature> activatedFeatures)
         {
             var location = new Location(id, displayName, parent, scope, url, activatedFeatures);
             return location;

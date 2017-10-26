@@ -15,7 +15,7 @@ namespace FeatureAdmin.Core.Models
 
         public static SPLocation GetDummyFarmForLoadCommand()
         {
-            var farmDummy = GetFarm(Guid.Empty, new List<Guid>());
+            var farmDummy = GetFarm(Guid.Empty, new List<ActivatedFeature>());
             return ToSPLocation(farmDummy);
         }
 
@@ -37,7 +37,7 @@ namespace FeatureAdmin.Core.Models
         public Location ToLocation()
         {
 
-            var location = Location.GetLocation(Id, DisplayName, Parent, Scope, Url, features);
+            var location = Location.GetLocation(Id, DisplayName, Parent, Scope, Url, activatedFeatures);
 
             return location;
         }
