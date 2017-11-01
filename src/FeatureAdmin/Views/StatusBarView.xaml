@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="FeatureAdmin.Views.StatusBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FeatureAdmin.Views"
+             mc:Ignorable="d" 
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             >
+    <Grid>
+        <!--Status Bar-->
+        <StatusBar Grid.Row="1" >
+            <StatusBarItem MinWidth="110">
+                <!-- Progress Section -->
+                <controls:MetroProgressBar 
+                    Name="progressBarStatus"
+                    VerticalAlignment="Center" 
+                    MinWidth="100"
+                    Margin="10 5" 
+                    />
+            </StatusBarItem>
+            <Separator ></Separator>
+            <StatusBarItem>
+                <!-- Output Section -->
+                <TextBlock
+                       Name="textStatus"
+                    Text="{Binding Status}"
+                    VerticalAlignment="Center" 
+                    Margin="10 5" 
+                 />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</UserControl>

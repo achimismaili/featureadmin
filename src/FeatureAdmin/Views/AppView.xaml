@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="FeatureAdmin.Views.AppView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:local="clr-namespace:FeatureAdmin.Views"
+             >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ContentControl cal:View.Model="{Binding NavigationBarVm}"
+            Grid.Row="0"
+            ></ContentControl>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Navigation -->
+            <ItemsControl x:Name="Items"
+                        Grid.Column="0"
+			             >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button cal:Message.Attach="Show"
+						        Margin="8">
+                            <TextBlock 
+                                FontSize="15"
+                                Text="{Binding DisplayName, Mode=OneWay}"
+									           HorizontalAlignment="Center" />
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
+            <GridSplitter Grid.Column="1" 
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"/>
+            
+            <!-- Active WorkSpace -->
+            <ContentControl x:Name="ActiveItem"
+                         Grid.Column="2"  />
+        </Grid>
+        <ContentControl cal:View.Model="{Binding StatusBarVm}"
+           Grid.Row="2"
+            ></ContentControl>
+    </Grid>
+</UserControl>
