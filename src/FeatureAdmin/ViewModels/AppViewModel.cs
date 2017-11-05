@@ -12,7 +12,7 @@ namespace FeatureAdmin.ViewModels
 
     public class AppViewModel : Conductor<IWorkSpace>.Collection.OneActive, 
         IHaveDisplayName, 
-        Caliburn.Micro.IHandle<LoadItem<SPLocation>>,
+        Caliburn.Micro.IHandle<LoadItem<Location>>,
         Caliburn.Micro.IHandle<LoadItem<FeatureDefinition>>
     {
         
@@ -56,7 +56,7 @@ namespace FeatureAdmin.ViewModels
        
         public NavigationBarViewModel NavigationBarVm { get; private set; }
         public StatusBarViewModel StatusBarVm { get; private set; }
-        public void Handle(LoadItem<SPLocation> loadCommand)
+        public void Handle(LoadItem<Location> loadCommand)
         {
             taskManagerActorRef.Tell(new LoadLocationQuery(loadCommand.Item));
         }
@@ -88,7 +88,7 @@ namespace FeatureAdmin.ViewModels
             
 
                 Handle(new LoadItem<FeatureDefinition>());
-            Handle(new LoadItem<SPLocation>(SPLocation.GetDummyFarmForLoadCommand()));
+            Handle(new LoadItem<Location>(Location.GetDummyFarmForLoadCommand()));
         }
     }
 }

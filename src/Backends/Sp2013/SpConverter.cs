@@ -209,47 +209,74 @@ namespace FeatureAdmin.Backends.Sp2013
             }
         }
 
-        public static IEnumerable<SPLocation> ToSPLocations(object spCollection, Guid parentId)
+        public static IEnumerable<Location> ToLocations(this SPWebCollection spLocations, Guid parentId)
         {
-            var spLocations = new List<SPLocation>();
 
-            if (spCollection != null)
+
+            if (spLocations == null)
             {
-                // Web
-                if (spCollection is SPWebCollection)
-                {
-                    foreach (SPWeb item in spCollection as SPWebCollection)
-                    {
-                        var location = item.ToLocation(parentId);
-                        spLocations.Add(SPLocation.GetSPLocation(location, item, false));
-                    }
-                }
-                else
-                {
-                    // Site
-                    if (spCollection is SPSiteCollection)
-                    {
-                        foreach (SPSite item in spCollection as SPSiteCollection)
-                        {
-                            var location = item.ToLocation(parentId);
-                            spLocations.Add(SPLocation.GetSPLocation(location, item, false));
-                        }
-                    }
-                    else
-                    {
-                        // WebApp
-                        if (spCollection is SPWebApplicationCollection)
-                        {
-                            foreach (SPWebApplication item in spCollection as SPWebApplicationCollection)
-                            {
-                                var location = item.ToLocation(parentId);
-                                spLocations.Add(SPLocation.GetSPLocation(location, item, false));
-                            }
-                        }
-                    }
-                }
+                // todo log error
+                return null;
             }
-            return spLocations;
+
+            var locations = new List<Location>();
+
+            foreach (SPWeb spl in spLocations)
+            {
+                var l = spl.ToLocation(parentId);
+                locations.Add(l);
+
+                // https://blogs.technet.microsoft.com/stefan_gossner/2008/12/05/disposing-spweb-and-spsite-objects/
+                spl.Dispose();
+            }
+
+            return locations;
+        }
+
+        public static IEnumerable<Location> ToLocations(this SPSiteCollection spLocations, Guid parentId)
+        {
+
+
+            if (spLocations == null)
+            {
+                // todo log error
+                return null;
+            }
+
+            var locations = new List<Location>();
+
+            foreach (SPSite spl in spLocations)
+            {
+                var l = spl.ToLocation(parentId);
+                locations.Add(l);
+
+                locations.AddRange(spl.AllWebs.ToLocations(parentId));
+
+                // https://blogs.technet.microsoft.com/stefan_gossner/2008/12/05/disposing-spweb-and-spsite-objects/
+                spl.Dispose();
+            }
+
+            return locations;
+        }
+
+
+        public static IEnumerable<Location> ToLocations(this SPWebApplicationCollection spLocations, Guid parentId)
+        {
+            if (spLocations == null)
+            {
+                // todo log error
+                return null;
+            }
+
+            var locations = new List<Location>();
+
+            foreach (SPWebApplication spl in spLocations)
+            {
+                var l = spl.ToLocation(parentId);
+                locations.Add(l);
+            }
+
+            return locations;
         }
     }
 }

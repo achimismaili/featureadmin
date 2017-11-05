@@ -91,126 +91,69 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             return GetWebApplication(id, false);
         }
 
-        public IEnumerable<ActivatedFeature> LoadActivatedFeatures(SPLocation location)
+        public IEnumerable<Location> LoadNonFarmLocationAndChildren(Location location)
         {
-            SPFeatureCollection features;
-            Guid parentId;
-
             if (location == null)
             {
                 return null;
             };
 
-            if (location.SPLocationObject == null)
-            {
-                location = LoadLocation(location);
-            }
+            var locations = new List<Location>();
 
-            if (location == null || location.SPLocationObject == null)
+            if (location.Scope == Core.Models.Enums.Scope.Farm)
             {
-                return null;
+                throw new Exception("This method must not be called with farm location");
             }
 
             switch (location.Scope)
             {
                 case Core.Models.Enums.Scope.Web:
-                    var web = location.SPLocationObject as SPWeb;
-                    if (web == null)
+                    SPSecurity.RunWithElevatedPrivileges(delegate ()
                     {
-                        return null;
-                    }
-                    features = web.Features;
-                    parentId = web.ID;
+                        using (SPSite sc = new SPSite(location.Parent))
+                        {
+                            using (SPWeb w = sc.OpenWeb(location.Id))
+                            {
+                                var l = w.ToLocation(location.Parent);
+                                locations.Add(l);
+                            }
+                        }
+                    });
                     break;
                 case Core.Models.Enums.Scope.Site:
-                    var site = location.SPLocationObject as SPSite;
-                    if (site == null)
-                    {
-                        return null;
-                    }
-                    features = site.Features;
-                    parentId = site.ID;
+                        SPSecurity.RunWithElevatedPrivileges(delegate ()
+                        {
+                            using (SPSite sc = new SPSite(location.Id))
+                            {
+                                var s = sc.ToLocation(location.Parent);
+                                locations.Add(s);
 
-                    features = ((SPSite)location.SPLocationObject).Features;
-                    break;
-                case Core.Models.Enums.Scope.WebApplication:
-                    var wa = location.SPLocationObject as SPWebApplication;
-                    if (wa == null)
-                    {
-                        return null;
-                    }
-                    features = wa.Features;
-                    parentId = wa.Id;
-                    break;
-                case Core.Models.Enums.Scope.Farm:
-                    var farm = location.SPLocationObject as SPWebService;
-                    if (farm == null)
-                    {
-                        return null;
-                    }
-                    features = farm.Features;
-                    parentId = farm.Id;
-                    break;
-                //case Core.Models.Enums.Scope.ScopeInvalid:
-                //    break;
-                default:
-                    //TODO log that scope is invalid
-                    return null;
-            }
-
-            if (features == null)
-            {
-                return null;
-            }
-
-            return features.ToActivatedFeatures(parentId);
-
-        }
-
-        public IEnumerable<SPLocation> LoadChildLocations(SPLocation parentLocation)
-        {
-            if (parentLocation == null)
-            {
-                return null;
-            };
-
-            IEnumerable<SPLocation> locations = null;
-
-            if (parentLocation.Scope != Core.Models.Enums.Scope.Farm && parentLocation.RequiresUpdate == true)
-            {
-                parentLocation = LoadLocation(parentLocation);
-            }
-
-            switch (parentLocation.Scope)
-            {
-                //case Core.Models.Enums.Scope.Web:
-                //    break;
-                case Core.Models.Enums.Scope.Site:
-
-                    if (parentLocation.SPLocationObject != null && parentLocation.SPLocationObject is SPSite)
-                    {
-                        var site = parentLocation.SPLocationObject as SPSite;
-
-                        locations = SpConverter.ToSPLocations(site.AllWebs, site.ID);
-                    }
+                                locations.AddRange(sc.AllWebs.ToLocations(location.Id));
+                            }
+                        });
                     break;
                 case Core.Models.Enums.Scope.WebApplication:
 
-                    if (parentLocation.SPLocationObject != null && parentLocation.SPLocationObject is SPWebApplication)
-                    {
-                        var webApp = parentLocation.SPLocationObject as SPWebApplication;
+                    var wa = GetWebApplication(location.Id);
 
-                        locations = SpConverter.ToSPLocations(webApp.Sites, webApp.Id);
+                    if (wa != null)
+                    {
+                        var webApp = wa.ToLocation(location.Parent);
+                        locations.Add(webApp);
+                    
+                        SPSecurity.RunWithElevatedPrivileges(delegate ()
+                        {
+                            locations.AddRange(wa.Sites.ToLocations(location.Id));
+                        });
                     }
                     break;
-
-                case Core.Models.Enums.Scope.Farm:
-                    locations = GetWebApplications(parentLocation.Id);
-                    break;
+                //case Core.Models.Enums.Scope.Farm:
+                //    // invalid
+                //    break;
                 //case Core.Models.Enums.Scope.ScopeInvalid:
                 //    break;
                 default:
-                    // TODO Log error: parent scope was not farm, web app or site!
+                    // TODO Log error: scope was not web, web app or site!
                     break;
             }
 
@@ -218,21 +161,15 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
         }
 
-        private IEnumerable<SPLocation> GetWebApplications(Guid farmId)
+        private IEnumerable<Location> GetAllWebApplications(Guid farmId)
         {
-            List<SPLocation> webApps;
-
             var spWebAppsContent = GetWebApplications(true);
 
-            var webAppsContent = SpConverter.ToSPLocations(spWebAppsContent, farmId);
-
-            webApps = new List<SPLocation>(webAppsContent);
+            var webApps = new List<Location>(spWebAppsContent.ToLocations(farmId));
 
             var spWebAppsAdmin = GetWebApplications(false);
 
-            var webAppsAdmin = SpConverter.ToSPLocations(spWebAppsAdmin, farmId);
-
-            webApps.AddRange(webAppsAdmin);
+            webApps.AddRange(spWebAppsAdmin.ToLocations(farmId));
 
             return webApps;
         }
@@ -254,43 +191,23 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             }
 
             return features;
-
         }
 
-        public SPLocation LoadLocation(Location location)
+        public IEnumerable<Location> LoadFarmAndWebApps()
         {
-            Location updatedLocation;
+            var locations = new List<Location>();
 
-            if (location == null)
-            {
-                updatedLocation = Location.GetLocationUndefined(Guid.Empty, Guid.Empty, "ERROR - location was null!");
-                return SPLocation.GetSPLocation(updatedLocation, "ERROR - location was null!", false);
-            }
+            var farm = GetFarm();
+            
+            locations.Add(farm.ToLocation());
 
-            switch (location.Scope)
-            {
-                case Core.Models.Enums.Scope.Web:
-                    var web = GetWeb(location);
-                    updatedLocation = web.ToLocation(web.Site.ID);
-                    return SPLocation.GetSPLocation(updatedLocation, web, false);
-                case Core.Models.Enums.Scope.Site:
-                    var site = GetSite(location);
-                    updatedLocation = site.ToLocation(site.WebApplication.Id);
-                    return SPLocation.GetSPLocation(updatedLocation, site, false);
-                case Core.Models.Enums.Scope.WebApplication:
-                    var wa = GetWebApplication(location.Id);
-                    updatedLocation = wa.ToLocation(wa.Farm.Id);
-                    return SPLocation.GetSPLocation(updatedLocation, wa, false);
-                case Core.Models.Enums.Scope.Farm:
-                    var spFarm = GetFarm();
-                    updatedLocation = spFarm.ToLocation();
-                    return SPLocation.GetSPLocation(updatedLocation, spFarm, false);
-                //case Core.Models.Enums.Scope.ScopeInvalid:
-                //    break;
-                default:
-                    updatedLocation = Location.GetLocationUndefined(Guid.Empty, Guid.Empty, "ERROR - location scope was undefined!");
-                    return SPLocation.GetSPLocation(updatedLocation, "ERROR - location scope was undefined!", false);
-            }
+            var farmId = farm.Id;
+
+            var webApps = GetAllWebApplications(farmId);
+
+            locations.AddRange(webApps);
+
+            return locations;
         }
     }
 }

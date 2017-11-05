@@ -9,10 +9,10 @@ namespace FeatureAdmin.Core.Messages
 {
     public class LoadLocationQuery
     {
-        public LoadLocationQuery(SPLocation spLocation)
+        public LoadLocationQuery(Location location)
         {
-            SPLocation = spLocation;
+            Location = Location;
         }
-        public SPLocation SPLocation { get; private set; }
+        public Location Location { get; private set; }
     }
 }

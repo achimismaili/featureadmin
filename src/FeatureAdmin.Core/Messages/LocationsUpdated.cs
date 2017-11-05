@@ -9,10 +9,10 @@ namespace FeatureAdmin.Core.Messages
 {
     public class LocationsUpdated
     {
-        public LocationsUpdated(IEnumerable<SPLocation> spLocations)
+        public LocationsUpdated(IEnumerable<Location> spLocations)
         {
-            SPLocations = spLocations;
+            Locations = Locations;
         }
-        public IEnumerable<SPLocation> SPLocations { get; private set; }
+        public IEnumerable<Location> Locations { get; private set; }
     }
 }

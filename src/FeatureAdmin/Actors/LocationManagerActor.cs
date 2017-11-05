@@ -24,7 +24,7 @@ namespace FeatureAdmin.Actors
 
             Receive<LoadLocationQuery>(message => LoadLocation(message));
 
-            Receive<ItemUpdated<SPLocation>>(message => LocationUpdated(message));
+            Receive<ItemUpdated<Location>>(message => LocationUpdated(message));
         }
 
         private void LoadLocation(LoadLocationQuery message)
@@ -34,7 +34,7 @@ namespace FeatureAdmin.Actors
             _locationActorChild.Tell(message);
         }
 
-        private void LocationUpdated(ItemUpdated<SPLocation> message)
+        private void LocationUpdated(ItemUpdated<Location> message)
         {
             if (message == null || message.Item == null)
             {
@@ -42,18 +42,15 @@ namespace FeatureAdmin.Actors
                 return;
             }
 
-            if (message.Item.Id == myLocation ||
-                !message.Item.CanHaveChildren ||
-                (myLocation == Guid.Empty && message.Item.Scope == Core.Models.Enums.Scope.Farm)
-                )
-
+            if (message.Item.Scope != Core.Models.Enums.Scope.WebApplication && message.Item.Id != myLocation)
+            {
+                // report other web applications to task manager to get it processed by different actor
+                Context.Parent.Tell(message);
+            }
+            else
+            {
                 // report loaded location to viewmodelsync actor , if this is mylocation or if this location cannot have children
                 viewModelSyncActor.Tell(message);
-
-           else
-            {            
-                // report child location to task manager to get it processed by different actor
-                Context.Parent.Tell(message);
             }
         }
     }

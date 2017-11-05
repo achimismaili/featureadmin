@@ -27,7 +27,7 @@ namespace FeatureAdmin.Actors
 
             Receive<LoadLocationQuery>(message => LoadTask(message));
 
-            Receive<ItemUpdated<SPLocation>>(message => LocationUpdated(message));
+            Receive<ItemUpdated<Location>>(message => LocationUpdated(message));
 
             Receive<LoadFeatureDefinitionQuery>(message => LoadFeatureDefinitions(message));
         }
@@ -40,13 +40,13 @@ namespace FeatureAdmin.Actors
         private void LoadTask(LoadLocationQuery message)
         {
             _log.Debug("Entered TaskManager-LoadTask");
-            if (message == null || message.SPLocation == null)
+            if (message == null || message.Location == null)
             {
                 _log.Error("LoadTask message or location was null");
                 return;
             }
 
-            var locationId = message.SPLocation.Id;
+            var locationId = message.Location.Id;
 
             bool locationActorNeedsCreating = !locationActors.ContainsKey(locationId);
 
@@ -70,7 +70,7 @@ namespace FeatureAdmin.Actors
         /// this method will send a load task to the correctly responsible actor 
         /// </summary>
         /// <param name="message"></param>
-        private void LocationUpdated(ItemUpdated<SPLocation> message)
+        private void LocationUpdated(ItemUpdated<Location> message)
         {
             if (message == null || message.Item == null)
             {

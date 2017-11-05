@@ -15,6 +15,12 @@ namespace FeatureAdmin.Core.Models
 
         }
 
+        public static Location GetDummyFarmForLoadCommand()
+        {
+            var farmDummy = GetFarm(Guid.Empty, new List<ActivatedFeature>());
+            return farmDummy;
+        }
+
         protected Location(Guid id, string displayName, Guid parent, Scope scope, string url)
             : this()
         {

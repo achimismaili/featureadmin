@@ -5,13 +5,13 @@ namespace FeatureAdmin.Core.Services
 {
     public interface IDataService
     {
-        IEnumerable<ActivatedFeature> LoadActivatedFeatures(SPLocation location);
+       
 
-        IEnumerable<SPLocation> LoadChildLocations(SPLocation parentLocation);
+        IEnumerable<Location> LoadNonFarmLocationAndChildren(Location location);
 
         IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions();
 
-        SPLocation LoadLocation(Location location);
+        IEnumerable<Location> LoadFarmAndWebApps();
         //int FeatureToggle(Models.SPObject location, bool add, Guid featureId, bool force);
         //int FeatureUninstall(Guid featureId, bool force);
 

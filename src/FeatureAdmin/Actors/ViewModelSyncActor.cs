@@ -15,11 +15,11 @@ namespace FeatureAdmin.Actors
         {
             this.eventAggregator = eventAggregator;
 
-            Receive<ItemUpdated<SPLocation>>(message => LocationUpdated(message));
+            Receive<ItemUpdated<Location>>(message => LocationUpdated(message));
             Receive<ItemUpdated<FeatureDefinition>>(message => FeatureDefinitionUpdated(message));
 
         }
-        private void LocationUpdated(ItemUpdated<SPLocation> message)
+        private void LocationUpdated(ItemUpdated<Location> message)
         {
             if (message == null || message.Item == null)
             {
@@ -27,7 +27,7 @@ namespace FeatureAdmin.Actors
                 throw new ArgumentNullException("LocationUpdated - Did not expect null message!");
             }
 
-            var location =  message.Item.ToLocation();
+            var location =  message.Item;
             eventAggregator.PublishOnUIThread(new ItemUpdated<Location>(location));
         }
 
