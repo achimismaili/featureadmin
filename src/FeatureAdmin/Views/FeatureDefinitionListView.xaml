@@ -156,13 +156,13 @@
                            
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
                             cal:Message.Attach="FilterLocation"
-                            >"Filter this location &amp; children</Button>
-                    <Button Name="FilterFeatures"
+                            >Filter locations where activated</Button>
+                    <!--<Button Name="FilterFeatures"
                             Margin="5,0,0,0"
                 Style="{DynamicResource AccentedSquareButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
                cal:Message.Attach="FilterThis"
-               >Filter active features</Button>
+               >Filter active features</Button>-->
                 </StackPanel>
                 <Label Content="Compatibility:"
                

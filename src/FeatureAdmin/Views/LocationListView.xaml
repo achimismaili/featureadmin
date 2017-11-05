@@ -156,7 +156,7 @@
                            
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
                             cal:Message.Attach="FilterThis"
-                            >"Filter this location &amp; children</Button>
+                            >Filter this &amp; children</Button>
                     <Button Name="FilterFeature"
                             Margin="5,0,0,0"
                 Style="{DynamicResource AccentedSquareButtonStyle}"
