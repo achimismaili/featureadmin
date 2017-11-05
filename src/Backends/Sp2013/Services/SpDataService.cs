@@ -4,10 +4,9 @@ using System.Linq;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Services;
 using Microsoft.SharePoint.Administration;
-using FeatureAdmin.Backends.Sp2013.Services;
 using Microsoft.SharePoint;
 
-namespace FeatureAdmin.Backends.Services
+namespace FeatureAdmin.Backends.Sp2013.Services
 {
     public class SpDataService : IDataService
     {

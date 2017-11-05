@@ -5,7 +5,7 @@ using Microsoft.SharePoint.Administration;
 using System;
 using System.Collections.Generic;
 
-namespace FeatureAdmin.Backends.Sp2013.Services
+namespace FeatureAdmin.Backends.Sp2013
 {
     public static class SpConverter
     {

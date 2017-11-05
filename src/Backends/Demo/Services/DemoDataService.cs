@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Services;
 
-namespace FeatureAdmin.Backends.Services
+namespace FeatureAdmin.Backends.Demo.Services
 {
     public class DemoDataService : IDataService
     {

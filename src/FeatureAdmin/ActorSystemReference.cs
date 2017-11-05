@@ -1,8 +1,6 @@
 ﻿using Akka.Actor;
 using Akka.DI.AutoFac;
 using Autofac;
-using FeatureAdmin.Backends.Actors;
-using FeatureAdmin.Backends.Services;
 using FeatureAdmin.Core.Services;
 
 namespace FeatureAdmin
@@ -37,10 +35,14 @@ namespace FeatureAdmin
 
             //// Setup Autofac
             ContainerBuilder builder = new ContainerBuilder();
-    builder.RegisterType<DemoDataService>().As<IDataService>();
-            builder.RegisterType<LocationActor>();
-            builder.RegisterType<FeatureDefinitionActor>();
 
+#if (SP2013)
+            builder.RegisterType<Backends.Sp2013.Services.SpDataService>().As<IDataService>().SingleInstance();
+#else
+            builder.RegisterType<Backends.Demo.Services.DemoDataService>().As<IDataService>().SingleInstance();
+#endif
+            builder.RegisterType<Actors.LocationActor>();
+            builder.RegisterType<Actors.FeatureDefinitionActor>();
             IContainer container = builder.Build();
 
     var propsResolver = new AutoFacDependencyResolver(container, ActorSystem);

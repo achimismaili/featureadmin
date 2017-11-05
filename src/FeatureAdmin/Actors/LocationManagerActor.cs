@@ -4,13 +4,9 @@ using Akka.Event;
 using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FeatureAdmin.Backends.Actors
-{ 
+namespace FeatureAdmin.Actors
+{
     public class LocationManagerActor : ReceiveActor
     {
         private Guid myLocation;

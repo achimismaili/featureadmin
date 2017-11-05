@@ -4,9 +4,6 @@ using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FeatureAdmin.Actors
 {
@@ -24,7 +21,7 @@ namespace FeatureAdmin.Actors
 
             featureDefinitionActor =
                     Context.ActorOf(
-                        Props.Create(() => new Backends.Actors.FeatureDefinitionManagerActor(viewModelSyncActorRef)),
+                        Props.Create(() => new FeatureDefinitionManagerActor(viewModelSyncActorRef)),
                                      "FeatureDefinitionManagerActor");
 
 
@@ -57,7 +54,7 @@ namespace FeatureAdmin.Actors
             {
                 IActorRef newLocationActor =
                     Context.ActorOf(
-                        Props.Create(() => new Backends.Actors.LocationManagerActor(viewModelSyncActorRef, locationId)),
+                        Props.Create(() => new LocationManagerActor(viewModelSyncActorRef, locationId)),
                                      locationId.ToString());
 
                 locationActors.Add(locationId, newLocationActor);

@@ -7,7 +7,7 @@
     <ProjectGuid>{E4A06935-054F-446A-B2AF-996DC615D775}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FeatureAdmin.Backends</RootNamespace>
+    <RootNamespace>FeatureAdmin.Backends.Demo</RootNamespace>
     <AssemblyName>FeatureAdmin.Backends.Demo</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -59,10 +59,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actors\FeatureDefinitionActor.cs" />
-    <Compile Include="Actors\LocationActor.cs" />
-    <Compile Include="Actors\FeatureDefinitionManagerActor.cs" />
-    <Compile Include="Actors\LocationManagerActor.cs" />
     <Compile Include="Services\DemoDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
