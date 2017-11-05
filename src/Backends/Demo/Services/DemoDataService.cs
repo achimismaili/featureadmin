@@ -10,32 +10,31 @@ namespace FeatureAdmin.Backends.Demo.Services
 {
     public class DemoDataService : IDataService
     {
-        private static IEnumerable<ActivatedFeature> activatedFeatures = SampleData.SampleActivatedFeatures.GetActivatedFeatures(locations);
+        public DemoDataService()
+        {
+            demoLocations = SampleData.SampleLocationHierarchy.GetAllLocations();
+
+        }
 
         private static IEnumerable<FeatureDefinition> featuredefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions();
 
-        private static IEnumerable<Location> locations = SampleData.SampleLocationHierarchy.GetAllLocations();
+        private static IEnumerable<Location> demoLocations;
 
         public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
         {
             return featuredefinitions;
         }
 
-        private static IEnumerable<ActivatedFeature> loadActivatedFeatures(Location location)
-        {
-            var features = activatedFeatures.Where(f => f.LocationId == location.Id).AsEnumerable<ActivatedFeature>();
-            if (features == null)
-            {
-                features = new List<ActivatedFeature>();
-            }
-
-            return features;
-        }
+        
 
         private static IEnumerable<Location> loadChildLocations(Location location)
         {
-            var children = locations.Where(f => f.Parent == location.Id).AsEnumerable<Location>();
-           
+            if (location == null)
+            {
+                return null;
+            }
+            var children = demoLocations.Where(f => f.Parent == location.Id).AsEnumerable<Location>();
+
             return children;
         }
 
@@ -47,16 +46,18 @@ namespace FeatureAdmin.Backends.Demo.Services
 
             var children = loadChildLocations(location);
 
-            locations.AddRange(children);
-
-            if (location.Scope == Core.Models.Enums.Scope.WebApplication)
+            if (children != null)
             {
-                foreach (Location siteCollection in children)
+                locations.AddRange(children);
+
+                if (location.Scope == Core.Models.Enums.Scope.WebApplication)
                 {
-                    locations.AddRange(loadChildLocations(siteCollection));
+                    foreach (Location siteCollection in children)
+                    {
+                        locations.AddRange(loadChildLocations(siteCollection));
+                    }
                 }
             }
-
             return locations;
         }
 
@@ -64,7 +65,7 @@ namespace FeatureAdmin.Backends.Demo.Services
         {
             var locations = new List<Location>();
 
-            var farm = locations.Where(f => f.Scope == Core.Models.Enums.Scope.Farm).FirstOrDefault();
+            var farm = demoLocations.Where(f => f.Scope == Core.Models.Enums.Scope.Farm).FirstOrDefault();
 
             locations.Add(farm);
 

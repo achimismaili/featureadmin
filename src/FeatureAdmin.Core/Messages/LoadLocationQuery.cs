@@ -11,7 +11,7 @@ namespace FeatureAdmin.Core.Messages
     {
         public LoadLocationQuery(Location location)
         {
-            Location = Location;
+            Location = location;
         }
         public Location Location { get; private set; }
     }

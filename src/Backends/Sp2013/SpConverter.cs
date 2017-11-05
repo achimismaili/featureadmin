@@ -139,7 +139,7 @@ namespace FeatureAdmin.Backends.Sp2013
                 id,
                 web.Title,
                 parentId,
-                Scope.Site,
+                Scope.Web,
                 web.Url,
                 activatedFeatures
                 );
@@ -250,7 +250,7 @@ namespace FeatureAdmin.Backends.Sp2013
                 var l = spl.ToLocation(parentId);
                 locations.Add(l);
 
-                locations.AddRange(spl.AllWebs.ToLocations(parentId));
+                locations.AddRange(spl.AllWebs.ToLocations(l.Id));
 
                 // https://blogs.technet.microsoft.com/stefan_gossner/2008/12/05/disposing-spweb-and-spsite-objects/
                 spl.Dispose();

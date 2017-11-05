@@ -42,7 +42,7 @@ namespace FeatureAdmin.Actors
                 return;
             }
 
-            if (message.Item.Scope != Core.Models.Enums.Scope.WebApplication && message.Item.Id != myLocation)
+            if (message.Item.Scope == Core.Models.Enums.Scope.WebApplication && message.Item.Id != myLocation)
             {
                 // report other web applications to task manager to get it processed by different actor
                 Context.Parent.Tell(message);

@@ -47,7 +47,7 @@ namespace FeatureAdmin.Actors
 
             foreach (Location l in locations)
             {
-                Sender.Tell(new ItemUpdated<Location>(location));
+                Sender.Tell(new ItemUpdated<Location>(l));
             }
         }
     }
