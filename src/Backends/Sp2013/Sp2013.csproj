@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DE7FAC0C-782B-4BA1-B1B8-3101955FC888}</ProjectGuid>
+    <ProjectGuid>{5D1949A6-17ED-4203-98F8-2B82415F97C1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FeatureAdmin.SampleData</RootNamespace>
-    <AssemblyName>FeatureAdmin.SampleData</AssemblyName>
+    <RootNamespace>FeatureAdmin.Backends.Sp2013</RootNamespace>
+    <AssemblyName>FeatureAdmin.Backends.Sp2013</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +30,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Akka, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Akka.1.3.1\lib\net45\Akka.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Collections.Immutable.1.4.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -42,18 +53,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features.cs" />
+    <Compile Include="Actors\FeatureDefinitionActor.cs" />
+    <Compile Include="Actors\FeatureDefinitionManagerActor.cs" />
+    <Compile Include="Actors\LocationActor.cs" />
+    <Compile Include="Actors\LocationManagerActor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Locations.cs" />
-    <Compile Include="SampleActivatedFeatures.cs" />
-    <Compile Include="SampleLocationHierarchy.cs" />
-    <Compile Include="StandardFeatureDefinitions.cs" />
+    <Compile Include="Services\SpDataService.cs" />
+    <Compile Include="Services\SpConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
+    <ProjectReference Include="..\..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
       <Project>{4cec2e98-5a3b-4793-b606-a5250d046f02}</Project>
       <Name>FeatureAdmin.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
