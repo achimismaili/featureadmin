@@ -39,7 +39,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DEMO</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SP2013</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -49,9 +49,10 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEMO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>fa-logo.ico</ApplicationIcon>
@@ -163,7 +164,6 @@
     <Compile Include="ViewModels\WorkSpaces\ActivationViewModel.cs" />
     <Compile Include="ViewModels\WorkSpaces\UpgradeViewModel.cs" />
     <Compile Include="ViewModels\WorkSpaces\TaskViewModel.cs" />
-    <Compile Include="ViewModels\BaseListViewModelOld.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionListViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />

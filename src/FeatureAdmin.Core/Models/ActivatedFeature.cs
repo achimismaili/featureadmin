@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
+    [Equals]
     public class ActivatedFeature
     {
         private ActivatedFeature()

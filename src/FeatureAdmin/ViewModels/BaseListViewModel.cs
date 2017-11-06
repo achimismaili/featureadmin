@@ -12,9 +12,9 @@ using System.Windows;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : Conductor<T>.Collection.OneActive, IHandle<ItemUpdated<T>>, IHandle<SetSearchFilter<T>> where T : BaseItem
+    public abstract class BaseListViewModel<T> : Conductor<T>.Collection.OneActive, IHandle<ItemUpdated<T>>, IHandle<SetSearchFilter<T>> where T : class, IBaseItem
     {
-        private IEventAggregator eventAggregator;
+        protected IEventAggregator eventAggregator;
 
         private string searchInput;
 
