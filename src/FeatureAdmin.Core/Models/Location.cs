@@ -13,14 +13,22 @@ namespace FeatureAdmin.Core.Models
         {
         }
 
+        public IReadOnlyCollection<ActivatedFeature> ActivatedFeatures
+        {
+            get
+            {
+                return activatedFeatures.AsReadOnly();
+            }
+        }
+
         protected Location(Guid id, string displayName, Guid parent, Scope scope, string url)
             : this()
         {
             Id = id;
-            DisplayName = displayName;
+            DisplayName = displayName == null ? string.Empty : displayName;
             Parent = parent;
             Scope = scope;
-            Url = url;
+            Url = url == null ? string.Empty : url;
         }
 
         protected Location(Guid id, string displayName, Guid parent, Scope scope, string url, IEnumerable<ActivatedFeature> activatedFeatures)
@@ -41,9 +49,9 @@ namespace FeatureAdmin.Core.Models
             }
         }
 
-        public Guid Parent { get; protected set; }
+        public Guid Parent { get;  }
 
-        public string Url { get; protected set; }
+        public string Url { get;  }
 
         public static Location GetDummyFarmForLoadCommand()
         {

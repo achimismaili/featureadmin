@@ -12,10 +12,10 @@ using System.Windows;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : Conductor<T>.Collection.OneActive, IHandle<ItemUpdated<T>>, IHandle<SetSearchFilter<T>> where T : class, IBaseItem
+    public abstract class BaseListViewModel<T> : Conductor<T>.Collection.OneActive, IHandle<SetSearchFilter<T>> where T : class, IBaseItem
     {
         protected IEventAggregator eventAggregator;
-
+        protected DateTime lastUpdateInitiatedSearch;
         private string searchInput;
 
         private Scope? selectedScopeFilter;
@@ -26,6 +26,8 @@ namespace FeatureAdmin.ViewModels
             this.eventAggregator.Subscribe(this);
             ScopeFilters = new ObservableCollection<Scope>(Common.Constants.Search.ScopeFilterList);
             allItems = new ObservableCollection<T>();
+
+            lastUpdateInitiatedSearch = DateTime.Now;
         }
 
         public ObservableCollection<Scope> ScopeFilters { get; private set; }
@@ -82,24 +84,7 @@ namespace FeatureAdmin.ViewModels
             Handle(searchFilter);
         }
 
-        public void Handle(ItemUpdated<T> message)
-        {
-            if (message == null || message.Item == null)
-            {
-                //TODO log
-                return;
-            }
-
-            var itemToAdd = message.Item;
-            if (allItems.Any(l => l.Id == itemToAdd.Id))
-            {
-                var existingLocation = allItems.FirstOrDefault(l => l.Id == itemToAdd.Id);
-                allItems.Remove(existingLocation);
-            }
-
-            allItems.Add(itemToAdd);
-            FilterResults();
-        }
+        
         public void Handle(SetSearchFilter<T> message)
         {
             if (message == null)

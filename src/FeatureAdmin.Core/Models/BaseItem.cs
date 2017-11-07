@@ -11,18 +11,11 @@ namespace FeatureAdmin.Core.Models
             this.activatedFeatures = new List<T>();
         }
 
-        public IReadOnlyCollection<T> ActivatedFeatures
-        {
-            get
-            {
-                return activatedFeatures.AsReadOnly();
-            }
-        }
-
         public string DisplayName { get; protected set; }
         public Guid Id { get; protected set; }
         public Scope Scope { get; protected set; }
-        protected List<T> activatedFeatures { get; set; }
+
+        protected List<T> activatedFeatures;
 
         /// <summary>
         /// adds or removes an activated feature 

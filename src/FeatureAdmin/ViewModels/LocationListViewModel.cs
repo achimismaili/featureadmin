@@ -1,11 +1,12 @@
 ﻿using Caliburn.Micro;
+using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
 using System;
 using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class LocationListViewModel : BaseListViewModel<Location>
+    public class LocationListViewModel : BaseListViewModel<Location>, IHandle<ItemUpdated<Location>>
     {
         public LocationListViewModel(IEventAggregator eventAggregator)
             : base(eventAggregator)
@@ -24,6 +25,33 @@ namespace FeatureAdmin.ViewModels
             return l => l.Id == guid
                        || l.Parent == guid
                        || l.ActivatedFeatures.Any(f => f.FeatureId == guid);
+        }
+
+        public void Handle(ItemUpdated<Location> message)
+        {
+            if (message == null || message.Item == null)
+            {
+                //TODO log
+                return;
+            }
+
+            var itemToAdd = message.Item;
+            if (!allItems.Any(l => l.Id == itemToAdd.Id))
+            {
+                //    var existingLocation = allItems.FirstOrDefault(l => l.Id == itemToAdd.Id);
+                //    allItems.Remove(existingLocation);
+                //}
+
+                allItems.Add(itemToAdd);
+            }
+
+            //if (lastUpdateInitiatedSearch.AddSeconds(3) < DateTime.Now)
+            //{
+            //    lastUpdateInitiatedSearch = DateTime.Now;
+                FilterResults();
+            //}
+
+
         }
 
         /// <summary>

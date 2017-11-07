@@ -7,95 +7,44 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>, IHandle<ItemUpdated<Location>>
+    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>, IHandle<ItemUpdated<FeatureDefinition>>
     {
         public FeatureDefinitionListViewModel(IEventAggregator eventAggregator)
          : base(eventAggregator)
         {
         }
 
-        /// <summary>
-        /// In feature definitions, activated features are just saved as guids
-        /// </summary>
-        /// <param name="message">item updated containing updated location</param>
-        public void Handle(ItemUpdated<Location> message)
+        public void Handle(ItemUpdated<FeatureDefinition> message)
         {
-            if (message == null || message.Item == null ||
-                message.Item.ActivatedFeatures == null || message.Item.ActivatedFeatures.Count == 0)
+            if (message == null || message.Item == null)
             {
                 //TODO log
                 return;
             }
 
-            var location = message.Item;
+            var itemToAdd = message.Item;
 
-            var locationId = location.Id;
+            var existingItem = allItems.FirstOrDefault(l => l == itemToAdd);
 
-            var updatedFeatures = location.ActivatedFeatures.Select(f => f.FeatureId).ToList();
-
-            // get existing activated features for this location
-
-            var existingFeatures = Items.Where(GetSearchForGuid(locationId));
-            if (existingFeatures != null && existingFeatures.Count() > 0)
+            if (existingItem != null)
             {
-                foreach (FeatureDefinition fd in existingFeatures)
-                {
-                    if (!updatedFeatures.Contains(fd.Id))
+                    foreach (Guid f in existingItem.ActivatedFeatures)
                     {
-                        Items.Remove(fd);
-                        fd.ToggleActivatedFeature(locationId, false);
-                        Items.Add(fd);
+                    itemToAdd.ToggleActivatedFeature(f, true);
                     }
-                    else
-                    {
-                        updatedFeatures.Remove(fd.Id);
-                    }
-                }
+
+                allItems.Remove(existingItem);
             }
 
-            foreach (Guid f in updatedFeatures)
-            {
-                var fdExisting = Items.FirstOrDefault(fd => fd.Id == f);
+            allItems.Add(itemToAdd);
 
-                if (fdExisting != null)
-                {
-                    Items.Remove(fdExisting);
-                    fdExisting.ToggleActivatedFeature(locationId, true);
-                    Items.Add(fdExisting);
-                }
-                else
-                {
-                    var featureToAdd = location.ActivatedFeatures.FirstOrDefault(af => af.FeatureId == f);
-                    if (featureToAdd != null )
-                    {
-                        FeatureDefinition newDef;
-
-                        if (featureToAdd.Faulty || featureToAdd.Definition == null)
-                        {
-                            newDef = FeatureDefinition.GetFaultyDefinition(
-                                featureToAdd.FeatureId,
-                                location.Scope,
-                                featureToAdd.Version
-                              );
-                            
-                        }
-                        else
-                        {
-                            newDef = featureToAdd.Definition;
-                        }
-
-                        newDef.ToggleActivatedFeature(f, true);
-                        Items.Add(newDef);
-                    }
-                    else
-                    {
-                        //TODO Log unexpected definition not found
-                    }
-                    
-                }
-            }
-
+            //if (lastUpdateInitiatedSearch.AddSeconds(3) < DateTime.Now)
+            //{
+            //    lastUpdateInitiatedSearch = DateTime.Now;
             FilterResults();
+            //}
+
+
         }
 
         /// <summary>

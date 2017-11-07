@@ -28,7 +28,16 @@ namespace FeatureAdmin.Actors
             }
 
             var location =  message.Item;
-            eventAggregator.PublishOnUIThread(new ItemUpdated<Location>(location));
+            eventAggregator.PublishOnUIThread(message);
+
+            foreach (ActivatedFeature f in location.ActivatedFeatures)
+            {
+                var fd = FeatureDefinition.GetFeatureDefinition(f, location.Scope);
+
+                eventAggregator.PublishOnUIThread(new ItemUpdated<FeatureDefinition>(fd));
+            }
+
+
         }
 
         private void FeatureDefinitionUpdated(ItemUpdated<FeatureDefinition> message)
