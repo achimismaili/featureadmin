@@ -1,0 +1,13 @@
+Todos FeatureAdmin:
+
+- consolidate load messages
+- task msg, model, functionality
+- start end of a task, percentage
+- log serilog?
+- modal window for confirmation
+- menu for: activation, upgrade, repair, Log
+- feature upgrade
+- store settings in config values
+- settings fly in window
+
+
