@@ -6,15 +6,25 @@ namespace FeatureAdmin.Core.Messages.Tasks
 {
     public class TaskUpdate
     {
-        public TaskUpdate(Guid taskId, string logEntry, decimal? newPercentage = null)
+        private TaskUpdate(Guid taskId)
         {
             TaskId = taskId;
-            LogEntry = logEntry;
-            NewPercentage = NewPercentage;
         }
 
-        public TaskUpdate(Guid taskId, int affectedFeatures, int affectedWebs, int affectedSites, int affectedWebApps, int affectedFarms, bool expected = false)
-            : this(taskId, null)
+        public TaskUpdate(Guid taskId, string logEntry, LogTaskStatus status = LogTaskStatus.InProgress)
+            : this(taskId)
+        {
+            LogEntry = logEntry;
+        }
+
+        public TaskUpdate(Guid taskId, decimal newPercentage, LogTaskStatus status = LogTaskStatus.InProgress)
+        : this(taskId)
+        {
+            NewPercentage = newPercentage;
+        }
+
+        public TaskUpdate(Guid taskId, int affectedFeatures, int affectedWebs, int affectedSites, int affectedWebApps, int affectedFarms, bool expected = false, LogTaskStatus status = LogTaskStatus.InProgress)
+        : this(taskId)
         {
             AffectedFeatures = affectedFeatures;
             AffectedWebs = affectedWebs;

@@ -57,6 +57,7 @@
     <Compile Include="Messages\ItemUpdated.cs" />
     <Compile Include="Models\IBaseItem.cs" />
     <Compile Include="Models\BaseItem.cs" />
+    <Compile Include="Models\Enums\TaskUpdateType.cs" />
     <Compile Include="Models\Enums\TaskType.cs" />
     <Compile Include="Models\LogTask.cs" />
     <Compile Include="Models\Enums\LogTaskStatus.cs" />
