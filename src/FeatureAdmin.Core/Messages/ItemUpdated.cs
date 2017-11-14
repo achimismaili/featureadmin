@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Core.Messages
 {
-    public class ItemUpdated<T> where T : IBaseItem
+    public class ItemUpdated<T> where T : class
     {
         public object i;
 

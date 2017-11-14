@@ -7,14 +7,14 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>, IHandle<ItemUpdated<FeatureDefinition>>
+    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>, IHandle<ItemUpdated<IEnumerable<FeatureDefinition>>>
     {
         public FeatureDefinitionListViewModel(IEventAggregator eventAggregator)
          : base(eventAggregator)
         {
         }
 
-        public void Handle(ItemUpdated<FeatureDefinition> message)
+        public void Handle(ItemUpdated<IEnumerable<FeatureDefinition>> message)
         {
             if (message == null || message.Item == null)
             {
@@ -22,21 +22,24 @@ namespace FeatureAdmin.ViewModels
                 return;
             }
 
-            var itemToAdd = message.Item;
+            var featureDefinitions = message.Item;
 
-            var existingItem = allItems.FirstOrDefault(l => l == itemToAdd);
-
-            if (existingItem != null)
+            foreach (FeatureDefinition fd in featureDefinitions)
             {
+                var existingItem = allItems.FirstOrDefault(l => l.Id == fd.Id);
+
+                if (existingItem != null)
+                {
                     foreach (Guid f in existingItem.ActivatedFeatures)
                     {
-                    itemToAdd.ToggleActivatedFeature(f, true);
+                        fd.ToggleActivatedFeature(f, true);
                     }
+                    allItems.Remove(existingItem);
+                }
 
-                allItems.Remove(existingItem);
+                allItems.Add(fd);
+
             }
-
-            allItems.Add(itemToAdd);
 
             //if (lastUpdateInitiatedSearch.AddSeconds(3) < DateTime.Now)
             //{

@@ -4,6 +4,8 @@ using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Messages;
 using Caliburn.Micro;
 using FeatureAdmin.ViewModels;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FeatureAdmin.Actors
 {
@@ -15,11 +17,11 @@ namespace FeatureAdmin.Actors
         {
             this.eventAggregator = eventAggregator;
 
-            Receive<ItemUpdated<Location>>(message => LocationUpdated(message));
+            Receive<ItemUpdated<IEnumerable<Location>>>(message => LocationUpdated(message));
             Receive<ItemUpdated<FeatureDefinition>>(message => FeatureDefinitionUpdated(message));
 
         }
-        private void LocationUpdated(ItemUpdated<Location> message)
+        private void LocationUpdated(ItemUpdated<IEnumerable<Location>> message)
         {
             if (message == null || message.Item == null)
             {
@@ -27,17 +29,24 @@ namespace FeatureAdmin.Actors
                 throw new ArgumentNullException("LocationUpdated - Did not expect null message!");
             }
 
-            var location =  message.Item;
+            var locations = message.Item;
+
+            // publish locations
             eventAggregator.PublishOnUIThread(message);
 
-            foreach (ActivatedFeature f in location.ActivatedFeatures)
-            {
-                var fd = FeatureDefinition.GetFeatureDefinition(f, location.Scope);
+            var features = locations.SelectMany(l => l.ActivatedFeatures);
 
-                eventAggregator.PublishOnUIThread(new ItemUpdated<FeatureDefinition>(fd));
+            var featureDefinitions = features.Select(f => f.Definition).Distinct();
+
+            foreach (FeatureDefinition fd in featureDefinitions)
+            {
+                    foreach (var locationIdToAdd in features.Where(f => f.Definition == fd).Select(f => f.LocationId))
+                    {
+                    fd.ToggleActivatedFeature(locationIdToAdd, true);
+                    }
             }
 
-
+            eventAggregator.PublishOnUIThread(new ItemUpdated<IEnumerable<FeatureDefinition>>(featureDefinitions));
         }
 
         private void FeatureDefinitionUpdated(ItemUpdated<FeatureDefinition> message)

@@ -4,6 +4,7 @@ using Akka.Event;
 using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
 using System;
+using System.Collections.Generic;
 
 namespace FeatureAdmin.Actors
 {
@@ -23,8 +24,8 @@ namespace FeatureAdmin.Actors
             this.viewModelSyncActor = viewModelSyncActor;
 
             Receive<LoadLocationQuery>(message => LoadLocation(message));
-
-            Receive<ItemUpdated<Location>>(message => LocationUpdated(message));
+            Receive<ItemUpdated <Location>>(message => LocationUpdated(message));
+            Receive<ItemUpdated<IEnumerable<Location>>>(message => LocationsUpdated(message));
         }
 
         private void LoadLocation(LoadLocationQuery message)
@@ -34,7 +35,21 @@ namespace FeatureAdmin.Actors
             _locationActorChild.Tell(message);
         }
 
-        private void LocationUpdated(ItemUpdated<Location> message)
+        private void LocationsUpdated(ItemUpdated<IEnumerable<Location>> message)
+        {
+            if (message == null || message.Item == null)
+            {
+                _log.Error("empty LocationsUpdated message returned!");
+                return;
+            }
+            viewModelSyncActor.Tell(message);
+        }
+
+        /// <summary>
+        /// Only for Farms and Web Applications
+        /// </summary>
+        /// <param name="message"></param>
+             private void LocationUpdated(ItemUpdated<Location> message)
         {
             if (message == null || message.Item == null)
             {
@@ -42,7 +57,13 @@ namespace FeatureAdmin.Actors
                 return;
             }
 
-            if (message.Item.Scope == Core.Models.Enums.Scope.WebApplication && message.Item.Id != myLocation)
+            // because all web apps are loaded as itemupdated with ienumerable, 
+            // and only farm loads with single itemupdated locations
+            // it is no longer possible, that scope is web app and web app id is same as mylocation:
+            // commented out
+            // if (message.Item.Scope == Core.Models.Enums.Scope.WebApplication && message.Item.Id != myLocation)
+
+            if (message.Item.Scope == Core.Models.Enums.Scope.WebApplication)
             {
                 // report other web applications to task manager to get it processed by different actor
                 Context.Parent.Tell(message);

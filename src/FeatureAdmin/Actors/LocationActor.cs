@@ -39,16 +39,20 @@ namespace FeatureAdmin.Actors
             if (location.Scope == Core.Models.Enums.Scope.Farm)
             {
                 locations.AddRange(dataService.LoadFarmAndWebApps());
+
+                foreach (Location l in locations)
+                {
+                    Sender.Tell(new ItemUpdated<Location>(l));
+                }
+
             }
             else
             {
                 locations.AddRange(dataService.LoadNonFarmLocationAndChildren(location));
+                Sender.Tell(new ItemUpdated<IEnumerable<Location>>(locations));
             }
 
-            foreach (Location l in locations)
-            {
-                Sender.Tell(new ItemUpdated<Location>(l));
-            }
+            
         }
     }
 }

@@ -2,11 +2,12 @@
 using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class LocationListViewModel : BaseListViewModel<Location>, IHandle<ItemUpdated<Location>>
+    public class LocationListViewModel : BaseListViewModel<Location>, IHandle<ItemUpdated<IEnumerable<Location>>>
     {
         public LocationListViewModel(IEventAggregator eventAggregator)
             : base(eventAggregator)
@@ -27,7 +28,7 @@ namespace FeatureAdmin.ViewModels
                        || l.ActivatedFeatures.Any(f => f.FeatureId == guid);
         }
 
-        public void Handle(ItemUpdated<Location> message)
+        public void Handle(ItemUpdated<IEnumerable<Location>> message)
         {
             if (message == null || message.Item == null)
             {
@@ -35,20 +36,28 @@ namespace FeatureAdmin.ViewModels
                 return;
             }
 
-            var itemToAdd = message.Item;
-            if (!allItems.Any(l => l.Id == itemToAdd.Id))
-            {
-                //    var existingLocation = allItems.FirstOrDefault(l => l.Id == itemToAdd.Id);
-                //    allItems.Remove(existingLocation);
-                //}
+            var locations = message.Item;
 
-                allItems.Add(itemToAdd);
+            var locationsToReplace = allItems.Where(al => locations.Any(l => l.Id == al.Id)).ToList();
+
+            if (locationsToReplace != null && locationsToReplace.Any())
+            {
+                for (int i = locationsToReplace.Count() - 1; i < 0; i--)
+                {
+                    allItems.Remove(locationsToReplace[i]);
+                }
+            }
+
+            foreach (Location l in locations)
+            {
+                allItems.Add(l);
+
             }
 
             //if (lastUpdateInitiatedSearch.AddSeconds(3) < DateTime.Now)
             //{
             //    lastUpdateInitiatedSearch = DateTime.Now;
-                FilterResults();
+            FilterResults();
             //}
 
 

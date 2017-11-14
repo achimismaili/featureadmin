@@ -25,11 +25,13 @@ namespace FeatureAdmin.Core.Models
         /// <returns>location with changed activatedfeatures list</returns>
         public void ToggleActivatedFeature(T feature, bool add)
         {
-            if (add)
+            var exists = activatedFeatures.Contains(feature);
+
+            if (add && !exists )
             {
                 activatedFeatures.Add(feature);
             }
-            else
+            else if (!add && exists)
             {
                 activatedFeatures.Remove(feature);
             }
