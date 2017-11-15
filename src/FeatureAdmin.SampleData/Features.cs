@@ -35,7 +35,7 @@ namespace FeatureAdmin.SampleData
                     return FeatureDefinition.GetFeatureDefinition(
                         Id, CompatibilityLevel,
                          Title,
-                        Name, Faulty, false,
+                        Name, false,
                         Name, null,
                         Scope,
                         Title,
@@ -75,7 +75,7 @@ namespace FeatureAdmin.SampleData
                     return FeatureDefinition.GetFeatureDefinition(
                          Id, CompatibilityLevel,
                          Title,
-                         Name, Faulty, false,
+                         Name,  false,
                          Name, null,
                          Scope,
                          Title,
@@ -115,7 +115,7 @@ namespace FeatureAdmin.SampleData
                     return FeatureDefinition.GetFeatureDefinition(
                          Id, CompatibilityLevel,
                          Title,
-                         Name, Faulty, false,
+                         Name,  false,
                          Name, null,
                          Scope,
                          Title,
@@ -155,7 +155,7 @@ namespace FeatureAdmin.SampleData
                     return FeatureDefinition.GetFeatureDefinition(
                          Id, CompatibilityLevel,
                          Title,
-                         Name, Faulty, false,
+                         Name,  false,
                          Name, null,
                          Scope,
                          Title,
@@ -195,7 +195,7 @@ namespace FeatureAdmin.SampleData
                     return FeatureDefinition.GetFeatureDefinition(
                          Id, CompatibilityLevel,
                          Title,
-                         Name, Faulty, false,
+                         Name,  false,
                          Name, null,
                          Scope,
                          Title,
@@ -235,7 +235,7 @@ namespace FeatureAdmin.SampleData
                     return FeatureDefinition.GetFeatureDefinition(
                          Id, CompatibilityLevel,
                          Title,
-                         Name, Faulty, false,
+                         Name,  false,
                          Name, null,
                          Scope,
                          Title,

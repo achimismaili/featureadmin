@@ -9,20 +9,23 @@ namespace FeatureAdmin.Backends.Sp2013
 {
     public static class SpConverter
     {
-        public static ActivatedFeature ToActivatedFeature(this SPFeature spFeature, Guid parentId)
+        public static ActivatedFeature ToActivatedFeature(this SPFeature spFeature, Guid parentId, Scope parentScope, string parentUrl)
         {
             FeatureDefinition definition = null;
             bool faulty = false;
+
+            string definitionInstallationScope = ActivatedFeature.GetDefinitionInstallationScope(spFeature.FeatureDefinitionScope == SPFeatureDefinitionScope.Farm, parentUrl);
 
             try
             {
                 if (spFeature.Definition != null)
                 {
                     var fDef = spFeature.Definition;
-                    definition = fDef.ToFeatureDefinition();
+                    definition = fDef.ToFeatureDefinition(definitionInstallationScope);
                 }
                 else
                 {
+                    definition = FeatureDefinition.GetFaultyDefinition(spFeature.DefinitionId, parentScope, spFeature.Version, definitionInstallationScope);
                     faulty = true;
                 }
             }
@@ -40,15 +43,28 @@ namespace FeatureAdmin.Backends.Sp2013
                 spFeature.Properties == null ? null :
                 spFeature.Properties.ToProperties(),
                 spFeature.TimeActivated,
-                spFeature.Version
+                spFeature.Version,
+                definitionInstallationScope
                 );
 
             return feature;
         }
 
 
+        public static IEnumerable<ActivatedFeature> ToActivatedFeatures(this SPFeatureCollection spFeatures, Location parent)
+        {
+            return ToActivatedFeatures(spFeatures, parent.Id, parent.Scope, parent.Url);
+        }
 
-        public static IEnumerable<ActivatedFeature> ToActivatedFeatures(this SPFeatureCollection spFeatures, Guid parentId)
+/// <summary>
+/// 
+/// </summary>
+/// <param name="spFeatures">the features</param>
+/// <param name="parentId">id of parent</param>
+/// <param name="parentScope">scope of parent</param>
+/// <param name="parentUrl">required only for site and web, others can write "Farm"</param>
+/// <returns></returns>
+        public static IEnumerable<ActivatedFeature> ToActivatedFeatures(this SPFeatureCollection spFeatures, Guid parentId, Scope parentScope, string parentUrl)
         {
             var features = new List<ActivatedFeature>();
 
@@ -56,7 +72,7 @@ namespace FeatureAdmin.Backends.Sp2013
             {
                 foreach (var f in spFeatures)
                 {
-                    features.Add(f.ToActivatedFeature(parentId));
+                    features.Add(f.ToActivatedFeature(parentId, parentScope, parentUrl));
                 }
             }
 
@@ -66,7 +82,7 @@ namespace FeatureAdmin.Backends.Sp2013
         public static Location ToLocation(this SPWebService farm)
         {
             var id = farm.Id;
-            var activatedFeatures = farm.Features.ToActivatedFeatures(id);
+            var activatedFeatures = farm.Features.ToActivatedFeatures(id, Scope.Farm, "Farm");
 
             var location = Location.GetFarm(id, activatedFeatures);
 
@@ -77,10 +93,9 @@ namespace FeatureAdmin.Backends.Sp2013
         {
             var id = webApp.Id;
 
-            var activatedFeatures = webApp.Features.ToActivatedFeatures(id);
+            var uri = webApp.GetResponseUri(SPUrlZone.Default);
 
             string url;
-            var uri = webApp.GetResponseUri(SPUrlZone.Default);
 
             if (uri != null)
             {
@@ -91,6 +106,10 @@ namespace FeatureAdmin.Backends.Sp2013
                 url = "No ResponseUri in default zone found.";
             }
 
+
+            var activatedFeatures = webApp.Features.ToActivatedFeatures(id, Scope.WebApplication, url);
+
+            
             var location = Location.GetLocation(
                 id,
                 webApp.DisplayName,
@@ -105,7 +124,7 @@ namespace FeatureAdmin.Backends.Sp2013
         public static Location ToLocation(this SPSite site, Guid parentId)
         {
             var id = site.ID;
-            var activatedFeatures = site.Features.ToActivatedFeatures(id);
+            var activatedFeatures = site.Features.ToActivatedFeatures(id, Scope.Site, site.Url);
 
             string displayName;
 
@@ -133,24 +152,23 @@ namespace FeatureAdmin.Backends.Sp2013
         public static Location ToLocation(this SPWeb web, Guid parentId)
         {
             var id = web.ID;
-            var activatedFeatures = web.Features.ToActivatedFeatures(id);
+            var webUrl = web.Url;
+            var activatedFeatures = web.Features.ToActivatedFeatures(id, Scope.Web, webUrl);
 
             var location = Location.GetLocation(
                 id,
                 web.Title,
                 parentId,
                 Scope.Web,
-                web.Url,
+                webUrl,
                 activatedFeatures
                 );
 
             return location;
         }
 
-        public static FeatureDefinition ToFeatureDefinition(this SPFeatureDefinition spFeatureDefinition)
+        public static FeatureDefinition ToFeatureDefinition(this SPFeatureDefinition spFeatureDefinition, string definitionInstallationScope)
         {
-            bool faulty = false;
-
             var cultureInfo = new System.Globalization.CultureInfo(1033);
 
             if (spFeatureDefinition == null)
@@ -163,7 +181,6 @@ namespace FeatureAdmin.Backends.Sp2013
                 spFeatureDefinition.CompatibilityLevel,
                 spFeatureDefinition.GetDescription(cultureInfo),
                 spFeatureDefinition.DisplayName,
-                faulty,
                 spFeatureDefinition.Hidden,
                 spFeatureDefinition.Name,
                 spFeatureDefinition.Properties == null ? null :
@@ -172,7 +189,8 @@ namespace FeatureAdmin.Backends.Sp2013
                 spFeatureDefinition.GetTitle(cultureInfo),
                 spFeatureDefinition.SolutionId,
                 spFeatureDefinition.UIVersion,
-                spFeatureDefinition.Version);
+                spFeatureDefinition.Version,
+                definitionInstallationScope);
 
             return fd;
         }
