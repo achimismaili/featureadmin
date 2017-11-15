@@ -3,6 +3,7 @@ using Akka.DI.Core;
 using Akka.Event;
 using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
+using System.Collections.Generic;
 
 namespace FeatureAdmin.Actors
 {
@@ -20,7 +21,7 @@ namespace FeatureAdmin.Actors
 
             Receive<LoadFeatureDefinitionQuery>(message => LoadFeatureDefinitions(message));
 
-            Receive<ItemUpdated<FeatureDefinition>>(message => FeatureDefinitionUpdated(message));
+            Receive<ItemUpdated<IEnumerable<FeatureDefinition>>>(message => FeatureDefinitionsUpdated(message));
         }
 
         private void LoadFeatureDefinitions(LoadFeatureDefinitionQuery message)
@@ -30,7 +31,7 @@ namespace FeatureAdmin.Actors
             featureDefinitionActorChild.Tell(message);
         }
 
-        private void FeatureDefinitionUpdated(ItemUpdated<FeatureDefinition> message)
+        private void FeatureDefinitionsUpdated(ItemUpdated<IEnumerable<FeatureDefinition>> message)
         {
                 viewModelSyncActor.Tell(message);
         }

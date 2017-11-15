@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace FeatureAdmin.Core.Models
 {
     [Equals]
-    public class FeatureDefinition : BaseItem<Guid>
+    public class FeatureDefinition : BaseItem<ActivatedFeature>
     {
         private FeatureDefinition(
             Guid id,
@@ -42,14 +42,6 @@ namespace FeatureAdmin.Core.Models
         [IgnoreDuringEquals]
         public string Description { get; private set; }
 
-        [IgnoreDuringEquals]
-        public IReadOnlyCollection<Guid> ActivatedFeatures
-        {
-            get
-            {
-                return activatedFeatures.AsReadOnly();
-            }
-        }
 
         [IgnoreDuringEquals]
         public int Faulty { get; private set; }
@@ -127,7 +119,7 @@ namespace FeatureAdmin.Core.Models
                     fDef = activatedFeature.Definition;
                 }
 
-                fDef.ToggleActivatedFeature(activatedFeature.LocationId, true);
+                fDef.ToggleActivatedFeature(activatedFeature, true);
                 return fDef;
             }
             else

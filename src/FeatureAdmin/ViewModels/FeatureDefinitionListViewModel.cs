@@ -30,7 +30,7 @@ namespace FeatureAdmin.ViewModels
 
                 if (existingItem != null)
                 {
-                    foreach (Guid f in existingItem.ActivatedFeatures)
+                    foreach (var f in existingItem.ActivatedFeatures)
                     {
                         fd.ToggleActivatedFeature(f, true);
                     }
@@ -59,7 +59,7 @@ namespace FeatureAdmin.ViewModels
         {
             // see also https://stackoverflow.com/questions/34220256/how-to-call-method-function-in-where-clause-of-a-linq-query-as-ienumerable-objec
             return fd => fd.Id == guid
-                       || fd.ActivatedFeatures.Any(f => f == guid);
+                       || fd.ActivatedFeatures.Any(f => f.FeatureId == guid);
         }
 
         /// <summary>

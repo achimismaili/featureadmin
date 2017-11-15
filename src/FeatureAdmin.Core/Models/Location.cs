@@ -13,14 +13,6 @@ namespace FeatureAdmin.Core.Models
         {
         }
 
-        public IReadOnlyCollection<ActivatedFeature> ActivatedFeatures
-        {
-            get
-            {
-                return activatedFeatures.AsReadOnly();
-            }
-        }
-
         protected Location(Guid id, string displayName, Guid parent, Scope scope, string url)
             : this()
         {

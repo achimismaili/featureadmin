@@ -18,7 +18,7 @@ namespace FeatureAdmin.Actors
             this.eventAggregator = eventAggregator;
 
             Receive<ItemUpdated<IEnumerable<Location>>>(message => LocationUpdated(message));
-            Receive<ItemUpdated<FeatureDefinition>>(message => FeatureDefinitionUpdated(message));
+            Receive<ItemUpdated<IEnumerable<FeatureDefinition>>>(message => FeatureDefinitionsUpdated(message));
 
         }
         private void LocationUpdated(ItemUpdated<IEnumerable<Location>> message)
@@ -36,20 +36,20 @@ namespace FeatureAdmin.Actors
 
             var features = locations.SelectMany(l => l.ActivatedFeatures);
 
-            var featureDefinitions = features.Select(f => f.Definition).Distinct();
+            var featureDefinitions = features.Select(f => f.Definition).Distinct().ToList();
 
             foreach (FeatureDefinition fd in featureDefinitions)
             {
-                    foreach (var locationIdToAdd in features.Where(f => f.Definition == fd).Select(f => f.LocationId))
+                    foreach (var feature in features.Where(f => f.Definition == fd))
                     {
-                    fd.ToggleActivatedFeature(locationIdToAdd, true);
+                    fd.ToggleActivatedFeature(feature, true);
                     }
             }
 
             eventAggregator.PublishOnUIThread(new ItemUpdated<IEnumerable<FeatureDefinition>>(featureDefinitions));
         }
 
-        private void FeatureDefinitionUpdated(ItemUpdated<FeatureDefinition> message)
+        private void FeatureDefinitionsUpdated(ItemUpdated<IEnumerable<FeatureDefinition>> message)
         {
             eventAggregator.PublishOnUIThread(message);
         }

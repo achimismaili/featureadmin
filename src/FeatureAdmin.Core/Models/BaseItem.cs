@@ -17,6 +17,14 @@ namespace FeatureAdmin.Core.Models
 
         protected List<T> activatedFeatures;
 
+        public IReadOnlyCollection<T> ActivatedFeatures
+        {
+            get
+            {
+                return activatedFeatures.AsReadOnly();
+            }
+        }
+
         /// <summary>
         /// adds or removes an activated feature 
         /// </summary>
