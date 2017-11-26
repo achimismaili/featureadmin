@@ -44,7 +44,7 @@ namespace FeatureAdmin.Backends.Sp2013
             }
 
 
-            var feature = ActivatedFeature.GetActivatedFeature(
+            var feature = ActivatedFeatureFactory.GetActivatedFeature(
                 spFeature.DefinitionId,
                 parentId,
                 definition,

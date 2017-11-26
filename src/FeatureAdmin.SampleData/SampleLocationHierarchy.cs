@@ -43,7 +43,7 @@ namespace FeatureAdmin.SampleData
                     Random rand = new Random();
                     if (rand.Next(1, 101) <= 80)
                     {
-                        var feature = ActivatedFeature.GetActivatedFeature(
+                        var feature = ActivatedFeatureFactory.GetActivatedFeature(
                             fd.Id, LocationId, fd, false, null, DateTime.Now.AddMonths(-6).AddDays(-15), fd.Version);
                         featureList.Add(feature);
                     }

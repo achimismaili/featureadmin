@@ -47,7 +47,7 @@ namespace FeatureAdmin.SampleData
 
             public static ActivatedFeature HealthyWeb15ActivatedInActivatedRootWeb()
             {
-                return ActivatedFeature.GetActivatedFeature(
+                return ActivatedFeatureFactory.GetActivatedFeature(
                        Id,
                        Locations.ActivatedRootWeb.Guid,
                        FeatureDefinitionHealthyWeb15,
@@ -87,7 +87,7 @@ namespace FeatureAdmin.SampleData
 
             public static ActivatedFeature HealthySiCo15ActivatedInActivatedSiCo()
             {
-                return ActivatedFeature.GetActivatedFeature(
+                return ActivatedFeatureFactory.GetActivatedFeature(
                        Id,
                        Locations.ActivatedRootWeb.Guid,
                        FeatureDefinitionHealthySiCo15,
@@ -127,7 +127,7 @@ namespace FeatureAdmin.SampleData
 
             public static ActivatedFeature HealthyWebApp15ActivatedInWebApp()
             {
-                return ActivatedFeature.GetActivatedFeature(
+                return ActivatedFeatureFactory.GetActivatedFeature(
                        Id,
                        Locations.ActivatedRootWeb.Guid,
                        FeatureDefinitionHealthyWebApp15,
@@ -167,7 +167,7 @@ namespace FeatureAdmin.SampleData
 
             public static ActivatedFeature HealthyFarm15ActivatedInFarm()
             {
-                return ActivatedFeature.GetActivatedFeature(
+                return ActivatedFeatureFactory.GetActivatedFeature(
                        Id,
                        Locations.ActivatedRootWeb.Guid,
                        FeatureDefinitionHealthyFarm15,
@@ -207,7 +207,7 @@ namespace FeatureAdmin.SampleData
 
             public static ActivatedFeature FaultyWeb15ActivatedInActivatedRootWeb()
             {
-                return ActivatedFeature.GetActivatedFeature(
+                return ActivatedFeatureFactory.GetActivatedFeature(
                         Id,
                         Locations.ActivatedRootWeb.Guid,
                         FeatureDefinitionFaultyWeb15,
@@ -247,7 +247,7 @@ namespace FeatureAdmin.SampleData
 
             public static ActivatedFeature FaultySite15ActivatedInActivatedSite()
             {
-                return ActivatedFeature.GetActivatedFeature(
+                return ActivatedFeatureFactory.GetActivatedFeature(
                         Id,
                         Locations.ActivatedRootWeb.Guid,
                         FeatureDefinitionFaultySite15,
