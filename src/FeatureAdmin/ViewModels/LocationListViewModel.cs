@@ -42,7 +42,7 @@ namespace FeatureAdmin.ViewModels
 
             if (locationsToReplace != null && locationsToReplace.Any())
             {
-                for (int i = locationsToReplace.Count() - 1; i < 0; i--)
+                for (int i = locationsToReplace.Count() - 1; i >= 0; i--)
                 {
                     allItems.Remove(locationsToReplace[i]);
                 }
