@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Factories\FeatureDefinitionFactoryTests.cs" />
     <Compile Include="Models\FeatureDefinitionEqualTests.cs" />
+    <Compile Include="Models\ActivatedFeatureEqualTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
