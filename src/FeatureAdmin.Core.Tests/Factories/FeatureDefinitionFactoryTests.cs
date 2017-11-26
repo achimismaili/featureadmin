@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Core.Tests.Factories
 {
-    public class FeatureDefinitionFactory
+    public class FeatureDefinitionFactoryTests
     {
     }
 }

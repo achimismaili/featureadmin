@@ -4,19 +4,21 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
+    [Equals]
     public abstract class BaseItem<T> : IBaseItem
     {
         public BaseItem()
         {
             this.activatedFeatures = new List<T>();
         }
-
+        [IgnoreDuringEquals]
         public string DisplayName { get; protected set; }
         public Guid Id { get; protected set; }
         public Scope Scope { get; protected set; }
 
         protected List<T> activatedFeatures;
 
+        [IgnoreDuringEquals]
         public IReadOnlyCollection<T> ActivatedFeatures
         {
             get

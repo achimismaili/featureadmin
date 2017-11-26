@@ -60,7 +60,7 @@ namespace FeatureAdmin.Core.Models
         /// Sandboxed Solutions have Scope Site
         /// </remarks>
         public string DefinitionInstallationScope { get; private set; }
-        [IgnoreDuringEquals]
+        
         public string Name { get; private set; }
         [IgnoreDuringEquals]
         public Dictionary<string, string> Properties { get; private set; }
