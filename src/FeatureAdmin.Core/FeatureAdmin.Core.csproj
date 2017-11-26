@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\FeatureDefinitionFactory.cs" />
     <Compile Include="Messages\Tasks\NewTask.cs" />
     <Compile Include="Messages\Tasks\TaskUpdate.cs" />
     <Compile Include="Messages\LoadChildLocationsQuery.cs" />

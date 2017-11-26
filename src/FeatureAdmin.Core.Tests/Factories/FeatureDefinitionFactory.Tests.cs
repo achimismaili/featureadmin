@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin.Core.Tests
+namespace FeatureAdmin.Core.Tests.Factories
 {
-    public class Class1
+    public class FeatureDefinitionFactory
     {
     }
 }

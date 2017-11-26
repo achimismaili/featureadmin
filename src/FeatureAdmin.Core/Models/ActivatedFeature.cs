@@ -47,15 +47,6 @@ namespace FeatureAdmin.Core.Models
 
         public Version Version { get; private set; }
 
-
-        public static string GetDefinitionInstallationScope(bool isFeatureDefinitionScopeEqualFarm, string featureParentUrl)
-        {
-            string definitionInstallationScope = isFeatureDefinitionScopeEqualFarm ?
-                "Farm" : featureParentUrl;
-
-            return definitionInstallationScope;
-        }
-
         public static ActivatedFeature GetActivatedFeature(
                 Guid featureId,
                 Guid locationId,

@@ -32,7 +32,7 @@ namespace FeatureAdmin.SampleData
             {
                 get
                 {
-                    return FeatureDefinition.GetFeatureDefinition(
+                    return FeatureDefinitionFactory.GetFeatureDefinition(
                         Id, CompatibilityLevel,
                          Title,
                         Name, false,
@@ -72,7 +72,7 @@ namespace FeatureAdmin.SampleData
             {
                 get
                 {
-                    return FeatureDefinition.GetFeatureDefinition(
+                    return FeatureDefinitionFactory.GetFeatureDefinition(
                          Id, CompatibilityLevel,
                          Title,
                          Name,  false,
@@ -112,7 +112,7 @@ namespace FeatureAdmin.SampleData
             {
                 get
                 {
-                    return FeatureDefinition.GetFeatureDefinition(
+                    return FeatureDefinitionFactory.GetFeatureDefinition(
                          Id, CompatibilityLevel,
                          Title,
                          Name,  false,
@@ -152,7 +152,7 @@ namespace FeatureAdmin.SampleData
             {
                 get
                 {
-                    return FeatureDefinition.GetFeatureDefinition(
+                    return FeatureDefinitionFactory.GetFeatureDefinition(
                          Id, CompatibilityLevel,
                          Title,
                          Name,  false,
@@ -192,7 +192,7 @@ namespace FeatureAdmin.SampleData
             {
                 get
                 {
-                    return FeatureDefinition.GetFeatureDefinition(
+                    return FeatureDefinitionFactory.GetFeatureDefinition(
                          Id, CompatibilityLevel,
                          Title,
                          Name,  false,
@@ -232,7 +232,7 @@ namespace FeatureAdmin.SampleData
             {
                 get
                 {
-                    return FeatureDefinition.GetFeatureDefinition(
+                    return FeatureDefinitionFactory.GetFeatureDefinition(
                          Id, CompatibilityLevel,
                          Title,
                          Name,  false,

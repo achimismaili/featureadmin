@@ -9,12 +9,21 @@ namespace FeatureAdmin.Backends.Sp2013
 {
     public static class SpConverter
     {
+        public static string GetDefinitionInstallationScope(bool isFeatureDefinitionScopeEqualFarm, string featureParentUrl)
+        {
+            string definitionInstallationScope = isFeatureDefinitionScopeEqualFarm ?
+                "Farm" : featureParentUrl;
+
+            return definitionInstallationScope;
+        }
+
+
         public static ActivatedFeature ToActivatedFeature(this SPFeature spFeature, Guid parentId, Scope parentScope, string parentUrl)
         {
             FeatureDefinition definition = null;
             bool faulty = false;
 
-            string definitionInstallationScope = ActivatedFeature.GetDefinitionInstallationScope(spFeature.FeatureDefinitionScope == SPFeatureDefinitionScope.Farm, parentUrl);
+            string definitionInstallationScope = GetDefinitionInstallationScope(spFeature.FeatureDefinitionScope == SPFeatureDefinitionScope.Farm, parentUrl);
 
             try
             {
@@ -25,7 +34,7 @@ namespace FeatureAdmin.Backends.Sp2013
                 }
                 else
                 {
-                    definition = FeatureDefinition.GetFaultyDefinition(spFeature.DefinitionId, parentScope, spFeature.Version, definitionInstallationScope);
+                    definition = FeatureDefinitionFactory.GetFaultyDefinition(spFeature.DefinitionId, parentScope, spFeature.Version, definitionInstallationScope);
                     faulty = true;
                 }
             }
@@ -176,7 +185,7 @@ namespace FeatureAdmin.Backends.Sp2013
                 return null;
             }
 
-            var fd = FeatureDefinition.GetFeatureDefinition(
+            var fd = FeatureDefinitionFactory.GetFeatureDefinition(
                 spFeatureDefinition.Id,
                 spFeatureDefinition.CompatibilityLevel,
                 spFeatureDefinition.GetDescription(cultureInfo),
