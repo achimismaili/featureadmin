@@ -11,11 +11,14 @@ namespace FeatureAdmin.Core.Messages
     {
         public object i;
 
-        public ItemUpdated(T item)
+        public ItemUpdated(T item, bool reportToTaskManager = false)
         {
             Item = item;
+            ReportToTaskManager = reportToTaskManager;
         }
 
         public T Item { get; private set; }
+
+        public bool ReportToTaskManager { get; private set; }
     }
 }

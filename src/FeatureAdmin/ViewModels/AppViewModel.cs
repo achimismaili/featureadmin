@@ -88,7 +88,7 @@ namespace FeatureAdmin.ViewModels
             
 
                 Handle(new LoadItem<FeatureDefinition>());
-            Handle(new LoadItem<Location>(Location.GetDummyFarmForLoadCommand()));
+            Handle(new LoadItem<Location>(LocationFactory.GetDummyFarmForLoadCommand()));
         }
     }
 }

@@ -40,10 +40,7 @@ namespace FeatureAdmin.Actors
             {
                 locations.AddRange(dataService.LoadFarmAndWebApps());
 
-                foreach (Location l in locations)
-                {
-                    Sender.Tell(new ItemUpdated<Location>(l));
-                }
+                Sender.Tell(new ItemUpdated<IEnumerable<Location>>(locations, true));
 
             }
             else

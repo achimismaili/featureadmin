@@ -20,7 +20,7 @@ namespace FeatureAdmin.ViewModels
         public void ReLoadFarm()
         {
             eventAggregator.PublishOnUIThread(new LoadItem<FeatureDefinition>());
-            eventAggregator.PublishOnUIThread(new LoadItem<Location>(Location.GetDummyFarmForLoadCommand()));
+            eventAggregator.PublishOnUIThread(new LoadItem<Location>(LocationFactory.GetDummyFarmForLoadCommand()));
         }
     }
 }

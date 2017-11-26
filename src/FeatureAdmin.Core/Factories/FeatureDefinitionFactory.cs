@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
-    public class FeatureDefinitionFactory : BaseItem<ActivatedFeature>
+    public class FeatureDefinitionFactory 
     {
         
 

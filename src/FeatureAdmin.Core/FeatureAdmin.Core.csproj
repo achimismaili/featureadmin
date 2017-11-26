@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Factories\ActivatedFeatureFactory.cs" />
     <Compile Include="Factories\FeatureDefinitionFactory.cs" />
+    <Compile Include="Factories\LocationFactory.cs" />
     <Compile Include="Messages\Tasks\NewTask.cs" />
     <Compile Include="Messages\Tasks\TaskUpdate.cs" />
     <Compile Include="Messages\LoadChildLocationsQuery.cs" />

@@ -93,7 +93,7 @@ namespace FeatureAdmin.Backends.Sp2013
             var id = farm.Id;
             var activatedFeatures = farm.Features.ToActivatedFeatures(id, Scope.Farm, "Farm");
 
-            var location = Location.GetFarm(id, activatedFeatures);
+            var location = LocationFactory.GetFarm(id, activatedFeatures);
 
             return location;
         }
@@ -119,7 +119,7 @@ namespace FeatureAdmin.Backends.Sp2013
             var activatedFeatures = webApp.Features.ToActivatedFeatures(id, Scope.WebApplication, url);
 
             
-            var location = Location.GetLocation(
+            var location = LocationFactory.GetLocation(
                 id,
                 webApp.DisplayName,
                 parentId,
@@ -146,7 +146,7 @@ namespace FeatureAdmin.Backends.Sp2013
                 displayName = "Site has no root web!";
             }
 
-            var location = Location.GetLocation(
+            var location = LocationFactory.GetLocation(
                 id,
                 displayName,
                 parentId,
@@ -164,7 +164,7 @@ namespace FeatureAdmin.Backends.Sp2013
             var webUrl = web.Url;
             var activatedFeatures = web.Features.ToActivatedFeatures(id, Scope.Web, webUrl);
 
-            var location = Location.GetLocation(
+            var location = LocationFactory.GetLocation(
                 id,
                 web.Title,
                 parentId,

@@ -24,7 +24,7 @@ namespace FeatureAdmin.Actors
             this.viewModelSyncActor = viewModelSyncActor;
 
             Receive<LoadLocationQuery>(message => LoadLocation(message));
-            Receive<ItemUpdated <Location>>(message => LocationUpdated(message));
+            Receive<ItemUpdated<Location>>(message => LocationUpdated(message));
             Receive<ItemUpdated<IEnumerable<Location>>>(message => LocationsUpdated(message));
         }
 
@@ -42,14 +42,38 @@ namespace FeatureAdmin.Actors
                 _log.Error("empty LocationsUpdated message returned!");
                 return;
             }
-            viewModelSyncActor.Tell(message);
+
+            if (message.ReportToTaskManager)
+            {
+                var synclocations = new List<Location>();
+                // send web apps to task manager and farm to sync actor
+
+                foreach (Location l in message.Item)
+                {
+                    if (l.Scope == Core.Models.Enums.Scope.WebApplication)
+                    {
+                        // report other web applications to task manager to get it processed by different actor
+                        Context.Parent.Tell(new ItemUpdated<Location>(l));
+                    }
+                    else
+                    {
+                        synclocations.Add(l);
+                    }
+                }
+
+                viewModelSyncActor.Tell(new ItemUpdated<IEnumerable<Location>>(synclocations));
+            }
+            else
+            {
+                viewModelSyncActor.Tell(message);
+            }
         }
 
         /// <summary>
         /// Only for Farms and Web Applications
         /// </summary>
         /// <param name="message"></param>
-             private void LocationUpdated(ItemUpdated<Location> message)
+        private void LocationUpdated(ItemUpdated<Location> message)
         {
             if (message == null || message.Item == null)
             {
@@ -63,11 +87,7 @@ namespace FeatureAdmin.Actors
             // commented out
             // if (message.Item.Scope == Core.Models.Enums.Scope.WebApplication && message.Item.Id != myLocation)
 
-            if (message.Item.Scope == Core.Models.Enums.Scope.WebApplication)
-            {
-                // report other web applications to task manager to get it processed by different actor
-                Context.Parent.Tell(message);
-            }
+
             else
             {
                 // report loaded location to viewmodelsync actor , if this is mylocation or if this location cannot have children
