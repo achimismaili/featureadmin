@@ -1,6 +1,7 @@
 ﻿using Akka.Actor;
 using Caliburn.Micro;
 using FeatureAdmin.Actors;
+using FeatureAdmin.Core.Factories;
 using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;

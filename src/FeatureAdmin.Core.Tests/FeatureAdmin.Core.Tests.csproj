@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Factories\FeatureDefinitionFactory.Tests.cs" />
-    <Compile Include="Models\FeatureDefinition.Tests.cs" />
+    <Compile Include="Models\FeatureDefinitionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +69,16 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\xunit.analyzers.0.8.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
+      <Project>{4cec2e98-5a3b-4793-b606-a5250d046f02}</Project>
+      <Name>FeatureAdmin.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FeatureAdmin.SampleData\FeatureAdmin.SampleData.csproj">
+      <Project>{de7fac0c-782b-4ba1-b1b8-3101955fc888}</Project>
+      <Name>FeatureAdmin.SampleData</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

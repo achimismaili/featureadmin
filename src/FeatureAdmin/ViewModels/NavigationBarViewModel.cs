@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using FeatureAdmin.Core.Factories;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
 using System.Collections.Generic;

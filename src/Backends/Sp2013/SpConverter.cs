@@ -1,4 +1,5 @@
-﻿using FeatureAdmin.Core.Models;
+﻿using FeatureAdmin.Core.Factories;
+using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Models.Enums;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;

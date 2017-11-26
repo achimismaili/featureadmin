@@ -1,9 +1,10 @@
-﻿using FeatureAdmin.Core.Models.Enums;
+﻿using FeatureAdmin.Core.Models;
+using FeatureAdmin.Core.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FeatureAdmin.Core.Models
+namespace FeatureAdmin.Core.Factories
 {
     public class LocationFactory
     {       

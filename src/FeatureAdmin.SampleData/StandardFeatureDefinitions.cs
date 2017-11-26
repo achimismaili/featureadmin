@@ -1,4 +1,5 @@
-﻿using FeatureAdmin.Core.Models;
+﻿using FeatureAdmin.Core.Factories;
+using FeatureAdmin.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
