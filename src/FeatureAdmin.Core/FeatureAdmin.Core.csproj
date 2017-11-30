@@ -38,6 +38,10 @@
       <HintPath>..\packages\Equals.Fody.1.7.1\lib\dotnet\Equals.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="NullGuard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1ca091877d12ca03, processorArchitecture=MSIL">
+      <HintPath>..\packages\NullGuard.Fody.1.6.3\lib\netstandard1.0\NullGuard.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,6 +55,7 @@
     <Compile Include="Factories\ActivatedFeatureFactory.cs" />
     <Compile Include="Factories\FeatureDefinitionFactory.cs" />
     <Compile Include="Factories\LocationFactory.cs" />
+    <Compile Include="NotNullAttribute.cs" />
     <Compile Include="Messages\Tasks\NewTask.cs" />
     <Compile Include="Messages\Tasks\TaskUpdate.cs" />
     <Compile Include="Messages\LoadChildLocationsQuery.cs" />

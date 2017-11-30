@@ -11,7 +11,7 @@ namespace FeatureAdmin.Core.Messages
     {
         public object i;
 
-        public ItemUpdated(T item, bool reportToTaskManager = false)
+        public ItemUpdated([NotNull] T item, bool reportToTaskManager = false)
         {
             Item = item;
             ReportToTaskManager = reportToTaskManager;
