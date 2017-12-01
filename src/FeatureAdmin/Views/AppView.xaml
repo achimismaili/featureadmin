@@ -13,46 +13,75 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ContentControl cal:View.Model="{Binding NavigationBarVm}"
+        <!--<ContentControl cal:View.Model="{Binding NavigationBarVm}"
             Grid.Row="0"
-            ></ContentControl>
+            ></ContentControl>-->
 
+        <Menu Grid.Row="0" IsMainMenu="True">
+            <MenuItem Header="Reload Farm" x:Name="Reload" ToolTip="Reload all locations, feature definitions and activated features."/>
+            <MenuItem Header="View">
+                <MenuItem  Header="Feature _Activation" x:Name="ActivationView" ToolTip="Default view to manage, activate and deactivate features" />
+                <MenuItem  Header="Feature _Upgrade" x:Name="UpgradeView" ToolTip="View for upgrading features" />
+                <MenuItem  Header="_Orphaned and Faulty Features" x:Name="OrphansView" ToolTip="View for managing/removing orphaned and faulty features, that do not have a feature definition anymore."/>
+            </MenuItem>
+            <MenuItem Header="_Activate" x:Name="ActivateFeatures" ToolTip="Activate/Add features"/>
+            <MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"/>
+            <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"/>
+            <MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definitions"/>
+            <MenuItem Header="_Settings">
+                <MenuItem Header="_Elevated Privileges" x:Name="ElevatedPrivilegesSetting" ToolTip="Runs under apppool privileges, when applicable. In Production environments, make sure, compliance reasons do not prevent the activation of this setting." />
+                <MenuItem Header="_Force" x:Name="ForceSetting" ToolTip="When activated, feature modifications are executed with force, if applicable"/>
+            </MenuItem>
+            <MenuItem Header="?">
+                <MenuItem Header="_Help" x:Name="Help" />
+                <MenuItem Header="_About" x:Name="About" />
+            </MenuItem>
+        </Menu>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="2*"/>  
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Left Navigation -->
-            <ItemsControl x:Name="Items"
-                        Grid.Column="0"
-			             >
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button cal:Message.Attach="Show"
-						        Margin="8">
-                            <TextBlock 
-                                FontSize="15"
-                                Text="{Binding DisplayName, Mode=OneWay}"
-									           HorizontalAlignment="Center" />
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <TabControl Grid.Column="0">
+                <TabItem Header="Activation">
+                    <!-- Location -->
+                    <ContentControl cal:View.Model="{Binding LocationListVm}" />
+                </TabItem>
+                <TabItem Header="Upgrade" >
+                    <Grid Background="#FFE5E5E5">
+                        <TextBlock HorizontalAlignment="Left"
+                               Margin="10"
+                               TextWrapping="Wrap"
+                               Text="Upgrade. Meow."
+                               VerticalAlignment="Top"
+                               Width="471"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Cleanup" >
+                    <Grid Background="#FFE5E5E5">
+                        <TextBlock HorizontalAlignment="Left"
+                               Margin="10"
+                               TextWrapping="Wrap"
+                               Text="Cleanup. Meow."
+                               VerticalAlignment="Top"
+                               Width="471"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
             
             <GridSplitter Grid.Column="1" 
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
+
+            <!-- Feature -->
+            <ContentControl cal:View.Model="{Binding FeatureDefinitionListVm}"
+          Grid.Column="2"
+            ></ContentControl>
             
-            <!-- Active WorkSpace -->
-            <ContentControl x:Name="ActiveItem"
-                         Grid.Column="2"  />
         </Grid>
         <ContentControl cal:View.Model="{Binding StatusBarVm}"
            Grid.Row="2"

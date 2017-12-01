@@ -44,7 +44,6 @@ namespace FeatureAdmin.Core.Tests.Models
         public static DateTime TimeActivatedDifferent = new DateTime(1975, 6, 27, 20, 15, 33);
         public static Dictionary<string, string> PropertiesDifferent = new Dictionary<string, string>() { { "asdf2", "asdfasdf" } };
         public static string UiVersionDifferent = "3";
-        private IEnumerable<object> notEquall;
 
         [Fact]
         // Following needs to be equal:

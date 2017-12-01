@@ -11,8 +11,7 @@ using System;
 namespace FeatureAdmin.ViewModels
 {
 
-    public class AppViewModel : Conductor<IWorkSpace>.Collection.OneActive, 
-        IHaveDisplayName, 
+    public class AppViewModel : IHaveDisplayName, 
         Caliburn.Micro.IHandle<LoadItem<Location>>,
         Caliburn.Micro.IHandle<LoadItem<FeatureDefinition>>
     {
@@ -28,35 +27,25 @@ namespace FeatureAdmin.ViewModels
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
 
-            NavigationBarVm = new NavigationBarViewModel(eventAggregator);
+            // NavigationBarVm = new NavigationBarViewModel(eventAggregator);
             StatusBarVm = new StatusBarViewModel(eventAggregator);
 
-            ActivationVm = new WorkSpaces.ActivationViewModel(eventAggregator);
-            UpgradeVm = new WorkSpaces.UpgradeViewModel(eventAggregator);
+            FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator);
 
-            ActivateItem(ActivationVm);
-
-            
-
-            Items.Add(UpgradeVm);
+            LocationListVm = new LocationListViewModel(eventAggregator);
 
             InitializeActors();
 
             InitializeFarmLoad();
-
-            
         }
-
-        public WorkSpaces.ActivationViewModel ActivationVm { get; set; }
-        public WorkSpaces.UpgradeViewModel UpgradeVm { get; set; }
-        public CommandViewModel CommandVm { get; private set; }
 
         public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
 
         public LocationListViewModel LocationListVm { get; private set; }
-       
-        public NavigationBarViewModel NavigationBarVm { get; private set; }
+      
         public StatusBarViewModel StatusBarVm { get; private set; }
+        public string DisplayName { get; set; }
+
         public void Handle(LoadItem<Location> loadCommand)
         {
             taskManagerActorRef.Tell(new LoadLocationQuery(loadCommand.Item));

@@ -165,9 +165,6 @@
     <Compile Include="Messages\ItemSelected.cs" />
     <Compile Include="UIModels\IWorkSpace.cs" />
     <Compile Include="ViewModels\BaseListViewModel.cs" />
-    <Compile Include="ViewModels\WorkSpaces\ActivationViewModel.cs" />
-    <Compile Include="ViewModels\WorkSpaces\UpgradeViewModel.cs" />
-    <Compile Include="ViewModels\WorkSpaces\TaskViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionListViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />
@@ -178,15 +175,6 @@
     </Compile>
     <Compile Include="Views\ActivatedFeatureView.xaml.cs">
       <DependentUpon>ActivatedFeatureView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\WorkSpaces\TaskView.xaml.cs">
-      <DependentUpon>TaskView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\WorkSpaces\UpgradeView.xaml.cs">
-      <DependentUpon>UpgradeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\WorkSpaces\ActivationView.xaml.cs">
-      <DependentUpon>ActivationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CommandView.xaml.cs">
       <DependentUpon>CommandView.xaml</DependentUpon>
@@ -213,18 +201,6 @@
     <Page Include="Views\ActivatedFeatureView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\WorkSpaces\TaskView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\WorkSpaces\UpgradeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\WorkSpaces\ActivationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AppView.xaml">
       <SubType>Designer</SubType>
@@ -317,10 +293,6 @@
     <ProjectReference Include="..\Backends\Demo\Demo.csproj">
       <Project>{e4a06935-054f-446a-b2af-996dc615d775}</Project>
       <Name>Demo</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Backends\Sp2013\Sp2013.csproj">
-      <Project>{5d1949a6-17ed-4203-98f8-2b82415f97c1}</Project>
-      <Name>Sp2013</Name>
     </ProjectReference>
     <ProjectReference Include="..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
       <Project>{4cec2e98-5a3b-4793-b606-a5250d046f02}</Project>

@@ -13,14 +13,14 @@ namespace FeatureAdmin
             builder.RegisterType<AppWindowManager>().As<IWindowManager>().SingleInstance();
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
 
-            //var assembly = typeof(AppViewModel).Assembly;
-            //builder.RegisterAssemblyTypes(assembly)
-            //    .Where(item => item.Name.EndsWith("ViewModel") && item.IsAbstract == false)
-            //    .AsSelf()
-            //    .SingleInstance();
+            var assembly = typeof(AppViewModel).Assembly;
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(item => item.Name.EndsWith("ViewModel") && item.IsAbstract == false)
+                .AsSelf()
+                .SingleInstance();
 
-            builder.RegisterType<LocationListViewModel>().SingleInstance();
-            builder.RegisterType<FeatureDefinitionListViewModel>().SingleInstance();
+            //builder.RegisterType<LocationListViewModel>().SingleInstance();
+            //builder.RegisterType<FeatureDefinitionListViewModel>().SingleInstance();
             // builder.RegisterType<NavigationBarViewModel>().InstancePerRequest();
         }
     }
