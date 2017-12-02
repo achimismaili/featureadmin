@@ -9,7 +9,7 @@
 			 xmlns:local="clr-namespace:FeatureAdmin.Views"
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300">
-      <Grid Background="#33F0A30A">
+    <Grid Background="#33F0A30A">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -18,7 +18,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Label Content="Features"
-            Grid.Row="0" Grid.Column="2" 
+            Grid.Row="0" 
                    FontFamily="{DynamicResource HeaderFontFamily}"
                    Foreground="{DynamicResource GrayBrush1}"
                HorizontalAlignment="Center"
@@ -71,38 +71,49 @@
                           HorizontalAlignment="Stretch"/>
 
         <!-- Active WorkSpace -->
-        <ScrollViewer Grid.Row="4" >
-            <Grid >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <Label Content="Selected feature"
-            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" 
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Content="Selected feature"
+            Grid.Row="0"  
             HorizontalAlignment="Center"
                    FontFamily="{DynamicResource HeaderFontFamily}"
                    Foreground="{DynamicResource GrayBrush1}"
                />
+            <Menu Grid.Row="1" IsMainMenu="False">
+                <MenuItem Header="_Activate" x:Name="ActivateFeatures" ToolTip="Activate/Add features"/>
+                <MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"/>
+                <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"/>
+                <MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definitions"/>
+            </Menu>
+            <ScrollViewer Grid.Row="2" >
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                <Label Content="Name:" 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Name:" 
                
-               Grid.Row="1" Grid.Column="0" />
-                <TextBlock x:Name="ActiveItem_DisplayName" 
+               Grid.Row="2" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_DisplayName" 
            Padding="5"
-               Grid.Row="1" Grid.Column="1" />
-                <Button Name="CopyName"
+               Grid.Row="2" Grid.Column="1" />
+                    <Button Name="CopyName"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_DisplayName)"
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
@@ -110,20 +121,20 @@
                 FontSize="25"
                 Height="30" Width="30"
       
-                Grid.Row="1" Grid.Column="2">n</Button>
+                Grid.Row="2" Grid.Column="2">n</Button>
 
-                <Label Content="Scope:" 
-               Grid.Row="2" Grid.Column="0" />
-                <TextBlock x:Name="ActiveItem_Scope" 
-               Padding="5"
-               Grid.Row="2" Grid.Column="1" />
-
-                <Label Content="Title:" 
+                    <Label Content="Scope:" 
                Grid.Row="3" Grid.Column="0" />
-                <TextBlock x:Name="ActiveItem_Title" 
-            Padding="5"
+                    <TextBlock x:Name="ActiveItem_Scope" 
+               Padding="5"
                Grid.Row="3" Grid.Column="1" />
-                <Button Name="CopyTitle"
+
+                    <Label Content="Title:" 
+               Grid.Row="4" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_Title" 
+            Padding="5"
+               Grid.Row="4" Grid.Column="1" />
+                    <Button Name="CopyTitle"
                 Style="{DynamicResource MetroCircleButtonStyle}"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_Title)"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
@@ -131,46 +142,47 @@
                 FontSize="25"
                 Height="30" Width="30"
        
-                Grid.Row="3" Grid.Column="2">n</Button>
+                Grid.Row="4" Grid.Column="2">n</Button>
 
-                <Label Content="Id:" 
-               Grid.Row="4" Grid.Column="0" />
-                <TextBlock x:Name="ActiveItem_Id" 
+                    <Label Content="Id:" 
+               Grid.Row="5" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_Id" 
                 Padding="5"
-               Grid.Row="4" Grid.Column="1" />
-                <Button Name="CopyId"
+               Grid.Row="5" Grid.Column="1" />
+                    <Button Name="CopyId"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_Id)"
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
                 FontFamily="/Resources/#Entypo"
                 FontSize="25"
                 Height="30" Width="30"
-                Grid.Row="4" Grid.Column="2">n</Button>
+                Grid.Row="5" Grid.Column="2">n</Button>
 
-                <StackPanel 
-            Grid.Row="5" 
-            Orientation="Horizontal"
-            Grid.ColumnSpan="3">
-                    <Button Name="FilterLocation"
-                Style="{DynamicResource AccentedSquareButtonStyle}"
+                    <StackPanel 
+                Grid.Row="6" 
+                Orientation="Horizontal"
+                Grid.ColumnSpan="3">
+                        <Button Name="FilterLocation"
+                            Style="{DynamicResource AccentedSquareButtonStyle}"
                            
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
+                            controls:ControlsHelper.ContentCharacterCasing="Normal"
                             cal:Message.Attach="FilterLocation"
                             >Filter locations where activated</Button>
-                    <!--<Button Name="FilterFeatures"
+                        <!--<Button Name="FilterFeatures"
                             Margin="5,0,0,0"
                 Style="{DynamicResource AccentedSquareButtonStyle}"
                 controls:ControlsHelper.ContentCharacterCasing="Normal"
                cal:Message.Attach="FilterThis"
                >Filter active features</Button>-->
-                </StackPanel>
-                <Label Content="Compatibility:"
+                    </StackPanel>
+                    <Label Content="Compatibility:"
                
-               Grid.Row="6" Grid.Column="0" />
-                <TextBlock x:Name="Item_CompatibilityLevel"
+               Grid.Row="7" Grid.Column="0" />
+                    <TextBlock x:Name="Item_CompatibilityLevel"
                Padding="5"
-               Grid.Row="6" Grid.Column="1" />
-            </Grid>
-        </ScrollViewer>
+               Grid.Row="7" Grid.Column="1" />
+                </Grid>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </UserControl>

@@ -8,45 +8,45 @@
              >
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!--<ContentControl cal:View.Model="{Binding NavigationBarVm}"
-            Grid.Row="0"
-            ></ContentControl>-->
-
-        <Menu Grid.Row="0" IsMainMenu="True">
-            <MenuItem Header="Reload Farm" x:Name="Reload" ToolTip="Reload all locations, feature definitions and activated features."/>
-            <MenuItem Header="View">
-                <MenuItem  Header="Feature _Activation" x:Name="ActivationView" ToolTip="Default view to manage, activate and deactivate features" />
-                <MenuItem  Header="Feature _Upgrade" x:Name="UpgradeView" ToolTip="View for upgrading features" />
-                <MenuItem  Header="_Orphaned and Faulty Features" x:Name="OrphansView" ToolTip="View for managing/removing orphaned and faulty features, that do not have a feature definition anymore."/>
-            </MenuItem>
-            <MenuItem Header="_Activate" x:Name="ActivateFeatures" ToolTip="Activate/Add features"/>
-            <MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"/>
-            <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"/>
-            <MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definitions"/>
-            <MenuItem Header="_Settings">
-                <MenuItem Header="_Elevated Privileges" x:Name="ElevatedPrivilegesSetting" ToolTip="Runs under apppool privileges, when applicable. In Production environments, make sure, compliance reasons do not prevent the activation of this setting." />
-                <MenuItem Header="_Force" x:Name="ForceSetting" ToolTip="When activated, feature modifications are executed with force, if applicable"/>
-            </MenuItem>
-            <MenuItem Header="?">
-                <MenuItem Header="_Help" x:Name="Help" />
-                <MenuItem Header="_About" x:Name="About" />
-            </MenuItem>
-        </Menu>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="2*"/>  
+                <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            <!--Menu and Feature definition-->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Menu IsMainMenu="True">
+                    <MenuItem Header="Reload Farm" x:Name="Reload" ToolTip="Reload all locations, feature definitions and activated features."/>
+                    <MenuItem Header="_Settings">
+                        <MenuItem Header="_Elevated Privileges" x:Name="ElevatedPrivilegesSetting" ToolTip="Runs under apppool privileges, when applicable. In Production environments, make sure, compliance reasons do not prevent the activation of this setting." />
+                        <MenuItem Header="_Force" x:Name="ForceSetting" ToolTip="When activated, feature modifications are executed with force, if applicable"/>
+                    </MenuItem>
+                    <MenuItem Header="?">
+                        <MenuItem Header="_Help" x:Name="Help" />
+                        <MenuItem Header="_About" x:Name="About" />
+                    </MenuItem>
+                </Menu>
+                <!-- Feature -->
+                <ContentControl cal:View.Model="{Binding FeatureDefinitionListVm}"
+                                Grid.Row="1"
+            ></ContentControl>
+            </Grid>
+            <GridSplitter Grid.Column="1" 
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"/>
 
-            <TabControl Grid.Column="0">
+            <TabControl Grid.Column="2">
                 <TabItem Header="Activation">
                     <!-- Location -->
                     <ContentControl cal:View.Model="{Binding LocationListVm}" />
@@ -72,16 +72,18 @@
                     </Grid>
                 </TabItem>
             </TabControl>
-            
-            <GridSplitter Grid.Column="1" 
+
+            <GridSplitter Grid.Column="3" 
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
 
-            <!-- Feature -->
-            <ContentControl cal:View.Model="{Binding FeatureDefinitionListVm}"
-          Grid.Column="2"
-            ></ContentControl>
-            
+            <Grid Grid.Column="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+            </Grid>
         </Grid>
         <ContentControl cal:View.Model="{Binding StatusBarVm}"
            Grid.Row="2"

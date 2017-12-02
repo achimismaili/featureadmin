@@ -95,8 +95,8 @@
                    Foreground="{DynamicResource GrayBrush1}"
                   HorizontalAlignment="Center" />
 
+                
                 <Label Content="Title:" 
-               
                Grid.Row="1" Grid.Column="0" />
                 <TextBlock x:Name="ActiveItem_DisplayName" 
            Padding="5"
