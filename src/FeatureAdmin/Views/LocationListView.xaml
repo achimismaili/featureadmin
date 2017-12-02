@@ -70,10 +70,32 @@
             Grid.Row="3" 
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
+        <GridSplitter Grid.Row="3" 
+                      Background="White"
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"/>
 
         <!-- Active WorkSpace -->
-        <ScrollViewer   Grid.Row="4">
-            <Grid Background="LightGray" >
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Content="Selected location"
+            Grid.Row="0"  
+            HorizontalAlignment="Center"
+                   FontFamily="{DynamicResource HeaderFontFamily}"
+                   Foreground="{DynamicResource GrayBrush1}"
+               />
+            <Menu Grid.Row="1" IsMainMenu="False">
+                <MenuItem Header="_Activate" x:Name="ActivateFeatures" ToolTip="Activate/Add features"/>
+                <MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"/>
+                <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"/>
+                <MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definitions"/>
+            </Menu>
+            <ScrollViewer Grid.Row="2" >
+                <Grid Background="LightGray" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -84,19 +106,12 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Label Content="Selected location"
-                 Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="3" 
-                   FontFamily="{DynamicResource HeaderFontFamily}"
-                   Foreground="{DynamicResource GrayBrush1}"
-                  HorizontalAlignment="Center" />
-
-                
-                <Label Content="Title:" 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Title:" 
                Grid.Row="1" Grid.Column="0" />
                 <TextBlock x:Name="ActiveItem_DisplayName" 
            Padding="5"
@@ -172,5 +187,6 @@
                Grid.Row="6" Grid.Column="1" />
             </Grid>
         </ScrollViewer>
+        </Grid>
     </Grid>
 </UserControl>

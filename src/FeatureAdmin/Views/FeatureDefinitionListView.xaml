@@ -67,6 +67,7 @@
         </DataGrid>
 
         <GridSplitter Grid.Row="3" 
+                      Background="White"
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
 

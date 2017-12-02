@@ -26,7 +26,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Menu IsMainMenu="True">
+                <Menu IsMainMenu="True" Margin="0 0 0 17">
                     <MenuItem Header="Reload Farm" x:Name="Reload" ToolTip="Reload all locations, feature definitions and activated features."/>
                     <MenuItem Header="_Settings">
                         <MenuItem Header="_Elevated Privileges" x:Name="ElevatedPrivilegesSetting" ToolTip="Runs under apppool privileges, when applicable. In Production environments, make sure, compliance reasons do not prevent the activation of this setting." />
@@ -43,6 +43,7 @@
             ></ContentControl>
             </Grid>
             <GridSplitter Grid.Column="1" 
+                          Background="White"
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
 
@@ -74,6 +75,7 @@
             </TabControl>
 
             <GridSplitter Grid.Column="3" 
+                          Background="White"
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
 
