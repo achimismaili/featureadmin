@@ -9,6 +9,7 @@
 			 xmlns:local="clr-namespace:FeatureAdmin.Views"
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300">
+    
     <Grid Background="#33F0A30A">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -19,8 +20,8 @@
         </Grid.RowDefinitions>
         <Label Content="Features"
             Grid.Row="0" 
-                   FontFamily="{DynamicResource HeaderFontFamily}"
-                   Foreground="{DynamicResource GrayBrush1}"
+                   Foreground="#FFB17807"
+               FontWeight="Bold"
                HorizontalAlignment="Center"
                />
         <Grid  Grid.Row="1">
@@ -81,8 +82,8 @@
             <Label Content="Selected feature"
             Grid.Row="0"  
             HorizontalAlignment="Center"
-                   FontFamily="{DynamicResource HeaderFontFamily}"
-                   Foreground="{DynamicResource GrayBrush1}"
+                   Foreground="#FFB17807"
+                   FontWeight="Bold"
                />
             <Menu Grid.Row="1" IsMainMenu="False">
                 <MenuItem Header="_Activate" x:Name="ActivateFeatures" ToolTip="Activate/Add features"/>
