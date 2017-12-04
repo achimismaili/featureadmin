@@ -34,7 +34,7 @@ namespace FeatureAdmin.Tests
             // Create the main VM injecting the mocked interfaces
             // Mocking interfaces is always good as there is a lot of freedom
             // Use mock.Object to get hold of the object, the mock is just a proxy that decorates the original object
-            _mainVM = new AppViewModel( _eventAggregator.Object);
+            _mainVM = new AppViewModel(_windowManager.Object, _eventAggregator.Object);
         }
 
         /// <summary>

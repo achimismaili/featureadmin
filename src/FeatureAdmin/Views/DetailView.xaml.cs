@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FeatureAdminForm
+namespace FeatureAdmin.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for DetailView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class DetailView : UserControl
     {
-        public MainWindow()
+        public DetailView()
         {
             InitializeComponent();
         }

@@ -72,5 +72,17 @@ namespace FeatureAdmin.Core.Models
         public string UIVersion { get; private set; }
         [IgnoreDuringEquals]
         public Version Version { get; private set; }
+        [IgnoreDuringEquals]
+        public override Dictionary<string, string> Details
+        {
+            get
+            {
+                var details = new Dictionary<string, string>() {
+                    { "SolutionId", this.SolutionId.ToString()   }
+                };
+
+                return details;
+            }
+        }
     }
 }

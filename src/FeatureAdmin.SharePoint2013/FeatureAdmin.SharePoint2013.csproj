@@ -45,7 +45,6 @@
     <Compile Include="Factories\FeatureDefinitionFactory.cs" />
     <Compile Include="Factories\FeatureParentFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\SharePointRepositoryRead.cs" />
     <Compile Include="SharePointApi\FarmRead.cs" />
     <Compile Include="SharePointApi\FeatureActivationAndDeactivationBulk.cs" />
     <Compile Include="SharePointApi\FeatureActivationAndDeactivationCore.cs" />

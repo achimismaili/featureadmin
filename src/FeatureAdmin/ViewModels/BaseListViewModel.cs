@@ -28,6 +28,9 @@ namespace FeatureAdmin.ViewModels
             allItems = new ObservableCollection<T>();
 
             lastUpdateInitiatedSearch = DateTime.Now;
+
+            // https://github.com/Fody/PropertyChanged/issues/269
+            ActivationProcessed += (s, e) => CanShowDetails = ActiveItem != null;
         }
 
         public ObservableCollection<Scope> ScopeFilters { get; private set; }
@@ -84,7 +87,17 @@ namespace FeatureAdmin.ViewModels
             Handle(searchFilter);
         }
 
+        public void ShowDetails()
+        {
+            var vm = new DetailViewModel(ActiveItem);
+            var message = new OpenWindow(vm);
+            eventAggregator.BeginPublishOnUIThread(message);
+        }
+
+        public bool CanShowDetails { get; protected set; }
         
+        
+
         public void Handle(SetSearchFilter<T> message)
         {
             if (message == null)

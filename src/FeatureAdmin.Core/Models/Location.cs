@@ -45,5 +45,16 @@ namespace FeatureAdmin.Core.Models
 
         public string Url { get;  }
 
+        public override Dictionary<string, string> Details
+        {
+            get
+            {
+                var details = new Dictionary<string, string>() {
+                    { "Url", this.Url  }
+                };
+
+                return details;
+            }
+        }
     }
 }

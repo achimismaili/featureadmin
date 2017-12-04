@@ -27,6 +27,9 @@ namespace FeatureAdmin.Core.Models
             }
         }
 
+        [IgnoreDuringEquals]
+        public abstract Dictionary<string, string> Details { get; }
+
         /// <summary>
         /// adds or removes an activated feature 
         /// </summary>

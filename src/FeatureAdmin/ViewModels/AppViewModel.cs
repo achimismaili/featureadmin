@@ -11,21 +11,28 @@ using System;
 namespace FeatureAdmin.ViewModels
 {
 
-    public class AppViewModel : IHaveDisplayName, 
+    public class AppViewModel : IHaveDisplayName,
         Caliburn.Micro.IHandle<LoadItem<Location>>,
-        Caliburn.Micro.IHandle<LoadItem<FeatureDefinition>>
+        Caliburn.Micro.IHandle<LoadItem<FeatureDefinition>>,
+        Caliburn.Micro.IHandle<OpenWindow>
     {
-        
+
         private readonly IEventAggregator eventAggregator;
+
+        private readonly IWindowManager windowManager;
 
         private IActorRef taskManagerActorRef;
         private IActorRef viewModelSyncActorRef;
-        public AppViewModel(IEventAggregator eventAggregator)
+        public AppViewModel(IWindowManager windowManager, IEventAggregator eventAggregator)
         {
             DisplayName = "Feature Admin 3 for SharePoint 2013";
 
+            this.windowManager = windowManager;
+
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
+
+
 
             // NavigationBarVm = new NavigationBarViewModel(eventAggregator);
             StatusBarVm = new StatusBarViewModel(eventAggregator);
@@ -42,7 +49,7 @@ namespace FeatureAdmin.ViewModels
         public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
 
         public LocationListViewModel LocationListVm { get; private set; }
-      
+
         public StatusBarViewModel StatusBarVm { get; private set; }
         public string DisplayName { get; set; }
 
@@ -73,12 +80,25 @@ namespace FeatureAdmin.ViewModels
             taskManagerActorRef.Tell(new LoadFeatureDefinitionQuery());
         }
 
+        public void Handle(OpenWindow message)
+        {
+            OpenWindow(message.ViewModel);
+        }
+
         public void InitializeFarmLoad()
         {
-            
 
-                Handle(new LoadItem<FeatureDefinition>());
+
+            Handle(new LoadItem<FeatureDefinition>());
             Handle(new LoadItem<Location>(LocationFactory.GetDummyFarmForLoadCommand()));
+        }
+
+        public void OpenWindow(DetailViewModel viewModel)
+        {
+            dynamic settings = new System.Dynamic.ExpandoObject();
+            settings.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
+
+            this.windowManager.ShowWindow(viewModel, null, settings);
         }
     }
 }

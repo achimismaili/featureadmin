@@ -160,6 +160,7 @@
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Caliburn.Metro.Autofac\EventAggregationAutoSubscriptionModule.cs" />
     <Compile Include="Common\NegatableBooleanToVisibilityConverter.cs" />
+    <Compile Include="Messages\OpenWindow.cs" />
     <Compile Include="Messages\SetSearchFilter.cs" />
     <Compile Include="Messages\LoadItem.cs" />
     <Compile Include="Messages\ItemSelected.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="ViewModels\BaseListViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionListViewModel.cs" />
+    <Compile Include="ViewModels\DetailViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />
     <Compile Include="ViewModels\NavigationBarViewModel.cs" />
     <Compile Include="ViewModels\LocationListViewModel.cs" />
@@ -178,6 +180,9 @@
     </Compile>
     <Compile Include="Views\CommandView.xaml.cs">
       <DependentUpon>CommandView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailView.xaml.cs">
+      <DependentUpon>DetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FeatureDefinitionListView.xaml.cs">
       <DependentUpon>FeatureDefinitionListView.xaml</DependentUpon>
@@ -225,6 +230,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\CommandView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

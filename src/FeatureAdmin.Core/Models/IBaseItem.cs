@@ -9,5 +9,7 @@ namespace FeatureAdmin.Core.Models
         string DisplayName { get; }
         Guid Id { get;  }
         Scope Scope { get;  }
+
+        Dictionary<string, string> Details { get; }
     }
 }
