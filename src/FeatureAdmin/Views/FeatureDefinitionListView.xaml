@@ -4,12 +4,13 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
 			 xmlns:cal="http://www.caliburnproject.org"
              xmlns:comm="clr-namespace:FeatureAdmin.Common"
 			 xmlns:local="clr-namespace:FeatureAdmin.Views"
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300">
-    
+
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -115,15 +116,13 @@
                     <TextBlock x:Name="ActiveItem_DisplayName" 
            Padding="5"
                Grid.Row="2" Grid.Column="1" />
-                    <Button Name="CopyName"
-                        cal:Message.Attach="CopyToClipBoard(ActiveItem_DisplayName)"
-                Style="{DynamicResource MetroCircleButtonStyle}"
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
-               FontFamily="/Resources/#Entypo"
-                FontSize="25"
-                Height="30" Width="30"
-      
-                Grid.Row="2" Grid.Column="2">n</Button>
+                    <Button Name="CopyName" Style="{DynamicResource MetroCircleButtonStyle}"
+						cal:Message.Attach="CopyToClipBoard(ActiveItem_DisplayName)"
+                        Height="30" Width="30"
+				        controls:ControlsHelper.ContentCharacterCasing="Normal"
+				        Grid.Row="2" Grid.Column="2">
+                        <fa:FontAwesome Icon="Clone" />
+                    </Button>
 
                     <Label Content="Scope:" 
                Grid.Row="3" Grid.Column="0" />
@@ -136,29 +135,26 @@
                     <TextBlock x:Name="ActiveItem_Title" 
             Padding="5"
                Grid.Row="4" Grid.Column="1" />
-                    <Button Name="CopyTitle"
-                Style="{DynamicResource MetroCircleButtonStyle}"
-                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Title)"
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
-                FontFamily="/Resources/#Entypo"
-                FontSize="25"
-                Height="30" Width="30"
-       
-                Grid.Row="4" Grid.Column="2">n</Button>
+                    <Button Name="CopyTitle" Style="{DynamicResource MetroCircleButtonStyle}"
+						cal:Message.Attach="CopyToClipBoard(ActiveItem_Title)"
+                        Background="Transparent" Height="30" Width="30"
+				        controls:ControlsHelper.ContentCharacterCasing="Normal"
+				        Grid.Row="4" Grid.Column="2">
+                        <fa:FontAwesome Icon="Clone" />
+                    </Button>
 
                     <Label Content="Id:" 
                Grid.Row="5" Grid.Column="0" />
                     <TextBlock x:Name="ActiveItem_Id" 
                 Padding="5"
                Grid.Row="5" Grid.Column="1" />
-                    <Button Name="CopyId"
-                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Id)"
-                Style="{DynamicResource MetroCircleButtonStyle}"
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
-                FontFamily="/Resources/#Entypo"
-                FontSize="25"
-                Height="30" Width="30"
-                Grid.Row="5" Grid.Column="2">n</Button>
+                    <Button Name="CopyId" Style="{DynamicResource MetroCircleButtonStyle}"
+						cal:Message.Attach="CopyToClipBoard(ActiveItem_Id)"
+                        Background="Transparent" Height="30" Width="30"
+				        controls:ControlsHelper.ContentCharacterCasing="Normal"
+				        Grid.Row="5" Grid.Column="2">
+                        <fa:FontAwesome Icon="Clone" />
+                    </Button>
 
                     <StackPanel 
                 Grid.Row="6" 

@@ -4,191 +4,183 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
 			 xmlns:cal="http://www.caliburnproject.org"
 			 xmlns:comm="clr-namespace:FeatureAdmin.Common"
 			 xmlns:local="clr-namespace:FeatureAdmin.Views"
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300">
-	<Grid Background="LightGray">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="2*" />
-			<RowDefinition Height="5" />
-			<RowDefinition Height="*" />
-		</Grid.RowDefinitions>
-		<Label Content="Locations"
+    <Grid Background="LightGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Label Content="Locations"
 				 Grid.Row="0"
 			   FontWeight="Bold"
 				  HorizontalAlignment="Center"
 			   />
-		<Grid Grid.Row="1">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
-			<Label Content="Search:"
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Content="Search:"
 				   HorizontalAlignment="Left"
 				   Margin="5,2"
 				   Grid.Row="0" Grid.Column="0" />
-			<TextBox x:Name="SearchInput"
+            <TextBox x:Name="SearchInput"
 					controls:TextBoxHelper.ClearTextButton="True"
 					Margin="5,2"
 					 Grid.Row="0" Grid.Column="1" />
-			<Label Content="Scope Filter:"
+            <Label Content="Scope Filter:"
 				   HorizontalAlignment="Left"
 					   Margin="5,2"
 						   Grid.Row="1" Grid.Column="0" />
-			<ComboBox x:Name="ScopeFilters"
+            <ComboBox x:Name="ScopeFilters"
 				Margin="5,2"
 				IsEditable="True"
 				controls:TextBoxHelper.ClearTextButton="True"
 				Grid.Row="1" Grid.Column="1">
-			</ComboBox>
-		</Grid>
-		<DataGrid x:Name="Items"
+            </ComboBox>
+        </Grid>
+        <DataGrid x:Name="Items"
 				  Margin="5"
 				  AutoGenerateColumns="False"
 				  SelectionMode="Single" 
 				  SelectionUnit="FullRow"
 			Grid.Row="2"
 			CanUserAddRows="False">
-			<DataGrid.Columns>
-				<!-- set mode to one way, because two way was causing issues, when selected item was 'clicked on' again ... -->
-				<DataGridTextColumn Binding="{Binding DisplayName,Mode=OneWay}" Header="Title" />
-				<DataGridTextColumn Binding="{Binding Scope,Mode=OneWay}" Header="Scope" />
-				<DataGridTextColumn Binding="{Binding Url,Mode=OneWay}" Header="Url" />
-			</DataGrid.Columns>
-		</DataGrid>
+            <DataGrid.Columns>
+                <!-- set mode to one way, because two way was causing issues, when selected item was 'clicked on' again ... -->
+                <DataGridTextColumn Binding="{Binding DisplayName,Mode=OneWay}" Header="Title" />
+                <DataGridTextColumn Binding="{Binding Scope,Mode=OneWay}" Header="Scope" />
+                <DataGridTextColumn Binding="{Binding Url,Mode=OneWay}" Header="Url" />
+            </DataGrid.Columns>
+        </DataGrid>
 
-		<GridSplitter 
+        <GridSplitter 
 			Grid.Row="3" 
 						  VerticalAlignment="Stretch"
 						  HorizontalAlignment="Stretch"/>
-		<GridSplitter Grid.Row="3" 
+        <GridSplitter Grid.Row="3" 
 					  Background="LightGray"
 						  VerticalAlignment="Stretch"
 						  HorizontalAlignment="Stretch"/>
 
-		<!-- Active WorkSpace -->
-		<Grid Grid.Row="4">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-			</Grid.RowDefinitions>
-			<Label Content="Selected location"
+        <!-- Active WorkSpace -->
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Content="Selected location"
 			Grid.Row="0"  
 			HorizontalAlignment="Center"
 				   FontWeight="Bold"
 			   />
             <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent">
-				<MenuItem Header="_ShowDetails" x:Name="ShowDetails" ToolTip="Show details for this location in new window"
-                          Background="Transparent"/>
-				<MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"
-                          Background="Transparent"/>
-				<MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"
-                          Background="Transparent"/>
-				<MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definitions"
-                          Background="Transparent"/>
-			</Menu>
+                <MenuItem x:Name="FilterFeatures" ToolTip="Filter activated features for this location"
+                          Background="Transparent" FontSize="18"
+				 cal:Message.Attach="FilterFeature" >
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Icon="MailReply" />
+                            <fa:FontAwesome Icon="Filter" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem x:Name="FilterLocation" ToolTip="Filter this location &amp; children"
+                          Background="Transparent" 
+				FontSize="18"  cal:Message.Attach="FilterThis" >
+                    <MenuItem.Header>
+                            <fa:FontAwesome Icon="Filter" />
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem x:Name="ShowDetails" ToolTip="Show details for this location in new window"
+                          Background="Transparent" FontSize="18">
+                    <MenuItem.Header>
+                        <fa:FontAwesome Icon="Eye" />
+                    </MenuItem.Header>
+                </MenuItem>
+            </Menu>
             <ScrollViewer Grid.Row="2">
-				<Grid >
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="Auto" />
-					</Grid.RowDefinitions>
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition Width="*" />
-						<ColumnDefinition Width="Auto" />
-					</Grid.ColumnDefinitions>
-					<Label Content="Title:" 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Title:" 
 			   Grid.Row="1" Grid.Column="0" />
-					<TextBlock x:Name="ActiveItem_DisplayName" 
+                    <TextBlock x:Name="ActiveItem_DisplayName" 
 		   Padding="5"
 			   Grid.Row="1" Grid.Column="1" />
-					<Button Name="CopyTitle"
+                    <Button Name="CopyTitle" Style="{DynamicResource MetroCircleButtonStyle}"
 						cal:Message.Attach="CopyToClipBoard(ActiveItem_DisplayName)"
-				Style="{DynamicResource MetroCircleButtonStyle}"
-				controls:ControlsHelper.ContentCharacterCasing="Normal"
-			   FontFamily="/Resources/#Entypo"
-				FontSize="25"
-				Height="30" Width="30"
-	  
-				Grid.Row="1" Grid.Column="2">n</Button>
+                        Background="Transparent" Height="30" Width="30"
+				        controls:ControlsHelper.ContentCharacterCasing="Normal"
+				        Grid.Row="1" Grid.Column="2">
+                        <fa:FontAwesome Icon="Clone" />
+                    </Button>
 
-					<Label Content="Scope:" 
+                    <Label Content="Scope:" 
 			   Grid.Row="2" Grid.Column="0" />
-					<TextBlock x:Name="ActiveItem_Scope" 
+                    <TextBlock x:Name="ActiveItem_Scope" 
 	                            Padding="5"
 			   Grid.Row="2" Grid.Column="1" />
 
-					<Label Content="Url:" 
+                    <Label Content="Url:" 
 			   Grid.Row="3" Grid.Column="0" />
-					<TextBlock x:Name="ActiveItem_Url" 
+                    <TextBlock x:Name="ActiveItem_Url" 
 			                    Padding="5"
 			   Grid.Row="3" Grid.Column="1" />
-                    <Button Name="CopyUrl"
-				        Style="{DynamicResource MetroCircleButtonStyle}"
+                    <Button Name="CopyUrl" Style="{DynamicResource MetroCircleButtonStyle}"
 						cal:Message.Attach="CopyToClipBoard(ActiveItem_Url)"
+                        Background="Transparent" Height="30" Width="30"
 				        controls:ControlsHelper.ContentCharacterCasing="Normal"
-				        FontFamily="/Resources/#Entypo"
-				        FontSize="25"
-				        Height="30" Width="30"
-	   
-				        Grid.Row="3" Grid.Column="2">n</Button> 
+				        Grid.Row="3" Grid.Column="2">
+                        <fa:FontAwesome Icon="Clone" />
+                    </Button>
 
                     <Label Content="Id:" 
 				   Grid.Row="4" Grid.Column="0" />
-					<TextBlock x:Name="ActiveItem_Id" 
+                    <TextBlock x:Name="ActiveItem_Id" 
 					Padding="5"
 			   Grid.Row="4" Grid.Column="1" />
-					<Button Name="CopyId"
+                    <Button Name="CopyId" Style="{DynamicResource MetroCircleButtonStyle}"
 						cal:Message.Attach="CopyToClipBoard(ActiveItem_Id)"
-				Style="{DynamicResource MetroCircleButtonStyle}"
-				controls:ControlsHelper.ContentCharacterCasing="Normal"
-				FontFamily="/Resources/#Entypo"
-				FontSize="25"
-				Height="30" Width="30"
-
-				Grid.Row="4" Grid.Column="2">n</Button>
-
-					<StackPanel 
-			Grid.Row="5" 
-			Orientation="Horizontal"
-			Grid.ColumnSpan="3">
-						<Button Name="FilterLocation"
-				Style="{DynamicResource AccentedSquareButtonStyle}"
-						   
-				controls:ControlsHelper.ContentCharacterCasing="Normal"
-							cal:Message.Attach="FilterThis"
-							>Filter this &amp; children</Button>
-						<Button Name="FilterFeature"
-							Margin="5,0,0,0"
-				Style="{DynamicResource AccentedSquareButtonStyle}"
-				controls:ControlsHelper.ContentCharacterCasing="Normal"
-			   cal:Message.Attach="FilterFeature"
-			   >Filter active features</Button>
-					</StackPanel>
-					<Label 
+                        Background="Transparent" Height="30" Width="30"
+				        controls:ControlsHelper.ContentCharacterCasing="Normal"
+				        Grid.Row="4" Grid.Column="2">
+                        <fa:FontAwesome Icon="Clone" />
+                    </Button>
+                    <Label 
 					Content="Child Locations:" 
 			   Grid.Row="6" Grid.Column="0" />
-					<Label 
+                    <Label 
 					Content="Activated Features:"
 			   Grid.Row="6" Grid.Column="1" />
-				</Grid>
-			</ScrollViewer>
-		</Grid>
-	</Grid>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
 </UserControl>

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:local="clr-namespace:FeatureAdmin.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -19,25 +20,15 @@
                    Foreground="#FFB17807"
                    FontWeight="Bold"
                />
-            <Button x:Name="CopyLog"
-                Style="{DynamicResource MetroCircleButtonStyle}"
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
-                FontFamily="/Resources/#Entypo"
-                FontSize="25"
-                Height="30" Width="30" >n</Button>
-            <Button x:Name="ClearLog"
-                Style="{DynamicResource MetroCircleButtonStyle}"
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
-                FontFamily="/Resources/#Entypo"
-                FontSize="25"
-                Height="30" Width="30" >[</Button>
-            <!--<Button x:Name="TestLog"
-                Style="{DynamicResource MetroCircleButtonStyle}"
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
-                FontFamily="/Resources/#Entypo"
-                FontSize="25"
-                Height="30" Width="30" >a</Button>-->
-       </StackPanel>
+            <Button x:Name="CopyLog" Style="{DynamicResource MetroCircleButtonStyle}"
+					    Height="30" Width="30">
+                <fa:FontAwesome Icon="Clone" />
+            </Button>
+            <Button x:Name="ClearLog" Style="{DynamicResource MetroCircleButtonStyle}"
+						 Height="30" Width="30">
+                <fa:FontAwesome Icon="Times" />
+            </Button>
+        </StackPanel>
         <ScrollViewer x:Name="logScrollViewer" ScrollViewer.HorizontalScrollBarVisibility="Auto" Grid.Row="1">
             <ItemsControl x:Name="Logs" >
                 <ItemsControl.ItemTemplate>

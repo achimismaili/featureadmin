@@ -51,14 +51,6 @@ namespace FeatureAdmin.ViewModels
             LogStartedMessage();
         }
 
-        //public void TestLog()
-        //{
-        //    var startMsg = new LogMessage(Core.Models.Enums.LogLevel.Information,
-        //         Guid.NewGuid().ToString() + " - Test log entry");
-
-        //    Logs.Add(startMsg);
-        //}
-
         private void LogStartedMessage()
         {
             var startMsg = new LogMessage(Core.Models.Enums.LogLevel.Information, 
