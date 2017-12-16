@@ -70,7 +70,7 @@
 						  VerticalAlignment="Stretch"
 						  HorizontalAlignment="Stretch"/>
 		<GridSplitter Grid.Row="3" 
-					  Background="White"
+					  Background="LightGray"
 						  VerticalAlignment="Stretch"
 						  HorizontalAlignment="Stretch"/>
 
@@ -86,14 +86,18 @@
 			HorizontalAlignment="Center"
 				   FontWeight="Bold"
 			   />
-			<Menu Grid.Row="1" IsMainMenu="False">
-				<MenuItem Header="_ShowDetails" x:Name="ShowDetails" ToolTip="Show details for this location in new window"/>
-				<MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"/>
-				<MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"/>
-				<MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definitions"/>
+            <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent">
+				<MenuItem Header="_ShowDetails" x:Name="ShowDetails" ToolTip="Show details for this location in new window"
+                          Background="Transparent"/>
+				<MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"
+                          Background="Transparent"/>
+				<MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"
+                          Background="Transparent"/>
+				<MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definitions"
+                          Background="Transparent"/>
 			</Menu>
-			<ScrollViewer Grid.Row="2" >
-				<Grid Background="LightGray" >
+            <ScrollViewer Grid.Row="2">
+				<Grid >
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto" />
 						<RowDefinition Height="Auto" />
@@ -127,25 +131,25 @@
 					<Label Content="Scope:" 
 			   Grid.Row="2" Grid.Column="0" />
 					<TextBlock x:Name="ActiveItem_Scope" 
-	   Padding="5"
+	                            Padding="5"
 			   Grid.Row="2" Grid.Column="1" />
 
 					<Label Content="Url:" 
 			   Grid.Row="3" Grid.Column="0" />
 					<TextBlock x:Name="ActiveItem_Url" 
-			Padding="5"
+			                    Padding="5"
 			   Grid.Row="3" Grid.Column="1" />
-					<Button Name="CopyUrl"
-				Style="{DynamicResource MetroCircleButtonStyle}"
+                    <Button Name="CopyUrl"
+				        Style="{DynamicResource MetroCircleButtonStyle}"
 						cal:Message.Attach="CopyToClipBoard(ActiveItem_Url)"
-				controls:ControlsHelper.ContentCharacterCasing="Normal"
-				FontFamily="/Resources/#Entypo"
-				FontSize="25"
-				Height="30" Width="30"
+				        controls:ControlsHelper.ContentCharacterCasing="Normal"
+				        FontFamily="/Resources/#Entypo"
+				        FontSize="25"
+				        Height="30" Width="30"
 	   
-				Grid.Row="3" Grid.Column="2">n</Button>
+				        Grid.Row="3" Grid.Column="2">n</Button> 
 
-					<Label Content="Id:" 
+                    <Label Content="Id:" 
 				   Grid.Row="4" Grid.Column="0" />
 					<TextBlock x:Name="ActiveItem_Id" 
 					Padding="5"
