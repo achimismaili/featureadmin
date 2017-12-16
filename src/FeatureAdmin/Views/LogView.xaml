@@ -13,11 +13,33 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button x:Name="Copy" Margin="5" >Copy log to clipboard</Button>
-            <Button x:Name="Clear" Margin="5" >Clear log</Button>
-        </StackPanel>
+            <Label Content="Log"
+            Grid.Row="0"  
+            HorizontalAlignment="Center"
+                   Foreground="#FFB17807"
+                   FontWeight="Bold"
+               />
+            <Button x:Name="CopyLog"
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+                FontFamily="/Resources/#Entypo"
+                FontSize="25"
+                Height="30" Width="30" >n</Button>
+            <Button x:Name="ClearLog"
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+                FontFamily="/Resources/#Entypo"
+                FontSize="25"
+                Height="30" Width="30" >[</Button>
+            <!--<Button x:Name="TestLog"
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                controls:ControlsHelper.ContentCharacterCasing="Normal"
+                FontFamily="/Resources/#Entypo"
+                FontSize="25"
+                Height="30" Width="30" >a</Button>-->
+       </StackPanel>
         <ScrollViewer x:Name="logScrollViewer" ScrollViewer.HorizontalScrollBarVisibility="Auto" Grid.Row="1">
-            <ItemsControl x:Name="Logs">
+            <ItemsControl x:Name="Logs" >
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="0,0,0,5">
@@ -26,8 +48,8 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Time}" Grid.Column="0" />
-                            <TextBlock Text="{Binding Level}" Grid.Column="1" />
+                            <TextBlock Text="{Binding ShortTime}" Grid.Column="0" />
+                            <TextBlock Margin="5,0" Text="{Binding ShortLevel}" Grid.Column="1" />
                             <TextBlock Text="{Binding Text}" Grid.Column="2" />
                         </Grid>
                     </DataTemplate>

@@ -46,9 +46,7 @@ namespace FeatureAdmin.ViewModels
             InitializeActors();
 
             InitializeFarmLoad();
-
-            eventAggregator.PublishOnUIThread(
-                new LogMessage(Core.Models.Enums.LogLevel.Warning, "Test, test"));
+           
         }
 
         public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }

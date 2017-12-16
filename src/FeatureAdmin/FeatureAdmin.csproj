@@ -159,7 +159,6 @@
     <Compile Include="Caliburn.Metro.Autofac\CaliburnMetroAutofacBootstrapper.cs" />
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Caliburn.Metro.Autofac\EventAggregationAutoSubscriptionModule.cs" />
-    <Compile Include="Common\ControlWriter.cs" />
     <Compile Include="Common\NegatableBooleanToVisibilityConverter.cs" />
     <Compile Include="Messages\LogMessage.cs" />
     <Compile Include="Messages\OpenWindow.cs" />

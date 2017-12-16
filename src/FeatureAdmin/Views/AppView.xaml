@@ -6,7 +6,7 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:local="clr-namespace:FeatureAdmin.Views"
              >
-    <Grid>
+    <Grid  Background="#33F0A30A">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -23,18 +23,21 @@
             <!--Menu and Feature definition-->
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="47"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Menu IsMainMenu="True" Margin="0 0 0 17">
-                    <MenuItem Header="Reload Farm" x:Name="Reload" ToolTip="Reload all locations, feature definitions and activated features."/>
-                    <MenuItem Header="_Settings">
-                        <MenuItem Header="_Elevated Privileges" x:Name="ElevatedPrivilegesSetting" ToolTip="Runs under apppool privileges, when applicable. In Production environments, make sure, compliance reasons do not prevent the activation of this setting." />
-                        <MenuItem Header="_Force" x:Name="ForceSetting" ToolTip="When activated, feature modifications are executed with force, if applicable"/>
+                <Menu IsMainMenu="True" Background="Transparent">
+                    <MenuItem Header="Reload Farm" x:Name="Reload" ToolTip="Reload all locations, feature definitions and activated features."
+                               Background="Transparent"/>
+                    <MenuItem Header="_Settings" Background="Transparent" >
+                        <MenuItem Header="_Elevated Privileges" x:Name="ElevatedPrivilegesSetting" ToolTip="Runs under apppool privileges, when applicable. In Production environments, make sure, compliance reasons do not prevent the activation of this setting." 
+                                  Background="Transparent"/>
+                        <MenuItem Header="_Force" x:Name="ForceSetting" ToolTip="When activated, feature modifications are executed with force, if applicable"
+                                  Background="Transparent"/>
                     </MenuItem>
-                    <MenuItem Header="?">
-                        <MenuItem Header="_Help" x:Name="Help" />
-                        <MenuItem Header="_About" x:Name="About" />
+                    <MenuItem Header="?"  Background="Transparent">
+                        <MenuItem Header="_Help" x:Name="Help" Background="Transparent"/>
+                        <MenuItem Header="_About" x:Name="About" Background="Transparent"/>
                     </MenuItem>
                 </Menu>
                 <!-- Feature -->
@@ -42,17 +45,17 @@
                                 Grid.Row="1" />
             </Grid>
             <GridSplitter Grid.Column="1" 
-                          Background="White"
+                          Background="Transparent"
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
 
             <TabControl Grid.Column="2">
-                <TabItem Header="Activation">
+                <TabItem Header="Activation" Background="Transparent">
                     <!-- Location -->
                     <ContentControl cal:View.Model="{Binding LocationListVm}" />
                 </TabItem>
-                <TabItem Header="Upgrade" >
-                    <Grid Background="#FFE5E5E5">
+                <TabItem Header="Upgrade" Background="Transparent" >
+                    <Grid >
                         <TextBlock HorizontalAlignment="Left"
                                Margin="10"
                                TextWrapping="Wrap"
@@ -61,8 +64,8 @@
                                Width="471"/>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Cleanup" >
-                    <Grid Background="#FFE5E5E5">
+                <TabItem Header="Cleanup" Background="Transparent">
+                    <Grid>
                         <TextBlock HorizontalAlignment="Left"
                                Margin="10"
                                TextWrapping="Wrap"
@@ -74,22 +77,23 @@
             </TabControl>
 
             <GridSplitter Grid.Column="3" 
-                          Background="White"
+                          Background="Transparent"
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
 
             <Grid Grid.Column="4">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="45"/>
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <!-- Log -->
-                <ContentControl cal:View.Model="{Binding LogVm}" Grid.Row="0" />
+                <ContentControl cal:View.Model="{Binding LogVm}" Grid.Row="1" />
 
-                <GridSplitter Grid.Row="1" 
-                          Background="White"
+                <GridSplitter Grid.Row="2" 
+                          Background="Transparent"
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
 

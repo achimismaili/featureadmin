@@ -10,7 +10,7 @@
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300">
     
-    <Grid Background="#33F0A30A">
+    <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -85,11 +85,11 @@
                    Foreground="#FFB17807"
                    FontWeight="Bold"
                />
-            <Menu Grid.Row="1" IsMainMenu="False">
-                <MenuItem Header="_Activate" x:Name="ActivateFeatures" ToolTip="Activate/Add features"/>
-                <MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"/>
-                <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"/>
-                <MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definitions"/>
+            <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent">
+                <MenuItem Header="_Activate" x:Name="ActivateFeatures" ToolTip="Activate/Add features"  Background="Transparent"/>
+                <MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"  Background="Transparent"/>
+                <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"  Background="Transparent"/>
+                <MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definitions"  Background="Transparent"/>
             </Menu>
             <ScrollViewer Grid.Row="2" >
                 <Grid >

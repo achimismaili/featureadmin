@@ -19,6 +19,8 @@ namespace FeatureAdmin.ViewModels
 
             this.eventAggregator = eventAggregator;
             eventAggregator.Subscribe(this);
+
+            LogStartedMessage();
         }
 
         public void Handle(LogMessage message)
@@ -27,29 +29,43 @@ namespace FeatureAdmin.ViewModels
         }
 
         public BindableCollection<LogMessage> Logs { get; }
-       
-        //private void LogBox_TextChanged(object sender, TextChangedEventArgs e)
+
+        public void CopyLog()
+        {
+            var log = new StringBuilder();
+
+            foreach (LogMessage lm in Logs)
+            {
+                log.Append(string.Format("{0}\t{1}\t{2}\n", 
+                    lm.Time.ToString(), 
+                    lm.ShortLevel, 
+                    lm.Text));
+            }
+
+            System.Windows.Clipboard.SetText(log.ToString());
+        }
+
+        public void ClearLog()
+        {
+            Logs.Clear();
+            LogStartedMessage();
+        }
+
+        //public void TestLog()
         //{
-        //    var h = logScrollViewer.ContentHorizontalOffset;
-        //    this.logScrollViewer.ScrollToEnd();
-        //    logScrollViewer.ScrollToHorizontalOffset(h);
+        //    var startMsg = new LogMessage(Core.Models.Enums.LogLevel.Information,
+        //         Guid.NewGuid().ToString() + " - Test log entry");
+
+        //    Logs.Add(startMsg);
         //}
 
-        //private void click_CopyToClipboard(object sender, RoutedEventArgs e)
-        //{
-        //    Clipboard.SetText(LogBox.Text);
-        //}
+        private void LogStartedMessage()
+        {
+            var startMsg = new LogMessage(Core.Models.Enums.LogLevel.Information, 
+                "Feature Admin Log");
 
-        //public void Clear()
-        //{
-        //    Logs.Clear();
-        //    LogStartedMessageWithDate();
-        //}
-
-        //private void LogStartedMessageWithDate()
-        //{
-        //    logWriter.WriteLine("Log started on {0}", System.DateTime.Now.ToShortDateString());
-        //}
+            Logs.Add(startMsg);
+        }
 
     }
 }

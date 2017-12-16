@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,18 @@ namespace FeatureAdmin.Views
         public LogView()
         {
             InitializeComponent();
+            ((INotifyCollectionChanged)Logs.Items).CollectionChanged += new NotifyCollectionChangedEventHandler(Logs_CollectionChanged);
+        }
+
+
+        private void Logs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                // var h = logScrollViewer.ContentHorizontalOffset;
+                this.logScrollViewer.ScrollToEnd();
+                logScrollViewer.ScrollToHorizontalOffset(50);
+            }
         }
     }
 }
