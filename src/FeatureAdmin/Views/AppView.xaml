@@ -39,8 +39,7 @@
                 </Menu>
                 <!-- Feature -->
                 <ContentControl cal:View.Model="{Binding FeatureDefinitionListVm}"
-                                Grid.Row="1"
-            ></ContentControl>
+                                Grid.Row="1" />
             </Grid>
             <GridSplitter Grid.Column="1" 
                           Background="White"
@@ -85,6 +84,15 @@
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+
+                <!-- Log -->
+                <ContentControl cal:View.Model="{Binding LogVm}" Grid.Row="0" />
+
+                <GridSplitter Grid.Row="1" 
+                          Background="White"
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"/>
+
             </Grid>
         </Grid>
         <ContentControl cal:View.Model="{Binding StatusBarVm}"

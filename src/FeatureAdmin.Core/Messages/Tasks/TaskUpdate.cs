@@ -11,19 +11,19 @@ namespace FeatureAdmin.Core.Messages.Tasks
             TaskId = taskId;
         }
 
-        public TaskUpdate(Guid taskId, string logEntry, LogTaskStatus status = LogTaskStatus.InProgress)
+        public TaskUpdate(Guid taskId, string logEntry, TaskStatus status = TaskStatus.InProgress)
             : this(taskId)
         {
             LogEntry = logEntry;
         }
 
-        public TaskUpdate(Guid taskId, decimal newPercentage, LogTaskStatus status = LogTaskStatus.InProgress)
+        public TaskUpdate(Guid taskId, decimal newPercentage, TaskStatus status = TaskStatus.InProgress)
         : this(taskId)
         {
             NewPercentage = newPercentage;
         }
 
-        public TaskUpdate(Guid taskId, int affectedFeatures, int affectedWebs, int affectedSites, int affectedWebApps, int affectedFarms, bool expected = false, LogTaskStatus status = LogTaskStatus.InProgress)
+        public TaskUpdate(Guid taskId, int affectedFeatures, int affectedWebs, int affectedSites, int affectedWebApps, int affectedFarms, bool expected = false, TaskStatus status = TaskStatus.InProgress)
         : this(taskId)
         {
             AffectedFeatures = affectedFeatures;

@@ -41,16 +41,24 @@ namespace FeatureAdmin.ViewModels
 
             LocationListVm = new LocationListViewModel(eventAggregator);
 
+            LogVm = new LogViewModel(eventAggregator);
+
             InitializeActors();
 
             InitializeFarmLoad();
+
+            eventAggregator.PublishOnUIThread(
+                new LogMessage(Core.Models.Enums.LogLevel.Warning, "Test, test"));
         }
 
         public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
 
         public LocationListViewModel LocationListVm { get; private set; }
 
+        public LogViewModel LogVm { get; private set; }
+
         public StatusBarViewModel StatusBarVm { get; private set; }
+
         public string DisplayName { get; set; }
 
         public void Handle(LoadItem<Location> loadCommand)

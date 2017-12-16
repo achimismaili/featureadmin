@@ -1,6 +1,6 @@
 ﻿namespace FeatureAdmin.Core.Models.Enums
 {
-    public enum LogTaskStatus
+    public enum TaskStatus
     {
         Started = 10,
         InProgress = 20,

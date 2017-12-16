@@ -13,7 +13,7 @@ namespace FeatureAdmin.Core.Models
             log = new List<string>();
             TaskType = taskType;
             Title = title;
-            Status = LogTaskStatus.Started;
+            Status = TaskStatus.Started;
             Id = new Guid();
             Start = DateTime.Now;
             End = null;
@@ -113,7 +113,7 @@ namespace FeatureAdmin.Core.Models
         public decimal ManualPercentCompleted { get; private set; }
         public int ProcessedSites { get; set; }
         public DateTime Start { get; set; }
-        public LogTaskStatus Status { get; private set; }
+        public TaskStatus Status { get; private set; }
         public TaskType TaskType { get; set; }
         public string Title { get; private set; }
         public int ProcessedWebApps { get; set; }
@@ -125,7 +125,7 @@ namespace FeatureAdmin.Core.Models
 
         public void TaskFailed(string logEntry)
         {
-            Status = LogTaskStatus.Failed;
+            Status = TaskStatus.Failed;
 
             UpdateTask(logEntry, ManualPercentCompleted);
         }
@@ -155,9 +155,9 @@ namespace FeatureAdmin.Core.Models
             ManualPercentCompleted = percentage;
             if (percentage == 1)
             {
-                if (Status != LogTaskStatus.Failed)
+                if (Status != TaskStatus.Failed)
                 {
-                    Status = LogTaskStatus.Completed;
+                    Status = TaskStatus.Completed;
                 }
 
                 // set end date only the first time, end is set
@@ -171,9 +171,9 @@ namespace FeatureAdmin.Core.Models
 
         public void UpdateTask(string logEntry)
         {
-            if (Status == LogTaskStatus.Started)
+            if (Status == TaskStatus.Started)
             {
-                Status = LogTaskStatus.InProgress;
+                Status = TaskStatus.InProgress;
             }
             if (!string.IsNullOrEmpty(logEntry))
             {
