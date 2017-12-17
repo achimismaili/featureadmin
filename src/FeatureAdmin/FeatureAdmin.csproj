@@ -164,6 +164,7 @@
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Caliburn.Metro.Autofac\EventAggregationAutoSubscriptionModule.cs" />
     <Compile Include="Common\NegatableBooleanToVisibilityConverter.cs" />
+    <Compile Include="Messages\ProgressMessage.cs" />
     <Compile Include="Messages\LogMessage.cs" />
     <Compile Include="Messages\OpenWindow.cs" />
     <Compile Include="Messages\SetSearchFilter.cs" />

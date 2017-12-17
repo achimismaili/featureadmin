@@ -11,12 +11,14 @@ namespace FeatureAdmin.Core.Messages.Tasks
             TaskId = taskId;
         }
 
+        // update with text
         public TaskUpdate(Guid taskId, string logEntry, TaskStatus status = TaskStatus.InProgress)
             : this(taskId)
         {
             LogEntry = logEntry;
         }
 
+        // update with percentages
         public TaskUpdate(Guid taskId, decimal newPercentage, TaskStatus status = TaskStatus.InProgress)
         : this(taskId)
         {

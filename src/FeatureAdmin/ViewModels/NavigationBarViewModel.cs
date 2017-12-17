@@ -1,10 +1,5 @@
 ﻿using Caliburn.Micro;
-using FeatureAdmin.Core.Factories;
 using FeatureAdmin.Core.Models;
-using FeatureAdmin.Messages;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {
@@ -20,8 +15,8 @@ namespace FeatureAdmin.ViewModels
 
         public void ReLoadFarm()
         {
-            eventAggregator.PublishOnUIThread(new LoadItem<FeatureDefinition>());
-            eventAggregator.PublishOnUIThread(new LoadItem<Location>(LocationFactory.GetDummyFarmForLoadCommand()));
+            var reloadTask = new Core.Models.Tasks.AdminTaskItems("Reload farm features and locations", Common.Constants.Tasks.PreparationStepsForLoad);
+            eventAggregator.PublishOnUIThread(new Core.Messages.Tasks.NewTask(reloadTask, Core.Models.Enums.TaskType.Load));
         }
     }
 }

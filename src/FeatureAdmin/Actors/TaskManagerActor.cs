@@ -1,7 +1,10 @@
 ﻿using Akka.Actor;
 using Akka.Event;
+using Caliburn.Micro;
 using FeatureAdmin.Core.Messages;
+using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
+using FeatureAdmin.Core.Models.Tasks;
 using System;
 using System.Collections.Generic;
 
@@ -9,14 +12,19 @@ namespace FeatureAdmin.Actors
 {
     public class TaskManagerActor : ReceiveActor
     {
+        private readonly IEventAggregator eventAggregator;
         private IActorRef viewModelSyncActorRef;
         private readonly IActorRef featureDefinitionActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
+        private readonly Dictionary<Guid, AdminTask> tasks;
 
-        public TaskManagerActor(IActorRef viewModelSyncActorRef)
+        public TaskManagerActor(IActorRef viewModelSyncActorRef, IEventAggregator eventAggregator)
         {
+            this.eventAggregator = eventAggregator;
+
             locationActors = new Dictionary<Guid, IActorRef>();
+            tasks = new Dictionary<Guid, AdminTask>();
             this.viewModelSyncActorRef = viewModelSyncActorRef;
 
             featureDefinitionActor =
@@ -25,12 +33,69 @@ namespace FeatureAdmin.Actors
                                      "FeatureDefinitionManagerActor");
 
 
-            Receive<LoadLocationQuery>(message => LoadTask(message));
+            Receive<NewTask>(message => HandleNewTask(message));
 
             Receive<ItemUpdated<Location>>(message => LocationUpdated(message));
 
-            Receive<LoadFeatureDefinitionQuery>(message => LoadFeatureDefinitions(message));
+           // Receive<LoadFeatureDefinitionQuery>(message => LoadFeatureDefinitions(message));
         }
+
+        private void HandleNewTask(NewTask message)
+        {
+            var logNewTask = new Messages.LogMessage(Core.Models.Enums.LogLevel.Information,
+                string.Format("Started '{1}' (ID: '{0}')", message.Task.Id, message.Task.Title)
+                );
+
+            // log new task started
+            eventAggregator.BeginPublishOnUIThread(logNewTask);
+
+            // initiate status bar to 0 percent progress
+            var initialStatus = new Messages.ProgressMessage(message.Task);
+            eventAggregator.BeginPublishOnUIThread(initialStatus);
+
+            // add new task to queue
+            tasks.Add(message.Task.Id, message.Task);
+
+            // delegate tasks and todos depending on task type
+            switch (message.TaskType)
+            {
+                case Core.Models.Enums.TaskType.Load:
+                    HandleTaskOfTypeLoad(message.Task);
+                    break;
+                case Core.Models.Enums.TaskType.Act:
+                    break;
+                case Core.Models.Enums.TaskType.Update:
+                    break;
+                case Core.Models.Enums.TaskType.Uninstall:
+                    break;
+                default:
+                    var logUnknownTaskType = new Messages.LogMessage(Core.Models.Enums.LogLevel.Error,
+                string.Format("Canceling due to unknown task type, task '{1}' (ID: '{0}')", message.Task.Id, message.Task.Title)
+                );
+                    eventAggregator.BeginPublishOnUIThread(logUnknownTaskType);
+                    tasks.Remove(message.Task.Id);
+                    break;
+            }
+        }
+            private void HandleTaskOfTypeLoad(AdminTask task)
+        {
+            var logNewTask = new Messages.LogMessage(Core.Models.Enums.LogLevel.Information,
+               string.Format("{2}% @Task '{1}' (ID: '{0}')", task.Id, task.Title, task.PercentCompleted)
+               );
+
+            // clean all feature definition and location collections
+            // subtask?
+
+            // load feature definitions
+
+
+            // load locations
+        }
+
+
+
+
+
 
         private void LoadFeatureDefinitions(LoadFeatureDefinitionQuery message)
         {

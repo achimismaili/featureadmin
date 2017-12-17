@@ -56,6 +56,8 @@
     <Compile Include="Factories\FeatureDefinitionFactory.cs" />
     <Compile Include="Factories\LocationFactory.cs" />
     <Compile Include="Models\Enums\LogLevel.cs" />
+    <Compile Include="Models\Tasks\AdminTaskFancy.cs" />
+    <Compile Include="Models\Tasks\AdminTaskItems.cs" />
     <Compile Include="NotNullAttribute.cs" />
     <Compile Include="Messages\Tasks\NewTask.cs" />
     <Compile Include="Messages\Tasks\TaskUpdate.cs" />
@@ -68,7 +70,7 @@
     <Compile Include="Models\BaseItem.cs" />
     <Compile Include="Models\Enums\TaskUpdateType.cs" />
     <Compile Include="Models\Enums\TaskType.cs" />
-    <Compile Include="Models\LogTask.cs" />
+    <Compile Include="Models\Tasks\AdminTask.cs" />
     <Compile Include="Models\Enums\TaskStatus.cs" />
     <Compile Include="Models\IActivatedFeature.cs" />
     <Compile Include="Models\IFeatureDefinition.cs" />

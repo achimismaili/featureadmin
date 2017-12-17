@@ -1,13 +1,10 @@
-﻿using Caliburn.Micro;
-using FeatureAdmin.Core.Models;
+﻿using System;
+using Caliburn.Micro;
 using FeatureAdmin.Messages;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class StatusBarViewModel : Screen
+    public class StatusBarViewModel : Screen, IHandle<ProgressMessage>
     {
         private IEventAggregator eventAggregator;
        
@@ -17,5 +14,14 @@ namespace FeatureAdmin.ViewModels
                 this.eventAggregator.Subscribe(this);
             }
 
+        public void Handle(ProgressMessage message)
+        {
+            ProgressBarStatus = message.Progress;
+            TextStatus = message.Title;
+        }
+
+        public double ProgressBarStatus { get; private set; }
+
+        public string TextStatus { get; private set; }
     }
 }

@@ -13,7 +13,7 @@ namespace FeatureAdmin.Core.Models
         {
         }
 
-        public Location(Guid id, string displayName, Guid parent, Scope scope, string url)
+        public Location(Guid id, string displayName, Guid parent, Scope scope, string url, int childCount)
             : this()
         {
             Id = id;
@@ -21,10 +21,11 @@ namespace FeatureAdmin.Core.Models
             Parent = parent;
             Scope = scope;
             Url = url == null ? string.Empty : url;
+            ChildCount = childCount;
         }
 
-        public Location(Guid id, string displayName, Guid parent, Scope scope, string url, IEnumerable<ActivatedFeature> activatedFeatures)
-            : this(id, displayName, parent, scope, url)
+        public Location(Guid id, string displayName, Guid parent, Scope scope, string url, IEnumerable<ActivatedFeature> activatedFeatures, int childCount)
+            : this(id, displayName, parent, scope, url, childCount)
         {
 
             if (activatedFeatures != null && activatedFeatures.Any())
@@ -56,5 +57,7 @@ namespace FeatureAdmin.Core.Models
                 return details;
             }
         }
+
+        public int ChildCount { get; set; }
     }
 }

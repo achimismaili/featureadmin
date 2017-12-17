@@ -3,6 +3,7 @@ using Caliburn.Micro;
 using FeatureAdmin.Actors;
 using FeatureAdmin.Core.Factories;
 using FeatureAdmin.Core.Messages;
+using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
 using FeatureAdmin.UIModels;
@@ -12,8 +13,7 @@ namespace FeatureAdmin.ViewModels
 {
 
     public class AppViewModel : IHaveDisplayName,
-        Caliburn.Micro.IHandle<LoadItem<Location>>,
-        Caliburn.Micro.IHandle<LoadItem<FeatureDefinition>>,
+        Caliburn.Micro.IHandle<NewTask>,
         Caliburn.Micro.IHandle<OpenWindow>
     {
 
@@ -59,17 +59,17 @@ namespace FeatureAdmin.ViewModels
 
         public string DisplayName { get; set; }
 
-        public void Handle(LoadItem<Location> loadCommand)
-        {
-            taskManagerActorRef.Tell(new LoadLocationQuery(loadCommand.Item));
-        }
+        //public void Handle(LoadItem<Location> loadCommand)
+        //{
+        //    taskManagerActorRef.Tell(new LoadLocationQuery(loadCommand.Item));
+        //}
 
         private void InitializeActors()
         {
             //   loadFeatureDefinitionActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new LoadActor())); 
             viewModelSyncActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new ViewModelSyncActor(eventAggregator)));
 
-            taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new TaskManagerActor(viewModelSyncActorRef)));
+            taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new TaskManagerActor(viewModelSyncActorRef, eventAggregator)));
             //featureToggleActorRef;
 
             //_chartingActorRef =
@@ -81,9 +81,9 @@ namespace FeatureAdmin.ViewModels
             //                _chartingActorRef)), "StocksCoordinator");
         }
 
-        public void Handle(LoadItem<FeatureDefinition> message)
+        public void Handle(NewTask message)
         {
-            taskManagerActorRef.Tell(new LoadFeatureDefinitionQuery());
+            taskManagerActorRef.Tell(message);
         }
 
         public void Handle(OpenWindow message)
@@ -93,10 +93,11 @@ namespace FeatureAdmin.ViewModels
 
         public void InitializeFarmLoad()
         {
+            var initialLoadTask = new Core.Models.Tasks.AdminTaskItems("Initial farm load", Common.Constants.Tasks.PreparationStepsForLoad);
 
-
-            Handle(new LoadItem<FeatureDefinition>());
-            Handle(new LoadItem<Location>(LocationFactory.GetDummyFarmForLoadCommand()));
+            Handle(new NewTask(initialLoadTask, Core.Models.Enums.TaskType.Load));
+            //Handle(new LoadItem<FeatureDefinition>());
+            //Handle(new LoadItem<Location>(LocationFactory.GetDummyFarmForLoadCommand()));
         }
 
         public void OpenWindow(DetailViewModel viewModel)

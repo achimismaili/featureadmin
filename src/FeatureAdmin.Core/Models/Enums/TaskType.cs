@@ -2,8 +2,9 @@
 {
     public enum TaskType
     {
-        Simple = 10,
         Load = 20,
-        Act = 30
+        Act = 30,
+        Update = 50,
+        Uninstall = 80
     }
 }

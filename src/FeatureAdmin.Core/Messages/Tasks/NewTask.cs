@@ -1,16 +1,17 @@
-﻿using FeatureAdmin.Core.Models;
-using FeatureAdmin.Core.Models.Enums;
-using System;
+﻿using FeatureAdmin.Core.Models.Enums;
+using FeatureAdmin.Core.Models.Tasks;
 
 namespace FeatureAdmin.Core.Messages.Tasks
 {
     public class NewTask
     {
-        public NewTask(LogTask task)
+        public NewTask(AdminTask task, TaskType taskType)
         {
             Task = task;
+            TaskType = TaskType;
         }
 
-        public LogTask Task { get; set; }
+        public AdminTask Task { get; }
+        public TaskType TaskType { get; }
     }
 }

@@ -13,7 +13,8 @@
             <StatusBarItem MinWidth="110">
                 <!-- Progress Section -->
                 <controls:MetroProgressBar 
-                    Name="progressBarStatus"
+                    x:Name="ProgressBarStatus"
+                    Maximum="1" Minimum="0"
                     VerticalAlignment="Center" 
                     MinWidth="100"
                     Margin="10 5" 
@@ -23,8 +24,7 @@
             <StatusBarItem>
                 <!-- Output Section -->
                 <TextBlock
-                       Name="textStatus"
-                    Text="{Binding Status}"
+                    x:Name="TextStatus"
                     VerticalAlignment="Center" 
                     Margin="10 5" 
                  />

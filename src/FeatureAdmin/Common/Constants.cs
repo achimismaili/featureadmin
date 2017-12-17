@@ -20,7 +20,15 @@ namespace FeatureAdmin.Common
                 Scope.ScopeInvalid
             };
         }
-        public static class Text
+
+        public static class Tasks
+        {
+            // preparation steps for load: 
+            // 1. clear locations collection
+            // 2. clear feature definition collection
+            public static int PreparationStepsForLoad = 2;
+        }
+            public static class Text
         {
             public static string FeatureAdminTitle = string.Format(
             "FeatureAdmin for SharePoint {0} - v{1}",
@@ -46,7 +54,7 @@ namespace FeatureAdmin.Common
 #elif (SP2010)
         public static string SharePointVersion = "2010";
 #else
-        public static string SharePointVersion = "2007";
+        public static string SharePointVersion = "Demo";
 #endif
     }
 }

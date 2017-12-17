@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace FeatureAdmin.Core.Models
+namespace FeatureAdmin.Core.Models.Tasks
 {
-    public class LogTask
+    public class AdminTaskFancy
     {
         private List<String> log;
-        public LogTask(TaskType taskType, string title)
+        public AdminTaskFancy(TaskType taskType, string title)
         {
             log = new List<string>();
             TaskType = taskType;
@@ -51,7 +51,7 @@ namespace FeatureAdmin.Core.Models
                 return ProcessedFeatures + ProcessedFarms + ProcessedWebApps + ProcessedSites + ProcessedWebs;
             } }
 
-        public decimal PercentCompleted
+        public double PercentCompleted
         {
             get
             {
@@ -110,7 +110,7 @@ namespace FeatureAdmin.Core.Models
             }
         }
 
-        public decimal ManualPercentCompleted { get; private set; }
+        public double ManualPercentCompleted { get; private set; }
         public int ProcessedSites { get; set; }
         public DateTime Start { get; set; }
         public TaskStatus Status { get; private set; }
@@ -150,7 +150,7 @@ namespace FeatureAdmin.Core.Models
             ProcessedFarms += farms;
         }
 
-        public void UpdateTask(string logEntry, decimal percentage)
+        public void UpdateTask(string logEntry, double percentage)
         {
             ManualPercentCompleted = percentage;
             if (percentage == 1)
