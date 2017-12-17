@@ -175,7 +175,6 @@
     <Compile Include="ViewModels\DetailViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />
-    <Compile Include="ViewModels\NavigationBarViewModel.cs" />
     <Compile Include="ViewModels\LocationListViewModel.cs" />
     <Compile Include="Views\ActivatedFeatureListView.xaml.cs">
       <DependentUpon>ActivatedFeatureListView.xaml</DependentUpon>
@@ -200,9 +199,6 @@
     </Compile>
     <Compile Include="Views\MainWindowContainer.xaml.cs">
       <DependentUpon>MainWindowContainer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\NavigationBarView.xaml.cs">
-      <DependentUpon>NavigationBarView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StatusBarView.xaml.cs">
       <DependentUpon>StatusBarView.xaml</DependentUpon>
@@ -258,10 +254,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainWindowContainer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\NavigationBarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -47,7 +47,7 @@ namespace FeatureAdmin.ViewModels
             InitializeActors();
 
             InitializeFarmLoad();
-           
+
         }
 
         public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
@@ -67,19 +67,7 @@ namespace FeatureAdmin.ViewModels
 
         private void InitializeActors()
         {
-            //   loadFeatureDefinitionActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new LoadActor())); 
-           // viewModelSyncActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new ViewModelSyncActor(eventAggregator)));
-
             taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Akka.Actor.Props.Create(() => new TaskManagerActor(eventAggregator)));
-            //featureToggleActorRef;
-
-            //_chartingActorRef =
-            //        ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new LineChartingActor(PlotModel)));
-
-            //    _stocksCoordinatorActorRef =
-            //        ActorSystemReference.ActorSystem.ActorOf(
-            //            Props.Create(() => new StocksCoordinatorActor(
-            //                _chartingActorRef)), "StocksCoordinator");
         }
 
         public void Handle(NewTask message)
@@ -92,14 +80,23 @@ namespace FeatureAdmin.ViewModels
             OpenWindow(message.ViewModel);
         }
 
+        public void ReLoad()
+        {
+            TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleReload);
+        }
         public void InitializeFarmLoad()
         {
-            var initialLoadTask = new Core.Models.Tasks.AdminTaskItems("Initial farm load", Common.Constants.Tasks.PreparationStepsForLoad);
+            TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleInitialLoad);
+        }
+
+        private void TriggerFarmLoadTask(string taskTitle) { 
+            var initialLoadTask = new Core.Models.Tasks.AdminTaskItems(taskTitle, Common.Constants.Tasks.PreparationStepsForLoad);
 
             Handle(new NewTask(initialLoadTask, Core.Models.Enums.TaskType.Load));
             //Handle(new LoadItem<FeatureDefinition>());
             //Handle(new LoadItem<Location>(LocationFactory.GetDummyFarmForLoadCommand()));
         }
+
 
         public void OpenWindow(DetailViewModel viewModel)
         {

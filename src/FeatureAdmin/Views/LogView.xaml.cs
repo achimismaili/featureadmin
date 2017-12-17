@@ -34,7 +34,7 @@ namespace FeatureAdmin.Views
             {
                 // var h = logScrollViewer.ContentHorizontalOffset;
                 this.logScrollViewer.ScrollToEnd();
-                logScrollViewer.ScrollToHorizontalOffset(50);
+                logScrollViewer.ScrollToHorizontalOffset(73);
             }
         }
     }
