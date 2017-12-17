@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : Conductor<T>.Collection.OneActive, IHandle<SetSearchFilter<T>> where T : class, IBaseItem
+    public abstract class BaseListViewModel<T> : Conductor<T>.Collection.OneActive, IHandle<ClearItems>, IHandle<SetSearchFilter<T>> where T : class, IBaseItem
     {
         protected IEventAggregator eventAggregator;
         protected DateTime lastUpdateInitiatedSearch;
@@ -169,5 +169,12 @@ namespace FeatureAdmin.ViewModels
 
         // Searching for results can be different in derived types
         protected abstract Func<T, bool> GetSearchForString(string searchString);
+
+        public void Handle(ClearItems message)
+        {
+            allItems.Clear();
+            var cleared = new ClearItemsReady(message.TaskId);
+            eventAggregator.PublishOnUIThread(cleared);
+        }
     }
 }

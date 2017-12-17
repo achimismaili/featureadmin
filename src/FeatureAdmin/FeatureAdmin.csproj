@@ -154,21 +154,19 @@
     </ApplicationDefinition>
     <Compile Include="ActorSystemReference.cs" />
     <Compile Include="Actors\FeatureDefinitionActor.cs" />
-    <Compile Include="Actors\FeatureDefinitionManagerActor.cs" />
     <Compile Include="Actors\LocationActor.cs" />
-    <Compile Include="Actors\LocationManagerActor.cs" />
     <Compile Include="Actors\TaskManagerActor.cs" />
-    <Compile Include="Actors\ViewModelSyncActor.cs" />
     <Compile Include="Caliburn.Metro.Autofac\AutofacBootstrapper.cs" />
     <Compile Include="Caliburn.Metro.Autofac\CaliburnMetroAutofacBootstrapper.cs" />
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Caliburn.Metro.Autofac\EventAggregationAutoSubscriptionModule.cs" />
     <Compile Include="Common\NegatableBooleanToVisibilityConverter.cs" />
+    <Compile Include="Messages\ClearItemsReady.cs" />
     <Compile Include="Messages\ProgressMessage.cs" />
     <Compile Include="Messages\LogMessage.cs" />
     <Compile Include="Messages\OpenWindow.cs" />
     <Compile Include="Messages\SetSearchFilter.cs" />
-    <Compile Include="Messages\LoadItem.cs" />
+    <Compile Include="Messages\ClearItems.cs" />
     <Compile Include="Messages\ItemSelected.cs" />
     <Compile Include="UIModels\IWorkSpace.cs" />
     <Compile Include="ViewModels\BaseListViewModel.cs" />

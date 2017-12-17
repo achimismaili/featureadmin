@@ -4,11 +4,10 @@ using System;
 
 namespace FeatureAdmin.Core.Messages.Tasks
 {
-    public class TaskUpdate
+    public class TaskUpdate : Core.Messages.Tasks.BaseTaskMessage
     {
-        private TaskUpdate(Guid taskId)
+        public TaskUpdate(Guid taskId) : base(taskId)
         {
-            TaskId = taskId;
         }
 
         // update with text
@@ -46,6 +45,5 @@ namespace FeatureAdmin.Core.Messages.Tasks
         public int AffectedWebs { get; set; }
         public string LogEntry { get; private set; }
         public decimal? NewPercentage { get; private set; }
-        public Guid TaskId { get; private set; }
     }
 }

@@ -77,7 +77,20 @@ namespace FeatureAdmin.Core.Models.Tasks
             return TrackItemsProcessed(featuresProcessed, ref FeaturesTotal, ref FeaturesProcessed, quotaScopeFarmFeatures);
         }
 
-        public bool TrackLocationProcessed(Location location)
+
+        public bool TrackLocationsProcessed([NotNull] IEnumerable<Location> locations)
+        {
+            bool finished = false;
+            foreach (Location l in locations)
+            {
+                var finishedThis = TrackLocationProcessed(l);
+
+                finished = finishedThis ? true : finished;
+            }
+
+            return finished;
+        }
+        public bool TrackLocationProcessed([NotNull] Location location)
         {
             switch (location.Scope)
             {

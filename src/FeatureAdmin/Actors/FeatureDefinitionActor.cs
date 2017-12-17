@@ -32,7 +32,9 @@ namespace FeatureAdmin.Actors
             {
                 _log.Error("Farm Feature Definitions not found!");
             }
-                Sender.Tell(new ItemUpdated<System.Collections.Generic.IEnumerable<FeatureDefinition>>(farmFeatureDefinitions));
+                Sender.Tell(new ItemUpdated<System.Collections.Generic.IEnumerable<FeatureDefinition>>(
+                    message.TaskId,
+                    farmFeatureDefinitions));
 
             //TODO: maybe check, if feature definitions from here have more data, than from activated features ...
         }

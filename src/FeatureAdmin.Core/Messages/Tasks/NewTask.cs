@@ -5,13 +5,13 @@ namespace FeatureAdmin.Core.Messages.Tasks
 {
     public class NewTask
     {
-        public NewTask(AdminTask task, TaskType taskType)
+        public NewTask(AdminTaskItems task, TaskType taskType)
         {
             Task = task;
-            TaskType = TaskType;
+            TaskType = taskType;
         }
 
-        public AdminTask Task { get; }
+        public AdminTaskItems Task { get; }
         public TaskType TaskType { get; }
     }
 }

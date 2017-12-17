@@ -2,7 +2,7 @@
 
 namespace FeatureAdmin.Core
 {
-    internal class NotNullAttribute : Attribute
+    public class NotNullAttribute : Attribute
     {
     }
 }

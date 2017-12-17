@@ -14,15 +14,16 @@ namespace FeatureAdmin.ViewModels
 
     public class AppViewModel : IHaveDisplayName,
         Caliburn.Micro.IHandle<NewTask>,
-        Caliburn.Micro.IHandle<OpenWindow>
+        Caliburn.Micro.IHandle<OpenWindow>,
+        Caliburn.Micro.IHandle<ClearItemsReady>
     {
 
         private readonly IEventAggregator eventAggregator;
 
         private readonly IWindowManager windowManager;
 
-        private IActorRef taskManagerActorRef;
-        private IActorRef viewModelSyncActorRef;
+        private Akka.Actor.IActorRef taskManagerActorRef;
+        // private IActorRef viewModelSyncActorRef;
         public AppViewModel(IWindowManager windowManager, IEventAggregator eventAggregator)
         {
             DisplayName = "Feature Admin 3 for SharePoint 2013";
@@ -67,9 +68,9 @@ namespace FeatureAdmin.ViewModels
         private void InitializeActors()
         {
             //   loadFeatureDefinitionActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new LoadActor())); 
-            viewModelSyncActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new ViewModelSyncActor(eventAggregator)));
+           // viewModelSyncActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new ViewModelSyncActor(eventAggregator)));
 
-            taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Props.Create(() => new TaskManagerActor(viewModelSyncActorRef, eventAggregator)));
+            taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Akka.Actor.Props.Create(() => new TaskManagerActor(eventAggregator)));
             //featureToggleActorRef;
 
             //_chartingActorRef =
@@ -106,6 +107,11 @@ namespace FeatureAdmin.ViewModels
             settings.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
 
             this.windowManager.ShowWindow(viewModel, null, settings);
+        }
+
+        public void Handle(ClearItemsReady message)
+        {
+            taskManagerActorRef.Tell(message);
         }
     }
 }

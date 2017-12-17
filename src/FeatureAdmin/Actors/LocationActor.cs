@@ -1,5 +1,6 @@
 ﻿using Akka.Actor;
 using Akka.Event;
+using FeatureAdmin.Core;
 using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Services;
@@ -22,34 +23,27 @@ namespace FeatureAdmin.Actors
             Receive<LoadLocationQuery>(message => LookupLocation(message));
         }
 
-        private void LookupLocation(LoadLocationQuery message)
+        private void LookupLocation([NotNull] LoadLocationQuery message)
         {
             // first, generate Location from SharePoint object
             _log.Debug("Entered LocationActor-LookupLocation");
 
             var locations = new List<Location>();
 
-            if (message == null || message.Location == null)
-            {
-                _log.Error("LookupLocation: message or message.splocation was null");
-            }
-
             var location = message.Location;
 
             if (location.Scope == Core.Models.Enums.Scope.Farm)
             {
                 locations.AddRange(dataService.LoadFarmAndWebApps());
-
-                Sender.Tell(new ItemUpdated<IEnumerable<Location>>(locations, true));
-
             }
             else
             {
                 locations.AddRange(dataService.LoadNonFarmLocationAndChildren(location));
-                Sender.Tell(new ItemUpdated<IEnumerable<Location>>(locations));
             }
 
-            
+            Sender.Tell(new ItemUpdated<IEnumerable<Location>>(
+                                message.TaskId,
+                                locations));
         }
     }
 }

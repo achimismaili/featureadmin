@@ -22,7 +22,7 @@ namespace FeatureAdmin.Core.Tests.Models
             Location l = null;
             // Act
 
-            Action act = () => new Messages.ItemUpdated<Location>(l);
+            Action act = () => new Messages.ItemUpdated<Location>(Guid.NewGuid(), l);
 
             // Assert
             Assert.Throws<ArgumentNullException>(act);

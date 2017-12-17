@@ -11,18 +11,18 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             Title = title;
             Status = TaskStatus.Started;
-            Id = new Guid();
-            Start = DateTime.Now;
+            Id = Guid.NewGuid();
+            Start = null;
             End = null;
             PercentCompleted = 0;
 
         }
 
-        public DateTime? End { get; private set; }
+        public DateTime? End { get; set; }
         public Guid Id { get; private set; }
 
         public double PercentCompleted { get; private set; }
-        public DateTime Start { get; private set; }
+        public DateTime? Start { get; set; }
         public TaskStatus Status { get; private set; }
         public string Title { get; private set; }
 
@@ -57,12 +57,6 @@ namespace FeatureAdmin.Core.Models.Tasks
                 if (Status != TaskStatus.Failed || Status != TaskStatus.Canceled)
                 {
                     Status = TaskStatus.Completed;
-                }
-
-                // set end date only the first time, end is set
-                if (End == null)
-                {
-                    End = DateTime.Now;
                 }
             }
         }

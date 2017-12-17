@@ -1,17 +1,13 @@
-﻿using FeatureAdmin.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace FeatureAdmin.Core.Messages
 {
-    public class ItemUpdated<T> where T : class
+    public class ItemUpdated<T> : Tasks.BaseTaskMessage where T : class
     {
         public object i;
 
-        public ItemUpdated([NotNull] T item, bool reportToTaskManager = false)
+        public ItemUpdated(Guid taskId, [NotNull] T item, bool reportToTaskManager = false)
+            : base(taskId)
         {
             Item = item;
             ReportToTaskManager = reportToTaskManager;
