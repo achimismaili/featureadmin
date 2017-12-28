@@ -16,10 +16,10 @@ namespace FeatureAdmin.Actors
 {
     public class TaskManagerActor : ReceiveActor
     {
+        private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IEventAggregator eventAggregator;
         private readonly IActorRef featureDefinitionActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
-        private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly Dictionary<Guid, AdminTaskItems> tasks;
 
         public TaskManagerActor(IEventAggregator eventAggregator)
@@ -39,6 +39,40 @@ namespace FeatureAdmin.Actors
 
             Receive<ItemUpdated<IEnumerable<Location>>>(message => LocationUpdated(message));
             Receive<ItemUpdated<IEnumerable<FeatureDefinition>>>(message => FeatureDefinitionsUpdated(message));
+        }
+
+        public void HandleClearItems(ClearItemsReady message)
+        {
+            var task = tasks[message.TaskId];
+
+            // how many steps are expected is decided in Common.Constants.Tasks.PreparationStepsForLoad
+            var preparationReady = task.TrackPreparationsProcessed(1);
+
+            if (preparationReady)
+            {
+                SendProgress(task);
+
+                featureDefinitionActor.Tell(message);
+
+                var loadLocation = Core.Factories.LocationFactory.GetDummyFarmForLoadCommand();
+                var locationQuery = new LoadLocationQuery(message.TaskId, loadLocation);
+                LoadTask(locationQuery);
+            }
+
+        }
+
+        private void FeatureDefinitionsUpdated(ItemUpdated<IEnumerable<FeatureDefinition>> message)
+        {
+            eventAggregator.PublishOnUIThread(message);
+
+            var task = tasks[message.TaskId];
+
+            var stepReady = task.TrackFeatureDefinitionsProcessed(message.Item.Count());
+
+            if (stepReady)
+            {
+                SendProgress(task);
+            }
         }
 
         private void HandleNewTask(NewTask message)
@@ -98,68 +132,6 @@ namespace FeatureAdmin.Actors
                 locationActors[locationId].Tell(message);
             }
         }
-
-        public void HandleClearItems(ClearItemsReady message)
-        {
-            var task = tasks[message.TaskId];
-
-            // how many steps are expected is decided in Common.Constants.Tasks.PreparationStepsForLoad
-            var preparationReady = task.TrackPreparationsProcessed(1);
-
-            if (preparationReady)
-            {
-                SendProgress(task);
-
-                featureDefinitionActor.Tell(message);
-
-                var loadLocation = Core.Factories.LocationFactory.GetDummyFarmForLoadCommand();
-                var locationQuery = new LoadLocationQuery(message.TaskId, loadLocation);
-                LoadTask(locationQuery);
-            }
-
-        }
-
-        private void SendProgress(AdminTaskItems task)
-        {
-            var progressMsg = new ProgressMessage(task);
-            eventAggregator.PublishOnUIThread(progressMsg);
-
-            if (task.PercentCompleted == 0 && task.Start == null)
-            {
-                task.Start = DateTime.Now;
-                var logMsg = new Messages.LogMessage(Core.Models.Enums.LogLevel.Information,
-                string.Format("Started '{1}' (ID: '{0}')", task.Id, task.Title)
-                );
-                eventAggregator.PublishOnUIThread(logMsg);
-            }
-
-            if (task.PercentCompleted >= 1 && task.End == null)
-            {
-                task.End = DateTime.Now;
-                var logMsg = new Messages.LogMessage(Core.Models.Enums.LogLevel.Information,
-                string.Format("Completed '{1}' (ID: '{0}')", task.Id, task.Title)
-                );
-                eventAggregator.PublishOnUIThread(logMsg);
-
-                // as task list ist deleted after restart, no need to delete tasks here
-            }
-
-        }
-
-        private void FeatureDefinitionsUpdated(ItemUpdated<IEnumerable<FeatureDefinition>> message)
-        {
-            eventAggregator.PublishOnUIThread(message);
-
-            var task = tasks[message.TaskId];
-
-            var stepReady = task.TrackFeatureDefinitionsProcessed(message.Item.Count());
-
-            if (stepReady)
-            {
-                SendProgress(task);
-            }
-        }
-
         private void LocationUpdated([NotNull] ItemUpdated<IEnumerable<Location>> message)
         {
             var locations = message.Item;
@@ -172,7 +144,12 @@ namespace FeatureAdmin.Actors
 
             var stepReady = task.TrackLocationsProcessed(message.Item);
 
-            SendProgress(task);
+            if (stepReady)
+            {
+                var dbgMsg = new Messages.LogMessage(Core.Models.Enums.LogLevel.Debug,
+                    string.Format("Status {0}", task.LoadReport)
+                    );
+            }
 
             // for web applications, load children
 
@@ -194,6 +171,35 @@ namespace FeatureAdmin.Actors
             eventAggregator.PublishOnUIThread(new ItemUpdated<IEnumerable<FeatureDefinition>>(
                  message.TaskId,
                  featureDefinitions));
+
+            SendProgress(task);
+        }
+
+        private void SendProgress(AdminTaskItems task)
+        {
+            var progressMsg = new ProgressMessage(task);
+            eventAggregator.PublishOnUIThread(progressMsg);
+
+            if (task.PercentCompleted == 0 && task.Start == null)
+            {
+                task.Start = DateTime.Now;
+                var logMsg = new Messages.LogMessage(Core.Models.Enums.LogLevel.Information,
+                string.Format("Started '{1}' (ID: '{0}')", task.Id, task.Title)
+                );
+                eventAggregator.PublishOnUIThread(logMsg);
+            }
+
+            //if (task.PercentCompleted >= 1 && task.End == null)
+            //{
+                task.End = DateTime.Now;
+                var logEndMsg = new Messages.LogMessage(Core.Models.Enums.LogLevel.Information,
+                string.Format("Completed {0}", task.LoadReport)
+                );
+                eventAggregator.PublishOnUIThread(logEndMsg);
+
+                // as task list ist deleted after restart, no need to delete tasks here
+            //}
+
         }
     }
 }

@@ -74,7 +74,7 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         public bool TrackFeatureDefinitionsProcessed(int featuresProcessed)
         {
-            return TrackItemsProcessed(featuresProcessed, ref FeaturesTotal, ref FeaturesProcessed, quotaScopeFarmFeatures);
+            return TrackItemsProcessed(featuresProcessed, ref FeaturesProcessed, ref FeaturesTotal, quotaScopeFarmFeatures);
         }
 
 
@@ -95,16 +95,16 @@ namespace FeatureAdmin.Core.Models.Tasks
             switch (location.Scope)
             {
                 case Scope.Web:
-                    return TrackItemsProcessed(1, ref WebsTotal, ref WebsProcessed, quotaScopeSites);
+                    return TrackItemsProcessed(1, ref WebsProcessed, ref WebsTotal, quotaScopeSites);
                 case Scope.Site:
                     UpdateExpectedItems(0, 0, location.ChildCount, 0, 0, 0);
-                    return TrackItemsProcessed(1, ref SitesTotal, ref SitesProcessed, quotaScopeSites);
+                    return TrackItemsProcessed(1, ref SitesProcessed, ref SitesTotal, quotaScopeSites);
                 case Scope.WebApplication:
                     UpdateExpectedItems(0, 0, 0, location.ChildCount, 0, 0);
-                    return TrackItemsProcessed(1, ref WebAppsTotal, ref WebAppsProcessed, quotaScopeWebApps);
+                    return TrackItemsProcessed(1, ref WebAppsProcessed, ref WebAppsTotal, quotaScopeWebApps);
                 case Scope.Farm:
                     UpdateExpectedItems(0, 0, 0, 0, location.ChildCount, 0);
-                    return TrackItemsProcessed(1, ref FarmsTotal, ref FarmsProcessed, quotaScopeFarm);
+                    return TrackItemsProcessed(1, ref FarmsProcessed, ref FarmsTotal, quotaScopeFarm);
                 case Scope.ScopeInvalid:
                 default:
                     // do not track non valid scopes
@@ -169,5 +169,19 @@ namespace FeatureAdmin.Core.Models.Tasks
             WebAppsProcessed += webApps;
             FarmsProcessed += farms;
         }
+
+        public string LoadReport { get
+            {
+                return string.Format("'{0}' (ID: '{1}') - Loaded: {2} web apps, {3} site collections, {4} webs, {5} features, progress {6:F0}%",
+                    Title,
+                    Id,
+                    WebAppsProcessed,
+                    SitesProcessed,
+                    WebsProcessed,
+                    FeaturesProcessed,
+                    PercentCompleted * 100
+                    
+                    );
+            } }
     }
 }
