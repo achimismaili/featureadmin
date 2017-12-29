@@ -37,8 +37,8 @@ namespace FeatureAdmin.Actors
             Receive<NewTask>(message => HandleNewTask(message));
             Receive<ClearItemsReady>(message => HandleClearItems(message));
 
-            Receive<ItemUpdated<IEnumerable<Location>>>(message => LocationUpdated(message));
-            Receive<ItemUpdated<IEnumerable<FeatureDefinition>>>(message => FeatureDefinitionsUpdated(message));
+            Receive<LocationsLoaded>(message => HandleLocationsLoaded(message));
+            Receive<FarmFeatureDefinitionsLoaded>(message => FarmFeatureDefinitionsLoaded(message));
         }
 
         public void HandleClearItems(ClearItemsReady message)
@@ -61,13 +61,13 @@ namespace FeatureAdmin.Actors
 
         }
 
-        private void FeatureDefinitionsUpdated(ItemUpdated<IEnumerable<FeatureDefinition>> message)
+        private void FarmFeatureDefinitionsLoaded(FarmFeatureDefinitionsLoaded message)
         {
             eventAggregator.PublishOnUIThread(message);
 
             var task = tasks[message.TaskId];
 
-            var stepReady = task.TrackFeatureDefinitionsProcessed(message.Item.Count());
+            var stepReady = task.TrackFeatureDefinitionsProcessed(message.FarmFeatureDefinitions.Count());
 
             if (stepReady)
             {
@@ -132,9 +132,9 @@ namespace FeatureAdmin.Actors
                 locationActors[locationId].Tell(message);
             }
         }
-        private void LocationUpdated([NotNull] ItemUpdated<IEnumerable<Location>> message)
+        private void HandleLocationsLoaded([NotNull] LocationsLoaded message)
         {
-            var locations = message.Item;
+            var locations = message.Locations;
 
             // publish locations to wpf
             eventAggregator.PublishOnUIThread(message);
@@ -142,7 +142,7 @@ namespace FeatureAdmin.Actors
             var task = tasks[message.TaskId];
 
 
-            var stepReady = task.TrackLocationsProcessed(message.Item);
+            var stepReady = task.TrackLocationsProcessed(message.Locations);
 
             if (stepReady)
             {
@@ -152,25 +152,6 @@ namespace FeatureAdmin.Actors
             }
 
             // for web applications, load children
-
-
-            // convert features for feature definitions
-
-            var features = locations.SelectMany(l => l.ActivatedFeatures);
-
-            var featureDefinitions = features.Select(f => f.Definition).Distinct().ToList();
-
-            foreach (FeatureDefinition fd in featureDefinitions)
-            {
-                foreach (var feature in features.Where(f => f.Definition == fd))
-                {
-                    fd.ToggleActivatedFeature(feature, true);
-                }
-            }
-
-            eventAggregator.PublishOnUIThread(new ItemUpdated<IEnumerable<FeatureDefinition>>(
-                 message.TaskId,
-                 featureDefinitions));
 
             SendProgress(task);
         }

@@ -4,51 +4,29 @@ using System.Linq;
 using System;
 using FeatureAdmin.Core.Messages;
 using System.Collections.Generic;
+using FeatureAdmin.Core.Messages.Tasks;
+using FeatureAdmin.Core;
+using FeatureAdmin.Core.Factories;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>, IHandle<ItemUpdated<IEnumerable<FeatureDefinition>>>
+    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>, IHandle<FarmFeatureDefinitionsLoaded>, IHandle<LocationsLoaded>
     {
         public FeatureDefinitionListViewModel(IEventAggregator eventAggregator)
          : base(eventAggregator)
         {
         }
 
-        public void Handle(ItemUpdated<IEnumerable<FeatureDefinition>> message)
+        public void Handle([NotNull] FarmFeatureDefinitionsLoaded message)
         {
-            if (message == null || message.Item == null)
-            {
-                //TODO log
-                return;
-            }
-
-            var featureDefinitions = message.Item;
-
-            foreach (FeatureDefinition fd in featureDefinitions)
-            {
-                var existingItem = allItems.FirstOrDefault(l => l.Id == fd.Id);
-
-                if (existingItem != null)
-                {
-                    foreach (var f in existingItem.ActivatedFeatures)
-                    {
-                        fd.ToggleActivatedFeature(f, true);
-                    }
-                    allItems.Remove(existingItem);
-                }
-
-                allItems.Add(fd);
-
-            }
-
-            //if (lastUpdateInitiatedSearch.AddSeconds(3) < DateTime.Now)
-            //{
-            //    lastUpdateInitiatedSearch = DateTime.Now;
-            FilterResults();
-            //}
-
-
+            allItems.Concat(message.FarmFeatureDefinitions);
         }
+        public void Handle([NotNull] LocationsLoaded message)
+        {
+           allItems.AddActivatedFeatures(message.)
+
+            FilterResults();
+                   }
 
         /// <summary>
         /// custom guid search in items for derived class

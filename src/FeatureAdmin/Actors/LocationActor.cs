@@ -41,7 +41,7 @@ namespace FeatureAdmin.Actors
                 locations.AddRange(dataService.LoadNonFarmLocationAndChildren(location));
             }
 
-            Sender.Tell(new ItemUpdated<IEnumerable<Location>>(
+            Sender.Tell(new Core.Messages.Tasks.LocationsLoaded(
                                 message.TaskId,
                                 locations));
         }

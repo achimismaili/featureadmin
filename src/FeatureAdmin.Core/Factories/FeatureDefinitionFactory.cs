@@ -1,15 +1,48 @@
-﻿using FeatureAdmin.Core.Models;
+﻿using FeatureAdmin.Core.Messages.Tasks;
+using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Models.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FeatureAdmin.Core.Factories
 {
-    public class FeatureDefinitionFactory 
+    public static class FeatureDefinitionFactory 
     {
-        
+        /// <summary>
+        /// Add activated features to list of definitions, when definition does not exist, it gets created
+        /// </summary>
+        /// <param name="existingFeatureDefinitions"></param>
+        /// <param name="featureDefinitionsToAdd"></param>
+        /// <returns></returns>
+        public static void AddActivatedFeatures(this ICollection<FeatureDefinition> existingFeatureDefinitions, IEnumerable<ActivatedFeature> featuresToAdd)
+        {
+            FeatureDefinition definitionCache = null;
 
-       
+            if (featuresToAdd != null)
+            {
+                foreach (ActivatedFeature f in featuresToAdd.OrderBy(feature => feature.Definition))
+                {
+                    if (f.Definition != definitionCache)
+                    {
+                        var existingDefinition = existingFeatureDefinitions.FirstOrDefault(fd => fd == f.Definition);
+
+                        if (existingDefinition != null)
+                        {
+                            definitionCache = existingDefinition;
+                        }
+                        else
+                        {
+                            definitionCache = f.Definition;
+                            existingFeatureDefinitions.Add(definitionCache);
+                        }
+                    }
+
+                    definitionCache.ToggleActivatedFeature(f, true);
+                }
+            }
+        }
+
         public static FeatureDefinition GetFaultyDefinition(
              Guid id,
              Scope scope,

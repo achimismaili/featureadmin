@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using FeatureAdmin.Core.Messages;
+using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class LocationListViewModel : BaseListViewModel<Location>, IHandle<ItemUpdated<IEnumerable<Location>>>
+    public class LocationListViewModel : BaseListViewModel<Location>, IHandle<LocationsLoaded>
     {
         public LocationListViewModel(IEventAggregator eventAggregator)
             : base(eventAggregator)
@@ -28,15 +29,9 @@ namespace FeatureAdmin.ViewModels
                        || l.ActivatedFeatures.Any(f => f.FeatureId == guid);
         }
 
-        public void Handle(ItemUpdated<IEnumerable<Location>> message)
+        public void Handle(LocationsLoaded message)
         {
-            if (message == null || message.Item == null)
-            {
-                //TODO log
-                return;
-            }
-
-            var locations = message.Item;
+            var locations = message.Locations;
 
             var locationsToReplace = allItems.Where(al => locations.Any(l => l.Id == al.Id)).ToList();
 

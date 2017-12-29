@@ -32,7 +32,7 @@ namespace FeatureAdmin.Actors
             {
                 _log.Error("Farm Feature Definitions not found!");
             }
-                Sender.Tell(new ItemUpdated<System.Collections.Generic.IEnumerable<FeatureDefinition>>(
+                Sender.Tell(new Core.Messages.Tasks.FarmFeatureDefinitionsLoaded(
                     message.TaskId,
                     farmFeatureDefinitions));
 

@@ -15,7 +15,7 @@ namespace FeatureAdmin.Core.Models
                 Dictionary<string, string> properties,
                 DateTime timeActivated,
                 Version version,
-                string definitionInstallationScope = "Farm"
+                string definitionInstallationScope = Common.Constants.Defaults.DefinitionInstallationScopeFarm
             )
         {
             FeatureId = featureId;

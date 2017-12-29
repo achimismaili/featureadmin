@@ -52,10 +52,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Constants.cs" />
     <Compile Include="Factories\ActivatedFeatureFactory.cs" />
     <Compile Include="Factories\FeatureDefinitionFactory.cs" />
     <Compile Include="Factories\LocationFactory.cs" />
     <Compile Include="Messages\Tasks\BaseTaskMessage.cs" />
+    <Compile Include="Messages\Tasks\FarmFeatureDefinitionsLoaded.cs" />
     <Compile Include="Models\Enums\LogLevel.cs" />
     <Compile Include="Models\Tasks\AdminTaskFancy.cs" />
     <Compile Include="Models\Tasks\AdminTaskItems.cs" />
@@ -65,7 +67,7 @@
     <Compile Include="Messages\LoadChildLocationsQuery.cs" />
     <Compile Include="Messages\LoadFeatureDefinitionQuery.cs" />
     <Compile Include="Messages\LoadLocationQuery.cs" />
-    <Compile Include="Messages\LocationsUpdated.cs" />
+    <Compile Include="Messages\Tasks\LocationsLoaded.cs" />
     <Compile Include="Messages\ItemUpdated.cs" />
     <Compile Include="Models\IBaseItem.cs" />
     <Compile Include="Models\BaseItem.cs" />
