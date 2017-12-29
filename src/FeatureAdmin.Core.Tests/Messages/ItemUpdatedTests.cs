@@ -1,15 +1,8 @@
-﻿using FeatureAdmin.Core.Factories;
-using FeatureAdmin.Core.Models;
-using FeatureAdmin.Core.Models.Enums;
-using FeatureAdmin.SampleData;
+﻿using FeatureAdmin.Core.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace FeatureAdmin.Core.Tests.Models
+namespace FeatureAdmin.Core.Tests.Messages
 {
     public class ItemUpdatedTests
     {
@@ -22,7 +15,7 @@ namespace FeatureAdmin.Core.Tests.Models
             Location l = null;
             // Act
 
-            Action act = () => new Messages.ItemUpdated<Location>(Guid.NewGuid(), l);
+            Action act = () => new Core.Messages.ItemUpdated<Location>(Guid.NewGuid(), l);
 
             // Assert
             Assert.Throws<ArgumentNullException>(act);

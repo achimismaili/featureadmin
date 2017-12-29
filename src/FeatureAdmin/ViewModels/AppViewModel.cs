@@ -34,8 +34,6 @@ namespace FeatureAdmin.ViewModels
             this.eventAggregator.Subscribe(this);
 
 
-
-            // NavigationBarVm = new NavigationBarViewModel(eventAggregator);
             StatusBarVm = new StatusBarViewModel(eventAggregator);
 
             FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator);
@@ -59,11 +57,6 @@ namespace FeatureAdmin.ViewModels
         public StatusBarViewModel StatusBarVm { get; private set; }
 
         public string DisplayName { get; set; }
-
-        //public void Handle(LoadItem<Location> loadCommand)
-        //{
-        //    taskManagerActorRef.Tell(new LoadLocationQuery(loadCommand.Item));
-        //}
 
         private void InitializeActors()
         {

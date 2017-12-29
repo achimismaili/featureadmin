@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace FeatureAdmin.Core.Factories
 {
-    public static class FeatureDefinitionFactory 
+    public static class FeatureDefinitionFactory
     {
         /// <summary>
         /// Add activated features to list of definitions, when definition does not exist, it gets created
@@ -15,33 +15,29 @@ namespace FeatureAdmin.Core.Factories
         /// <param name="existingFeatureDefinitions"></param>
         /// <param name="featureDefinitionsToAdd"></param>
         /// <returns></returns>
-        public static void AddActivatedFeatures(this ICollection<FeatureDefinition> existingFeatureDefinitions, IEnumerable<ActivatedFeature> featuresToAdd)
+        /// <remarks>see also https://stackoverflow.com/questions/12873855/c-sharp-groupby-linq-and-foreach
+        /// </remarks>
+        public static void AddActivatedFeatures(this ICollection<FeatureDefinition> existingFeatureDefinitions, [NotNull] IEnumerable<IGrouping<FeatureDefinition, ActivatedFeature>> featuresToAdd)
         {
-            FeatureDefinition definitionCache = null;
-
-            if (featuresToAdd != null)
+            foreach (var featureDefinitionGroup in featuresToAdd)
             {
-                foreach (ActivatedFeature f in featuresToAdd.OrderBy(feature => feature.Definition))
+                // get feature definition from collection or add a new one if it does not exist yet
+
+                var definitionToAddFeaturesTo = existingFeatureDefinitions.FirstOrDefault(fd => fd.Equals(featureDefinitionGroup.Key));
+
+                if (definitionToAddFeaturesTo == null)
                 {
-                    if (f.Definition != definitionCache)
-                    {
-                        var existingDefinition = existingFeatureDefinitions.FirstOrDefault(fd => fd == f.Definition);
+                    definitionToAddFeaturesTo = featureDefinitionGroup.Key;
+                    existingFeatureDefinitions.Add(definitionToAddFeaturesTo);
+                }
 
-                        if (existingDefinition != null)
-                        {
-                            definitionCache = existingDefinition;
-                        }
-                        else
-                        {
-                            definitionCache = f.Definition;
-                            existingFeatureDefinitions.Add(definitionCache);
-                        }
-                    }
-
-                    definitionCache.ToggleActivatedFeature(f, true);
+                foreach (ActivatedFeature activeFeature in featureDefinitionGroup)
+                {
+                    definitionToAddFeaturesTo.ToggleActivatedFeature(activeFeature, true);
                 }
             }
         }
+
 
         public static FeatureDefinition GetFaultyDefinition(
              Guid id,

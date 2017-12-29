@@ -19,7 +19,7 @@ namespace FeatureAdmin.Core.Tests.Models
         public static string DisplayName = "Test Display Name";
         public static string Description = "Test description";
         public static bool Hidden = false;
-        public static string DefinitioninstallationScope = "Farm";
+        public static string DefinitioninstallationScope = Core.Common.Constants.Defaults.DefinitionInstallationScopeFarm;
         public static Scope Scope = Scope.Web;
         public static Version Version = new Version("3.0.0.0");
         public static bool Faulty = false;

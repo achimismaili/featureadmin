@@ -156,6 +156,8 @@
     <Compile Include="Actors\FeatureDefinitionActor.cs" />
     <Compile Include="Actors\LocationActor.cs" />
     <Compile Include="Actors\TaskManagerActor.cs" />
+    <Compile Include="Actors\Tasks\LoadTaskActor.cs" />
+    <Compile Include="Actors\Tasks\BaseTaskActor.cs" />
     <Compile Include="Caliburn.Metro.Autofac\AutofacBootstrapper.cs" />
     <Compile Include="Caliburn.Metro.Autofac\CaliburnMetroAutofacBootstrapper.cs" />
     <Compile Include="Common\Constants.cs" />

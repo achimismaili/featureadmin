@@ -20,7 +20,7 @@ namespace FeatureAdmin.Core.Models
              Guid solutionId,
              string uIVersion,
              Version version,
-            string definitionInstallationScope = "Farm"
+            string definitionInstallationScope = Common.Constants.Defaults.DefinitionInstallationScopeFarm
             ) : base()
         {
             Id = id;

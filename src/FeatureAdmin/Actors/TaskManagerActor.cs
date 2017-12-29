@@ -20,7 +20,7 @@ namespace FeatureAdmin.Actors
         private readonly IEventAggregator eventAggregator;
         private readonly IActorRef featureDefinitionActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
-        private readonly Dictionary<Guid, AdminTaskItems> tasks;
+        private readonly Dictionary<Guid, IActorRef> tasks;
 
         public TaskManagerActor(IEventAggregator eventAggregator)
         {
@@ -28,7 +28,7 @@ namespace FeatureAdmin.Actors
 
             locationActors = new Dictionary<Guid, IActorRef>();
 
-            tasks = new Dictionary<Guid, AdminTaskItems>();
+            tasks = new Dictionary<Guid, IActorRef>();
 
             featureDefinitionActor =
                     Context.ActorOf(Context.DI().Props<FeatureDefinitionActor>());
@@ -46,33 +46,33 @@ namespace FeatureAdmin.Actors
             var task = tasks[message.TaskId];
 
             // how many steps are expected is decided in Common.Constants.Tasks.PreparationStepsForLoad
-            var preparationReady = task.TrackPreparationsProcessed(1);
+       //     var preparationReady = task.TrackPreparationsProcessed(1);
 
-            if (preparationReady)
-            {
-                SendProgress(task);
+            //if (preparationReady)
+            //{
+          //      SendProgress(task);
 
-                featureDefinitionActor.Tell(message);
+            //    featureDefinitionActor.Tell(message);
 
-                var loadLocation = Core.Factories.LocationFactory.GetDummyFarmForLoadCommand();
-                var locationQuery = new LoadLocationQuery(message.TaskId, loadLocation);
-                LoadTask(locationQuery);
-            }
+            //    var loadLocation = Core.Factories.LocationFactory.GetDummyFarmForLoadCommand();
+            //    var locationQuery = new LoadLocationQuery(message.TaskId, loadLocation);
+            //    LoadTask(locationQuery);
+            //}
 
         }
 
         private void FarmFeatureDefinitionsLoaded(FarmFeatureDefinitionsLoaded message)
         {
-            eventAggregator.PublishOnUIThread(message);
+            //    eventAggregator.PublishOnUIThread(message);
 
-            var task = tasks[message.TaskId];
+            //    var task = tasks[message.TaskId];
 
-            var stepReady = task.TrackFeatureDefinitionsProcessed(message.FarmFeatureDefinitions.Count());
+            //    var stepReady = task.TrackFeatureDefinitionsProcessed(message.FarmFeatureDefinitions.Count());
 
-            if (stepReady)
-            {
-                SendProgress(task);
-            }
+            //    if (stepReady)
+            //    {
+            //        SendProgress(task);
+            //    }
         }
 
         private void HandleNewTask(NewTask message)
@@ -81,7 +81,7 @@ namespace FeatureAdmin.Actors
             SendProgress(message.Task);
 
             // add new task to tracking list
-            tasks.Add(message.Task.Id, message.Task);
+         //   tasks.Add(message.Task.Id, message.Task);
 
             // delegate tasks and todos depending on task type
             switch (message.TaskType)
@@ -142,18 +142,18 @@ namespace FeatureAdmin.Actors
             var task = tasks[message.TaskId];
 
 
-            var stepReady = task.TrackLocationsProcessed(message.Locations);
+            //var stepReady = task.TrackLocationsProcessed(message.Locations);
 
-            if (stepReady)
-            {
-                var dbgMsg = new Messages.LogMessage(Core.Models.Enums.LogLevel.Debug,
-                    string.Format("Status {0}", task.LoadReport)
-                    );
-            }
+            //if (stepReady)
+            //{
+            //    var dbgMsg = new Messages.LogMessage(Core.Models.Enums.LogLevel.Debug,
+            //        string.Format("Status {0}", task.LoadReport)
+            //        );
+            //}
 
-            // for web applications, load children
+            //// for web applications, load children
 
-            SendProgress(task);
+            //SendProgress(task);
         }
 
         private void SendProgress(AdminTaskItems task)

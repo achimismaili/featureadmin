@@ -23,10 +23,10 @@ namespace FeatureAdmin.ViewModels
         }
         public void Handle([NotNull] LocationsLoaded message)
         {
-           allItems.AddActivatedFeatures(message.)
+            allItems.AddActivatedFeatures(message.LoadedFeatures);
 
             FilterResults();
-                   }
+        }
 
         /// <summary>
         /// custom guid search in items for derived class
