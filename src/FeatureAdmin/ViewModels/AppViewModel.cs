@@ -1,21 +1,14 @@
 ﻿using Akka.Actor;
 using Caliburn.Micro;
 using FeatureAdmin.Actors;
-using FeatureAdmin.Core.Factories;
-using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Messages.Tasks;
-using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
-using FeatureAdmin.UIModels;
-using System;
 
 namespace FeatureAdmin.ViewModels
 {
 
     public class AppViewModel : IHaveDisplayName,
-        Caliburn.Micro.IHandle<NewTask>,
-        Caliburn.Micro.IHandle<OpenWindow>,
-        Caliburn.Micro.IHandle<ClearItemsReady>
+        Caliburn.Micro.IHandle<OpenWindow>
     {
 
         private readonly IEventAggregator eventAggregator;
@@ -48,6 +41,7 @@ namespace FeatureAdmin.ViewModels
 
         }
 
+        public string DisplayName { get; set; }
         public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
 
         public LocationListViewModel LocationListVm { get; private set; }
@@ -55,41 +49,19 @@ namespace FeatureAdmin.ViewModels
         public LogViewModel LogVm { get; private set; }
 
         public StatusBarViewModel StatusBarVm { get; private set; }
-
-        public string DisplayName { get; set; }
-
-        private void InitializeActors()
-        {
-            taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Akka.Actor.Props.Create(() => new TaskManagerActor(eventAggregator)));
-        }
-
-        public void Handle(NewTask message)
-        {
-            taskManagerActorRef.Tell(message);
-        }
-
         public void Handle(OpenWindow message)
         {
             OpenWindow(message.ViewModel);
         }
 
-        public void ReLoad()
-        {
-            TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleReload);
-        }
         public void InitializeFarmLoad()
         {
-            TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleInitialLoad);
+            taskManagerActorRef.Tell(
+                new LoadTask(Common.Constants.Tasks.TaskTitleInitialLoad,
+                Core.Factories.LocationFactory.GetDummyFarmForLoadCommand())
+                );
+//            TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleInitialLoad);
         }
-
-        private void TriggerFarmLoadTask(string taskTitle) { 
-            var initialLoadTask = new Core.Models.Tasks.AdminTaskItems(taskTitle, Common.Constants.Tasks.PreparationStepsForLoad);
-
-            Handle(new NewTask(initialLoadTask, Core.Models.Enums.TaskType.Load));
-            //Handle(new LoadItem<FeatureDefinition>());
-            //Handle(new LoadItem<Location>(LocationFactory.GetDummyFarmForLoadCommand()));
-        }
-
 
         public void OpenWindow(DetailViewModel viewModel)
         {
@@ -99,9 +71,18 @@ namespace FeatureAdmin.ViewModels
             this.windowManager.ShowWindow(viewModel, null, settings);
         }
 
-        public void Handle(ClearItemsReady message)
+        public void ReLoad()
         {
-            taskManagerActorRef.Tell(message);
+            TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleReload);
+        }
+
+        private void InitializeActors()
+        {
+            taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Akka.Actor.Props.Create(() => new TaskManagerActor(eventAggregator)));
+        }
+        private void TriggerFarmLoadTask(string taskTitle) { 
+
+            eventAggregator.PublishOnUIThread(new LoadTask(taskTitle, Core.Factories.LocationFactory.GetDummyFarmForLoadCommand()));
         }
     }
 }

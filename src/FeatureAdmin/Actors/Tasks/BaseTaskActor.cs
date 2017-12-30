@@ -1,22 +1,25 @@
 ﻿using Akka.Actor;
+using Caliburn.Micro;
 using FeatureAdmin.Core.Models.Enums;
+using FeatureAdmin.Messages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace FeatureAdmin.Core.Models.Tasks
 {
-    public class BaseTaskActor : ReceiveActor
+    public abstract class BaseTaskActor : ReceiveActor
     {
-        public BaseTaskActor(string title)
+        protected readonly IEventAggregator eventAggregator;
+        public BaseTaskActor(IEventAggregator eventAggregator, string title, Guid id)
         {
-            Title = title;
+            this.eventAggregator = eventAggregator;
             Status = TaskStatus.Started;
-            Id = Guid.NewGuid();
+            Id = id;
+            Title = title;
             Start = null;
             End = null;
             PercentCompleted = 0;
-
         }
 
         public DateTime? End { get; set; }
@@ -25,8 +28,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         public double PercentCompleted { get; private set; }
         public DateTime? Start { get; set; }
         public TaskStatus Status { get; private set; }
-        public string Title { get; private set; }
-
+        public string Title { get; protected set; }
 
         public void SetProgress(double percentage)
         {
@@ -61,5 +63,34 @@ namespace FeatureAdmin.Core.Models.Tasks
                 }
             }
         }
-   }
+
+        protected void SendProgress()
+        {
+            var progressMsg = new ProgressMessage(PercentCompleted,Title);
+            eventAggregator.PublishOnUIThread(progressMsg);
+
+            if (PercentCompleted == 0 && Start == null)
+            {
+                Start = DateTime.Now;
+                var logMsg = new LogMessage(LogLevel.Information,
+                string.Format("Started '{1}' (ID: '{0}')", Id, Title)
+                );
+                eventAggregator.PublishOnUIThread(logMsg);
+            }
+
+            //if (task.PercentCompleted >= 1 && task.End == null)
+            //{
+            End = DateTime.Now;
+            var logEndMsg = new LogMessage(Core.Models.Enums.LogLevel.Information,
+            string.Format("Completed {0}", StatusReport)
+            );
+            eventAggregator.PublishOnUIThread(logEndMsg);
+
+            // as task list ist deleted after restart, no need to delete tasks here
+            //}
+
+        }
+
+        public abstract string StatusReport { get; }
+    }
 }

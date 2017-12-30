@@ -12,12 +12,6 @@ namespace FeatureAdmin.Messages
             Title = title;
         }
 
-        public ProgressMessage(AdminTask task)
-        {
-            Progress = task.PercentCompleted;
-            Title = task.Title;
-        }
-
         public double Progress { get; }
         public string Title { get; }
 
