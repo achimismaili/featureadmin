@@ -28,6 +28,8 @@ namespace FeatureAdmin.Actors
             this.eventAggregator.Subscribe(this);
 
             taskActors = new Dictionary<Guid, IActorRef>();
+
+            Receive<LoadTask>(message => Handle(message));
         }
 
         /// <summary>
@@ -52,8 +54,9 @@ namespace FeatureAdmin.Actors
         public void Handle(LoadTask message)
         {
             Guid newId = Guid.NewGuid();
+
             IActorRef newTaskActor =
-           Context.ActorOf(LoadTaskActor.Props(eventAggregator,
+            ActorSystemReference.ActorSystem.ActorOf(LoadTaskActor.Props(eventAggregator,
            message.Title, newId, message.StartLocation), newId.ToString());
 
            taskActors.Add(newId, newTaskActor);

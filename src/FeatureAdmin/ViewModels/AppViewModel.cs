@@ -56,11 +56,14 @@ namespace FeatureAdmin.ViewModels
 
         public void InitializeFarmLoad()
         {
+            // Commented out, because calling via Caliburn Eventbus is too early on application start ... 
+            // would have to find a way to verify, the actor is already listening at that time ...
+            // TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleInitialLoad);
+
             taskManagerActorRef.Tell(
                 new LoadTask(Common.Constants.Tasks.TaskTitleInitialLoad,
                 Core.Factories.LocationFactory.GetDummyFarmForLoadCommand())
                 );
-//            TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleInitialLoad);
         }
 
         public void OpenWindow(DetailViewModel viewModel)
