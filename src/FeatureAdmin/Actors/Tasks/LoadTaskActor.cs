@@ -16,54 +16,76 @@ namespace FeatureAdmin.Core.Models.Tasks
 {
     public class LoadTaskActor : BaseTaskActor
     {
-        private FarmFeatureDefinitionsLoaded tempFeatureDefinitionStore = null;
-        private List<LocationsLoaded> tempLocationStore = new List<LocationsLoaded>();
-        private Location StartLocation;
-        private bool PreparationReady = false;
-        private bool DefinitionLoadReady = false;
-
-        public int FarmsProcessed;
-        public int FarmsTotal;
-        public int FeaturesProcessed;
-        public int FeaturesTotal;
-        public int PreparationStepsProcessed;
-        public int PreparationStepsTotal = FeatureAdmin.Common.Constants.Tasks.PreparationStepsForLoad;
-        public int SitesProcessed;
-        public int SitesTotal;
-        public int WebAppsProcessed;
-        public int WebAppsTotal;
-        public int WebsProcessed;
-        public int WebsTotal;
+        public ProgressModule Farm;
+        public ProgressModule FarmFeatureDefinitions;
+        public ProgressModule Preparations;
+        public ProgressModule Sites;
+        public ProgressModule WebApps;
+        public ProgressModule Webs;
+        private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IActorRef featureDefinitionActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
-
-        private double quotaPreparation = 5d / 100;
-
-        private double quotaScopeFarm = 5d / 100;
-
-        private double quotaScopeFarmFeatures = 5d / 100;
-
-        private double quotaScopeWebApps = 10d / 100;
-
-        private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
-
+        private bool DefinitionLoadReady = false;
+        private bool PreparationReady = false;
+        private FarmFeatureDefinitionsLoaded tempFeatureDefinitionStore = null;
+        private List<LocationsLoaded> tempLocationStore = new List<LocationsLoaded>();
         public LoadTaskActor(IEventAggregator eventAggregator, string title, Guid id, Location startLocation)
             : base(eventAggregator, title, id)
         {
             locationActors = new Dictionary<Guid, IActorRef>();
+
             featureDefinitionActor =
                    Context.ActorOf(Context.DI().Props<FeatureDefinitionActor>());
 
-            StartLocation = startLocation;
-            FarmsTotal = 1;
-            FeaturesTotal = 1;
+            Preparations = new ProgressModule(
+                5d / 100,
+                0d,
+                FeatureAdmin.Common.Constants.Tasks.PreparationStepsForLoad);
+
+            FarmFeatureDefinitions = new ProgressModule(
+                5d / 100,
+                Preparations.MaxCumulatedQuota);
+
+            Farm = new ProgressModule(
+                5d / 100,
+                FarmFeatureDefinitions.MaxCumulatedQuota,
+                1);
+            WebApps = new ProgressModule(
+                10d / 100,
+                Farm.MaxCumulatedQuota);
+            
+            Sites = new ProgressModule(
+                40d / 100, 
+                WebApps.MaxCumulatedQuota);
+
+            Webs = new ProgressModule(
+                1d - Sites.MaxCumulatedQuota, 
+                Sites.MaxCumulatedQuota);
 
 
             Receive<ClearItemsReady>(message => HandleClearItemsReady(message));
             Receive<LocationsLoaded>(message => HandleLocationsLoaded(message));
             Receive<FarmFeatureDefinitionsLoaded>(message => FarmFeatureDefinitionsLoaded(message));
 
-            InitiateLoadTask();
+            InitiateLoadTask(startLocation);
+        }
+
+        public override string StatusReport
+        {
+            get
+            {
+                return string.Format("'{0}' (ID: '{1}') - Loaded: {2} web apps, {3} site collections, {4} webs, {5} features, progress {6:F0}% \nelapsed time: {7}",
+                    Title,
+                    Id,
+                    WebApps.Processed,
+                    Sites.Processed,
+                    Webs.Processed ,
+                    FarmFeatureDefinitions.Processed,
+                    PercentCompleted * 100,
+                    (End == null ? DateTime.Now : End.Value).Subtract(
+                        Start == null ? DateTime.Now : Start.Value).ToString("c")
+                    );
+            }
         }
 
         /// <summary>
@@ -81,92 +103,6 @@ namespace FeatureAdmin.Core.Models.Tasks
             return Akka.Actor.Props.Create(() => new LoadTaskActor(eventAggregator, title, id, startLocation));
         }
 
-        private void InitiateLoadTask()
-        {
-            // initiate clean all feature definition and location collections
-            var clearMessage = new ClearItems(Id);
-            eventAggregator.PublishOnUIThread(clearMessage);
-
-            // initiate read of all feature definitions
-            var fdQuery = new LoadFeatureDefinitionQuery(Id);
-            featureDefinitionActor.Tell(fdQuery);
-
-            // initiate read of locations
-            var loadQuery = new LoadLocationQuery(Id, StartLocation);
-            LoadTask(loadQuery);
-        }
-
-        private void LoadTask([NotNull] LoadLocationQuery loadQuery)
-        {
-            _log.Debug("Entered LoadTask");
-
-            var locationId = loadQuery.Location.Id;
-
-            if (!locationActors.ContainsKey(locationId))
-            {
-                IActorRef newLocationActor =
-                    Context.ActorOf(Context.DI().Props<LocationActor>());
-
-                locationActors.Add(locationId, newLocationActor);
-
-                newLocationActor.Tell(loadQuery);
-            }
-            else
-            {
-                locationActors[locationId].Tell(loadQuery);
-            }
-        }
-
-        public int ItemsProcessed
-        {
-            get
-            {
-                return
-                    FeaturesProcessed +
-                    FarmsProcessed +
-                    WebAppsProcessed +
-                    SitesProcessed +
-                    WebsProcessed;
-            }
-        }
-
-        public int ItemsTotal
-        {
-            get
-            {
-                return FeaturesTotal + FarmsTotal + WebAppsTotal + SitesTotal + WebsTotal;
-            }
-        }
-
-        public override string StatusReport
-        {
-            get
-            {
-                return string.Format("'{0}' (ID: '{1}') - Loaded: {2} web apps, {3} site collections, {4} webs, {5} features, progress {6:F0}% \nelapsed time: {7}",
-                    Title,
-                    Id,
-                    WebAppsProcessed,
-                    SitesProcessed,
-                    WebsProcessed,
-                    FeaturesProcessed,
-                    PercentCompleted * 100,
-                    (End == null ? DateTime.Now : End.Value).Subtract(
-                        Start == null ? DateTime.Now : Start.Value).ToString("c")
-                    );
-            }
-        }
-
-        private double quotaScopeSites
-        {
-            get
-            {
-                return
-                    1 - quotaPreparation
-                    - quotaScopeFarm
-                    - quotaScopeFarmFeatures
-                    - quotaScopeWebApps;
-            }
-        }
         public void HandleClearItemsReady(ClearItemsReady message)
         {
 
@@ -202,7 +138,7 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         public bool TrackFeatureDefinitionsProcessed(int featuresProcessed)
         {
-            return TrackItemsProcessed(featuresProcessed, ref FeaturesProcessed, ref FeaturesTotal, quotaScopeFarmFeatures);
+            return TrackItemsProcessed(featuresProcessed, ref FarmFeatureDefinitions);
         }
 
         public bool TrackLocationProcessed([NotNull] Location location)
@@ -210,16 +146,16 @@ namespace FeatureAdmin.Core.Models.Tasks
             switch (location.Scope)
             {
                 case Enums.Scope.Web:
-                    return TrackItemsProcessed(1, ref WebsProcessed, ref WebsTotal, quotaScopeSites);
+                    return TrackItemsProcessed(1, ref Webs);
                 case Enums.Scope.Site:
                     UpdateExpectedItems(0, 0, location.ChildCount, 0, 0, 0);
-                    return TrackItemsProcessed(1, ref SitesProcessed, ref SitesTotal, quotaScopeSites);
+                    return TrackItemsProcessed(1, ref Sites);
                 case Enums.Scope.WebApplication:
                     UpdateExpectedItems(0, 0, 0, location.ChildCount, 0, 0);
-                    return TrackItemsProcessed(1, ref WebAppsProcessed, ref WebAppsTotal, quotaScopeWebApps);
+                    return TrackItemsProcessed(1, ref WebApps);
                 case Enums.Scope.Farm:
                     UpdateExpectedItems(0, 0, 0, 0, location.ChildCount, 0);
-                    return TrackItemsProcessed(1, ref FarmsProcessed, ref FarmsTotal, quotaScopeFarm);
+                    return TrackItemsProcessed(1, ref Farm);
                 case Enums.Scope.ScopeInvalid:
                 default:
                     // do not track non valid scopes
@@ -247,7 +183,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         /// <returns>true, if all preparation steps have been processed</returns>
         public bool TrackPreparationsProcessed(int preparationSteps)
         {
-            return TrackItemsProcessed(preparationSteps, ref PreparationStepsProcessed, ref PreparationStepsTotal, quotaPreparation);
+            return TrackItemsProcessed(preparationSteps, ref Preparations);
 
         }
 
@@ -313,49 +249,83 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             SendProgress();
         }
+
+        private void InitiateLoadTask(Location startLocation)
+        {
+            // initiate clean all feature definition and location collections
+            var clearMessage = new ClearItems(Id);
+            eventAggregator.PublishOnUIThread(clearMessage);
+
+            // initiate read of all feature definitions
+            var fdQuery = new LoadFeatureDefinitionQuery(Id);
+            featureDefinitionActor.Tell(fdQuery);
+
+            // initiate read of locations
+            var loadQuery = new LoadLocationQuery(Id, startLocation);
+            LoadTask(loadQuery);
+        }
+
+        private void LoadTask([NotNull] LoadLocationQuery loadQuery)
+        {
+            _log.Debug("Entered LoadTask");
+
+            var locationId = loadQuery.Location.Id;
+
+            if (!locationActors.ContainsKey(locationId))
+            {
+                IActorRef newLocationActor =
+                    Context.ActorOf(Context.DI().Props<LocationActor>());
+
+                locationActors.Add(locationId, newLocationActor);
+
+                newLocationActor.Tell(loadQuery);
+            }
+            else
+            {
+                locationActors[locationId].Tell(loadQuery);
+            }
+        }
         /// <summary>
         /// tracks / increments items processed
         /// </summary>
         /// <param name="itemsProcessedNew">processed items to increment</param>
-        /// <param name="itemsProcessedReference">variable for tracking processed items</param>
-        /// <param name="itemsTotalReference">variable for total items</param>
-        /// <param name="quota">quota for this type of items regarding total progress</param>
+        /// <param name="progModule">a ProgressModule where to get the values</param>
         /// <returns>true, if all items have been processed (--> if processed reached total)</returns>
-        private bool TrackItemsProcessed(int itemsProcessedNew, ref int itemsProcessedReference,
-            ref int itemsTotalReference, double quota)
+        private bool TrackItemsProcessed(int itemsProcessedNew, ref ProgressModule progModule)
         {
-            itemsProcessedReference += itemsProcessedNew;
+            progModule.Processed += itemsProcessedNew;
 
-            if (itemsProcessedReference > itemsTotalReference)
+            if (progModule.Processed > progModule.Total)
             {
-                IncrementProgress(quota);
+                IncrementProgress(progModule.Quota, progModule.MaxCumulatedQuota);
             }
             else
             {
-                IncrementProgress((quota * itemsProcessedReference / itemsTotalReference));
+                IncrementProgress(
+                    progModule.Quota * progModule.Processed / progModule.Total,
+                    progModule.MaxCumulatedQuota);
             }
 
-
-            return itemsProcessedReference >= itemsTotalReference;
+            return progModule.Processed >= progModule.Total;
         }
         private void UpdateExpectedItems(int prepSteps, int features, int webs, int sites, int webApps, int farms)
         {
-            PreparationStepsTotal += prepSteps;
-            FeaturesTotal += features;
-            WebsTotal += webs;
-            SitesTotal += sites;
-            WebAppsTotal += webApps;
-            FarmsTotal += farms;
+            Preparations.Total += prepSteps;
+            FarmFeatureDefinitions.Total += features;
+            Webs.Total += webs;
+            Sites.Total += sites;
+            WebApps.Total += webApps;
+            Farm.Total += farms;
         }
 
 
         private void UpdateProcessedItems(int features, int webs, int sites, int webApps, int farms)
         {
-            FeaturesProcessed += features;
-            WebsProcessed += webs;
-            SitesProcessed += sites;
-            WebAppsProcessed += webApps;
-            FarmsProcessed += farms;
+            FarmFeatureDefinitions.Processed += features;
+            Webs.Processed += webs;
+            Sites.Processed += sites;
+            WebApps.Processed += webApps;
+            Farm.Processed += farms;
         }
     }
 }

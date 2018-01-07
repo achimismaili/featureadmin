@@ -59,6 +59,7 @@
     <Compile Include="Messages\Tasks\BaseTaskMessage.cs" />
     <Compile Include="Messages\Tasks\FarmFeatureDefinitionsLoaded.cs" />
     <Compile Include="Models\Enums\LogLevel.cs" />
+    <Compile Include="Models\ProgressModule.cs" />
     <Compile Include="NotNullAttribute.cs" />
     <Compile Include="Messages\Tasks\LoadTask.cs" />
     <Compile Include="Messages\Tasks\TaskUpdate.cs" />

@@ -39,18 +39,26 @@ namespace FeatureAdmin.Core.Models.Tasks
             }
             else
             {
-                IncrementProgress(percentage - PercentCompleted);
+                IncrementProgress(percentage - PercentCompleted, 0d);
             }
         }
 
-        public void IncrementProgress(double percentage)
+        public void IncrementProgress(double percentage, double maximumPercentage)
         {
             if (PercentCompleted == 0d && percentage > 0d && Status == TaskStatus.Started )
             {
                 Status = TaskStatus.InProgress;
             }
 
-            PercentCompleted += percentage;
+            if ((PercentCompleted + percentage) <= maximumPercentage)
+            {
+                PercentCompleted += percentage;
+            }
+            else
+            {
+                PercentCompleted = maximumPercentage;
+            }
+            
 
             if (PercentCompleted > 1d)
                 {
