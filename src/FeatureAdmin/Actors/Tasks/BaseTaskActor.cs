@@ -19,7 +19,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             Title = title;
             Start = null;
             End = null;
-            PercentCompleted = 0;
+            PercentCompleted = 0d;
         }
 
         public DateTime? End { get; set; }
@@ -37,30 +37,30 @@ namespace FeatureAdmin.Core.Models.Tasks
             {
                 return;
             }
-
-            IncrementProgress(PercentCompleted - percentage);
+            else
+            {
+                IncrementProgress(percentage - PercentCompleted);
+            }
         }
 
         public void IncrementProgress(double percentage)
         {
-            if (PercentCompleted == 0 && percentage > 0 && Status == TaskStatus.Started )
+            if (PercentCompleted == 0d && percentage > 0d && Status == TaskStatus.Started )
             {
                 Status = TaskStatus.InProgress;
             }
 
             PercentCompleted += percentage;
 
-            if (PercentCompleted >= 1)
+            if (PercentCompleted > 1d)
+                {
+                    PercentCompleted = 1d;
+                }
+
+            if (PercentCompleted == 1d && Status != TaskStatus.Failed && Status != TaskStatus.Canceled
+                && Status != TaskStatus.Completed)
             {
-                if (PercentCompleted > 1)
-                {
-                    PercentCompleted = 1;
-                }
-                
-                if (Status != TaskStatus.Failed || Status != TaskStatus.Canceled)
-                {
                     Status = TaskStatus.Completed;
-                }
             }
         }
 
@@ -69,7 +69,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             var progressMsg = new ProgressMessage(PercentCompleted,Title);
             eventAggregator.PublishOnUIThread(progressMsg);
 
-            if (PercentCompleted == 0 && Start == null)
+            if (PercentCompleted != 1d && Start == null)
             {
                 Start = DateTime.Now;
                 var logMsg = new LogMessage(LogLevel.Information,
@@ -78,16 +78,16 @@ namespace FeatureAdmin.Core.Models.Tasks
                 eventAggregator.PublishOnUIThread(logMsg);
             }
 
-            //if (task.PercentCompleted >= 1 && task.End == null)
-            //{
-            End = DateTime.Now;
-            var logEndMsg = new LogMessage(Core.Models.Enums.LogLevel.Information,
-            string.Format("Completed {0}", StatusReport)
-            );
-            eventAggregator.PublishOnUIThread(logEndMsg);
+            if (PercentCompleted >= 1d && End == null)
+            {
+                End = DateTime.Now;
+                var logEndMsg = new LogMessage(Core.Models.Enums.LogLevel.Information,
+                string.Format("Completed {0}", StatusReport)
+                );
+                eventAggregator.PublishOnUIThread(logEndMsg);
 
-            // as task list ist deleted after restart, no need to delete tasks here
-            //}
+             // as task list ist deleted after restart, no need to delete tasks here
+            }
 
         }
 

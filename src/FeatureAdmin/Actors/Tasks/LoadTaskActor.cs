@@ -37,13 +37,13 @@ namespace FeatureAdmin.Core.Models.Tasks
         private readonly IActorRef featureDefinitionActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
 
-        private double quotaPreparation = 5 / 100;
+        private double quotaPreparation = 5d / 100;
 
-        private double quotaScopeFarm = 5 / 100;
+        private double quotaScopeFarm = 5d / 100;
 
-        private double quotaScopeFarmFeatures = 5 / 100;
+        private double quotaScopeFarmFeatures = 5d / 100;
 
-        private double quotaScopeWebApps = 10 / 100;
+        private double quotaScopeWebApps = 10d / 100;
 
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
 
@@ -292,7 +292,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             {
                 SendProgress();
                 var dbgMsg = new FeatureAdmin.Messages.LogMessage(Core.Models.Enums.LogLevel.Debug,
-                    string.Format("Status {0}", StatusReport)
+                    string.Format("Debug Load progress: {0}", StatusReport)
                     );
                 eventAggregator.PublishOnUIThread(dbgMsg);
 
@@ -328,11 +328,11 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             if (itemsProcessedReference > itemsTotalReference)
             {
-                SetProgress(quota);
+                IncrementProgress(quota);
             }
             else
             {
-                SetProgress(quota * itemsProcessedReference / itemsTotalReference);
+                IncrementProgress((quota * itemsProcessedReference / itemsTotalReference));
             }
 
 
