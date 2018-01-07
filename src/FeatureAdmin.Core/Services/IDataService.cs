@@ -7,11 +7,11 @@ namespace FeatureAdmin.Core.Services
     {
        
 
-        IEnumerable<Location> LoadNonFarmLocationAndChildren(Location location);
+        IEnumerable<Location> LoadNonFarmLocationAndChildren(Location location, out Location parent);
 
         IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions();
 
-        IEnumerable<Location> LoadFarmAndWebApps();
+        IEnumerable<Location> LoadFarmAndWebApps(out Location farm);
         //int FeatureToggle(Models.SPObject location, bool add, Guid featureId, bool force);
         //int FeatureUninstall(Guid featureId, bool force);
 

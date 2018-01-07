@@ -19,61 +19,29 @@ namespace FeatureAdmin.Core.Models.Tasks
             Title = title;
             Start = null;
             End = null;
-            PercentCompleted = 0d;
         }
 
         public DateTime? End { get; set; }
         public Guid Id { get; private set; }
 
-        public double PercentCompleted { get; private set; }
+        public abstract double PercentCompleted { get; }
         public DateTime? Start { get; set; }
         public TaskStatus Status { get; private set; }
         public string Title { get; protected set; }
 
-        public void SetProgress(double percentage)
+        protected void SendProgress()
         {
-            // cannot set progress smaller than previous value
-            if (percentage <= PercentCompleted)
-            {
-                return;
-            }
-            else
-            {
-                IncrementProgress(percentage - PercentCompleted, 0d);
-            }
-        }
-
-        public void IncrementProgress(double percentage, double maximumPercentage)
-        {
-            if (PercentCompleted == 0d && percentage > 0d && Status == TaskStatus.Started )
+            if (PercentCompleted > 0d && Status == TaskStatus.Started)
             {
                 Status = TaskStatus.InProgress;
             }
 
-            if ((PercentCompleted + percentage) <= maximumPercentage)
-            {
-                PercentCompleted += percentage;
-            }
-            else
-            {
-                PercentCompleted = maximumPercentage;
-            }
-            
-
-            if (PercentCompleted > 1d)
-                {
-                    PercentCompleted = 1d;
-                }
-
-            if (PercentCompleted == 1d && Status != TaskStatus.Failed && Status != TaskStatus.Canceled
+            if (PercentCompleted >= 1d && Status != TaskStatus.Failed && Status != TaskStatus.Canceled
                 && Status != TaskStatus.Completed)
             {
-                    Status = TaskStatus.Completed;
+                Status = TaskStatus.Completed;
             }
-        }
 
-        protected void SendProgress()
-        {
             var progressMsg = new ProgressMessage(PercentCompleted,Title);
             eventAggregator.PublishOnUIThread(progressMsg);
 

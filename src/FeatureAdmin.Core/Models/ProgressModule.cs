@@ -8,6 +8,21 @@ namespace FeatureAdmin.Core.Models
 {
     public class ProgressModule
     {
+        public bool Completed
+        {
+            get
+            {
+                if (Total == 0)
+                {
+                    return Processed > 0;
+                }
+                else
+                {
+                    return Processed / Total >= 1; 
+                }
+            }
+        }
+
         public double Quota;
 
         public double MaxCumulatedQuota;
@@ -16,9 +31,22 @@ namespace FeatureAdmin.Core.Models
 
         public int Processed;
 
-        public double OuotaPercentage { get {
-                return Processed / Total * Quota;
-            } }
+        public double OuotaPercentage
+        {
+            get
+            {
+                var totalNormalized = Processed > Total ? Processed : Total;
+
+                if (totalNormalized == 0)
+                {
+                    return 0d;
+                }
+                else
+                {
+                    return (double)Processed / totalNormalized * Quota;
+                }
+            }
+        }
 
         /// <summary>
         /// Tracks the progress for one part of all progress parts

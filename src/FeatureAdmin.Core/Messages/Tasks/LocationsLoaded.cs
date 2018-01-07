@@ -9,14 +9,22 @@ namespace FeatureAdmin.Core.Messages.Tasks
 {
     public class LocationsLoaded : Tasks.BaseTaskMessage
     {
-        public LocationsLoaded(Guid taskId, [NotNull] IEnumerable<Location> locations)
+        /// <summary>
+        /// provides the loaded location including child locations
+        /// </summary>
+        /// <param name="taskId">reference to task id</param>
+        /// <param name="parent">the parent location that was reloaded</param>
+        /// <param name="ChildLocations">the child location of the parent location</param>
+        public LocationsLoaded(Guid taskId, Location parent, [NotNull] IEnumerable<Location> ChildLocations)
             : base (taskId)
         {
-            Locations = locations;
-
-            LoadedFeatures = locations.SelectMany(l => l.ActivatedFeatures).GroupBy(f => f.Definition);
+            this.ChildLocations = ChildLocations;
+            Parent = parent;
+            LoadedFeatures = ChildLocations.SelectMany(l => l.ActivatedFeatures).GroupBy(f => f.Definition);
          }
-        public IEnumerable<Location> Locations { get; private set; }
+        public IEnumerable<Location> ChildLocations { get; private set; }
+
+        public Location Parent { get; private set; }
 
         public IEnumerable<IGrouping<FeatureDefinition,ActivatedFeature>> LoadedFeatures { get; private set; }
         

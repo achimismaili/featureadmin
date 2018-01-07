@@ -32,17 +32,20 @@ namespace FeatureAdmin.Actors
 
             var location = message.Location;
 
+            Location parent;
+
             if (location.Scope == Core.Models.Enums.Scope.Farm)
             {
-                locations.AddRange(dataService.LoadFarmAndWebApps());
+                locations.AddRange(dataService.LoadFarmAndWebApps(out parent));
             }
             else
             {
-                locations.AddRange(dataService.LoadNonFarmLocationAndChildren(location));
+                locations.AddRange(dataService.LoadNonFarmLocationAndChildren(location, out parent));
             }
 
             Sender.Tell(new Core.Messages.Tasks.LocationsLoaded(
                                 message.TaskId,
+                                parent,
                                 locations));
         }
     }

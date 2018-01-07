@@ -19,14 +19,13 @@ namespace FeatureAdmin.Core.Models.Tasks
         public ProgressModule Farm;
         public ProgressModule FarmFeatureDefinitions;
         public ProgressModule Preparations;
-        public ProgressModule Sites;
+        public ProgressModule SitesAndWebs;
         public ProgressModule WebApps;
-        public ProgressModule Webs;
+
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IActorRef featureDefinitionActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
-        private bool DefinitionLoadReady = false;
-        private bool PreparationReady = false;
+        
         private FarmFeatureDefinitionsLoaded tempFeatureDefinitionStore = null;
         private List<LocationsLoaded> tempLocationStore = new List<LocationsLoaded>();
         public LoadTaskActor(IEventAggregator eventAggregator, string title, Guid id, Location startLocation)
@@ -53,15 +52,10 @@ namespace FeatureAdmin.Core.Models.Tasks
             WebApps = new ProgressModule(
                 10d / 100,
                 Farm.MaxCumulatedQuota);
-            
-            Sites = new ProgressModule(
-                40d / 100, 
+
+            SitesAndWebs = new ProgressModule(
+               1d - WebApps.MaxCumulatedQuota,
                 WebApps.MaxCumulatedQuota);
-
-            Webs = new ProgressModule(
-                1d - Sites.MaxCumulatedQuota, 
-                Sites.MaxCumulatedQuota);
-
 
             Receive<ClearItemsReady>(message => HandleClearItemsReady(message));
             Receive<LocationsLoaded>(message => HandleLocationsLoaded(message));
@@ -74,17 +68,28 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             get
             {
-                return string.Format("'{0}' (ID: '{1}') - Loaded: {2} web apps, {3} site collections, {4} webs, {5} features, progress {6:F0}% \nelapsed time: {7}",
+                return string.Format("'{0}' (ID: '{1}') - Loaded: {2} web apps, {3} sites and webs, {4} features, progress {5:F0}% \nelapsed time: {6}",
                     Title,
                     Id,
                     WebApps.Processed,
-                    Sites.Processed,
-                    Webs.Processed ,
+                    SitesAndWebs.Processed,
                     FarmFeatureDefinitions.Processed,
                     PercentCompleted * 100,
                     (End == null ? DateTime.Now : End.Value).Subtract(
                         Start == null ? DateTime.Now : Start.Value).ToString("c")
                     );
+            }
+        }
+
+        public override double PercentCompleted
+        {
+            get
+            {
+                return Preparations.OuotaPercentage + 
+                    FarmFeatureDefinitions.OuotaPercentage +
+                    Farm.OuotaPercentage +
+                    WebApps.OuotaPercentage +
+                    SitesAndWebs.OuotaPercentage;
             }
         }
 
@@ -107,11 +112,10 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
 
             // how many steps are expected is decided in Common.Constants.Tasks.PreparationStepsForLoad
-            var preparationReady = TrackPreparationsProcessed(1);
+            Preparations.Processed++;
 
-            if (preparationReady)
+            if (Preparations.Completed)
             {
-                PreparationReady = true;
                 SendProgress();
 
                 // feature definitions already loaded?
@@ -122,7 +126,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                 }
 
                 // locations already loaded? 
-                if (DefinitionLoadReady && tempLocationStore.Count() > 0)
+                if (FarmFeatureDefinitions.Completed && tempLocationStore.Count() > 0)
                 {
                     foreach (LocationsLoaded loadedMsg in tempLocationStore)
                     {
@@ -136,72 +140,66 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         }
 
-        public bool TrackFeatureDefinitionsProcessed(int featuresProcessed)
-        {
-            return TrackItemsProcessed(featuresProcessed, ref FarmFeatureDefinitions);
-        }
-
-        public bool TrackLocationProcessed([NotNull] Location location)
+        public void TrackLocationProcessed([NotNull] Location location)
         {
             switch (location.Scope)
             {
                 case Enums.Scope.Web:
-                    return TrackItemsProcessed(1, ref Webs);
+                    SitesAndWebs.Processed++;
+                    break;
                 case Enums.Scope.Site:
-                    UpdateExpectedItems(0, 0, location.ChildCount, 0, 0, 0);
-                    return TrackItemsProcessed(1, ref Sites);
+                    SitesAndWebs.Total += location.ChildCount;
+                    SitesAndWebs.Processed++;
+                    break;
                 case Enums.Scope.WebApplication:
-                    UpdateExpectedItems(0, 0, 0, location.ChildCount, 0, 0);
-                    return TrackItemsProcessed(1, ref WebApps);
+                    SitesAndWebs.Total += location.ChildCount;
+                    WebApps.Processed++;
+                    break;
                 case Enums.Scope.Farm:
-                    UpdateExpectedItems(0, 0, 0, 0, location.ChildCount, 0);
-                    return TrackItemsProcessed(1, ref Farm);
+                    WebApps.Total += location.ChildCount;
+                    Farm.Processed++;
+                    break;
                 case Enums.Scope.ScopeInvalid:
                 default:
                     // do not track non valid scopes
-                    return false;
+                    break;
             }
         }
 
-        public bool TrackLocationsProcessed([NotNull] IEnumerable<Location> locations)
+        public bool TrackLocationsProcessed(LocationsLoaded loadedMessage)
         {
             bool finished = false;
-            foreach (Location l in locations)
-            {
-                var finishedThis = TrackLocationProcessed(l);
 
-                finished = finishedThis ? true : finished;
+            var parent = loadedMessage.Parent;
+
+            if (parent.Scope == Enums.Scope.Farm)
+            {
+                TrackLocationProcessed(loadedMessage.Parent);
+            }
+
+            foreach (Location l in loadedMessage.ChildLocations)
+            {
+                TrackLocationProcessed(l);
             }
 
             return finished;
         }
 
-        /// <summary>
-        /// increments preparation steps processed
-        /// </summary>
-        /// <param name="preparationSteps">number of processed preparation steps</param>
-        /// <returns>true, if all preparation steps have been processed</returns>
-        public bool TrackPreparationsProcessed(int preparationSteps)
-        {
-            return TrackItemsProcessed(preparationSteps, ref Preparations);
-
-        }
-
         private void FarmFeatureDefinitionsLoaded(FarmFeatureDefinitionsLoaded message)
         {
 
-            var stepReady = TrackFeatureDefinitionsProcessed(message.FarmFeatureDefinitions.Count());
-            if (stepReady)
+            FarmFeatureDefinitions.Processed = message.FarmFeatureDefinitions.Count();
+            
+            if (FarmFeatureDefinitions.Completed)
             {
-                DefinitionLoadReady = true;
                 SendProgress();
 
-                if (PreparationReady)
+                if (Preparations.Completed)
                 {
                     eventAggregator.PublishOnUIThread(message);
 
                     // locations already loaded? 
-                    if (DefinitionLoadReady && tempLocationStore.Count() > 0)
+                    if (tempLocationStore.Count() > 0)
                     {
                         foreach (LocationsLoaded loadedMsg in tempLocationStore)
                         {
@@ -222,29 +220,35 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         private void HandleLocationsLoaded([NotNull] LocationsLoaded message)
         {
-            var stepReady = TrackLocationsProcessed(message.Locations);
-
-            if (stepReady)
-            {
-                SendProgress();
-                var dbgMsg = new FeatureAdmin.Messages.LogMessage(Core.Models.Enums.LogLevel.Debug,
+            TrackLocationsProcessed(message);
+#if DEBUG
+            var dbgMsg = new FeatureAdmin.Messages.LogMessage(Core.Models.Enums.LogLevel.Debug,
                     string.Format("Debug Load progress: {0}", StatusReport)
                     );
-                eventAggregator.PublishOnUIThread(dbgMsg);
+            eventAggregator.PublishOnUIThread(dbgMsg);
+#endif
+            // if web apps are loaded, load children
+            if (message.Parent.Scope == Enums.Scope.Farm)
+            {
+                foreach (Location l in message.ChildLocations)
+                {
+                    if (l.Scope == Enums.Scope.WebApplication)
+                    {
+                        // initiate read of locations
+                        var loadWebAppChildren = new LoadLocationQuery(Id, l);
+                        LoadTask(loadWebAppChildren);
+                    }
+                }
+            }
 
-                if (PreparationReady && DefinitionLoadReady)
-                {
-                    // publish locations to wpf
-                    eventAggregator.PublishOnUIThread(message);
-                }
-                else
-                {
-                    tempLocationStore.Add(message);
-                }
+            if (Preparations.Completed && FarmFeatureDefinitions.Completed)
+            {
+                // publish locations to wpf
+                eventAggregator.PublishOnUIThread(message);
             }
             else
             {
-                //// for web applications, load children
+                tempLocationStore.Add(message);
             }
 
             SendProgress();
@@ -284,48 +288,6 @@ namespace FeatureAdmin.Core.Models.Tasks
             {
                 locationActors[locationId].Tell(loadQuery);
             }
-        }
-        /// <summary>
-        /// tracks / increments items processed
-        /// </summary>
-        /// <param name="itemsProcessedNew">processed items to increment</param>
-        /// <param name="progModule">a ProgressModule where to get the values</param>
-        /// <returns>true, if all items have been processed (--> if processed reached total)</returns>
-        private bool TrackItemsProcessed(int itemsProcessedNew, ref ProgressModule progModule)
-        {
-            progModule.Processed += itemsProcessedNew;
-
-            if (progModule.Processed > progModule.Total)
-            {
-                IncrementProgress(progModule.Quota, progModule.MaxCumulatedQuota);
-            }
-            else
-            {
-                IncrementProgress(
-                    progModule.Quota * progModule.Processed / progModule.Total,
-                    progModule.MaxCumulatedQuota);
-            }
-
-            return progModule.Processed >= progModule.Total;
-        }
-        private void UpdateExpectedItems(int prepSteps, int features, int webs, int sites, int webApps, int farms)
-        {
-            Preparations.Total += prepSteps;
-            FarmFeatureDefinitions.Total += features;
-            Webs.Total += webs;
-            Sites.Total += sites;
-            WebApps.Total += webApps;
-            Farm.Total += farms;
-        }
-
-
-        private void UpdateProcessedItems(int features, int webs, int sites, int webApps, int farms)
-        {
-            FarmFeatureDefinitions.Processed += features;
-            Webs.Processed += webs;
-            Sites.Processed += sites;
-            WebApps.Processed += webApps;
-            Farm.Processed += farms;
         }
     }
 }

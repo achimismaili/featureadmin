@@ -31,7 +31,7 @@ namespace FeatureAdmin.ViewModels
 
         public void Handle(LocationsLoaded message)
         {
-            var locations = message.Locations;
+            var locations = message.ChildLocations;
 
             var locationsToReplace = allItems.Where(al => locations.Any(l => l.Id == al.Id)).ToList();
 

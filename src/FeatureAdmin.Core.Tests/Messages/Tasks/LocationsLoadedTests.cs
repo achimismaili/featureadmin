@@ -35,7 +35,7 @@ namespace FeatureAdmin.Core.Tests.Messages.Tasks
 
             // Act
 
-            var msg = new Core.Messages.Tasks.LocationsLoaded(Guid.NewGuid(), locations);
+            var msg = new Core.Messages.Tasks.LocationsLoaded(Guid.NewGuid(),null, locations);
 
             // Assert
             // 4 different feature definitions

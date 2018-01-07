@@ -38,11 +38,11 @@ namespace FeatureAdmin.Backends.Demo.Services
             return children;
         }
 
-        public IEnumerable<Location> LoadNonFarmLocationAndChildren(Location location)
+        public IEnumerable<Location> LoadNonFarmLocationAndChildren(Location location, out Location parent)
         {
             var locations = new List<Location>();
 
-            locations.Add(location);
+            parent = location;
 
             var children = loadChildLocations(location);
 
@@ -61,14 +61,12 @@ namespace FeatureAdmin.Backends.Demo.Services
             return locations;
         }
 
-        public IEnumerable<Location> LoadFarmAndWebApps()
+        public IEnumerable<Location> LoadFarmAndWebApps(out Location farm)
         {
             var locations = new List<Location>();
 
-            var farm = demoLocations.Where(f => f.Scope == Core.Models.Enums.Scope.Farm).FirstOrDefault();
-
-            locations.Add(farm);
-
+            farm = demoLocations.Where(f => f.Scope == Core.Models.Enums.Scope.Farm).FirstOrDefault();
+            
             locations.AddRange(loadChildLocations(farm));
 
             return locations;

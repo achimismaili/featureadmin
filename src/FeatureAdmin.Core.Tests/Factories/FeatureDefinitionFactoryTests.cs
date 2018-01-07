@@ -29,7 +29,7 @@ namespace FeatureAdmin.Core.Tests.Factories
 
             var locations = TestLocations.GetLocations(lIds, fIds);
 
-            Loaded3LocationsWithFirst4ActivatedFeaturesEach = new LocationsLoaded(Guid.NewGuid(), locations);
+            Loaded3LocationsWithFirst4ActivatedFeaturesEach = new LocationsLoaded(Guid.NewGuid(), null, locations);
         }
 
 
