@@ -91,6 +91,22 @@
                 <MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"  Background="Transparent"/>
                 <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"  Background="Transparent"/>
                 <MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definitions"  Background="Transparent"/>
+                <MenuItem x:Name="FilterLocation" ToolTip="Filter locations where this feature is activated"
+                          Background="Transparent" FontSize="18"
+				 cal:Message.Attach="FilterFeature" >
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Icon="Filter" />
+                            <fa:FontAwesome Icon="MailForward" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem x:Name="ShowDetails" ToolTip="Show details for this feature definition in new window"
+                          Background="Transparent" FontSize="18">
+                    <MenuItem.Header>
+                        <fa:FontAwesome Icon="Eye" />
+                    </MenuItem.Header>
+                </MenuItem>
             </Menu>
             <ScrollViewer Grid.Row="2" >
                 <Grid >
@@ -155,24 +171,6 @@
 				        Grid.Row="5" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
                     </Button>
-
-                    <StackPanel 
-                Grid.Row="6" 
-                Orientation="Horizontal"
-                Grid.ColumnSpan="3">
-                        <Button Name="FilterLocation"
-                            Style="{DynamicResource AccentedSquareButtonStyle}"
-                           
-                            controls:ControlsHelper.ContentCharacterCasing="Normal"
-                            cal:Message.Attach="FilterLocation"
-                            >Filter locations where activated</Button>
-                        <!--<Button Name="FilterFeatures"
-                            Margin="5,0,0,0"
-                Style="{DynamicResource AccentedSquareButtonStyle}"
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
-               cal:Message.Attach="FilterThis"
-               >Filter active features</Button>-->
-                    </StackPanel>
                     <Label Content="Compatibility:"
                
                Grid.Row="7" Grid.Column="0" />

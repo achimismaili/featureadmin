@@ -76,8 +76,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                     SitesAndWebs.Processed,
                     FarmFeatureDefinitions.Processed,
                     PercentCompleted * 100,
-                    (End == null ? DateTime.Now : End.Value).Subtract(
-                        Start == null ? DateTime.Now : Start.Value).ToString("c")
+                    ElapsedTime
                     );
             }
         }

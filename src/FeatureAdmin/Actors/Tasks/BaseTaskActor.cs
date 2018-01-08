@@ -21,12 +21,22 @@ namespace FeatureAdmin.Core.Models.Tasks
             End = null;
         }
 
+        public string ElapsedTime
+        {
+            get
+            {
+                return (End == null ? DateTime.Now : End.Value).Subtract(
+                        Start == null ? DateTime.Now : Start.Value).ToString("c");
+            }
+        }
+
         public DateTime? End { get; set; }
         public Guid Id { get; private set; }
 
         public abstract double PercentCompleted { get; }
         public DateTime? Start { get; set; }
         public TaskStatus Status { get; private set; }
+        public abstract string StatusReport { get; }
         public string Title { get; protected set; }
 
         protected void SendProgress()
@@ -41,10 +51,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             {
                 Status = TaskStatus.Completed;
             }
-
-            var progressMsg = new ProgressMessage(PercentCompleted,Title);
-            eventAggregator.PublishOnUIThread(progressMsg);
-
+            
             if (PercentCompleted != 1d && Start == null)
             {
                 Start = DateTime.Now;
@@ -58,15 +65,26 @@ namespace FeatureAdmin.Core.Models.Tasks
             {
                 End = DateTime.Now;
                 var logEndMsg = new LogMessage(Core.Models.Enums.LogLevel.Information,
-                string.Format("Completed {0}", StatusReport)
+                string.Format("{0} {1}", Status.ToString(), StatusReport)
                 );
                 eventAggregator.PublishOnUIThread(logEndMsg);
 
-             // as task list ist deleted after restart, no need to delete tasks here
+                // as task list ist deleted after restart, no need to delete tasks here
             }
 
-        }
+            ProgressMessage progressMsg;
 
-        public abstract string StatusReport { get; }
+            if (PercentCompleted < 1d)
+            {
+                progressMsg = new ProgressMessage(PercentCompleted, string.Format("'{0}' in progress ({1:F0}%), please wait ...", Title, PercentCompleted * 100));
+            }
+            else
+            {
+                progressMsg = new ProgressMessage(PercentCompleted, string.Format("'{0}' completed! Elapsed time: {1}", Title, ElapsedTime));
+            }
+
+            eventAggregator.PublishOnUIThread(progressMsg);
+
+        }
     }
 }

@@ -59,7 +59,7 @@
                         <TextBlock HorizontalAlignment="Left"
                                Margin="10"
                                TextWrapping="Wrap"
-                               Text="Upgrade. Meow."
+                               Text="The upgrade functionality will be implemented in a future version."
                                VerticalAlignment="Top"
                                Width="471"/>
                     </Grid>
@@ -69,7 +69,7 @@
                         <TextBlock HorizontalAlignment="Left"
                                Margin="10"
                                TextWrapping="Wrap"
-                               Text="Cleanup. Meow."
+                               Text="The faulty feature Cleanup functionality is not implemented yet ... soon to come."
                                VerticalAlignment="Top"
                                Width="471"/>
                     </Grid>
