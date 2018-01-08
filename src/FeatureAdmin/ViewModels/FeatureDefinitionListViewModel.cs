@@ -19,7 +19,10 @@ namespace FeatureAdmin.ViewModels
 
         public void Handle([NotNull] FarmFeatureDefinitionsLoaded message)
         {
-            allItems.Concat(message.FarmFeatureDefinitions);
+            foreach (FeatureDefinition fd in message.FarmFeatureDefinitions)
+            {
+                allItems.Add(fd);
+            }            
         }
         public void Handle([NotNull] LocationsLoaded message)
         {
@@ -37,7 +40,7 @@ namespace FeatureAdmin.ViewModels
         {
             // see also https://stackoverflow.com/questions/34220256/how-to-call-method-function-in-where-clause-of-a-linq-query-as-ienumerable-objec
             return fd => fd.Id == guid
-                       || fd.ActivatedFeatures.Any(f => f.FeatureId == guid);
+                       || fd.ActivatedFeatures.Any(f => f.LocationId == guid);
         }
 
         /// <summary>

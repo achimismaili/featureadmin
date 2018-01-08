@@ -43,7 +43,8 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             FarmFeatureDefinitions = new ProgressModule(
                 5d / 100,
-                Preparations.MaxCumulatedQuota);
+                Preparations.MaxCumulatedQuota,
+                1);
 
             Farm = new ProgressModule(
                 5d / 100,
@@ -171,11 +172,6 @@ namespace FeatureAdmin.Core.Models.Tasks
             bool finished = false;
 
             var parent = loadedMessage.Parent;
-
-            if (parent.Scope == Enums.Scope.Farm)
-            {
-                TrackLocationProcessed(loadedMessage.Parent);
-            }
 
             foreach (Location l in loadedMessage.ChildLocations)
             {

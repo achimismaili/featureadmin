@@ -66,7 +66,10 @@ namespace FeatureAdmin.Backends.Demo.Services
             var locations = new List<Location>();
 
             farm = demoLocations.Where(f => f.Scope == Core.Models.Enums.Scope.Farm).FirstOrDefault();
-            
+
+            // in this set, parent is included in result
+            locations.Add(farm);
+
             locations.AddRange(loadChildLocations(farm));
 
             return locations;
