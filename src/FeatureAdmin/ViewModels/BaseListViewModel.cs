@@ -89,14 +89,21 @@ namespace FeatureAdmin.ViewModels
 
         public void ShowDetails()
         {
-            var vm = new DetailViewModel(ActiveItem);
-            var message = new OpenWindow(vm);
-            eventAggregator.BeginPublishOnUIThread(message);
+            if (ActiveItem != null)
+            {
+                var vm = new DetailViewModel(
+                    string.Format("{0}: {1}", ActiveItem.GetType().ToString(), ActiveItem.DisplayName),
+                    ActiveItem.GetAsPropertyList() 
+                    );
+                var message = new OpenWindow(vm);
+                eventAggregator.BeginPublishOnUIThread(message);
+            }
+
         }
 
         public bool CanShowDetails { get; protected set; }
-        
-        
+
+
 
         public void Handle(SetSearchFilter<T> message)
         {

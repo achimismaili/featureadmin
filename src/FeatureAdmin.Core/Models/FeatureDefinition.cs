@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace FeatureAdmin.Core.Models
 {
     [Equals]
-    public class FeatureDefinition : BaseItem<ActivatedFeature>
+    public class FeatureDefinition : BaseItem
     {
         public FeatureDefinition(
             Guid id,
@@ -72,17 +72,24 @@ namespace FeatureAdmin.Core.Models
         public string UIVersion { get; private set; }
         [IgnoreDuringEquals]
         public Version Version { get; private set; }
-        [IgnoreDuringEquals]
-        public override Dictionary<string, string> Details
-        {
-            get
-            {
-                var details = new Dictionary<string, string>() {
-                    { "SolutionId", this.SolutionId.ToString()   }
-                };
 
-                return details;
-            }
+
+        public override List<KeyValuePair<string, string>> GetAsPropertyList()
+        {
+            var propList = GetAsPropertyList(true);
+
+            propList.Add(new KeyValuePair<string, string>(nameof(Title), Title));
+            propList.Add(new KeyValuePair<string, string>(nameof(Name), Name));
+            propList.Add(new KeyValuePair<string, string>(nameof(CompatibilityLevel), CompatibilityLevel.ToString()));
+            propList.Add(new KeyValuePair<string, string>(nameof(Description), Description));
+            propList.Add(new KeyValuePair<string, string>(nameof(Hidden), Hidden.ToString()));
+            propList.Add(new KeyValuePair<string, string>(nameof(SolutionId), SolutionId.ToString()));
+            propList.Add(new KeyValuePair<string, string>(nameof(UIVersion), UIVersion.ToString()));
+            propList.Add(new KeyValuePair<string, string>(nameof(Version), Version == null ? string.Empty : Version.ToString()));
+            propList.Add(new KeyValuePair<string, string>(nameof(DefinitionInstallationScope), DefinitionInstallationScope));
+            propList.Add(new KeyValuePair<string, string>(nameof(Properties), Common.StringUtilities.PropertiesToString(Properties)));
+            
+            return propList;
         }
     }
 }

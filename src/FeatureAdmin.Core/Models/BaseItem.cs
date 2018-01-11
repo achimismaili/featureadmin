@@ -5,21 +5,21 @@ using System.Collections.Generic;
 namespace FeatureAdmin.Core.Models
 {
     [Equals]
-    public abstract class BaseItem<T> : IBaseItem
+    public abstract class BaseItem : IBaseItem
     {
         public BaseItem()
         {
-            this.activatedFeatures = new List<T>();
+            this.activatedFeatures = new List<ActivatedFeature>();
         }
         [IgnoreDuringEquals]
         public string DisplayName { get; protected set; }
         public Guid Id { get; protected set; }
         public Scope Scope { get; protected set; }
 
-        protected List<T> activatedFeatures;
+        protected List<ActivatedFeature> activatedFeatures;
 
         [IgnoreDuringEquals]
-        public IReadOnlyCollection<T> ActivatedFeatures
+        public IReadOnlyCollection<ActivatedFeature> ActivatedFeatures
         {
             get
             {
@@ -27,16 +27,13 @@ namespace FeatureAdmin.Core.Models
             }
         }
 
-        [IgnoreDuringEquals]
-        public abstract Dictionary<string, string> Details { get; }
-
         /// <summary>
         /// adds or removes an activated feature 
         /// </summary>
         /// <param name="feature">feature Guid</param>
         /// <param name="add">adds if true, removes if false</param>
         /// <returns>location with changed activatedfeatures list</returns>
-        public void ToggleActivatedFeature(T feature, bool add)
+        public void ToggleActivatedFeature(ActivatedFeature feature, bool add)
         {
             var exists = activatedFeatures.Contains(feature);
 
@@ -48,6 +45,24 @@ namespace FeatureAdmin.Core.Models
             {
                 activatedFeatures.Remove(feature);
             }
+        }
+        public abstract List<KeyValuePair<string, string>> GetAsPropertyList();
+        protected List<KeyValuePair<string, string>> GetAsPropertyList(bool activatedfeaturesGuidAsLocation)
+        {
+            string activatedFeatures = "";
+
+            foreach (ActivatedFeature f in ActivatedFeatures)
+            {
+                activatedFeatures += string.Format("'{0}'\n", activatedfeaturesGuidAsLocation ? f.LocationId.ToString() : f.FeatureId.ToString());
+            }
+
+            return new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>(nameof(DisplayName),DisplayName),
+                new KeyValuePair<string, string>(nameof(Id),Id.ToString()),
+                new KeyValuePair<string, string>(nameof(Scope), Scope.ToString()),
+                new KeyValuePair<string, string>(nameof(ActivatedFeatures), activatedFeatures)
+            };
         }
     }
 }

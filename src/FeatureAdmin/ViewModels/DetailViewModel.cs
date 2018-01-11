@@ -10,20 +10,29 @@ namespace FeatureAdmin.ViewModels
 {
     public class DetailViewModel 
     {
-        private IBaseItem model;
-
-        public DetailViewModel(IBaseItem model)
+        public DetailViewModel(string title, IEnumerable<KeyValuePair<string, string>> items)
         {
-            this.model = model;
+            Title = title;
+            Items = items;
         }
 
+        public DetailViewModel(FeatureDefinition featureDefinition)
+        {
 
-        public string DisplayName { get { return model.DisplayName; } }
+        }
 
-        public Guid Id { get { return model.Id; } }
+        public DetailViewModel(Location location)
+        {
 
-        public Scope Scope { get { return model.Scope; } }
+        }
 
-        public Dictionary<string, string> Details { get { return model.Details; } }
+        public DetailViewModel(ActivatedFeature activatedFeature)
+        {
+
+        }
+
+        public string Title { get; private set; }
+
+        public IEnumerable<KeyValuePair<string, string>> Items { get; private set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace FeatureAdmin.Core.Models
 {
-    public class Location : BaseItem<ActivatedFeature>
+    public class Location : BaseItem
     {
         
 
@@ -46,18 +46,17 @@ namespace FeatureAdmin.Core.Models
 
         public string Url { get;  }
 
-        public override Dictionary<string, string> Details
-        {
-            get
-            {
-                var details = new Dictionary<string, string>() {
-                    { "Url", this.Url  }
-                };
-
-                return details;
-            }
-        }
-
         public int ChildCount { get; set; }
+
+        public override List<KeyValuePair<string, string>> GetAsPropertyList()
+        {
+            var propList = GetAsPropertyList(false);
+
+            propList.Add(new KeyValuePair<string, string>(nameof(Parent), Parent.ToString()));
+            propList.Add(new KeyValuePair<string, string>(nameof(Url), Url));
+            propList.Add(new KeyValuePair<string, string>(nameof(ChildCount), ChildCount.ToString()));
+            
+            return propList;
+        }
     }
 }
