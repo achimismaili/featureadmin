@@ -50,10 +50,13 @@ namespace FeatureAdmin.Core.Models
         protected List<KeyValuePair<string, string>> GetAsPropertyList(bool activatedfeaturesGuidAsLocation)
         {
             string activatedFeatures = "";
-
+            int fCounter = 1;
             foreach (ActivatedFeature f in ActivatedFeatures)
             {
-                activatedFeatures += string.Format("'{0}'\n", activatedfeaturesGuidAsLocation ? f.LocationId.ToString() : f.FeatureId.ToString());
+                activatedFeatures += string.Format("{0}. {1}: '{2}'\n",
+                    fCounter++,
+                    activatedfeaturesGuidAsLocation ? "Location Id" : "Feature Id",
+                    activatedfeaturesGuidAsLocation ? f.LocationId.ToString() : f.FeatureId.ToString());
             }
 
             return new List<KeyValuePair<string, string>>()

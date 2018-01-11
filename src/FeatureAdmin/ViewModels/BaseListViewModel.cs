@@ -92,7 +92,7 @@ namespace FeatureAdmin.ViewModels
             if (ActiveItem != null)
             {
                 var vm = new DetailViewModel(
-                    string.Format("{0}: {1}", ActiveItem.GetType().ToString(), ActiveItem.DisplayName),
+                    string.Format("{0}: {1}", ActiveItem.GetType().Name, ActiveItem.DisplayName),
                     ActiveItem.GetAsPropertyList() 
                     );
                 var message = new OpenWindow(vm);

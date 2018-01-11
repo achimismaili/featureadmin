@@ -5,34 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using FeatureAdmin.Core.Models.Enums;
 using FeatureAdmin.Core.Models;
+using Caliburn.Micro;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class DetailViewModel 
+    public class DetailViewModel : IHaveDisplayName
     {
-        public DetailViewModel(string title, IEnumerable<KeyValuePair<string, string>> items)
+        public DetailViewModel(string displayName, IEnumerable<KeyValuePair<string, string>> items)
         {
-            Title = title;
+            DisplayName = string.Format("Detail view for {0}", displayName);
             Items = items;
         }
 
-        public DetailViewModel(FeatureDefinition featureDefinition)
-        {
-
-        }
-
-        public DetailViewModel(Location location)
-        {
-
-        }
-
-        public DetailViewModel(ActivatedFeature activatedFeature)
-        {
-
-        }
-
-        public string Title { get; private set; }
-
         public IEnumerable<KeyValuePair<string, string>> Items { get; private set; }
+
+        public string DisplayName { get; set; }
     }
 }

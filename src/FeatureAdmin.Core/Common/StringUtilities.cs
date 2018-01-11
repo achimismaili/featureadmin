@@ -16,7 +16,7 @@ namespace FeatureAdmin.Core.Common
             {
                 foreach (var p in properties)
                 {
-                    propString += string.Format("'{0}':'{1}'\n", p.Key, p.Value);
+                    propString += string.Format("'{0}' : '{1}'\n", p.Key, p.Value);
                 }
             }
 

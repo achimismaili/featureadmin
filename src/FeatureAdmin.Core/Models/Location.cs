@@ -50,12 +50,14 @@ namespace FeatureAdmin.Core.Models
 
         public override List<KeyValuePair<string, string>> GetAsPropertyList()
         {
-            var propList = GetAsPropertyList(false);
+            var propList = new List<KeyValuePair<string, string>>(); 
 
-            propList.Add(new KeyValuePair<string, string>(nameof(Parent), Parent.ToString()));
+            propList.Add(new KeyValuePair<string, string>(nameof(Parent), string.Format("Location Id: {0}", Parent.ToString())));
             propList.Add(new KeyValuePair<string, string>(nameof(Url), Url));
             propList.Add(new KeyValuePair<string, string>(nameof(ChildCount), ChildCount.ToString()));
-            
+
+            propList.AddRange(GetAsPropertyList(false));
+
             return propList;
         }
     }

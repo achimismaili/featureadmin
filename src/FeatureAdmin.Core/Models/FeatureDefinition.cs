@@ -76,7 +76,7 @@ namespace FeatureAdmin.Core.Models
 
         public override List<KeyValuePair<string, string>> GetAsPropertyList()
         {
-            var propList = GetAsPropertyList(true);
+            var propList = new List<KeyValuePair<string, string>>();
 
             propList.Add(new KeyValuePair<string, string>(nameof(Title), Title));
             propList.Add(new KeyValuePair<string, string>(nameof(Name), Name));
@@ -88,7 +88,9 @@ namespace FeatureAdmin.Core.Models
             propList.Add(new KeyValuePair<string, string>(nameof(Version), Version == null ? string.Empty : Version.ToString()));
             propList.Add(new KeyValuePair<string, string>(nameof(DefinitionInstallationScope), DefinitionInstallationScope));
             propList.Add(new KeyValuePair<string, string>(nameof(Properties), Common.StringUtilities.PropertiesToString(Properties)));
-            
+
+            propList.AddRange(GetAsPropertyList(true));
+
             return propList;
         }
     }
