@@ -11,17 +11,13 @@ using FeatureAdmin.Messages;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class ActivatedFeatureViewModel : Screen, IHandle<ItemSelected<FeatureDefinition>>, IHandle<ItemSelected<Location>>
+    public class ActivatedFeatureViewModel : BaseItemViewModel<ActivatedFeature>, IHandle<ItemSelected<FeatureDefinition>>, IHandle<ItemSelected<Location>>
     {
-        private readonly IEventAggregator eventAggregator;
         public ActivatedFeatureViewModel(IEventAggregator eventAggregator)
+            : base(eventAggregator)
         {
-            this.eventAggregator = eventAggregator;
-            this.eventAggregator.Subscribe(this);
             ActiveItem = null;
         }
-
-        public ActivatedFeature ActiveItem { get; private set; }
 
         public FeatureDefinition SelectedFeatureDefinition { get; private set; }
 

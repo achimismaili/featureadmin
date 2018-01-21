@@ -5,8 +5,23 @@ using System.Collections.Generic;
 namespace FeatureAdmin.Core.Models
 {
     [Equals]
-    public class ActivatedFeature
+    public class ActivatedFeature : IDisplayableItem
     {
+        public string DisplayName
+        {
+            get
+            {
+                if (Definition == null)
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    return Definition.DisplayName;
+                }
+            }
+        }
+
         public ActivatedFeature(
                 Guid featureId,
                 Guid locationId,
@@ -50,5 +65,20 @@ namespace FeatureAdmin.Core.Models
         [IgnoreDuringEquals]
         public Version Version { get; private set; }
 
+        public List<KeyValuePair<string, string>> GetAsPropertyList()
+        {
+            return new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>(nameof(DisplayName),DisplayName),
+                new KeyValuePair<string, string>(nameof(FeatureId),FeatureId.ToString()),
+                new KeyValuePair<string, string>(nameof(LocationId),LocationId.ToString()),
+                new KeyValuePair<string, string>(nameof(Scope), Definition.Scope.ToString()),
+                new KeyValuePair<string, string>(nameof(TimeActivated),TimeActivated.ToString()),
+                new KeyValuePair<string, string>(nameof(Version),Version.ToString()),
+                new KeyValuePair<string, string>(nameof(Faulty),Faulty.ToString()),
+                new KeyValuePair<string, string>(nameof(DefinitionInstallationScope), DefinitionInstallationScope),
+            new KeyValuePair<string, string>(nameof(Properties), Common.StringUtilities.PropertiesToString(Properties))
+        };
+        }
     }
 }

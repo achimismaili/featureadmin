@@ -4,13 +4,10 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
-    public interface IBaseItem
+    public interface IBaseItem : IDisplayableItem
     {
         IReadOnlyCollection<ActivatedFeature> ActivatedFeatures { get; }
-        string DisplayName { get; }
         Guid Id { get;  }
         Scope Scope { get;  }
-
-        List<KeyValuePair<string, string>> GetAsPropertyList();
     }
 }

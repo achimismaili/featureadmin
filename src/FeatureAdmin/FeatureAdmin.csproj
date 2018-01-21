@@ -171,6 +171,7 @@
     <Compile Include="Messages\ClearItems.cs" />
     <Compile Include="Messages\ItemSelected.cs" />
     <Compile Include="UIModels\IWorkSpace.cs" />
+    <Compile Include="ViewModels\BaseItemViewModel.cs" />
     <Compile Include="ViewModels\BaseListViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\ActivatedFeatureViewModel.cs" />

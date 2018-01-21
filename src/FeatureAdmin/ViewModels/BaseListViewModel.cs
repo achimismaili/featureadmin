@@ -12,26 +12,24 @@ using System.Windows;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : Conductor<T>.Collection.OneActive, IHandle<ClearItems>, IHandle<SetSearchFilter<T>> where T : class, IBaseItem
+    public abstract class BaseListViewModel<T> : BaseItemViewModel<T>, IHandle<ClearItems>, IHandle<SetSearchFilter<T>> where T : class, IBaseItem
     {
-        protected IEventAggregator eventAggregator;
+
         protected DateTime lastUpdateInitiatedSearch;
         private string searchInput;
 
         private Scope? selectedScopeFilter;
 
-        public BaseListViewModel(IEventAggregator eventAggregator)
+        public BaseListViewModel(IEventAggregator eventAggregator) :
+            base(eventAggregator)
         {
-            this.eventAggregator = eventAggregator;
-            this.eventAggregator.Subscribe(this);
             ScopeFilters = new ObservableCollection<Scope>(Common.Constants.Search.ScopeFilterList);
             allItems = new ObservableCollection<T>();
 
             lastUpdateInitiatedSearch = DateTime.Now;
 
             // https://github.com/Fody/PropertyChanged/issues/269
-            ActivationProcessed += (s, e) => CanShowDetails = ActiveItem != null;
-            ActivationProcessed += (s, e) => eventAggregator.PublishOnUIThread(
+           ActivationProcessed += (s, e) => eventAggregator.PublishOnUIThread(
                 new Messages.ItemSelected<T>(ActiveItem)
                 );
         }

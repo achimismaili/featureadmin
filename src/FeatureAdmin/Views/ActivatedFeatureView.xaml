@@ -59,7 +59,7 @@
 		   Padding="5"
 			   Grid.Row="2" Grid.Column="1" />
                     <Button Name="CopyName" Style="{DynamicResource MetroCircleButtonStyle}"
-						cal:Message.Attach="CopyToClipBoard(ActiveItem_DisplayName)"
+						cal:Message.Attach="CopyToClipBoard(ActiveItem_TimeActivated)"
 						Height="30" Width="30"
 						controls:ControlsHelper.ContentCharacterCasing="Normal"
 						Grid.Row="2" Grid.Column="2">
@@ -82,24 +82,6 @@
                     <TextBlock x:Name="ActiveItem_Definition_DisplayName" 
 				Padding="4"
 			   Grid.Row="4" Grid.Column="1" />
-                    <Label Content="Id:" 
-			   Grid.Row="5" Grid.Column="0" />
-					<TextBlock x:Name="ActiveItem_Id" 
-				Padding="5"
-			   Grid.Row="5" Grid.Column="1" />
-					<Button Name="CopyId" Style="{DynamicResource MetroCircleButtonStyle}"
-						cal:Message.Attach="CopyToClipBoard(ActiveItem_Id)"
-						Background="Transparent" Height="30" Width="30"
-						controls:ControlsHelper.ContentCharacterCasing="Normal"
-						Grid.Row="5" Grid.Column="2">
-						<fa:FontAwesome Icon="Clone" />
-					</Button>
-					<Label Content="Compatibility:"
-			   
-			   Grid.Row="7" Grid.Column="0" />
-					<TextBlock x:Name="Item_CompatibilityLevel"
-			   Padding="5"
-			   Grid.Row="7" Grid.Column="1" />
 				</Grid>
 			</ScrollViewer>
 		</Grid>
