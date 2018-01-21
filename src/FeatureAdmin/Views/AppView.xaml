@@ -96,6 +96,7 @@
                           Background="Transparent"
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
+                <ContentControl cal:View.Model="{Binding ActivatedFeatureVm}" Grid.Row="3" />
 
             </Grid>
         </Grid>

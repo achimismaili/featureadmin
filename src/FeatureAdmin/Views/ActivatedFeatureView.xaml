@@ -1,117 +1,114 @@
 ﻿<UserControl x:Class="FeatureAdmin.Views.ActivatedFeatureView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:comm="clr-namespace:FeatureAdmin.Common"
-             xmlns:local="clr-namespace:FeatureAdmin.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
-             >
-    <!-- d:DataContext="{d:DesignInstance viewModels:ActivatedFeatureViewModel}" -->
-    <UserControl.Resources>
-        <comm:NegatableBooleanToVisibilityConverter x:Key="VisConverter" />
-        <comm:NegatableBooleanToVisibilityConverter x:Key="NegVisConverter"
-                                                    Negate="True" />
-    </UserControl.Resources>
-    <ScrollViewer>
-        <StackPanel>
-            <Label Content="Please select a feature instance."
-            FontSize="16"
-           HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-           Visibility="{Binding ItemSelected, Converter={StaticResource NegVisConverter}}"
-           />
-            <Grid Background="LightGray"
-          Visibility="{Binding ItemSelected, Converter={StaticResource VisConverter}}"
-          >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+			 xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:cal="http://www.caliburnproject.org"
+			 xmlns:local="clr-namespace:FeatureAdmin.Views"
+			 mc:Ignorable="d" 
+			 d:DesignHeight="300" d:DesignWidth="300">
+	<Grid>
+		<!-- Active WorkSpace -->
+		<Grid Grid.Row="4">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Label Content="Resultant activated feature"
+			Grid.Row="0"  
+			HorizontalAlignment="Center"
+				   Foreground="#FFB17807"
+				   FontWeight="Bold"
+			   />
+			<Menu Grid.Row="1" IsMainMenu="False" Background="Transparent">
+				<MenuItem Header="_Activate" x:Name="ActivateFeatures" ToolTip="Activate/Add features"  Background="Transparent"/>
+				<MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"  Background="Transparent"/>
+				<MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"  Background="Transparent"/>
+				<MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definition"  Background="Transparent"/>
+				<MenuItem x:Name="FilterLocation" ToolTip="Filter locations where this feature is activated"
+						  Background="Transparent" FontSize="18"
+				 cal:Message.Attach="FilterFeature" >
+					<MenuItem.Header>
+						<StackPanel Orientation="Horizontal">
+							<fa:FontAwesome Icon="Filter" />
+							<fa:FontAwesome Icon="MailForward" />
+						</StackPanel>
+					</MenuItem.Header>
+				</MenuItem>
+				<MenuItem x:Name="ShowDetails" ToolTip="Show details for this activated feature in new window"
+						  Background="Transparent" FontSize="18">
+					<MenuItem.Header>
+						<fa:FontAwesome Icon="Eye" />
+					</MenuItem.Header>
+				</MenuItem>
+			</Menu>
+			<ScrollViewer Grid.Row="2" >
+				<Grid >
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+					</Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+					<Label Content="Time activated:" 
+			   
+			   Grid.Row="2" Grid.Column="0" />
+					<TextBlock x:Name="ActiveItem_TimeActivated" 
+		   Padding="5"
+			   Grid.Row="2" Grid.Column="1" />
+                    <Button Name="CopyName" Style="{DynamicResource MetroCircleButtonStyle}"
+						cal:Message.Attach="CopyToClipBoard(ActiveItem_DisplayName)"
+						Height="30" Width="30"
+						controls:ControlsHelper.ContentCharacterCasing="Normal"
+						Grid.Row="2" Grid.Column="2">
+                        <fa:FontAwesome Icon="Clone" />
+                    </Button>
+                    <Label Content="Version:" 
+			   Grid.Row="3" Grid.Column="0" />
+					<TextBlock x:Name="ActiveItem_Version" 
+			Padding="5"
+			   Grid.Row="3" Grid.Column="1" />
+					<Button Name="CopyVersion" Style="{DynamicResource MetroCircleButtonStyle}"
+						cal:Message.Attach="CopyToClipBoard(ActiveItem_Version)"
+						Background="Transparent" Height="30" Width="30"
+						controls:ControlsHelper.ContentCharacterCasing="Normal"
+						Grid.Row="3" Grid.Column="2">
+						<fa:FontAwesome Icon="Clone" />
+					</Button>
 
-                <Label Content="Title:" 
-               
-               Grid.Row="0" Grid.Column="0" />
-                <TextBlock x:Name="Item_DisplayName" 
-           Padding="5"
-               Grid.Row="0" Grid.Column="1" />
-                <Button x:Name="CopyTitle"
-                Style="{DynamicResource MetroCircleButtonStyle}"
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
-               FontFamily="/Resources/#Entypo"
-                FontSize="25"
-                Height="30" Width="30"
-      
-                Grid.Row="0" Grid.Column="2">n</Button>
-                <Label Content="Scope:" 
-
-               Grid.Row="1" Grid.Column="0" />
-                <TextBlock x:Name="Item_Scope" 
-       Padding="5"
-               Grid.Row="1" Grid.Column="1" />
-                <Label Content="Url:" 
-           
-               Grid.Row="2" Grid.Column="0" />
-                <TextBlock x:Name="Item_Url" 
-            Padding="5"
-               Grid.Row="2" Grid.Column="1" />
-                <Button x:Name="CopyUrl"
-                Style="{DynamicResource MetroCircleButtonStyle}"
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
-                FontFamily="/Resources/#Entypo"
-                FontSize="25"
-                Height="30" Width="30"
-       
-                Grid.Row="2" Grid.Column="2">n</Button>
-                <Label Content="Id:" 
-        
-               Grid.Row="3" Grid.Column="0" />
-                <TextBlock x:Name="Item_Id" 
-  Padding="5"
-               Grid.Row="3" Grid.Column="1" />
-                <Button x:Name="CopyId"
-                Style="{DynamicResource MetroCircleButtonStyle}"
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
-                FontFamily="/Resources/#Entypo"
-                FontSize="25"
-                Height="30" Width="30"
-
-                Grid.Row="3" Grid.Column="2">n</Button>
-                <StackPanel 
-            Grid.Row="4" 
-            Orientation="Horizontal"
-            Grid.ColumnSpan="3">
-                    <Button x:Name="FilterLocation"
-                Style="{DynamicResource AccentedSquareButtonStyle}"
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
-
-                >Filter this location &amp; children</Button>
-                    <Button x:Name="FilterFeature"
-                            Margin="5,0,0,0"
-                Style="{DynamicResource AccentedSquareButtonStyle}"
-                controls:ControlsHelper.ContentCharacterCasing="Normal"
-               
-               >Filter active features</Button>
-                </StackPanel>
-                <Label 
-                    Content="Child Locations:" 
-               Grid.Row="5" Grid.Column="0" />
-                <Label 
-                    Content="Activated Features:"
-               Grid.Row="5" Grid.Column="1" />
-            </Grid>
-        </StackPanel>
-    </ScrollViewer>
+					<Label Content="Id:" 
+			   Grid.Row="5" Grid.Column="0" />
+					<TextBlock x:Name="ActiveItem_Id" 
+				Padding="5"
+			   Grid.Row="5" Grid.Column="1" />
+					<Button Name="CopyId" Style="{DynamicResource MetroCircleButtonStyle}"
+						cal:Message.Attach="CopyToClipBoard(ActiveItem_Id)"
+						Background="Transparent" Height="30" Width="30"
+						controls:ControlsHelper.ContentCharacterCasing="Normal"
+						Grid.Row="5" Grid.Column="2">
+						<fa:FontAwesome Icon="Clone" />
+					</Button>
+					<Label Content="Compatibility:"
+			   
+			   Grid.Row="7" Grid.Column="0" />
+					<TextBlock x:Name="Item_CompatibilityLevel"
+			   Padding="5"
+			   Grid.Row="7" Grid.Column="1" />
+				</Grid>
+			</ScrollViewer>
+		</Grid>
+	</Grid>
 </UserControl>

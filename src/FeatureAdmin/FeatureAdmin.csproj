@@ -173,14 +173,12 @@
     <Compile Include="UIModels\IWorkSpace.cs" />
     <Compile Include="ViewModels\BaseListViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
+    <Compile Include="ViewModels\ActivatedFeatureViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionListViewModel.cs" />
     <Compile Include="ViewModels\DetailViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />
     <Compile Include="ViewModels\LocationListViewModel.cs" />
-    <Compile Include="Views\ActivatedFeatureListView.xaml.cs">
-      <DependentUpon>ActivatedFeatureListView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\ActivatedFeatureView.xaml.cs">
       <DependentUpon>ActivatedFeatureView.xaml</DependentUpon>
     </Compile>
@@ -205,13 +203,9 @@
     <Compile Include="Views\StatusBarView.xaml.cs">
       <DependentUpon>StatusBarView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\ActivatedFeatureListView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\ActivatedFeatureView.xaml">
-      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AppView.xaml">
       <SubType>Designer</SubType>

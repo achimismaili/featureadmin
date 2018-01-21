@@ -31,6 +31,9 @@ namespace FeatureAdmin.ViewModels
 
             // https://github.com/Fody/PropertyChanged/issues/269
             ActivationProcessed += (s, e) => CanShowDetails = ActiveItem != null;
+            ActivationProcessed += (s, e) => eventAggregator.PublishOnUIThread(
+                new Messages.ItemSelected<T>(ActiveItem)
+                );
         }
 
         public ObservableCollection<Scope> ScopeFilters { get; private set; }
@@ -101,7 +104,8 @@ namespace FeatureAdmin.ViewModels
 
         }
 
-        public bool CanShowDetails { get; protected set; }
+        private bool canShowDetails;
+        public bool CanShowDetails { get; private set; }
 
 
 

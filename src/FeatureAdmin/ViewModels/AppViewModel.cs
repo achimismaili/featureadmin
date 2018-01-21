@@ -33,6 +33,8 @@ namespace FeatureAdmin.ViewModels
 
             LocationListVm = new LocationListViewModel(eventAggregator);
 
+            ActivatedFeatureVm = new ActivatedFeatureViewModel(eventAggregator);
+
             LogVm = new LogViewModel(eventAggregator);
 
             InitializeActors();
@@ -42,6 +44,8 @@ namespace FeatureAdmin.ViewModels
         }
 
         public string DisplayName { get; set; }
+
+        public ActivatedFeatureViewModel ActivatedFeatureVm { get; private set; }
         public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
 
         public LocationListViewModel LocationListVm { get; private set; }
