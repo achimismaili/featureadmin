@@ -26,19 +26,8 @@
 			<Menu Grid.Row="1" IsMainMenu="False" Background="Transparent">
 				<MenuItem Header="_Activate" x:Name="ActivateFeatures" ToolTip="Activate/Add features"  Background="Transparent"/>
 				<MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"  Background="Transparent"/>
-				<MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"  Background="Transparent"/>
-				<MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definition"  Background="Transparent"/>
-				<MenuItem x:Name="FilterLocation" ToolTip="Filter locations where this feature is activated"
-						  Background="Transparent" FontSize="18"
-				 cal:Message.Attach="FilterFeature" >
-					<MenuItem.Header>
-						<StackPanel Orientation="Horizontal">
-							<fa:FontAwesome Icon="Filter" />
-							<fa:FontAwesome Icon="MailForward" />
-						</StackPanel>
-					</MenuItem.Header>
-				</MenuItem>
-				<MenuItem x:Name="ShowDetails" ToolTip="Show details for this activated feature in new window"
+                <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"  Background="Transparent"/>
+                <MenuItem x:Name="ShowDetails" ToolTip="Show details for this activated feature in new window"
 						  Background="Transparent" FontSize="18">
 					<MenuItem.Header>
 						<fa:FontAwesome Icon="Eye" />
@@ -88,8 +77,12 @@
 						Grid.Row="3" Grid.Column="2">
 						<fa:FontAwesome Icon="Clone" />
 					</Button>
-
-					<Label Content="Id:" 
+                    <Label Content="Name:" 
+			   Grid.Row="4" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_Definition_DisplayName" 
+				Padding="4"
+			   Grid.Row="4" Grid.Column="1" />
+                    <Label Content="Id:" 
 			   Grid.Row="5" Grid.Column="0" />
 					<TextBlock x:Name="ActiveItem_Id" 
 				Padding="5"
