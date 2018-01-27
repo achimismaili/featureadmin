@@ -16,7 +16,6 @@ namespace FeatureAdmin.ViewModels
         public ActivatedFeatureViewModel(IEventAggregator eventAggregator)
             : base(eventAggregator)
         {
-            ActiveItem = null;
         }
 
         public FeatureDefinition SelectedFeatureDefinition { get; private set; }
@@ -37,18 +36,30 @@ namespace FeatureAdmin.ViewModels
 
         private void SetActivatedFeature()
         {
-            if (SelectedLocation != null && 
+            Items.Clear();
+
+            if (SelectedLocation != null &&
                 SelectedFeatureDefinition != null &&
                 SelectedLocation.ActivatedFeatures.Count > 0 &&
                 SelectedFeatureDefinition.ActivatedFeatures.Count > 0
                 )
             {
-                ActiveItem = SelectedLocation.ActivatedFeatures.FirstOrDefault(
+                var activeItem = SelectedLocation.ActivatedFeatures.FirstOrDefault(
                     lf => SelectedFeatureDefinition.ActivatedFeatures.Any(
                         df => df == lf
                         )
                     );
+
+                if (activeItem != null)
+                {
+                    Items.Add(activeItem);
+                    ActiveItem = activeItem;
                 }
+                else
+                {
+                    ActiveItem = null;
+                }
+            }
             else
             {
                 ActiveItem = null;
