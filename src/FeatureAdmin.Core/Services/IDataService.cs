@@ -27,7 +27,8 @@ namespace FeatureAdmin.Core.Services
         /// <returns>list of normalized web applications and farm</returns>
         /// <remarks>not only is the farm returned as out variable, but also included in the returned collection</remarks>
         IEnumerable<Location> LoadFarmAndWebApps(out Location farm);
-        //int FeatureToggle(Models.SPObject location, bool add, Guid featureId, bool force);
+        
+        int FeatureToggle(Location location, FeatureDefinition feature, bool add, bool force);
         //int FeatureUninstall(Guid featureId, bool force);
 
         //int FeatureUpdate(Models.SPObject location, bool add, Guid featureId, bool force);

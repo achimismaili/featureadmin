@@ -1,20 +1,28 @@
 ﻿using Caliburn.Micro;
+using FeatureAdmin.Core;
 using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
+using FeatureAdmin.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class LocationListViewModel : BaseListViewModel<Location>, IHandle<LocationsLoaded>
+    public class LocationListViewModel : BaseListViewModel<Location>, IHandle<LocationsLoaded>, IHandle<ItemSelected<FeatureDefinition>>
     {
         public LocationListViewModel(IEventAggregator eventAggregator)
             : base(eventAggregator)
         {
+            SelectionChanged();
         }
 
+        public new void SelectionChanged()
+        {
+            base.SelectionChanged();
+            CanFilterFeature = ActiveItem != null;
+        }
 
         /// <summary>
         /// custom guid search in items for derived class
@@ -68,6 +76,11 @@ namespace FeatureAdmin.ViewModels
         {
             return l => l.DisplayName.ToLower().Contains(searchString) ||
                             l.Url.ToLower().Contains(searchString);
+        }
+
+        public void Handle([NotNull] ItemSelected<FeatureDefinition> message)
+        {
+            SelectedFeatureDefinition = message.Item;
         }
     }
 }

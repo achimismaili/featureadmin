@@ -29,9 +29,17 @@ namespace FeatureAdmin.ViewModels
             lastUpdateInitiatedSearch = DateTime.Now;
 
             // https://github.com/Fody/PropertyChanged/issues/269
-           ActivationProcessed += (s, e) => eventAggregator.PublishOnUIThread(
-                new Messages.ItemSelected<T>(ActiveItem)
-                );
+            ActivationProcessed += (s, e) => SelectionChanged();
+        }
+
+        public virtual void SelectionChanged()
+        {
+            eventAggregator.PublishOnUIThread(
+                 new Messages.ItemSelected<T>(ActiveItem)
+                 );
+
+            CanShowDetails = ActiveItem != null;
+            CanFilterthis = ActiveItem != null;
         }
 
         public ObservableCollection<Scope> ScopeFilters { get; private set; }
@@ -58,13 +66,9 @@ namespace FeatureAdmin.ViewModels
             }
         }
 
-        public void CopyToClipBoard(string textToCopy)
-        {
-            if (!string.IsNullOrEmpty(textToCopy))
-            {
-                Clipboard.SetText(textToCopy);
-            }
-        }
+        public bool CanFilterFeature { get; protected set; }
+        public bool CanFilterthis { get; protected set; }
+        public bool CanFilterLocation { get; protected set; }
 
         public void FilterFeature()
         {
@@ -87,25 +91,6 @@ namespace FeatureAdmin.ViewModels
                 ActiveItem == null ? string.Empty : ActiveItem.Id.ToString(), null);
             Handle(searchFilter);
         }
-
-        public void ShowDetails()
-        {
-            if (ActiveItem != null)
-            {
-                var vm = new DetailViewModel(
-                    string.Format("{0}: {1}", ActiveItem.GetType().Name, ActiveItem.DisplayName),
-                    ActiveItem.GetAsPropertyList() 
-                    );
-                var message = new OpenWindow(vm);
-                eventAggregator.BeginPublishOnUIThread(message);
-            }
-
-        }
-
-        private bool canShowDetails;
-        public bool CanShowDetails { get; private set; }
-
-
 
         public void Handle(SetSearchFilter<T> message)
         {
@@ -165,13 +150,18 @@ namespace FeatureAdmin.ViewModels
             Items.Clear();
             Items.AddRange(searchResult);
 
-            if (activeItemCache != null && Items.Contains(activeItemCache))
+            if (activeItemCache != null)
             {
-                ActivateItem(activeItemCache);
+                if (Items.Contains(activeItemCache))
+                {
+                    ActivateItem(activeItemCache);
+                }
+                else
+                {
+                    SelectionChanged();
+                }
             }
-
         }
-
         // Searching for results can be different in derived types
         protected abstract Func<T, bool> GetSearchForGuid(Guid guid);
 

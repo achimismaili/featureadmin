@@ -11,21 +11,27 @@ using FeatureAdmin.Messages;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class ActivatedFeatureViewModel : BaseItemViewModel<ActivatedFeature>, IHandle<ItemSelected<FeatureDefinition>>, IHandle<ItemSelected<Location>>
+    public class ActivatedFeatureViewModel : BaseItemViewModel<ActivatedFeature>, IHandle<ItemSelected<FeatureDefinition>>, IHandle<ItemSelected<Location>>, IHandle<ActionOptionsUpdate>
     {
         public ActivatedFeatureViewModel(IEventAggregator eventAggregator)
             : base(eventAggregator)
         {
         }
 
-        public FeatureDefinition SelectedFeatureDefinition { get; private set; }
-
-        public Location SelectedLocation { get; private set; }
+  
 
         public void Handle(ItemSelected<FeatureDefinition> message)
         {
             SelectedFeatureDefinition = message.Item;
             SetActivatedFeature();
+        }
+
+        public void Handle(ActionOptionsUpdate message)
+        {
+            CanActivateFeatures = message.CanActivate;
+            CanDeactivateFeatures = message.CanDeactivate;
+            CanUpgradeFeatures = message.CanUpgrade;
+
         }
 
         public void Handle(ItemSelected<Location> message)

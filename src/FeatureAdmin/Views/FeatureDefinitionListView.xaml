@@ -90,7 +90,7 @@
                 <MenuItem Header="_Activate" x:Name="ActivateFeatures" ToolTip="Activate/Add features"  Background="Transparent"/>
                 <MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"  Background="Transparent"/>
                 <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"  Background="Transparent"/>
-                <MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinitions" ToolTip="Uninstall feature definitions"  Background="Transparent"/>
+                <MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinition" ToolTip="Uninstall feature definition"  Background="Transparent"/>
                 <MenuItem x:Name="FilterLocation" ToolTip="Filter locations where this feature is activated"
                           Background="Transparent" FontSize="18"
 				 cal:Message.Attach="FilterFeature" >

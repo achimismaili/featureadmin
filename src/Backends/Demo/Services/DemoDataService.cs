@@ -12,11 +12,12 @@ namespace FeatureAdmin.Backends.Demo.Services
     {
         public DemoDataService()
         {
+            featuredefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions();
             demoLocations = SampleData.SampleLocationHierarchy.GetAllLocations();
 
         }
 
-        private static IEnumerable<FeatureDefinition> featuredefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions();
+        private static IEnumerable<FeatureDefinition> featuredefinitions;
 
         private static IEnumerable<Location> demoLocations;
 
@@ -73,6 +74,34 @@ namespace FeatureAdmin.Backends.Demo.Services
             locations.AddRange(loadChildLocations(farm));
 
             return locations;
+        }
+
+        public int FeatureToggle(Location location, FeatureDefinition feature, bool add, bool force)
+        {
+            if (location == null || feature == null)
+            {
+                throw new ArgumentNullException("Location must not be null!");
+            }
+
+            var counter = 0;
+
+            switch (feature.Scope)
+            {
+                case Core.Models.Enums.Scope.Web:
+                    break;
+                case Core.Models.Enums.Scope.Site:
+                    break;
+                case Core.Models.Enums.Scope.WebApplication:
+                    break;
+                case Core.Models.Enums.Scope.Farm:
+                    break;
+                case Core.Models.Enums.Scope.ScopeInvalid:
+                    throw new Exception("Invalid scope was not expected!");
+                default:
+                    throw new Exception("Undefined scope!");
+            }
+
+            return counter;
         }
     }
 }
