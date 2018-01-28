@@ -1,5 +1,4 @@
 ﻿using Caliburn.Micro;
-using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
 using System.Collections.Generic;
@@ -7,8 +6,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System;
 using FeatureAdmin.Core.Models.Enums;
-using System.Linq.Expressions;
-using System.Windows;
 
 namespace FeatureAdmin.ViewModels
 {
@@ -32,15 +29,7 @@ namespace FeatureAdmin.ViewModels
             ActivationProcessed += (s, e) => SelectionChanged();
         }
 
-        public virtual void SelectionChanged()
-        {
-            eventAggregator.PublishOnUIThread(
-                 new Messages.ItemSelected<T>(ActiveItem)
-                 );
-
-            CanShowDetails = ActiveItem != null;
-            CanFilterthis = ActiveItem != null;
-        }
+        public bool CanFilterThis { get; protected set; }
 
         public ObservableCollection<Scope> ScopeFilters { get; private set; }
 
@@ -54,8 +43,6 @@ namespace FeatureAdmin.ViewModels
             }
         }
 
-        // The filtered Items
-        protected ObservableCollection<T> allItems { get; private set; }
         public Scope? SelectedScopeFilter
         {
             get { return selectedScopeFilter; }
@@ -66,24 +53,8 @@ namespace FeatureAdmin.ViewModels
             }
         }
 
-        public bool CanFilterFeature { get; protected set; }
-        public bool CanFilterthis { get; protected set; }
-        public bool CanFilterLocation { get; protected set; }
-
-        public void FilterFeature()
-        {
-            var searchFilter = new SetSearchFilter<FeatureDefinition>(
-
-                ActiveItem == null ? string.Empty : ActiveItem.Id.ToString(), null);
-            eventAggregator.BeginPublishOnUIThread(searchFilter);
-        }
-
-        public void FilterLocation()
-        {
-            var searchFilter = new SetSearchFilter<Location>(
-                ActiveItem == null ? string.Empty : ActiveItem.Id.ToString(), null);
-            eventAggregator.BeginPublishOnUIThread(searchFilter);
-        }
+        // The filtered Items
+        protected ObservableCollection<T> allItems { get; private set; }
 
         public void FilterThis()
         {
@@ -110,6 +81,15 @@ namespace FeatureAdmin.ViewModels
             }
 
         }
+
+        public void Handle(ClearItems message)
+        {
+            allItems.Clear();
+            var cleared = new ClearItemsReady(message.TaskId);
+            eventAggregator.PublishOnUIThread(cleared);
+        }
+
+        public abstract void SelectionChanged();
 
         protected void FilterResults()
         {
@@ -162,18 +142,21 @@ namespace FeatureAdmin.ViewModels
                 }
             }
         }
+
         // Searching for results can be different in derived types
         protected abstract Func<T, bool> GetSearchForGuid(Guid guid);
-
 
         // Searching for results can be different in derived types
         protected abstract Func<T, bool> GetSearchForString(string searchString);
 
-        public void Handle(ClearItems message)
+        protected virtual void SelectionChangedBase()
         {
-            allItems.Clear();
-            var cleared = new ClearItemsReady(message.TaskId);
-            eventAggregator.PublishOnUIThread(cleared);
+            eventAggregator.PublishOnUIThread(
+                 new Messages.ItemSelected<T>(ActiveItem)
+                 );
+
+            CanShowDetails = ActiveItem != null;
+            CanFilterThis = ActiveItem != null;
         }
     }
 }
