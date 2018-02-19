@@ -91,10 +91,13 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             return GetWebApplication(id, false);
         }
 
-        public IEnumerable<Location> LoadNonFarmLocationAndChildren(Location location)
+        public IEnumerable<Location> LoadNonFarmLocationAndChildren(Location location, out Location parent)
         {
+            Location updatedLocation = null;
+
             if (location == null)
             {
+                parent = updatedLocation;
                 return null;
             };
 
@@ -114,8 +117,9 @@ namespace FeatureAdmin.Backends.Sp2013.Services
                         {
                             using (SPWeb w = sc.OpenWeb(location.Id))
                             {
-                                var l = w.ToLocation(location.Parent);
-                                locations.Add(l);
+                                updatedLocation = w.ToLocation(location.Parent);
+                                
+                                locations.Add(updatedLocation);
                             }
                         }
                     });
@@ -125,8 +129,9 @@ namespace FeatureAdmin.Backends.Sp2013.Services
                         {
                             using (SPSite sc = new SPSite(location.Id))
                             {
-                                var s = sc.ToLocation(location.Parent);
-                                locations.Add(s);
+                                updatedLocation = sc.ToLocation(location.Parent);
+
+                                locations.Add(updatedLocation);
 
                                 locations.AddRange(sc.AllWebs.ToLocations(location.Id));
                             }
@@ -138,8 +143,8 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
                     if (wa != null)
                     {
-                        var webApp = wa.ToLocation(location.Parent);
-                        locations.Add(webApp);
+                        updatedLocation = wa.ToLocation(location.Parent);
+                        locations.Add(updatedLocation);
                     
                         SPSecurity.RunWithElevatedPrivileges(delegate ()
                         {
@@ -156,6 +161,8 @@ namespace FeatureAdmin.Backends.Sp2013.Services
                     // TODO Log error: scope was not web, web app or site!
                     break;
             }
+
+            parent = updatedLocation;
 
             return locations;
 
@@ -193,13 +200,15 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             return features;
         }
 
-        public IEnumerable<Location> LoadFarmAndWebApps()
+        public IEnumerable<Location> LoadFarmAndWebApps(out Location farm)
         {
             var locations = new List<Location>();
 
-            var farm = GetFarm();
-            
-            locations.Add(farm.ToLocation());
+            var spFarm = GetFarm();
+
+            farm = spFarm.ToLocation();
+
+            locations.Add(farm);
 
             var farmId = farm.Id;
 
@@ -208,6 +217,11 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             locations.AddRange(webApps);
 
             return locations;
+        }
+
+        public int FeatureToggle(Location location, FeatureDefinition feature, bool add, bool force)
+        {
+            throw new NotImplementedException();
         }
     }
 }

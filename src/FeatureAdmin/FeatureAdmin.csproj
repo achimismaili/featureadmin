@@ -305,6 +305,10 @@
       <Project>{e4a06935-054f-446a-b2af-996dc615d775}</Project>
       <Name>Demo</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Backends\Sp2013\Sp2013.csproj">
+      <Project>{5d1949a6-17ed-4203-98f8-2b82415f97c1}</Project>
+      <Name>Sp2013</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
       <Project>{4cec2e98-5a3b-4793-b606-a5250d046f02}</Project>
       <Name>FeatureAdmin.Core</Name>
