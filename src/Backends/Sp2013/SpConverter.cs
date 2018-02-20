@@ -5,6 +5,7 @@ using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FeatureAdmin.Backends.Sp2013
 {
@@ -94,7 +95,9 @@ namespace FeatureAdmin.Backends.Sp2013
             var id = farm.Id;
             var activatedFeatures = farm.Features.ToActivatedFeatures(id, Scope.Farm, "Farm");
 
-            var location = LocationFactory.GetFarm(id, activatedFeatures);
+            var webAppsCount = Services.SpDataService.GetAllWebApplications().Count();
+
+            var location = LocationFactory.GetFarm(id, activatedFeatures, webAppsCount);
 
             return location;
         }
@@ -126,7 +129,8 @@ namespace FeatureAdmin.Backends.Sp2013
                 parentId,
                 Scope.WebApplication,
                 url,
-                activatedFeatures);
+                activatedFeatures,
+                webApp.Sites.Count);
 
             return location;
         }
@@ -153,7 +157,8 @@ namespace FeatureAdmin.Backends.Sp2013
                 parentId,
                 Scope.Site,
                 site.Url,
-                activatedFeatures
+                activatedFeatures,
+                site.AllWebs.Count
                 );
 
             return location;
@@ -171,7 +176,8 @@ namespace FeatureAdmin.Backends.Sp2013
                 parentId,
                 Scope.Web,
                 webUrl,
-                activatedFeatures
+                activatedFeatures,
+                0
                 );
 
             return location;

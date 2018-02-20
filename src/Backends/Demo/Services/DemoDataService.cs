@@ -80,12 +80,12 @@ namespace FeatureAdmin.Backends.Demo.Services
         {
             if (location == null || feature == null)
             {
-                throw new ArgumentNullException("Location must not be null!");
+                throw new ArgumentNullException("Location or feature must not be null!");
             }
 
             var counter = 0;
 
-            switch (feature.Scope)
+            switch (location.Scope)
             {
                 case Core.Models.Enums.Scope.Web:
                     break;

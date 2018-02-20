@@ -5,12 +5,13 @@ using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Services;
 using Microsoft.SharePoint.Administration;
 using Microsoft.SharePoint;
+using FeatureAdmin.Core.Models.Enums;
 
 namespace FeatureAdmin.Backends.Sp2013.Services
 {
     public class SpDataService : IDataService
     {
-        private SPWebService GetFarm()
+        private static SPWebService GetFarm()
         {
             return SPWebService.ContentService;
         }
@@ -47,12 +48,19 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             return oSPsite.OpenWeb(location.Id);
         }
 
+        public static IEnumerable<SPWebApplication> GetAllWebApplications()
+        {
+            var webApps = GetWebApplications(true);
+
+            return webApps.Concat(GetWebApplications(false).AsEnumerable());
+        }
+
         /// <summary>
         /// returns web applications of type content or admin
         /// </summary>
         /// <param name="content">true, if content is requested, false for admin</param>
         /// <returns>content or admin web applications</returns>
-        private SPWebApplicationCollection GetWebApplications(bool content)
+        private static SPWebApplicationCollection GetWebApplications(bool content)
         {
             if (content)
             {
@@ -118,24 +126,24 @@ namespace FeatureAdmin.Backends.Sp2013.Services
                             using (SPWeb w = sc.OpenWeb(location.Id))
                             {
                                 updatedLocation = w.ToLocation(location.Parent);
-                                
+
                                 locations.Add(updatedLocation);
                             }
                         }
                     });
                     break;
                 case Core.Models.Enums.Scope.Site:
-                        SPSecurity.RunWithElevatedPrivileges(delegate ()
+                    SPSecurity.RunWithElevatedPrivileges(delegate ()
+                    {
+                        using (SPSite sc = new SPSite(location.Id))
                         {
-                            using (SPSite sc = new SPSite(location.Id))
-                            {
-                                updatedLocation = sc.ToLocation(location.Parent);
+                            updatedLocation = sc.ToLocation(location.Parent);
 
-                                locations.Add(updatedLocation);
+                            locations.Add(updatedLocation);
 
-                                locations.AddRange(sc.AllWebs.ToLocations(location.Id));
-                            }
-                        });
+                            locations.AddRange(sc.AllWebs.ToLocations(location.Id));
+                        }
+                    });
                     break;
                 case Core.Models.Enums.Scope.WebApplication:
 
@@ -145,7 +153,7 @@ namespace FeatureAdmin.Backends.Sp2013.Services
                     {
                         updatedLocation = wa.ToLocation(location.Parent);
                         locations.Add(updatedLocation);
-                    
+
                         SPSecurity.RunWithElevatedPrivileges(delegate ()
                         {
                             locations.AddRange(wa.Sites.ToLocations(location.Id));
@@ -221,7 +229,163 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
         public int FeatureToggle(Location location, FeatureDefinition feature, bool add, bool force)
         {
-            throw new NotImplementedException();
+            if (location == null || feature == null)
+            {
+                throw new ArgumentNullException("Location or feature must not be null!");
+            }
+
+            var counter = 0;
+
+            switch (location.Scope)
+            {
+                case Core.Models.Enums.Scope.Web:
+                    if (feature.Scope == Core.Models.Enums.Scope.Web)
+                    {
+                        SPSecurity.RunWithElevatedPrivileges(delegate ()
+                        {
+                            using (var site = new SPSite(location.Url))
+                            {
+                                using (var web = site.OpenWeb())
+                                {
+                                    FeatureToggleWeb(web, feature.Id, add, force);
+                                }
+                            };
+                        });
+                    }
+                    break;
+                case Core.Models.Enums.Scope.Site:
+
+                    SPSecurity.RunWithElevatedPrivileges(delegate ()
+                    {
+                        using (var site = new SPSite(location.Url))
+                        {
+                            FeatureToggleSite(site, feature.Id, feature.Scope, add, force);
+                        };
+                    });
+
+                    break;
+                case Core.Models.Enums.Scope.WebApplication:
+
+                    var wa = GetWebApplication(location.Id);
+
+                    if (wa != null)
+                    {
+                        FeatureToggleWebApp(wa, feature.Id, feature.Scope, add, force);
+                    }
+                        break;
+                case Core.Models.Enums.Scope.Farm:
+                    FeatureToggleFarm(feature.Id, feature.Scope, add, force);
+                    break;
+                case Core.Models.Enums.Scope.ScopeInvalid:
+                    throw new Exception("Invalid scope was not expected!");
+                default:
+                    throw new Exception("Undefined scope!");
+            }
+
+            return counter;
         }
+
+        private static int FeatureToggleFarm(Guid featureId, Scope featureScope, bool add, bool force)
+        {
+            var processingCounter = 0;
+
+            var farm = GetFarm();
+
+            if (featureScope == Scope.Farm)
+            {
+                processingCounter += ToggleFeatureInFeatureCollection(farm.Features, featureId, add, force);
+            }
+
+            else
+            {
+                var webApps = GetAllWebApplications();
+
+                foreach (SPWebApplication webApp in webApps)
+                {
+                    FeatureToggleWebApp(webApp, featureId, featureScope, add, force);
+                }
+            }
+
+            return processingCounter;
+        }
+
+        private static int FeatureToggleWebApp(SPWebApplication webApp, Guid featureId, Scope featureScope, bool add, bool force)
+        {
+            var processingCounter = 0;
+
+            if (featureScope == Scope.WebApplication)
+            {
+                processingCounter += ToggleFeatureInFeatureCollection(webApp.Features, featureId, add, force);
+            }
+
+            else if (featureScope == Scope.Site || featureScope == Scope.Web)
+            {
+                foreach (SPSite site in webApp.Sites)
+                {
+                    processingCounter += FeatureToggleSite(site, featureId, featureScope, add, force);
+                }
+            }
+            return processingCounter;
+        }
+
+
+
+        public static int FeatureToggleSite(SPSite site, Guid featureId, Scope featureScope, bool activate, bool force)
+        {
+            var processingCounter = 0;
+
+
+            if (featureScope == Scope.Site)
+            {
+                processingCounter += ToggleFeatureInFeatureCollection(site.Features, featureId, activate, force);
+            }
+            else if (featureScope == Scope.Web)
+            {
+                foreach (SPWeb web in site.AllWebs)
+                {
+                    processingCounter += ToggleFeatureInFeatureCollection(web.Features, featureId, activate, force);
+                }
+            }
+            return processingCounter;
+        }
+        public static int FeatureToggleWeb(SPWeb web, Guid featureId, bool add, bool force)
+        {
+            var processingCounter = 0;
+
+
+            processingCounter += ToggleFeatureInFeatureCollection(web.Features, featureId, add, force);
+
+            return processingCounter;
+        }
+        private static int ToggleFeatureInFeatureCollection(SPFeatureCollection features, Guid featureId, bool activate, bool force)
+        {
+
+            var featuresModifiedCounter = 0;
+
+
+            if (activate)
+            {
+                // activate feature
+                var feature = features.Add(featureId, force);
+                if (feature != null)
+                {
+                    featuresModifiedCounter++;
+                }
+            }
+            else
+            {
+                // deactivate feature
+                var featuresActiveBefore = features.Count();
+
+                features.Remove(featureId, force);
+                if (featuresActiveBefore > features.Count)
+                {
+                    featuresModifiedCounter++;
+                }
+            }
+
+            return featuresModifiedCounter;
+        }
+
     }
 }
