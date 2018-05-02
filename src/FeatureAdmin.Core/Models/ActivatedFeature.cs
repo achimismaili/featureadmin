@@ -7,6 +7,7 @@ namespace FeatureAdmin.Core.Models
     [Equals]
     public class ActivatedFeature : IDisplayableItem
     {
+        [IgnoreDuringEquals]
         public string DisplayName
         {
             get
@@ -65,6 +66,7 @@ namespace FeatureAdmin.Core.Models
         [IgnoreDuringEquals]
         public Version Version { get; private set; }
 
+        
         public List<KeyValuePair<string, string>> GetAsPropertyList()
         {
             return new List<KeyValuePair<string, string>>()
