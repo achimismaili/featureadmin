@@ -2,6 +2,7 @@
 using Caliburn.Micro;
 using MahApps.Metro.Controls;
 using System.ComponentModel.Composition;
+using MahApps.Metro;
 
 namespace FeatureAdmin
 {

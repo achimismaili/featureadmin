@@ -3,7 +3,7 @@
     /// <summary>
     /// Interaction logic for MainWindowContainer.xaml
     /// </summary>
-    public partial class MainWindowContainer 
+    public partial class MainWindowContainer : MahApps.Metro.Controls.MetroWindow
     {
         public MainWindowContainer()
         {

@@ -171,11 +171,11 @@
     <Compile Include="Messages\SetSearchFilter.cs" />
     <Compile Include="Messages\ClearItems.cs" />
     <Compile Include="Messages\ActionOptionsUpdate.cs" />
-    <Compile Include="UIModels\IWorkSpace.cs" />
     <Compile Include="ViewModels\BaseItemViewModel.cs" />
     <Compile Include="ViewModels\BaseListViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\ActivatedFeatureViewModel.cs" />
+    <Compile Include="ViewModels\DialogViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionListViewModel.cs" />
     <Compile Include="ViewModels\DetailViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
@@ -189,6 +189,9 @@
     </Compile>
     <Compile Include="Views\DetailView.xaml.cs">
       <DependentUpon>DetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DialogView.xaml.cs">
+      <DependentUpon>DialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FeatureDefinitionListView.xaml.cs">
       <DependentUpon>FeatureDefinitionListView.xaml</DependentUpon>
@@ -238,6 +241,10 @@
     <Page Include="Views\DetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\FeatureDefinitionListView.xaml">
       <SubType>Designer</SubType>

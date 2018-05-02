@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="FeatureAdmin.Views.DialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Micro="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
+             xmlns:local="clr-namespace:FeatureAdmin.Views"
+             mc:Ignorable="d" 
+             >
+    <Grid Background="#33F0A30A" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+         <TextBlock x:Name="Content" />
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Width="100" x:Name="Ok" Content="OK" IsDefault="True" IsCancel="True" />
+            <Button Width="100" x:Name="Cancel" Content="Cancel" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+
+</UserControl>

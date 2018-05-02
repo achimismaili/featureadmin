@@ -78,6 +78,22 @@ namespace FeatureAdmin.ViewModels
             this.windowManager.ShowWindow(viewModel, null, settings);
         }
 
+        public void OpenDialog(string title, string message)
+        {
+            DialogViewModel dialogVm = new DialogViewModel(title, message);
+
+            dynamic settings = new System.Dynamic.ExpandoObject();
+            settings.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            settings.ResizeMode = System.Windows.ResizeMode.NoResize;
+            settings.Width = 300;
+            settings.Height = 200;
+            // settings.Title = "window title";
+            // settings.Icon = new BitmapImage(new Uri("pack://application:,,,/MyApplication;component/Assets/myicon.ico"));
+
+            this.windowManager.ShowDialog(dialogVm, null, settings);
+        }
+
+
         public void ReLoad()
         {
             TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleReload);
@@ -87,7 +103,8 @@ namespace FeatureAdmin.ViewModels
         {
             taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Akka.Actor.Props.Create(() => new TaskManagerActor(eventAggregator)));
         }
-        private void TriggerFarmLoadTask(string taskTitle) { 
+        private void TriggerFarmLoadTask(string taskTitle)
+        {
 
             eventAggregator.PublishOnUIThread(new LoadTask(taskTitle, Core.Factories.LocationFactory.GetDummyFarmForLoadCommand()));
         }
