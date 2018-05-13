@@ -169,7 +169,6 @@
     <Compile Include="Messages\LogMessage.cs" />
     <Compile Include="Messages\OpenWindow.cs" />
     <Compile Include="Messages\SetSearchFilter.cs" />
-    <Compile Include="Messages\ClearItems.cs" />
     <Compile Include="Messages\ActionOptionsUpdate.cs" />
     <Compile Include="ViewModels\BaseItemViewModel.cs" />
     <Compile Include="ViewModels\BaseListViewModel.cs" />

@@ -9,7 +9,7 @@ namespace FeatureAdmin.Repository
     public interface IFeatureRepository 
     {
         //IEnumerable<ActivatedFeature> SearchActivatedFeatures();
-        IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchString);
+        IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, bool? onlyFarmFeatures);
         //IEnumerable<Location> SearchLocations();
 
         //void AddActivatedFeature(ActivatedFeature feature);
@@ -17,6 +17,8 @@ namespace FeatureAdmin.Repository
         //void RemoveActivatedFeature(ActivatedFeature feature);
 
         void Clear();
+
+        IEnumerable<FeatureDefinition> Search<FeatureDefinition>();
         
 
 

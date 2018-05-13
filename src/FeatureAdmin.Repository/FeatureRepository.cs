@@ -38,9 +38,10 @@ namespace FeatureAdmin.Repository
 
       
 
-        public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchString)
+        public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Scope? selectedScopeFilter, bool? onlyFarmFeatures)
         {
-            return store.SearchFeatureDefinitions();
+            return store.SearchFeatureDefinitions(searchInput, selectedScopeFilter, onlyFarmFeatures);
         }
+
     }
 }

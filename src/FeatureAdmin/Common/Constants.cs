@@ -23,11 +23,6 @@ namespace FeatureAdmin.Common
 
         public static class Tasks
         {
-            // preparation steps for load: 
-            // 1. clear locations collection
-            // 2. clear feature definition collection
-            public static int PreparationStepsForLoad = 2;
-
             public static string TaskTitleReload = "Reload farm features and locations";
             public static string TaskTitleInitialLoad = "Initial farm load";
 

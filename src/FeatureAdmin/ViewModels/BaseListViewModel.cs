@@ -10,22 +10,19 @@ using FeatureAdmin.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : BaseItemViewModel<T>, IHandle<ClearItems>, IHandle<SetSearchFilter<T>> where T : class, IBaseItem
+    public abstract class BaseListViewModel<T> : BaseItemViewModel<T>, IHandle<SetSearchFilter<T>> where T : class, IBaseItem
     {
 
         protected DateTime lastUpdateInitiatedSearch;
-        private string searchInput;
+        protected IFeatureRepository repository;
+        protected string searchInput;
 
         private Scope? selectedScopeFilter;
-
-        protected IFeatureRepository repository;
-
         public BaseListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository) :
             base(eventAggregator)
         {
             ScopeFilters = new ObservableCollection<Scope>(Common.Constants.Search.ScopeFilterList);
-            allItems = new ObservableCollection<T>();
-
+            
             lastUpdateInitiatedSearch = DateTime.Now;
 
             // https://github.com/Fody/PropertyChanged/issues/269
@@ -58,9 +55,6 @@ namespace FeatureAdmin.ViewModels
             }
         }
 
-        // The filtered Items
-        protected ObservableCollection<T> allItems { get; private set; }
-
         public void FilterThis()
         {
             var searchFilter = new SetSearchFilter<T>(
@@ -87,49 +81,12 @@ namespace FeatureAdmin.ViewModels
 
         }
 
-        public void Handle(ClearItems message)
-        {
-            allItems.Clear();
-            var cleared = new ClearItemsReady(message.TaskId);
-            eventAggregator.PublishOnUIThread(cleared);
-        }
-
         public abstract void SelectionChanged();
 
         protected void FilterResults()
         {
-            IEnumerable<T> searchResult;
 
-            if (string.IsNullOrEmpty(searchInput))
-            {
-                searchResult = allItems;
-            }
-            else
-            {
-                Guid idGuid;
-                Guid.TryParse(searchInput, out idGuid);
-
-                // if searchInput is not a guid, seachstring will always be a guid.empty
-                // to also catch, if user intentionally wants to search for guid empty, this is checked here, too
-                if (searchInput.Equals(Guid.Empty.ToString()) || idGuid != Guid.Empty)
-                {
-                    searchResult = allItems.Where(GetSearchForGuid(idGuid));
-                }
-                else
-                {
-                    var lowerCaseSearchInput = searchInput.ToLower();
-                    searchResult =
-                       allItems.Where(GetSearchForString(lowerCaseSearchInput));
-                }
-
-            }
-
-            if (SelectedScopeFilter != null)
-            {
-                searchResult =
-                    searchResult.Where(l => l.Scope == SelectedScopeFilter.Value);
-            }
-
+            var searchResult = repository.Search<T>()
             var activeItemCache = ActiveItem;
 
             Items.Clear();

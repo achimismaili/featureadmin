@@ -97,6 +97,10 @@
       <Project>{4cec2e98-5a3b-4793-b606-a5250d046f02}</Project>
       <Name>FeatureAdmin.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FeatureAdmin.Repository\FeatureAdmin.Repository.csproj">
+      <Project>{a9554c65-3bcc-4f78-9349-a63c737a19bd}</Project>
+      <Name>FeatureAdmin.Repository</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FeatureAdmin.SampleData\FeatureAdmin.SampleData.csproj">
       <Project>{de7fac0c-782b-4ba1-b1b8-3101955fc888}</Project>
       <Name>FeatureAdmin.SampleData</Name>

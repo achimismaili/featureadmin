@@ -1,4 +1,5 @@
 ﻿using FeatureAdmin.Core.Models;
+using FeatureAdmin.Core.Models.Enums;
 using OrigoDB.Core;
 using System;
 using System.Collections.Generic;
@@ -35,9 +36,44 @@ namespace FeatureAdmin.Repository
             Locations.Clear();
         }
 
-        public IEnumerable<FeatureDefinition> SearchFeatureDefinitions()
+        public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Scope? selectedScopeFilter, bool? onlyFarmFeatures)
         {
-            return FeatureDefinitions;
+            IEnumerable<FeatureDefinition> searchResult;
+
+            if (string.IsNullOrEmpty(searchInput))
+            {
+                searchResult = FeatureDefinitions;
+            }
+            else
+            {
+                Guid idGuid;
+                Guid.TryParse(searchInput, out idGuid);
+
+                // if searchInput is not a guid, seachstring will always be a guid.empty
+                // to also catch, if user intentionally wants to search for guid empty, this is checked here, too
+                if (searchInput.Equals(Guid.Empty.ToString()) || idGuid != Guid.Empty)
+                {
+                    searchResult = FeatureDefinitions.Where(
+                        fd => fd.Id == idGuid
+                       || fd.ActivatedFeatures.Any(f => f.LocationId == idGuid));
+                }
+                else
+                {
+                    var lowerCaseSearchInput = searchInput.ToLower();
+                    searchResult =
+                       FeatureDefinitions.Where(fd => fd.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
+                            fd.Title.ToLower().Contains(lowerCaseSearchInput));
+                }
+
+            }
+
+            if (selectedScopeFilter != null)
+            {
+                searchResult =
+                    searchResult.Where(l => l.Scope == selectedScopeFilter.Value);
+            }
+
+            return searchResult;
         }
     }
 }

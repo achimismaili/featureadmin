@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using FeatureAdmin.Core.Services;
+using FeatureAdmin.Repository;
 using FeatureAdmin.ViewModels;
 using Moq;
 using System;
@@ -19,7 +20,7 @@ namespace FeatureAdmin.Tests
         // You can mock the other interfaces:
         Mock<IWindowManager> _windowManager;
         Mock<IEventAggregator> _eventAggregator;
-        Mock<IDataService> _repository;
+        Mock<IFeatureRepository> _repository;
 
         public AppViewModelTests()
         {
@@ -29,12 +30,12 @@ namespace FeatureAdmin.Tests
             // Mock the event aggregator
             _eventAggregator = new Mock<IEventAggregator>();
 
-            _repository = new Mock<IDataService>();
+            _repository = new Mock<IFeatureRepository>();
           
             // Create the main VM injecting the mocked interfaces
             // Mocking interfaces is always good as there is a lot of freedom
             // Use mock.Object to get hold of the object, the mock is just a proxy that decorates the original object
-            _mainVM = new AppViewModel(_windowManager.Object, _eventAggregator.Object);
+            _mainVM = new AppViewModel(_windowManager.Object, _eventAggregator.Object, _repository.Object);
         }
 
         /// <summary>

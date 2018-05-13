@@ -38,11 +38,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             featureDefinitionActor =
                    Context.ActorOf(Context.DI().Props<FeatureDefinitionActor>());
 
-            Preparations = new ProgressModule(
-                5d / 100,
-                0d,
-                FeatureAdmin.Common.Constants.Tasks.PreparationStepsForLoad);
-
+       
             FarmFeatureDefinitions = new ProgressModule(
                 5d / 100,
                 Preparations.MaxCumulatedQuota,
@@ -190,32 +186,8 @@ namespace FeatureAdmin.Core.Models.Tasks
             
             if (FarmFeatureDefinitions.Completed)
             {
+                repository.AddFeatureDefinitions(message.FarmFeatureDefinitions);
                 SendProgress();
-
-                if (Preparations.Completed)
-                {
-                    repository.AddFeatureDefinitions(message.FarmFeatureDefinitions);
-
-
-                    eventAggregator.PublishOnUIThread(message);
-
-                    // locations already loaded? 
-                    if (tempLocationStore.Count() > 0)
-                    {
-                        foreach (LocationsLoaded loadedMsg in tempLocationStore)
-                        {
-                            eventAggregator.BeginPublishOnUIThread(loadedMsg);
-                        }
-
-                        tempLocationStore.Clear();
-                    }
-                }
-                else
-                {
-                    tempFeatureDefinitionStore = message;
-                }
-
-
             }
         }
 
@@ -257,9 +229,7 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         private void InitiateLoadTask(Location startLocation)
         {
-            // initiate clean all feature definition and location collections
-            var clearMessage = new ClearItems(Id);
-            eventAggregator.PublishOnUIThread(clearMessage);
+            repository.Clear();
 
             // initiate read of all feature definitions
             var fdQuery = new LoadFeatureDefinitionQuery(Id);
