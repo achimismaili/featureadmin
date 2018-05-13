@@ -1,5 +1,4 @@
-﻿using Akka.Actor;
-using FeatureAdmin.Core.Messages.Tasks;
+﻿using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
 using OrigoDB.Core;
 using System;
@@ -15,7 +14,7 @@ namespace FeatureAdmin.Repository
     public class FeatureRepository : IFeatureRepository
     {
         public FeatureModel store;
-        private Akka.Actor.IActorRef taskManagerActorRef;
+
         public FeatureRepository()
         {
             var config = new EngineConfiguration();
@@ -38,10 +37,13 @@ namespace FeatureAdmin.Repository
 
       
 
-        public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Scope? selectedScopeFilter, bool? onlyFarmFeatures)
+        public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, bool? onlyFarmFeatures)
         {
             return store.SearchFeatureDefinitions(searchInput, selectedScopeFilter, onlyFarmFeatures);
         }
-
+        public IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter)
+        {
+            return store.SearchLocations(searchInput, selectedScopeFilter);
+        }
     }
 }

@@ -10,16 +10,13 @@ namespace FeatureAdmin.Repository
     {
         //IEnumerable<ActivatedFeature> SearchActivatedFeatures();
         IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, bool? onlyFarmFeatures);
-        //IEnumerable<Location> SearchLocations();
+        IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter);
 
         //void AddActivatedFeature(ActivatedFeature feature);
         void AddFeatureDefinitions(IEnumerable<FeatureDefinition> featureDefinitions);
         //void RemoveActivatedFeature(ActivatedFeature feature);
 
         void Clear();
-
-        IEnumerable<FeatureDefinition> Search<FeatureDefinition>();
-        
 
 
     }

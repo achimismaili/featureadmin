@@ -10,7 +10,7 @@ using FeatureAdmin.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>, IHandle<FarmFeatureDefinitionsLoaded>, IHandle<LocationsLoaded>, IHandle<ItemSelected<Location>>
+    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>, IHandle<ItemSelected<Location>>
     {
         public FeatureDefinitionListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
          : base(eventAggregator, repository)
@@ -29,26 +29,11 @@ namespace FeatureAdmin.ViewModels
             eventAggregator.BeginPublishOnUIThread(searchFilter);
         }
 
-        protected new void FilterResults()
+        protected override void FilterResults()
         {
             var searchResult = repository.SearchFeatureDefinitions(searchInput, SelectedScopeFilter, null );
 
-            var activeItemCache = ActiveItem;
-
-            Items.Clear();
-            Items.AddRange(searchResult);
-
-            if (activeItemCache != null)
-            {
-                if (Items.Contains(activeItemCache))
-                {
-                    ActivateItem(activeItemCache);
-                }
-                else
-                {
-                    SelectionChanged();
-                }
-            }
+            ShowResults(searchResult);
         }
 
         public void Handle([NotNull] ItemSelected<Location> message)

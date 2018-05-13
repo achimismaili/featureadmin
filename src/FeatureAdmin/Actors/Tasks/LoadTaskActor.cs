@@ -56,7 +56,6 @@ namespace FeatureAdmin.Core.Models.Tasks
                1d - WebApps.MaxCumulatedQuota,
                 WebApps.MaxCumulatedQuota);
 
-            Receive<ClearItemsReady>(message => HandleClearItemsReady(message));
             Receive<LocationsLoaded>(message => HandleLocationsLoaded(message));
             Receive<FarmFeatureDefinitionsLoaded>(message => FarmFeatureDefinitionsLoaded(message));
 
@@ -105,38 +104,6 @@ namespace FeatureAdmin.Core.Models.Tasks
             string title, Guid id, Location startLocation)
         {
             return Akka.Actor.Props.Create(() => new LoadTaskActor(eventAggregator, repository, title, id, startLocation));
-        }
-
-        public void HandleClearItemsReady(ClearItemsReady message)
-        {
-
-            // how many steps are expected is decided in Common.Constants.Tasks.PreparationStepsForLoad
-            Preparations.Processed++;
-
-            if (Preparations.Completed)
-            {
-                SendProgress();
-
-                // feature definitions already loaded?
-                if (tempFeatureDefinitionStore != null)
-                {
-                    eventAggregator.BeginPublishOnUIThread(tempFeatureDefinitionStore);
-                    tempFeatureDefinitionStore = null;
-                }
-
-                // locations already loaded? 
-                if (FarmFeatureDefinitions.Completed && tempLocationStore.Count() > 0)
-                {
-                    foreach (LocationsLoaded loadedMsg in tempLocationStore)
-                    {
-                        eventAggregator.BeginPublishOnUIThread(loadedMsg);
-                    }
-
-                    tempLocationStore.Clear();
-                }
-
-            }
-
         }
 
         public void TrackLocationProcessed([NotNull] Location location)

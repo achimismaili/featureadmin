@@ -16,8 +16,7 @@ using FeatureAdmin.Repository;
 namespace FeatureAdmin.Actors
 {
     public class TaskManagerActor : ReceiveActor,
-                Caliburn.Micro.IHandle<LoadTask>,
-        Caliburn.Micro.IHandle<ClearItemsReady>
+                Caliburn.Micro.IHandle<LoadTask>
     {
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IEventAggregator eventAggregator;
@@ -33,18 +32,6 @@ namespace FeatureAdmin.Actors
 
             Receive<LoadTask>(message => Handle(message));
         }
-
-        /// <summary>
-        /// Forward message from Caliburn to akka task actor
-        /// </summary>
-        /// <param name="message"></param>
-        public void Handle(ClearItemsReady message)
-        {
-            var taskActor = taskActors[message.TaskId];
-
-            taskActor.Tell(message);
-        }
-
 
         /// <summary>
         /// send load task to load task actor

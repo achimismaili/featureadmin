@@ -10,7 +10,7 @@ using FeatureAdmin.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : BaseItemViewModel<T>, IHandle<SetSearchFilter<T>> where T : class, IBaseItem
+    public abstract class BaseListViewModel<T> : BaseItemViewModel<T>, IHandle<ProgressMessage>, IHandle<SetSearchFilter<T>> where T : class, IBaseItem
     {
 
         protected DateTime lastUpdateInitiatedSearch;
@@ -81,12 +81,19 @@ namespace FeatureAdmin.ViewModels
 
         }
 
-        public abstract void SelectionChanged();
-
-        protected void FilterResults()
+        /// <summary>
+        /// whenever Progress is made, update the search results
+        /// </summary>
+        /// <param name="message"></param>
+        public void Handle(ProgressMessage message)
         {
+            FilterResults();
+        }
 
-            var searchResult = repository.Search<T>()
+        protected abstract void FilterResults();
+
+        protected void ShowResults(IEnumerable<T> searchResult)
+        {
             var activeItemCache = ActiveItem;
 
             Items.Clear();
@@ -105,11 +112,8 @@ namespace FeatureAdmin.ViewModels
             }
         }
 
-        // Searching for results can be different in derived types
-        protected abstract Func<T, bool> GetSearchForGuid(Guid guid);
+        public abstract void SelectionChanged();
 
-        // Searching for results can be different in derived types
-        protected abstract Func<T, bool> GetSearchForString(string searchString);
 
         protected virtual void SelectionChangedBase()
         {
