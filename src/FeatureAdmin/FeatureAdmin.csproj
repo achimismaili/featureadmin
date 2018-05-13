@@ -39,7 +39,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SP2013</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DEMO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -156,8 +156,8 @@
     <Compile Include="Actors\FeatureDefinitionActor.cs" />
     <Compile Include="Actors\LocationActor.cs" />
     <Compile Include="Actors\TaskManagerActor.cs" />
-    <Compile Include="Actors\Tasks\LoadTaskActor.cs" />
     <Compile Include="Actors\Tasks\BaseTaskActor.cs" />
+    <Compile Include="Actors\Tasks\LoadTaskActor.cs" />
     <Compile Include="Caliburn.Metro.Autofac\AutofacBootstrapper.cs" />
     <Compile Include="Caliburn.Metro.Autofac\CaliburnMetroAutofacBootstrapper.cs" />
     <Compile Include="Common\Constants.cs" />
@@ -319,6 +319,10 @@
     <ProjectReference Include="..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
       <Project>{4cec2e98-5a3b-4793-b606-a5250d046f02}</Project>
       <Name>FeatureAdmin.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FeatureAdmin.Repository\FeatureAdmin.Repository.csproj">
+      <Project>{a9554c65-3bcc-4f78-9349-a63c737a19bd}</Project>
+      <Name>FeatureAdmin.Repository</Name>
     </ProjectReference>
     <ProjectReference Include="..\FeatureAdmin.SampleData\FeatureAdmin.SampleData.csproj">
       <Project>{de7fac0c-782b-4ba1-b1b8-3101955fc888}</Project>

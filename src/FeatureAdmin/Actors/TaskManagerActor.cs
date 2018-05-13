@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using FeatureAdmin.Core;
+using FeatureAdmin.Repository;
 
 namespace FeatureAdmin.Actors
 {
@@ -21,12 +22,13 @@ namespace FeatureAdmin.Actors
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IEventAggregator eventAggregator;
         private readonly Dictionary<Guid, IActorRef> taskActors;
+        private readonly IFeatureRepository repository;
 
-        public TaskManagerActor(IEventAggregator eventAggregator)
+        public TaskManagerActor(IEventAggregator eventAggregator, IFeatureRepository repository)
         {
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
-
+            this.repository = repository;
             taskActors = new Dictionary<Guid, IActorRef>();
 
             Receive<LoadTask>(message => Handle(message));
@@ -56,7 +58,7 @@ namespace FeatureAdmin.Actors
             Guid newId = Guid.NewGuid();
 
             IActorRef newTaskActor =
-            ActorSystemReference.ActorSystem.ActorOf(LoadTaskActor.Props(eventAggregator,
+            ActorSystemReference.ActorSystem.ActorOf(LoadTaskActor.Props(eventAggregator, repository,
            message.Title, newId, message.StartLocation), newId.ToString());
 
            taskActors.Add(newId, newTaskActor);

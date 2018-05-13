@@ -1,17 +1,18 @@
 ﻿using Autofac;
 using Caliburn.Metro.Autofac;
 using Caliburn.Micro;
-using FeatureAdmin.Core.Services;
 using FeatureAdmin.ViewModels;
 
 namespace FeatureAdmin
 {
-    public class AppBootstrapper : CaliburnMetroAutofacBootstrapper<ViewModels.AppViewModel>
+    public class AppBootstrapper : CaliburnMetroAutofacBootstrapper<AppViewModel>
     {
         protected override void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<AppWindowManager>().As<IWindowManager>().SingleInstance();
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
+
+            builder.RegisterType<Repository.FeatureRepository>().As<Repository.IFeatureRepository>().SingleInstance();
 
             var assembly = typeof(AppViewModel).Assembly;
             builder.RegisterAssemblyTypes(assembly)
@@ -19,7 +20,6 @@ namespace FeatureAdmin
                 .AsSelf()
                 .SingleInstance();
 
-            //builder.RegisterType<LocationListViewModel>().SingleInstance();
             //builder.RegisterType<FeatureDefinitionListViewModel>().SingleInstance();
             // builder.RegisterType<NavigationBarViewModel>().InstancePerRequest();
         }

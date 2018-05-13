@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System;
 using FeatureAdmin.Core.Models.Enums;
+using FeatureAdmin.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
@@ -17,7 +18,9 @@ namespace FeatureAdmin.ViewModels
 
         private Scope? selectedScopeFilter;
 
-        public BaseListViewModel(IEventAggregator eventAggregator) :
+        protected IFeatureRepository repository;
+
+        public BaseListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository) :
             base(eventAggregator)
         {
             ScopeFilters = new ObservableCollection<Scope>(Common.Constants.Search.ScopeFilterList);
@@ -27,6 +30,8 @@ namespace FeatureAdmin.ViewModels
 
             // https://github.com/Fody/PropertyChanged/issues/269
             ActivationProcessed += (s, e) => SelectionChanged();
+
+            this.repository = repository;
         }
 
         public bool CanFilterThis { get; protected set; }

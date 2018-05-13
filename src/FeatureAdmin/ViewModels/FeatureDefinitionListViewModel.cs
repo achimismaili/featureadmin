@@ -6,13 +6,14 @@ using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core;
 using FeatureAdmin.Core.Factories;
 using FeatureAdmin.Messages;
+using FeatureAdmin.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
     public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>, IHandle<FarmFeatureDefinitionsLoaded>, IHandle<LocationsLoaded>, IHandle<ItemSelected<Location>>
     {
-        public FeatureDefinitionListViewModel(IEventAggregator eventAggregator)
-         : base(eventAggregator)
+        public FeatureDefinitionListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
+         : base(eventAggregator, repository)
         {
             SelectionChanged();
         }
@@ -30,10 +31,11 @@ namespace FeatureAdmin.ViewModels
 
         public void Handle([NotNull] FarmFeatureDefinitionsLoaded message)
         {
-            foreach (FeatureDefinition fd in message.FarmFeatureDefinitions)
+            foreach (FeatureDefinition fd in repository.SearchFeatureDefinitions(""))
             {
                 allItems.Add(fd);
             }
+            
         }
 
         public void Handle([NotNull] LocationsLoaded message)
@@ -41,6 +43,29 @@ namespace FeatureAdmin.ViewModels
             allItems.AddActivatedFeatures(message.LoadedFeatures);
 
             FilterResults();
+        }
+
+        protected new void FilterResults()
+        {
+            System.Collections.Generic.IEnumerable<FeatureDefinition> searchResult = repository.SearchFeatureDefinitions("");
+
+            
+            var activeItemCache = ActiveItem;
+
+            Items.Clear();
+            Items.AddRange(searchResult);
+
+            if (activeItemCache != null)
+            {
+                if (Items.Contains(activeItemCache))
+                {
+                    ActivateItem(activeItemCache);
+                }
+                else
+                {
+                    SelectionChanged();
+                }
+            }
         }
 
         public void Handle([NotNull] ItemSelected<Location> message)

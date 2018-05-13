@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace FeatureAdmin.Core.Models
 {
     [Equals]
+    [Serializable]
     public class FeatureDefinition : BaseItem
     {
         public FeatureDefinition(

@@ -3,6 +3,7 @@ using FeatureAdmin.Core;
 using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
+using FeatureAdmin.Repository;
 using System;
 using System.Linq;
 
@@ -10,8 +11,8 @@ namespace FeatureAdmin.ViewModels
 {
     public class LocationListViewModel : BaseListViewModel<Location>, IHandle<LocationsLoaded>, IHandle<ItemSelected<FeatureDefinition>>
     {
-        public LocationListViewModel(IEventAggregator eventAggregator)
-            : base(eventAggregator)
+        public LocationListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
+            : base(eventAggregator, repository)
         {
             SelectionChanged();
         }

@@ -3,6 +3,7 @@ using Caliburn.Micro;
 using FeatureAdmin.Actors;
 using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Messages;
+using FeatureAdmin.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
@@ -14,10 +15,11 @@ namespace FeatureAdmin.ViewModels
         private readonly IEventAggregator eventAggregator;
 
         private readonly IWindowManager windowManager;
-
         private Akka.Actor.IActorRef taskManagerActorRef;
+        IFeatureRepository repository;
+        
         // private IActorRef viewModelSyncActorRef;
-        public AppViewModel(IWindowManager windowManager, IEventAggregator eventAggregator)
+        public AppViewModel(IWindowManager windowManager, IEventAggregator eventAggregator, IFeatureRepository repository)
         {
             DisplayName = "Feature Admin 3 for SharePoint 2013";
 
@@ -26,12 +28,13 @@ namespace FeatureAdmin.ViewModels
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
 
+            this.repository = repository;
 
             StatusBarVm = new StatusBarViewModel(eventAggregator);
 
-            FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator);
+            FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator, repository);
 
-            LocationListVm = new LocationListViewModel(eventAggregator);
+            LocationListVm = new LocationListViewModel(eventAggregator, repository);
 
             ActivatedFeatureVm = new ActivatedFeatureViewModel(eventAggregator);
 
@@ -60,14 +63,12 @@ namespace FeatureAdmin.ViewModels
 
         public void InitializeFarmLoad()
         {
-            // Commented out, because calling via Caliburn Eventbus is too early on application start ... 
-            // would have to find a way to verify, the actor is already listening at that time ...
-            // TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleInitialLoad);
+            // repository.Reload(Common.Constants.Tasks.TaskTitleInitialLoad);
 
             taskManagerActorRef.Tell(
-                new LoadTask(Common.Constants.Tasks.TaskTitleInitialLoad,
-                Core.Factories.LocationFactory.GetDummyFarmForLoadCommand())
-                );
+               new LoadTask(Common.Constants.Tasks.TaskTitleInitialLoad,
+               Core.Factories.LocationFactory.GetDummyFarmForLoadCommand())
+               );
         }
 
         public void OpenWindow(DetailViewModel viewModel)
@@ -101,7 +102,7 @@ namespace FeatureAdmin.ViewModels
 
         private void InitializeActors()
         {
-            taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Akka.Actor.Props.Create(() => new TaskManagerActor(eventAggregator)));
+            taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Akka.Actor.Props.Create(() => new TaskManagerActor(eventAggregator, repository)));
         }
         private void TriggerFarmLoadTask(string taskTitle)
         {

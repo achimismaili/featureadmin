@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace FeatureAdmin.Core.Models
 {
+    [Serializable]
     public class Location : BaseItem
     {
         

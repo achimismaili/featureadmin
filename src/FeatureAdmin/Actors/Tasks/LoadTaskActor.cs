@@ -7,6 +7,7 @@ using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models.Enums;
 using FeatureAdmin.Messages;
+using FeatureAdmin.Repository;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,14 +26,15 @@ namespace FeatureAdmin.Core.Models.Tasks
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IActorRef featureDefinitionActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
-        
+        private readonly IFeatureRepository repository;
         private FarmFeatureDefinitionsLoaded tempFeatureDefinitionStore = null;
         private List<LocationsLoaded> tempLocationStore = new List<LocationsLoaded>();
-        public LoadTaskActor(IEventAggregator eventAggregator, string title, Guid id, Location startLocation)
+        public LoadTaskActor(IEventAggregator eventAggregator, IFeatureRepository repository,
+            string title, Guid id, Location startLocation)
             : base(eventAggregator, title, id)
         {
             locationActors = new Dictionary<Guid, IActorRef>();
-
+            this.repository = repository;
             featureDefinitionActor =
                    Context.ActorOf(Context.DI().Props<FeatureDefinitionActor>());
 
@@ -103,9 +105,10 @@ namespace FeatureAdmin.Core.Models.Tasks
         /// <remarks>
         /// see also https://getakka.net/articles/actors/receive-actor-api.html
         /// </remarks>
-        public static Props Props(IEventAggregator eventAggregator, string title, Guid id, Location startLocation)
+        public static Props Props(IEventAggregator eventAggregator, IFeatureRepository repository,
+            string title, Guid id, Location startLocation)
         {
-            return Akka.Actor.Props.Create(() => new LoadTaskActor(eventAggregator, title, id, startLocation));
+            return Akka.Actor.Props.Create(() => new LoadTaskActor(eventAggregator, repository, title, id, startLocation));
         }
 
         public void HandleClearItemsReady(ClearItemsReady message)
@@ -191,6 +194,9 @@ namespace FeatureAdmin.Core.Models.Tasks
 
                 if (Preparations.Completed)
                 {
+                    repository.AddFeatureDefinitions(message.FarmFeatureDefinitions);
+
+
                     eventAggregator.PublishOnUIThread(message);
 
                     // locations already loaded? 
