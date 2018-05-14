@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace FeatureAdmin.Repository
 {
+    [Serializable]
     public class FeatureModel : Model 
     {
         private List<ActivatedFeature> ActivatedFeatures;
@@ -20,6 +21,15 @@ namespace FeatureAdmin.Repository
             Locations = new Dictionary<Guid, Location>();
         }
 
+        public void AddActivatedFeatures(IEnumerable<ActivatedFeature> activatedFeatures)
+        {
+            if (activatedFeatures != null)
+            {
+                ActivatedFeatures.AddRange(activatedFeatures);
+
+            }
+        }
+
         public void AddFeatureDefinitions(IEnumerable<FeatureDefinition> farmFeatureDefinitions)
         {
             if (farmFeatureDefinitions != null)
@@ -28,7 +38,6 @@ namespace FeatureAdmin.Repository
 
             }
         }
-
         public void Clear()
         {
             ActivatedFeatures.Clear();
@@ -55,14 +64,14 @@ namespace FeatureAdmin.Repository
                 {
                     searchResult = FeatureDefinitions.Where(
                         fd => fd.Id == idGuid
-                       || fd.ActivatedFeatures.Any(f => f.LocationId == idGuid));
+                       || fd.ActivatedFeatures.Any(f => f.LocationId == idGuid)).ToArray();
                 }
                 else
                 {
                     var lowerCaseSearchInput = searchInput.ToLower();
                     searchResult =
                        FeatureDefinitions.Where(fd => fd.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
-                            fd.Title.ToLower().Contains(lowerCaseSearchInput));
+                            fd.Title.ToLower().Contains(lowerCaseSearchInput)).ToArray();
                 }
 
             }
@@ -70,12 +79,19 @@ namespace FeatureAdmin.Repository
             if (selectedScopeFilter != null)
             {
                 searchResult =
-                    searchResult.Where(l => l.Scope == selectedScopeFilter.Value);
+                    searchResult.Where(l => l.Scope == selectedScopeFilter.Value).ToArray();
             }
 
-            return searchResult;
+            return searchResult.ToArray();
         }
 
+        internal void AddLocations(IEnumerable<Location> locations)
+        {
+            if (locations != null)
+            {
+                Locations = Locations.Concat(locations.ToDictionary(l => l.Id)).ToDictionary(l => l.Key, l => l.Value); ;
+            }
+        }
         internal IEnumerable<Location> SearchLocations(string searchInput, Scope? selectedScopeFilter)
         {
             IEnumerable<Location> searchResult;
@@ -97,7 +113,7 @@ namespace FeatureAdmin.Repository
                         l => l.Key == idGuid
                        || l.Value.Parent == idGuid
                        || l.Value.ActivatedFeatures.Any(f => f.FeatureId == idGuid)
-                       ).Select(l => l.Value);
+                       ).Select(l => l.Value).ToArray();
                 }
                 else
                 {
@@ -105,7 +121,7 @@ namespace FeatureAdmin.Repository
                     searchResult = Locations.Values.Where(
                        l => l.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
                             l.Url.ToLower().Contains(lowerCaseSearchInput)
-                        );
+                        ).ToArray();
                 }
 
             }
@@ -113,10 +129,10 @@ namespace FeatureAdmin.Repository
             if (selectedScopeFilter != null)
             {
                 searchResult =
-                    searchResult.Where(l => l.Scope == selectedScopeFilter.Value);
+                    searchResult.Where(l => l.Scope == selectedScopeFilter.Value).ToArray();
             }
 
-            return searchResult;
+            return searchResult.ToArray();
         }
     }
 }

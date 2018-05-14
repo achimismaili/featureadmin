@@ -18,8 +18,19 @@ namespace FeatureAdmin.SampleData
             fdList.AddRange(GetSiteWorkflowFeatureDefinitions());
             fdList.AddRange(GetWebAppFeatureDefinitions());
             fdList.AddRange(GetWebFeatureDefinitions());
+            fdList.AddRange(GetSandBoxFeatureDefinitions());
 
             return fdList;
+        }
+
+        public static List<FeatureDefinition> GetSandBoxFeatureDefinitions()
+        {
+            List<FeatureDefinition> sandBoxFeatureDefinitions = new List<FeatureDefinition>();
+
+            sandBoxFeatureDefinitions.Add(FeatureDefinitionFactory.GetFeatureDefinition(
+                new Guid("001f4bd7-746c-403c-aa09-a6cc43de7942"), 15, "Sandbox Definition", "Sandbox Definition", false, "Sandbox Definition", new Dictionary<string, string>() { { "propKey1", "property value 1" }, { "propKey2", "property value 2" } }, Core.Models.Enums.Scope.Farm, "PublishingStapling", Guid.Empty, "4", new Version("15.0.0.0"), "https://www.featureadmin.com/"));
+
+            return sandBoxFeatureDefinitions;
         }
 
         public static List<FeatureDefinition> GetFarmFeatureDefinitions()

@@ -61,9 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Constants.cs" />
-    <Compile Include="Factories\FeatureDefinitionFactoryTests.cs" />
     <Compile Include="Messages\ItemUpdatedTests.cs" />
-    <Compile Include="Messages\Tasks\LocationsLoadedTests.cs" />
     <Compile Include="Models\FeatureDefinitionEqualTests.cs" />
     <Compile Include="Models\ActivatedFeatureEqualTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,6 +85,10 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Factories\" />
+    <Folder Include="Messages\Tasks\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

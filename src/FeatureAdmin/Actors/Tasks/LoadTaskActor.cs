@@ -19,7 +19,6 @@ namespace FeatureAdmin.Core.Models.Tasks
     {
         public ProgressModule Farm;
         public ProgressModule FarmFeatureDefinitions;
-        public ProgressModule Preparations;
         public ProgressModule SitesAndWebs;
         public ProgressModule WebApps;
 
@@ -27,8 +26,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         private readonly IActorRef featureDefinitionActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
         private readonly IFeatureRepository repository;
-        private FarmFeatureDefinitionsLoaded tempFeatureDefinitionStore = null;
-        private List<LocationsLoaded> tempLocationStore = new List<LocationsLoaded>();
+
         public LoadTaskActor(IEventAggregator eventAggregator, IFeatureRepository repository,
             string title, Guid id, Location startLocation)
             : base(eventAggregator, title, id)
@@ -41,7 +39,7 @@ namespace FeatureAdmin.Core.Models.Tasks
        
             FarmFeatureDefinitions = new ProgressModule(
                 5d / 100,
-                Preparations.MaxCumulatedQuota,
+                0d,
                 1);
 
             Farm = new ProgressModule(
@@ -82,7 +80,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             get
             {
-                return Preparations.OuotaPercentage + 
+                return 
                     FarmFeatureDefinitions.OuotaPercentage +
                     Farm.OuotaPercentage +
                     WebApps.OuotaPercentage +
@@ -181,15 +179,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                 }
             }
 
-            if (Preparations.Completed && FarmFeatureDefinitions.Completed)
-            {
-                // publish locations to wpf
-                eventAggregator.PublishOnUIThread(message);
-            }
-            else
-            {
-                tempLocationStore.Add(message);
-            }
+            repository.AddLoadedLocations(message);
 
             SendProgress();
         }

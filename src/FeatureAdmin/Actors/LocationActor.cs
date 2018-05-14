@@ -28,25 +28,20 @@ namespace FeatureAdmin.Actors
             // first, generate Location from SharePoint object
             _log.Debug("Entered LocationActor-LookupLocation");
 
-            var locations = new List<Location>();
-
             var location = message.Location;
 
-            Location parent;
+            Core.Messages.Tasks.LocationsLoaded loadedMessage;
 
             if (location.Scope == Core.Models.Enums.Scope.Farm)
             {
-                locations.AddRange(dataService.LoadFarmAndWebApps(out parent));
+                loadedMessage = dataService.LoadFarmAndWebApps();
             }
             else
             {
-                locations.AddRange(dataService.LoadNonFarmLocationAndChildren(location, out parent));
+                loadedMessage = dataService.LoadNonFarmLocationAndChildren(location);
             }
 
-            Sender.Tell(new Core.Messages.Tasks.LocationsLoaded(
-                                message.TaskId,
-                                parent,
-                                locations));
+            Sender.Tell(loadedMessage);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Services;
 
@@ -14,66 +15,104 @@ namespace FeatureAdmin.Backends.Demo.Services
         {
             featuredefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions();
             demoLocations = SampleData.SampleLocationHierarchy.GetAllLocations();
-
+            demoActivatedFeatures = SampleData.SampleLocationHierarchy.GetAllActivatedFeatures(demoLocations);
         }
 
         private static IEnumerable<FeatureDefinition> featuredefinitions;
 
         private static IEnumerable<Location> demoLocations;
 
+        private static IEnumerable<ActivatedFeature> demoActivatedFeatures;
+
         public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
         {
             return featuredefinitions;
         }
 
-        
 
-        private static IEnumerable<Location> loadChildLocations(Location location)
+
+        private static LocationsLoaded loadLocations(Location location)
         {
+            List<ActivatedFeature> activatedFeatures = new List<ActivatedFeature>();
+            List<FeatureDefinition> definitions = new List<FeatureDefinition>();
             if (location == null)
             {
                 return null;
             }
-            var children = demoLocations.Where(f => f.Parent == location.Id).AsEnumerable<Location>();
 
-            return children;
-        }
+            List<Location> children = new List<Location>();
 
-        public IEnumerable<Location> LoadNonFarmLocationAndChildren(Location location, out Location parent)
-        {
-            var locations = new List<Location>();
-
-            parent = location;
-
-            var children = loadChildLocations(location);
-
-            if (children != null)
+            //if farm is loaded, set loaded farm as parent and add farm as children, too
+            if (location.Scope == Core.Models.Enums.Scope.Farm)
             {
-                locations.AddRange(children);
-
-                if (location.Scope == Core.Models.Enums.Scope.WebApplication)
-                {
-                    foreach (Location siteCollection in children)
-                    {
-                        locations.AddRange(loadChildLocations(siteCollection));
-                    }
-                }
+                location = demoLocations.Where(f => f.Scope == Core.Models.Enums.Scope.Farm).FirstOrDefault();
+                children.Add(location);
             }
-            return locations;
+
+            children.AddRange(demoLocations.Where(f => f.Parent == location.Id).AsEnumerable<Location>());
+
+
+            foreach (Location l in children)
+            {
+                var features = demoActivatedFeatures.Where(f => f.LocationId == location.Id).AsEnumerable<ActivatedFeature>();
+                activatedFeatures.AddRange(features);
+                var defs = featuredefinitions.Where(f => f.SandBoxedSolutionLocation == location.Url).AsEnumerable<FeatureDefinition>();
+                definitions.AddRange(defs);
+            }
+
+
+            var loadedMessage = new LocationsLoaded(location, children, activatedFeatures, definitions);
+
+            return loadedMessage;
         }
 
-        public IEnumerable<Location> LoadFarmAndWebApps(out Location farm)
+        public LocationsLoaded LoadNonFarmLocationAndChildren(Location location)
         {
-            var locations = new List<Location>();
 
-            farm = demoLocations.Where(f => f.Scope == Core.Models.Enums.Scope.Farm).FirstOrDefault();
 
-            // in this set, parent is included in result
-            locations.Add(farm);
+            var initialLoaded = loadLocations(location);
 
-            locations.AddRange(loadChildLocations(farm));
 
-            return locations;
+            if (location.Scope == Core.Models.Enums.Scope.WebApplication && initialLoaded.ChildLocations.Count() > 0)
+            {
+
+                List<FeatureDefinition> featureDefinitions = new List<FeatureDefinition>(initialLoaded.Definitions);
+
+                List<Location> locations = new List<Location>(initialLoaded.ChildLocations);
+
+                List<ActivatedFeature> features = new List<ActivatedFeature>(initialLoaded.ActivatedFeatures);
+
+
+
+                foreach (Location siteCollection in initialLoaded.ChildLocations)
+                {
+                    var child = loadLocations(siteCollection);
+
+                    featureDefinitions.AddRange(child.Definitions);
+                    locations.AddRange(child.ChildLocations);
+                    features.AddRange(child.ActivatedFeatures);
+                }
+
+
+                var loadedMessage = new LocationsLoaded(
+                    location,
+                    locations,
+                    features,
+                    featuredefinitions
+                    );
+
+                return loadedMessage;
+            }
+            else
+            {
+                return initialLoaded;
+            }
+
+        }
+
+        public LocationsLoaded LoadFarmAndWebApps()
+        {
+            return loadLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
         }
 
         public int FeatureToggle(Location location, FeatureDefinition feature, bool add, bool force)

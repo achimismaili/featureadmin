@@ -43,7 +43,7 @@ namespace FeatureAdmin.Core.Factories
              Guid id,
              Scope scope,
              Version version,
-             string definitionInstallationScope
+             string sandBoxedSolutionLocation
             )
         {
             var featureDefinition = new FeatureDefinition(id,
@@ -58,7 +58,7 @@ namespace FeatureAdmin.Core.Factories
                 Guid.Empty,
                 "n/a",
                 version,
-                definitionInstallationScope);
+                sandBoxedSolutionLocation);
 
             return featureDefinition;
         }
@@ -77,7 +77,7 @@ namespace FeatureAdmin.Core.Factories
                         activatedFeature.FeatureId,
                         location.Scope,
                         activatedFeature.Version,
-                        activatedFeature.DefinitionInstallationScope
+                        activatedFeature.SandBoxedSolutionLocation
                       );
                 }
                 else
@@ -109,7 +109,7 @@ namespace FeatureAdmin.Core.Factories
              Guid solutionId,
              string uIVersion,
              Version version,
-             string definitionInstallationScope = "Farm"
+             string sandBoxedSolutionLocation = null
             )
         {
             var featureDefinition = new FeatureDefinition(
@@ -125,7 +125,7 @@ namespace FeatureAdmin.Core.Factories
                 solutionId,
                 uIVersion,
                 version,
-                definitionInstallationScope);
+                sandBoxedSolutionLocation);
             return featureDefinition;
         }
     }

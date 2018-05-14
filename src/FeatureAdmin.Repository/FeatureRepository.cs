@@ -27,6 +27,18 @@ namespace FeatureAdmin.Repository
             store.AddFeatureDefinitions(featureDefinitions);
         }
 
+        //public void AddActivatedFeatures(IEnumerable<ActivatedFeature> activatedFeatures)
+        //{
+        //    store.AddActivatedFeatures(activatedFeatures);
+        //}
+
+        public void AddLoadedLocations(LocationsLoaded message)
+        {
+            store.AddLocations(message.ChildLocations);
+            store.AddActivatedFeatures(message.ActivatedFeatures);
+            store.AddFeatureDefinitions(message.Definitions);
+        }
+
         /// <summary>
         /// Initial load and also reload of all feature definitions, locations and activated features
         /// </summary>

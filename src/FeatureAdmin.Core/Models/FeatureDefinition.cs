@@ -21,7 +21,7 @@ namespace FeatureAdmin.Core.Models
              Guid solutionId,
              string uIVersion,
              Version version,
-            string definitionInstallationScope = Common.Constants.Defaults.DefinitionInstallationScopeFarm
+            string sandBoxedSolutionLocation = null
             ) : base()
         {
             Id = id;
@@ -36,8 +36,17 @@ namespace FeatureAdmin.Core.Models
             SolutionId = solutionId;
             UIVersion = uIVersion == null ? string.Empty : uIVersion;
             Version = version;
-            DefinitionInstallationScope = definitionInstallationScope;
+            SandBoxedSolutionLocation = sandBoxedSolutionLocation;
+
+            UniqueIdentifier = string.Format(
+                "{0}-{1}{2}", 
+                id.ToString(), 
+                compatibilityLevel, 
+                sandBoxedSolutionLocation == null ? string.Empty : "-" + sandBoxedSolutionLocation
+                );
         }
+
+        public string UniqueIdentifier { get; private set; }
 
         public int CompatibilityLevel { get; private set; }
         [IgnoreDuringEquals]
@@ -54,13 +63,13 @@ namespace FeatureAdmin.Core.Models
         public bool Hidden { get; private set; }
 
         /// <summary>
-        /// The Scope, in which this Definition is installed
+        /// The location url, if this is a sandboxed solution feature definition
         /// </summary>
         /// <remarks>
-        /// All Farm Solutions have Scope FARM
-        /// Sandboxed Solutions have Scope Site
+        /// All Farm Solutions have value null
+        /// Sandboxed Solutions have the url
         /// </remarks>
-        public string DefinitionInstallationScope { get; private set; }
+        public string SandBoxedSolutionLocation { get; private set; }
         
         public string Name { get; private set; }
         [IgnoreDuringEquals]
@@ -87,7 +96,7 @@ namespace FeatureAdmin.Core.Models
             propList.Add(new KeyValuePair<string, string>(nameof(SolutionId), SolutionId.ToString()));
             propList.Add(new KeyValuePair<string, string>(nameof(UIVersion), UIVersion.ToString()));
             propList.Add(new KeyValuePair<string, string>(nameof(Version), Version == null ? string.Empty : Version.ToString()));
-            propList.Add(new KeyValuePair<string, string>(nameof(DefinitionInstallationScope), DefinitionInstallationScope));
+            propList.Add(new KeyValuePair<string, string>(nameof(SandBoxedSolutionLocation), SandBoxedSolutionLocation ));
             propList.Add(new KeyValuePair<string, string>(nameof(Properties), Common.StringUtilities.PropertiesToString(Properties)));
 
             propList.AddRange(GetAsPropertyList(true));

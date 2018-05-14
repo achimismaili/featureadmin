@@ -29,7 +29,7 @@ namespace FeatureAdmin.Core.Tests.Factories
 
             var locations = TestLocations.GetLocations(lIds, fIds);
 
-            Loaded3LocationsWithFirst4ActivatedFeaturesEach = new LocationsLoaded(Guid.NewGuid(), null, locations);
+            Loaded3LocationsWithFirst4ActivatedFeaturesEach = new LocationsLoaded(Guid.NewGuid(), null, locations, null, null);
         }
 
 
@@ -50,7 +50,7 @@ namespace FeatureAdmin.Core.Tests.Factories
 
             // Act
 
-            featureDefinitions.AddActivatedFeatures(Loaded3LocationsWithFirst4ActivatedFeaturesEach.LoadedFeatures);
+            featureDefinitions.AddActivatedFeatures(Loaded3LocationsWithFirst4ActivatedFeaturesEach.ActivatedFeatures);
 
             // Assert
 
@@ -84,7 +84,7 @@ namespace FeatureAdmin.Core.Tests.Factories
 
             // Act
 
-            featureDefinitions.AddActivatedFeatures(Loaded3LocationsWithFirst4ActivatedFeaturesEach.LoadedFeatures);
+            featureDefinitions.AddActivatedFeatures(Loaded3LocationsWithFirst4ActivatedFeaturesEach.ActivatedFeatures);
 
             // Assert
 

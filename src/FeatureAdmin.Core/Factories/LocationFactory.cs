@@ -10,25 +10,24 @@ namespace FeatureAdmin.Core.Factories
     {       
         public static Location GetDummyFarmForLoadCommand()
         {
-            var farmDummy = GetFarm(Guid.Empty, new List<ActivatedFeature>(),0);
+            var farmDummy = GetFarm(Guid.Empty,0);
             return farmDummy;
         }
-        public static Location GetFarm(Guid farmId, IEnumerable<ActivatedFeature> activatedFeatures, int childCount)
+        public static Location GetFarm(Guid farmId, int childCount)
         {
             var location = new Location(farmId,
                "Farm",
                Guid.Empty,
                Scope.Farm,
                "Farm",
-               activatedFeatures,
                childCount);
 
             return location;
         }
 
-        public static Location GetLocation(Guid id, string displayName, Guid parent, Scope scope, string url, IEnumerable<ActivatedFeature> activatedFeatures, int childCount)
+        public static Location GetLocation(Guid id, string displayName, Guid parent, Scope scope, string url, int childCount)
         {
-            var location = new Location(id, displayName, parent, scope, url, activatedFeatures, childCount);
+            var location = new Location(id, displayName, parent, scope, url, childCount);
             return location;
         }
 

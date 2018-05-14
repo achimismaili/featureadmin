@@ -1,5 +1,8 @@
-﻿namespace FeatureAdmin.Core.Models.Enums
+﻿using System;
+
+namespace FeatureAdmin.Core.Models.Enums
 {
+    [Serializable]
     public enum Scope
     {
         Web = 10,

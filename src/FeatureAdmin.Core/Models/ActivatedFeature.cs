@@ -32,7 +32,7 @@ namespace FeatureAdmin.Core.Models
                 Dictionary<string, string> properties,
                 DateTime timeActivated,
                 Version version,
-                string definitionInstallationScope = Common.Constants.Defaults.DefinitionInstallationScopeFarm
+                string sandBoxedSolutionLocation = null
             )
         {
             FeatureId = featureId;
@@ -42,7 +42,7 @@ namespace FeatureAdmin.Core.Models
             Properties = properties;
             TimeActivated = timeActivated;
             Version = version;
-            DefinitionInstallationScope = definitionInstallationScope;
+            SandBoxedSolutionLocation = sandBoxedSolutionLocation;
         }
 
 
@@ -54,10 +54,10 @@ namespace FeatureAdmin.Core.Models
 
         [IgnoreDuringEquals]
         /// <summary>
-        /// The scope, where the definition is installed
-        /// Url in case of Site, otherwise "Farm"
+        /// The location, where the definition is installed in case of sandboxed solutions
+        /// Url in case of Site, otherwise null
         /// </summary>
-        public string DefinitionInstallationScope { get; private set; }
+        public string SandBoxedSolutionLocation { get; private set; }
         [IgnoreDuringEquals]
         public bool Faulty { get; private set; }
         [IgnoreDuringEquals]
@@ -79,7 +79,7 @@ namespace FeatureAdmin.Core.Models
                 new KeyValuePair<string, string>(nameof(TimeActivated),TimeActivated.ToString()),
                 new KeyValuePair<string, string>(nameof(Version),Version.ToString()),
                 new KeyValuePair<string, string>(nameof(Faulty),Faulty.ToString()),
-                new KeyValuePair<string, string>(nameof(DefinitionInstallationScope), DefinitionInstallationScope),
+                new KeyValuePair<string, string>(nameof(SandBoxedSolutionLocation), SandBoxedSolutionLocation),
             new KeyValuePair<string, string>(nameof(Properties), Common.StringUtilities.PropertiesToString(Properties))
         };
         }
