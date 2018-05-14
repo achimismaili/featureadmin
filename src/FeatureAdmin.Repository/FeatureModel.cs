@@ -64,14 +64,14 @@ namespace FeatureAdmin.Repository
                 {
                     searchResult = FeatureDefinitions.Where(
                         fd => fd.Id == idGuid
-                       || fd.ActivatedFeatures.Any(f => f.LocationId == idGuid)).ToArray();
+                       || fd.ActivatedFeatures.Any(f => f.LocationId == idGuid));
                 }
                 else
                 {
                     var lowerCaseSearchInput = searchInput.ToLower();
                     searchResult =
                        FeatureDefinitions.Where(fd => fd.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
-                            fd.Title.ToLower().Contains(lowerCaseSearchInput)).ToArray();
+                            fd.Title.ToLower().Contains(lowerCaseSearchInput));
                 }
 
             }
@@ -79,7 +79,7 @@ namespace FeatureAdmin.Repository
             if (selectedScopeFilter != null)
             {
                 searchResult =
-                    searchResult.Where(l => l.Scope == selectedScopeFilter.Value).ToArray();
+                    searchResult.Where(l => l.Scope == selectedScopeFilter.Value);
             }
 
             return searchResult.ToArray();
@@ -113,7 +113,7 @@ namespace FeatureAdmin.Repository
                         l => l.Key == idGuid
                        || l.Value.Parent == idGuid
                        || l.Value.ActivatedFeatures.Any(f => f.FeatureId == idGuid)
-                       ).Select(l => l.Value).ToArray();
+                       ).Select(l => l.Value);
                 }
                 else
                 {
@@ -121,7 +121,7 @@ namespace FeatureAdmin.Repository
                     searchResult = Locations.Values.Where(
                        l => l.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
                             l.Url.ToLower().Contains(lowerCaseSearchInput)
-                        ).ToArray();
+                        );
                 }
 
             }
@@ -129,7 +129,7 @@ namespace FeatureAdmin.Repository
             if (selectedScopeFilter != null)
             {
                 searchResult =
-                    searchResult.Where(l => l.Scope == selectedScopeFilter.Value).ToArray();
+                    searchResult.Where(l => l.Scope == selectedScopeFilter.Value);
             }
 
             return searchResult.ToArray();
