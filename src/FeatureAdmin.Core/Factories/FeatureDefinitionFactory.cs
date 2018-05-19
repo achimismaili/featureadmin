@@ -42,8 +42,7 @@ namespace FeatureAdmin.Core.Factories
         public static FeatureDefinition GetFaultyDefinition(
              Guid id,
              Scope scope,
-             Version version,
-             string sandBoxedSolutionLocation
+             Version version
             )
         {
             var featureDefinition = new FeatureDefinition(id,
@@ -57,8 +56,8 @@ namespace FeatureAdmin.Core.Factories
                 "Faulty, orphaned feature",
                 Guid.Empty,
                 "n/a",
-                version,
-                sandBoxedSolutionLocation);
+                version
+                );
 
             return featureDefinition;
         }
@@ -76,8 +75,7 @@ namespace FeatureAdmin.Core.Factories
                     fDef = FeatureDefinitionFactory.GetFaultyDefinition(
                         activatedFeature.FeatureId,
                         location.Scope,
-                        activatedFeature.Version,
-                        activatedFeature.SandBoxedSolutionLocation
+                        activatedFeature.Version
                       );
                 }
                 else
