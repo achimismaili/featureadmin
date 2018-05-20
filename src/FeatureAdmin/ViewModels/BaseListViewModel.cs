@@ -10,7 +10,7 @@ using FeatureAdmin.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : BaseItemViewModel<T>, IHandle<ProgressMessage>, IHandle<SetSearchFilter<T>> where T : class, IBaseItem
+    public abstract class BaseListViewModel<T> : BaseItemViewModel<T>, IHandle<ProgressMessage>, IHandle<SetSearchFilter<T>> where T : class
     {
 
         protected DateTime lastUpdateInitiatedSearch;
@@ -55,10 +55,17 @@ namespace FeatureAdmin.ViewModels
             }
         }
 
-        public void FilterThis()
+        public void FilterThis(Guid id)
         {
+            var searchQuery = string.Empty;
+
+            if (ActiveItem != null && id != null)
+            {
+                searchQuery = id.ToString();
+            }
+
             var searchFilter = new SetSearchFilter<T>(
-                ActiveItem == null ? string.Empty : ActiveItem.Id.ToString(), null);
+                searchQuery, null);
             Handle(searchFilter);
         }
 

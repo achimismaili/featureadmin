@@ -56,38 +56,41 @@ namespace FeatureAdmin.ViewModels
 
         protected void CheckIfCanToggleFeatures()
         {
-            bool canActivate = false;
-            bool canDeactivate = false;
-            bool canUpgrade = false;
+            throw new NotImplementedException();
 
-            if (ActiveItem != null && SelectedLocation != null)
-            {
-                // check for activated feature
-                if (ActiveItem.Scope == SelectedLocation.Scope)
-                {
-                    var isActivated = SelectedLocation.ActivatedFeatures.Any(f => f.FeatureId == ActiveItem.Id);
+            // to be refactored in repository
+            //bool canActivate = false;
+            //bool canDeactivate = false;
+            //bool canUpgrade = false;
 
-                    canActivate = !isActivated;
-                    canDeactivate = isActivated;
-                }
-                // check for bulk feature toggle
-                else if (ActiveItem.Scope < SelectedLocation.Scope && SelectedLocation.ChildCount > 0)
-                {
-                    canActivate = true;
-                    canDeactivate = ActiveItem.ActivatedFeatures.Count > 0;
-                }
-            }
+            //if (ActiveItem != null && SelectedLocation != null)
+            //{
+            //    // check for activated feature
+            //    if (ActiveItem.Scope == SelectedLocation.Scope)
+            //    {
+            //        var isActivated = SelectedLocation.ActivatedFeatures.Any(f => f.FeatureId == ActiveItem.Id);
 
-            // TODO: Implement check for can upgrade
+            //        canActivate = !isActivated;
+            //        canDeactivate = isActivated;
+            //    }
+            //    // check for bulk feature toggle
+            //    else if (ActiveItem.Scope < SelectedLocation.Scope && SelectedLocation.ChildCount > 0)
+            //    {
+            //        canActivate = true;
+            //        canDeactivate = ActiveItem.ActivatedFeatures.Count > 0;
+            //    }
+            //}
 
-            CanActivateFeatures = canActivate;
-            CanDeactivateFeatures = canDeactivate;
-            CanUpgradeFeatures = canUpgrade;
+            //// TODO: Implement check for can upgrade
 
-            // update ActivatedFeatureViewModel
-            eventAggregator.PublishOnUIThread(
-                 new Messages.ActionOptionsUpdate(canActivate, canDeactivate, canUpgrade)
-                 );
+            //CanActivateFeatures = canActivate;
+            //CanDeactivateFeatures = canDeactivate;
+            //CanUpgradeFeatures = canUpgrade;
+
+            //// update ActivatedFeatureViewModel
+            //eventAggregator.PublishOnUIThread(
+            //     new Messages.ActionOptionsUpdate(canActivate, canDeactivate, canUpgrade)
+            //     );
         }
     }
 }

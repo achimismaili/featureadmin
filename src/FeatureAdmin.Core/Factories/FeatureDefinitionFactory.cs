@@ -9,34 +9,34 @@ namespace FeatureAdmin.Core.Factories
 {
     public static class FeatureDefinitionFactory
     {
-        /// <summary>
-        /// Add activated features to list of definitions, when definition does not exist, it gets created
-        /// </summary>
-        /// <param name="existingFeatureDefinitions"></param>
-        /// <param name="featureDefinitionsToAdd"></param>
-        /// <returns></returns>
-        /// <remarks>see also https://stackoverflow.com/questions/12873855/c-sharp-groupby-linq-and-foreach
-        /// </remarks>
-        public static void AddActivatedFeatures(this ICollection<FeatureDefinition> existingFeatureDefinitions, [NotNull] IEnumerable<IGrouping<FeatureDefinition, ActivatedFeature>> featuresToAdd)
-        {
-            foreach (var featureDefinitionGroup in featuresToAdd)
-            {
-                // get feature definition from collection or add a new one if it does not exist yet
+        ///// <summary>
+        ///// Add activated features to list of definitions, when definition does not exist, it gets created
+        ///// </summary>
+        ///// <param name="existingFeatureDefinitions"></param>
+        ///// <param name="featureDefinitionsToAdd"></param>
+        ///// <returns></returns>
+        ///// <remarks>see also https://stackoverflow.com/questions/12873855/c-sharp-groupby-linq-and-foreach
+        ///// </remarks>
+        //public static void AddActivatedFeatures(this ICollection<FeatureDefinition> existingFeatureDefinitions, [NotNull] IEnumerable<IGrouping<FeatureDefinition, ActivatedFeature>> featuresToAdd)
+        //{
+        //    foreach (var featureDefinitionGroup in featuresToAdd)
+        //    {
+        //        // get feature definition from collection or add a new one if it does not exist yet
 
-                var definitionToAddFeaturesTo = existingFeatureDefinitions.FirstOrDefault(fd => fd.Equals(featureDefinitionGroup.Key));
+        //        var definitionToAddFeaturesTo = existingFeatureDefinitions.FirstOrDefault(fd => fd.Equals(featureDefinitionGroup.Key));
 
-                if (definitionToAddFeaturesTo == null)
-                {
-                    definitionToAddFeaturesTo = featureDefinitionGroup.Key;
-                    existingFeatureDefinitions.Add(definitionToAddFeaturesTo);
-                }
+        //        if (definitionToAddFeaturesTo == null)
+        //        {
+        //            definitionToAddFeaturesTo = featureDefinitionGroup.Key;
+        //            existingFeatureDefinitions.Add(definitionToAddFeaturesTo);
+        //        }
 
-                foreach (ActivatedFeature activeFeature in featureDefinitionGroup)
-                {
-                    definitionToAddFeaturesTo.ToggleActivatedFeature(activeFeature, true);
-                }
-            }
-        }
+        //        foreach (ActivatedFeature activeFeature in featureDefinitionGroup)
+        //        {
+        //            definitionToAddFeaturesTo.ToggleActivatedFeature(activeFeature, true);
+        //        }
+        //    }
+        //}
 
 
         public static FeatureDefinition GetFaultyDefinition(
@@ -63,35 +63,35 @@ namespace FeatureAdmin.Core.Factories
         }
 
 
-        public static FeatureDefinition GetFeatureDefinition(
-            ActivatedFeature activatedFeature, Location location)
-        {
-            if (activatedFeature != null)
-            {
-                FeatureDefinition fDef;
+        //public static FeatureDefinition GetFeatureDefinition(
+        //    ActivatedFeature activatedFeature, Location location)
+        //{
+        //    if (activatedFeature != null)
+        //    {
+        //        FeatureDefinition fDef;
 
-                if (activatedFeature.Faulty || activatedFeature.Definition == null)
-                {
-                    fDef = FeatureDefinitionFactory.GetFaultyDefinition(
-                        activatedFeature.FeatureId,
-                        location.Scope,
-                        activatedFeature.Version
-                      );
-                }
-                else
-                {
-                    fDef = activatedFeature.Definition;
-                }
+        //        if (activatedFeature.Faulty || activatedFeature.Definition == null)
+        //        {
+        //            fDef = FeatureDefinitionFactory.GetFaultyDefinition(
+        //                activatedFeature.FeatureId,
+        //                location.Scope,
+        //                activatedFeature.Version
+        //              );
+        //        }
+        //        else
+        //        {
+        //            fDef = activatedFeature.Definition;
+        //        }
 
-                fDef.ToggleActivatedFeature(activatedFeature, true);
-                return fDef;
-            }
-            else
-            {
-                //TODO Log unexpected definition not found
-                return null;
-            }
-        }
+        //        //fDef.ToggleActivatedFeature(activatedFeature, true);
+        //        return fDef;
+        //    }
+        //    else
+        //    {
+        //        //TODO Log unexpected definition not found
+        //        return null;
+        //    }
+        //}
 
 
         public static FeatureDefinition GetFeatureDefinition(

@@ -1,15 +1,19 @@
-﻿using Akka.Actor;
+﻿using System;
+using Akka.Actor;
 using Caliburn.Micro;
 using FeatureAdmin.Actors;
 using FeatureAdmin.Core.Messages.Tasks;
+using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
 using FeatureAdmin.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
 
-    public class AppViewModel : IHaveDisplayName,
-        Caliburn.Micro.IHandle<OpenWindow>
+    public class AppViewModel : IHaveDisplayName
+        ,Caliburn.Micro.IHandle<OpenWindow<ActivatedFeature>>
+        ,Caliburn.Micro.IHandle<OpenWindow<FeatureDefinition>>
+        ,Caliburn.Micro.IHandle<OpenWindow<Location>>
     {
 
         private readonly IEventAggregator eventAggregator;
@@ -56,9 +60,10 @@ namespace FeatureAdmin.ViewModels
         public LogViewModel LogVm { get; private set; }
 
         public StatusBarViewModel StatusBarVm { get; private set; }
-        public void Handle(OpenWindow message)
+        public void Handle<T>(OpenWindow<T> message) where T : class
         {
-            OpenWindow(message.ViewModel);
+            throw new System.Exception("Todo - convert dto to object and then detail view ...");
+            // OpenWindow(message.ViewModel);
         }
 
         public void InitializeFarmLoad()
@@ -108,6 +113,21 @@ namespace FeatureAdmin.ViewModels
         {
 
             eventAggregator.PublishOnUIThread(new LoadTask(taskTitle, Core.Factories.LocationFactory.GetDummyFarmForLoadCommand()));
+        }
+
+        public void Handle(OpenWindow<ActivatedFeature> message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Handle(OpenWindow<FeatureDefinition> message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Handle(OpenWindow<Location> message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

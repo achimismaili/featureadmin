@@ -38,28 +38,7 @@ namespace FeatureAdmin.Core.Tests.Common
                 public static Guid Id009 = new Guid("fd000009-0000-0000-0000-000000000000");
                 public static Guid Id010 = new Guid("fd000010-0000-0000-0000-000000000000");
             }
-
-            public static IEnumerable<FeatureDefinition> GetFeatureDefinitions([NotNull] Guid[] definitionIds, Guid[] locationIdsOfActivatedFeatures = null)
-            {
-                var definitions = new List<FeatureDefinition>();
-
-                foreach (Guid fdId in definitionIds)
-                {
-                    var fd = TestFeatureDefinitions.GetFeatureDefinition(fdId);
-
-                    if (locationIdsOfActivatedFeatures != null)
-                    {
-                        foreach (Guid lId in locationIdsOfActivatedFeatures)
-                        {
-                            var feat = TestActivatedFeatures.GetNormalActivatedFeature(fd, lId);
-                            fd.ToggleActivatedFeature(feat, true);
-                        }
-                    }
-                    definitions.Add(fd);
-                }
-                return definitions;
-            }
-
+           
             public static FeatureDefinition GetFeatureDefinition(Guid definitionId)
             {
                 return new FeatureDefinition(definitionId, Constants.GenericValues.CompatibilityLevel,
@@ -90,32 +69,6 @@ namespace FeatureAdmin.Core.Tests.Common
                 public static Guid Id008 = new Guid("ca000008-0000-0000-0000-000000000000");
                 public static Guid Id009 = new Guid("ca000009-0000-0000-0000-000000000000");
                 public static Guid Id010 = new Guid("ca000010-0000-0000-0000-000000000000");
-            }
-
-            public static IEnumerable<Location> GetLocations([NotNull] Guid[] locationIds, Guid[] activatedFeatureIds = null)
-            {
-
-                var locations = new List<Location>();
-
-
-                foreach (Guid l in locationIds)
-                {
-                    var loc = new Location(l, Constants.GenericValues.DisplayName, Ids.Id010, Core.Models.Enums.Scope.Web,
-                        Constants.GenericValues.Url, null, 0);
-
-                    if (activatedFeatureIds != null)
-                    {
-                        foreach (Guid f in activatedFeatureIds)
-                        {
-                            var fd = TestFeatureDefinitions.GetFeatureDefinition(f);
-                            var feat = TestActivatedFeatures.GetNormalActivatedFeature(fd, l);
-                            loc.ToggleActivatedFeature(feat, true);
-                        }
-                    }
-
-                    locations.Add(loc);
-                }
-                return locations;
             }
         }
     }

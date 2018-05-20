@@ -6,7 +6,7 @@ namespace FeatureAdmin.Core.Models
 {
     [Equals]
     [Serializable]
-    public class ActivatedFeature : ActivatedFeatureBase, IDisplayableItem
+    public class ActivatedFeature 
     {
         public ActivatedFeature(
                 Guid featureId,
@@ -17,21 +17,48 @@ namespace FeatureAdmin.Core.Models
                 DateTime timeActivated,
                 Version version,
                 string sandBoxedSolutionLocation = null
-            ) : base(featureId, definition.DisplayName, definition.UniqueIdentifier, locationId, faulty, timeActivated, version,
-                definition.Version < version)
+            ) 
         {
-
+            FeatureId = featureId;
+            FeatureDefinitionUniqueIdentifier = definition.UniqueIdentifier;
+            LocationId = locationId;
             Definition = definition;
+            Faulty = faulty;
             Properties = properties;
+            TimeActivated = timeActivated;
+            Version = version;
+            CanUpgrade = definition.Version < version;
+            
+            
         }
+
+        [IgnoreDuringEquals]
+        public bool CanUpgrade { get; private set; }
 
         public FeatureDefinition Definition { get; private set; }
 
+        [IgnoreDuringEquals]
+        public string DisplayName { get {
+                return Definition.DisplayName;
+            } }
 
+        [IgnoreDuringEquals]
+        public bool Faulty { get; private set; }
+
+        public string FeatureDefinitionUniqueIdentifier { get; private set; }
+
+        // only feature id and location are relevant for equal
+        public Guid FeatureId { get; private set; }
+
+        // only feature id and location are relevant for equal
+        public Guid LocationId { get; private set; }
         [IgnoreDuringEquals]
         public Dictionary<string, string> Properties { get; private set; } = new Dictionary<string, string>();
 
-
+        [IgnoreDuringEquals]
+        public DateTime TimeActivated { get; private set; }
+        [IgnoreDuringEquals]
+        public Version Version { get; private set; }
         public List<KeyValuePair<string, string>> GetAsPropertyList()
         {
             return new List<KeyValuePair<string, string>>()

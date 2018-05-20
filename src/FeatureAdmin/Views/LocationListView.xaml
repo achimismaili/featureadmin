@@ -100,7 +100,7 @@
                 </MenuItem>
                 <MenuItem x:Name="FilterLocation" ToolTip="Filter this location &amp; children"
                           Background="Transparent" 
-				FontSize="18"  cal:Message.Attach="FilterThis" >
+				FontSize="18"  cal:Message.Attach="FilterThis(ActiveItem_Id)" >
                     <MenuItem.Header>
                             <fa:FontAwesome Icon="Filter" />
                     </MenuItem.Header>

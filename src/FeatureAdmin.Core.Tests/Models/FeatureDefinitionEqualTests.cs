@@ -46,167 +46,167 @@ namespace FeatureAdmin.Core.Tests.Models
         public static string UiVersionDifferent = "3";
 
 
-        [Fact]
+        // [Fact]
         // Following needs to be equal:
         // FeatureId, Compatibility level, Name, Scope, DefinitioninstallationScope
-        public void DefinitionsWithSameFeatureIdCompLevelNameAndScopeAreEqual()
-        {
+        //public void DefinitionsWithSameFeatureIdCompLevelNameAndScopeAreEqual()
+        //{
 
 
 
-            // Arrange
-            var referenceFeature = FeatureDefinitionFactory.GetFeatureDefinition(
-                            Id, CompatibilityLevel,
-                             Description,
-                            DisplayName, Hidden,
-                            Name, Properties,
-                            Scope,
-                            Title,
-                            SolutionId, UiVersion,
-                            Version, DefinitioninstallationScope
-                           );
+        //    // Arrange
+        //    var referenceFeature = FeatureDefinitionFactory.GetFeatureDefinition(
+        //                    Id, CompatibilityLevel,
+        //                     Description,
+        //                    DisplayName, Hidden,
+        //                    Name, Properties,
+        //                    Scope,
+        //                    Title,
+        //                    SolutionId, UiVersion,
+        //                    Version, DefinitioninstallationScope
+        //                   );
 
-            ActivatedFeature ActiveFeature1 = ActivatedFeatureFactory.GetActivatedFeature(
-                  Id,
-                  Locations.ActivatedRootWeb.Guid,
-                  referenceFeature,
-                  Faulty, null, DateTime.Now,
-                  Version
-                  );
+        //    ActivatedFeature ActiveFeature1 = ActivatedFeatureFactory.GetActivatedFeature(
+        //          Id,
+        //          Locations.ActivatedRootWeb.Guid,
+        //          referenceFeature,
+        //          Faulty, null, DateTime.Now,
+        //          Version
+        //          );
 
-            referenceFeature.ToggleActivatedFeature(ActiveFeature1, true);
+        //    referenceFeature.ToggleActivatedFeature(ActiveFeature1, true);
 
-            // Act
-            var equalFeature = FeatureDefinitionFactory.GetFeatureDefinition(
-                    Id, CompatibilityLevel,
-                     DescriptionDifferent,
-                    DisplayNameDifferent, HiddenDifferent,
-                    Name, PropertiesDifferent,
-                    Scope,
-                    TitleDifferent,
-                    SolutionIdDifferent, UiVersionDifferent,
-                    VersionDifferent, DefinitioninstallationScope
-                   );
+        //    // Act
+        //    var equalFeature = FeatureDefinitionFactory.GetFeatureDefinition(
+        //            Id, CompatibilityLevel,
+        //             DescriptionDifferent,
+        //            DisplayNameDifferent, HiddenDifferent,
+        //            Name, PropertiesDifferent,
+        //            Scope,
+        //            TitleDifferent,
+        //            SolutionIdDifferent, UiVersionDifferent,
+        //            VersionDifferent, DefinitioninstallationScope
+        //           );
 
-            // Assert
+        //    // Assert
             
-            Assert.Equal(referenceFeature, equalFeature);
+        //    Assert.Equal(referenceFeature, equalFeature);
 
-            // Act
-            var equalFeatureEmpty = FeatureDefinitionFactory.GetFeatureDefinition(
-                    Id, CompatibilityLevel,
-                     null,
-                    null, HiddenDifferent,
-                    Name, null,
-                    Scope,
-                    null,
-                    Guid.Empty, null,
-                    null, DefinitioninstallationScope
-                   );
+        //    // Act
+        //    var equalFeatureEmpty = FeatureDefinitionFactory.GetFeatureDefinition(
+        //            Id, CompatibilityLevel,
+        //             null,
+        //            null, HiddenDifferent,
+        //            Name, null,
+        //            Scope,
+        //            null,
+        //            Guid.Empty, null,
+        //            null, DefinitioninstallationScope
+        //           );
 
-            // Assert
+        //    // Assert
 
-            Assert.Equal(referenceFeature, equalFeatureEmpty);
-
-
-        }
-
-        [Fact]
-        // Following needs to be equal:
-        // FeatureId, Compatibility level, Name, Scope, DefinitioninstallationScope
-        public void DefinitionsWithDifferentFeatureIdCompLevelNameOrScopeAreNotEqual()
-        {
+        //    Assert.Equal(referenceFeature, equalFeatureEmpty);
 
 
+        //}
 
-            // Arrange
-            var referenceFeature = FeatureDefinitionFactory.GetFeatureDefinition(
-                            Id, CompatibilityLevel,
-                             Description,
-                            DisplayName, Hidden,
-                            Name, Properties,
-                            Scope,
-                            Title,
-                            SolutionId, UiVersion,
-                            Version, DefinitioninstallationScope
-                           );
-
-            ActivatedFeature ActiveFeature1 = ActivatedFeatureFactory.GetActivatedFeature(
-                  Id,
-                  Locations.ActivatedRootWeb.Guid,
-                  referenceFeature,
-                  Faulty, null, DateTime.Now,
-                  Version
-                  );
-
-            referenceFeature.ToggleActivatedFeature(ActiveFeature1, true);
-
-            // Act
-            var notEqualFeatureId = FeatureDefinitionFactory.GetFeatureDefinition(
-                            IdDifferent, CompatibilityLevel,
-                            Description,
-                            DisplayName, Hidden,
-                            Name, Properties,
-                            Scope,
-                            Title,
-                            SolutionId, UiVersion,
-                            Version, DefinitioninstallationScope
-                           );
-
-            var notEqualFeatureCompatibility = FeatureDefinitionFactory.GetFeatureDefinition(
-                          Id, CompatibilityLevelDifferent,
-                           Description,
-                          DisplayName, Hidden,
-                          Name, Properties,
-                          Scope,
-                          Title,
-                          SolutionId, UiVersion,
-                          Version, DefinitioninstallationScope
-                         );
-
-            var notEqualFeatureScope = FeatureDefinitionFactory.GetFeatureDefinition(
-                         Id, CompatibilityLevel,
-                          Description,
-                         DisplayName, Hidden,
-                         Name, Properties,
-                         ScopeDifferent,
-                         Title,
-                         SolutionId, UiVersion,
-                         Version, DefinitioninstallationScope
-                        );
-
-            var notEqualFeatureName = FeatureDefinitionFactory.GetFeatureDefinition(
-                          Id, CompatibilityLevel,
-                           Description,
-                          DisplayName, Hidden,
-                          NameDifferent, Properties,
-                          Scope,
-                          Title,
-                          SolutionId, UiVersion,
-                          Version, DefinitioninstallationScope
-                         );
-
-            var notEqualFeatureDefInstScope = FeatureDefinitionFactory.GetFeatureDefinition(
-                          Id, CompatibilityLevel,
-                           Description,
-                          DisplayName, Hidden,
-                          Name, Properties,
-                          Scope,
-                          Title,
-                          SolutionId, UiVersion,
-                          Version, DefinitioninstallationScopeDifferent
-                         );
-
-            // Assert
-
-            Assert.NotEqual(referenceFeature, notEqualFeatureId);
-            Assert.NotEqual(referenceFeature, notEqualFeatureCompatibility);
-            Assert.NotEqual(referenceFeature, notEqualFeatureName);
-            Assert.NotEqual(referenceFeature, notEqualFeatureScope);
-            Assert.NotEqual(referenceFeature, notEqualFeatureDefInstScope);
+        //[Fact]
+        //// Following needs to be equal:
+        //// FeatureId, Compatibility level, Name, Scope, DefinitioninstallationScope
+        //public void DefinitionsWithDifferentFeatureIdCompLevelNameOrScopeAreNotEqual()
+        //{
 
 
-        }
+
+        //    // Arrange
+        //    var referenceFeature = FeatureDefinitionFactory.GetFeatureDefinition(
+        //                    Id, CompatibilityLevel,
+        //                     Description,
+        //                    DisplayName, Hidden,
+        //                    Name, Properties,
+        //                    Scope,
+        //                    Title,
+        //                    SolutionId, UiVersion,
+        //                    Version, DefinitioninstallationScope
+        //                   );
+
+        //    ActivatedFeature ActiveFeature1 = ActivatedFeatureFactory.GetActivatedFeature(
+        //          Id,
+        //          Locations.ActivatedRootWeb.Guid,
+        //          referenceFeature,
+        //          Faulty, null, DateTime.Now,
+        //          Version
+        //          );
+
+        //    referenceFeature.ToggleActivatedFeature(ActiveFeature1, true);
+
+        //    // Act
+        //    var notEqualFeatureId = FeatureDefinitionFactory.GetFeatureDefinition(
+        //                    IdDifferent, CompatibilityLevel,
+        //                    Description,
+        //                    DisplayName, Hidden,
+        //                    Name, Properties,
+        //                    Scope,
+        //                    Title,
+        //                    SolutionId, UiVersion,
+        //                    Version, DefinitioninstallationScope
+        //                   );
+
+        //    var notEqualFeatureCompatibility = FeatureDefinitionFactory.GetFeatureDefinition(
+        //                  Id, CompatibilityLevelDifferent,
+        //                   Description,
+        //                  DisplayName, Hidden,
+        //                  Name, Properties,
+        //                  Scope,
+        //                  Title,
+        //                  SolutionId, UiVersion,
+        //                  Version, DefinitioninstallationScope
+        //                 );
+
+        //    var notEqualFeatureScope = FeatureDefinitionFactory.GetFeatureDefinition(
+        //                 Id, CompatibilityLevel,
+        //                  Description,
+        //                 DisplayName, Hidden,
+        //                 Name, Properties,
+        //                 ScopeDifferent,
+        //                 Title,
+        //                 SolutionId, UiVersion,
+        //                 Version, DefinitioninstallationScope
+        //                );
+
+        //    var notEqualFeatureName = FeatureDefinitionFactory.GetFeatureDefinition(
+        //                  Id, CompatibilityLevel,
+        //                   Description,
+        //                  DisplayName, Hidden,
+        //                  NameDifferent, Properties,
+        //                  Scope,
+        //                  Title,
+        //                  SolutionId, UiVersion,
+        //                  Version, DefinitioninstallationScope
+        //                 );
+
+        //    var notEqualFeatureDefInstScope = FeatureDefinitionFactory.GetFeatureDefinition(
+        //                  Id, CompatibilityLevel,
+        //                   Description,
+        //                  DisplayName, Hidden,
+        //                  Name, Properties,
+        //                  Scope,
+        //                  Title,
+        //                  SolutionId, UiVersion,
+        //                  Version, DefinitioninstallationScopeDifferent
+        //                 );
+
+        //    // Assert
+
+        //    Assert.NotEqual(referenceFeature, notEqualFeatureId);
+        //    Assert.NotEqual(referenceFeature, notEqualFeatureCompatibility);
+        //    Assert.NotEqual(referenceFeature, notEqualFeatureName);
+        //    Assert.NotEqual(referenceFeature, notEqualFeatureScope);
+        //    Assert.NotEqual(referenceFeature, notEqualFeatureDefInstScope);
+
+
+        //}
 
     }
 }

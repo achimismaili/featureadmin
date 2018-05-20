@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Messages
 {
-    public class ItemSelected<T> where T : class, IBaseItem
+    public class ItemSelected<T> where T : class
     {
         public ItemSelected(T item)
         {

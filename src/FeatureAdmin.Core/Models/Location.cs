@@ -6,16 +6,9 @@ using System.Linq;
 namespace FeatureAdmin.Core.Models
 {
     [Serializable]
-    public class Location : BaseItem
+    public class Location 
     {
-        
-
-        protected Location():base()
-        {
-        }
-
-        public Location(Guid id, string displayName, Guid parent, Scope scope, string url, int childCount)
-            : this()
+        public Location(Guid id, string displayName, Guid parent, Scope scope, string url, int childCount = 0)
         {
             Id = id;
             DisplayName = displayName == null ? string.Empty : displayName;
@@ -24,16 +17,10 @@ namespace FeatureAdmin.Core.Models
             Url = url == null ? string.Empty : url;
             ChildCount = childCount;
         }
-
-        public Location(Guid id, string displayName, Guid parent, Scope scope, string url, IEnumerable<ActivatedFeature> activatedFeatures, int childCount)
-            : this(id, displayName, parent, scope, url, childCount)
-        {
-
-            if (activatedFeatures != null && activatedFeatures.Any())
-            {
-                this.activatedFeatures.AddRange(activatedFeatures);
-            }
-        }
+        public string DisplayName { get; protected set; }
+        public Guid Id { get; protected set; }
+        public Scope Scope { get; protected set; }
+    
 
         public bool CanHaveChildren
         {
@@ -49,15 +36,13 @@ namespace FeatureAdmin.Core.Models
 
         public int ChildCount { get; set; }
 
-        public override List<KeyValuePair<string, string>> GetAsPropertyList()
+        public List<KeyValuePair<string, string>> GetAsPropertyList()
         {
-            var propList = new List<KeyValuePair<string, string>>(); 
+            var propList = new List<KeyValuePair<string, string>>();
 
             propList.Add(new KeyValuePair<string, string>(nameof(Parent), string.Format("Location Id: {0}", Parent.ToString())));
             propList.Add(new KeyValuePair<string, string>(nameof(Url), Url));
             propList.Add(new KeyValuePair<string, string>(nameof(ChildCount), ChildCount.ToString()));
-
-            propList.AddRange(GetAsPropertyList(false));
 
             return propList;
         }

@@ -3,14 +3,14 @@ using FeatureAdmin.ViewModels;
 
 namespace FeatureAdmin.Messages
 {
-    public class OpenWindow
+    public class OpenWindow<T> where T : class
     {
         
-        public OpenWindow(DetailViewModel viewModel)
+        public OpenWindow(T viewModel)
         {
             ViewModel = viewModel;
         }
 
-        public DetailViewModel ViewModel { get; private set; }
+        public T ViewModel { get; private set; }
     }
 }

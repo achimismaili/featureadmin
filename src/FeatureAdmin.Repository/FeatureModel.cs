@@ -11,13 +11,13 @@ namespace FeatureAdmin.Repository
     public class FeatureModel : Model 
     {
         private List<ActivatedFeature> ActivatedFeatures;
-        private List<FeatureDefinition> FeatureDefinitions;
+        private Dictionary<string, FeatureDefinition> FeatureDefinitions;
         private Dictionary<Guid, Location> Locations;
 
         public FeatureModel()
         {
             ActivatedFeatures = new List<ActivatedFeature>();
-            FeatureDefinitions = new List<FeatureDefinition>();
+            FeatureDefinitions = new Dictionary<string, FeatureDefinition>();
             Locations = new Dictionary<Guid, Location>();
         }
 
@@ -34,8 +34,8 @@ namespace FeatureAdmin.Repository
         {
             if (farmFeatureDefinitions != null)
             {
-                FeatureDefinitions.AddRange(farmFeatureDefinitions);
-
+                FeatureDefinitions = FeatureDefinitions.Concat(
+                    farmFeatureDefinitions.ToDictionary(fd => fd.UniqueIdentifier)).ToDictionary(l => l.Key, l => l.Value); ;
             }
         }
         public void Clear()
@@ -51,7 +51,7 @@ namespace FeatureAdmin.Repository
 
             if (string.IsNullOrEmpty(searchInput))
             {
-                searchResult = FeatureDefinitions;
+                searchResult = FeatureDefinitions.Values;
             }
             else
             {
@@ -63,15 +63,27 @@ namespace FeatureAdmin.Repository
                 if (searchInput.Equals(Guid.Empty.ToString()) || idGuid != Guid.Empty)
                 {
                     searchResult = FeatureDefinitions.Where(
-                        fd => fd.Id == idGuid
-                       || fd.ActivatedFeatures.Any(f => f.LocationId == idGuid));
+                        fd => fd.Value.Id == idGuid
+                        ).Select(fd => fd.Value);
+
+                    // search for feature Ids in activated features, if no location was found with that id
+                    if (!searchResult.Any())
+                    {
+                        // see also https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-inner-joins
+                        searchResult =
+                            from af in ActivatedFeatures
+                            where af.LocationId == idGuid
+                            join fd in FeatureDefinitions on af.FeatureDefinitionUniqueIdentifier equals fd.Key
+                            select fd.Value;
+                    }
                 }
                 else
                 {
                     var lowerCaseSearchInput = searchInput.ToLower();
                     searchResult =
-                       FeatureDefinitions.Where(fd => fd.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
-                            fd.Title.ToLower().Contains(lowerCaseSearchInput));
+                       FeatureDefinitions.Where(fd => fd.Value.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
+                            fd.Value.Title.ToLower().Contains(lowerCaseSearchInput))
+                            .Select(fd => fd.Value);
                 }
 
             }
@@ -112,8 +124,19 @@ namespace FeatureAdmin.Repository
                     searchResult = Locations.Where(
                         l => l.Key == idGuid
                        || l.Value.Parent == idGuid
-                       || l.Value.ActivatedFeatures.Any(f => f.FeatureId == idGuid)
-                       ).Select(l => l.Value);
+                        ).Select(l => l.Value);
+
+                    // search for feature Ids in activated features, if no location was found with that id
+                    if (!searchResult.Any())
+                    {
+                        // see also https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-inner-joins
+                        searchResult =
+                            from af in ActivatedFeatures
+                            where af.FeatureId == idGuid
+                            join l in Locations on af.LocationId equals l.Key
+                            select l.Value;
+                    }
+
                 }
                 else
                 {

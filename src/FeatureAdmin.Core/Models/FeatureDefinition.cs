@@ -6,7 +6,7 @@ namespace FeatureAdmin.Core.Models
 {
     [Equals]
     [Serializable]
-    public class FeatureDefinition : BaseItem
+    public class FeatureDefinition 
     {
         public FeatureDefinition(
             Guid id,
@@ -22,11 +22,11 @@ namespace FeatureAdmin.Core.Models
              string uIVersion,
              Version version,
             string sandBoxedSolutionLocation = null
-            ) : base()
+            ) 
         {
             Id = id;
             CompatibilityLevel = compatibilityLevel;
-            Description = description == null ? string.Empty : description;
+            Description = description;
             DisplayName = displayName == null ? string.Empty : displayName;
             Hidden = hidden;
             Name = name == null ? string.Empty : name;
@@ -37,30 +37,29 @@ namespace FeatureAdmin.Core.Models
             UIVersion = uIVersion == null ? string.Empty : uIVersion;
             Version = version;
             SandBoxedSolutionLocation = sandBoxedSolutionLocation;
-
             UniqueIdentifier = string.Format(
-                "{0}-{1}{2}", 
-                id.ToString(), 
-                compatibilityLevel, 
+                "{0}-{1}{2}",
+                id.ToString(),
+                compatibilityLevel,
                 sandBoxedSolutionLocation == null ? string.Empty : "-" + sandBoxedSolutionLocation
                 );
         }
 
-        public string UniqueIdentifier { get; private set; }
-
+        public int CanUpgrade { get; private set; }
         public int CompatibilityLevel { get; private set; }
         [IgnoreDuringEquals]
         public string Description { get; private set; }
 
+        public string DisplayName { get; protected set; }
 
-        [IgnoreDuringEquals]
         public int Faulty { get; private set; }
-
-        [IgnoreDuringEquals]
-        public int CanUpgrade { get; private set; }
-
-        [IgnoreDuringEquals]
         public bool Hidden { get; private set; }
+        public Guid Id { get; protected set; }
+
+        public string Name { get; private set; }
+
+        [IgnoreDuringEquals]
+        public Dictionary<string, string> Properties { get; private set; }
 
         /// <summary>
         /// The location url, if this is a sandboxed solution feature definition
@@ -70,21 +69,21 @@ namespace FeatureAdmin.Core.Models
         /// Sandboxed Solutions have the url
         /// </remarks>
         public string SandBoxedSolutionLocation { get; private set; }
-        
-        public string Name { get; private set; }
-        [IgnoreDuringEquals]
-        public Dictionary<string, string> Properties { get; private set; }
+
+        public Scope Scope { get; protected set; }
+
         [IgnoreDuringEquals]
         public Guid SolutionId { get; private set; }
+
         [IgnoreDuringEquals]
         public string Title { get; private set; }
+
         [IgnoreDuringEquals]
         public string UIVersion { get; private set; }
-        [IgnoreDuringEquals]
+
+        public string UniqueIdentifier { get; private set; }
         public Version Version { get; private set; }
-
-
-        public override List<KeyValuePair<string, string>> GetAsPropertyList()
+        public List<KeyValuePair<string, string>> GetAsPropertyList()
         {
             var propList = new List<KeyValuePair<string, string>>();
 
@@ -98,8 +97,6 @@ namespace FeatureAdmin.Core.Models
             propList.Add(new KeyValuePair<string, string>(nameof(Version), Version == null ? string.Empty : Version.ToString()));
             propList.Add(new KeyValuePair<string, string>(nameof(SandBoxedSolutionLocation), SandBoxedSolutionLocation ));
             propList.Add(new KeyValuePair<string, string>(nameof(Properties), Common.StringUtilities.PropertiesToString(Properties)));
-
-            propList.AddRange(GetAsPropertyList(true));
 
             return propList;
         }

@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseItemViewModel<T> : Conductor<T>.Collection.OneActive where T : class, IDisplayableItem
+    public abstract class BaseItemViewModel<T> : Conductor<T>.Collection.OneActive where T : class
     {
 
         protected IEventAggregator eventAggregator;
@@ -37,11 +37,7 @@ namespace FeatureAdmin.ViewModels
         {
             if (ActiveItem != null)
             {
-                var vm = new DetailViewModel(
-                    string.Format("{0}: {1}", ActiveItem.GetType().Name, ActiveItem.DisplayName),
-                    ActiveItem.GetAsPropertyList() 
-                    );
-                var message = new OpenWindow(vm);
+                var message = new OpenWindow<T>(ActiveItem);
                 eventAggregator.BeginPublishOnUIThread(message);
             }
 
@@ -64,12 +60,8 @@ namespace FeatureAdmin.ViewModels
         {
             if (ActiveItem != null && SelectedLocation != null)
             {
-                var vm = new DetailViewModel(
-                    string.Format("{0}: {1}", ActiveItem.GetType().Name, ActiveItem.DisplayName),
-                    ActiveItem.GetAsPropertyList()
-                    );
-                var message = new OpenWindow(vm);
-                eventAggregator.BeginPublishOnUIThread(message);
+                throw new NotImplementedException();
+// tbd
             }
             else
             {

@@ -42,34 +42,38 @@ namespace FeatureAdmin.ViewModels
 
         private void SetActivatedFeature()
         {
+            throw new NotImplementedException();
+
+            // change logic to refer to repository for this
+
             Items.Clear();
 
-            if (SelectedLocation != null &&
-                SelectedFeatureDefinition != null &&
-                SelectedLocation.ActivatedFeatures.Count > 0 &&
-                SelectedFeatureDefinition.ActivatedFeatures.Count > 0
-                )
-            {
-                var activeItem = SelectedLocation.ActivatedFeatures.FirstOrDefault(
-                    lf => SelectedFeatureDefinition.ActivatedFeatures.Any(
-                        df => df == lf
-                        )
-                    );
+            //if (SelectedLocation != null &&
+            //    SelectedFeatureDefinition != null &&
+            //    SelectedLocation.ActivatedFeatures.Count > 0 &&
+            //    SelectedFeatureDefinition.ActivatedFeatures.Count > 0
+            //    )
+            //{
+            //    var activeItem = SelectedLocation.ActivatedFeatures.FirstOrDefault(
+            //        lf => SelectedFeatureDefinition.ActivatedFeatures.Any(
+            //            df => df == lf
+            //            )
+            //        );
 
-                if (activeItem != null)
-                {
-                    Items.Add(activeItem);
-                    ActiveItem = activeItem;
-                }
-                else
-                {
-                    ActiveItem = null;
-                }
-            }
-            else
-            {
-                ActiveItem = null;
-            }
+            //    if (activeItem != null)
+            //    {
+            //        Items.Add(activeItem);
+            //        ActiveItem = activeItem;
+            //    }
+            //    else
+            //    {
+            //        ActiveItem = null;
+            //    }
+            //}
+            //else
+            //{
+            //    ActiveItem = null;
+            //}
         }
     }
 }
