@@ -59,19 +59,5 @@ namespace FeatureAdmin.Core.Models
         public DateTime TimeActivated { get; private set; }
         [IgnoreDuringEquals]
         public Version Version { get; private set; }
-        public List<KeyValuePair<string, string>> GetAsPropertyList()
-        {
-            return new List<KeyValuePair<string, string>>()
-            {
-                new KeyValuePair<string, string>(nameof(DisplayName),DisplayName),
-                new KeyValuePair<string, string>(nameof(FeatureId),FeatureId.ToString()),
-                new KeyValuePair<string, string>(nameof(LocationId),LocationId.ToString()),
-                new KeyValuePair<string, string>(nameof(Scope), Definition.Scope.ToString()),
-                new KeyValuePair<string, string>(nameof(TimeActivated),TimeActivated.ToString()),
-                new KeyValuePair<string, string>(nameof(Version),Version.ToString()),
-                new KeyValuePair<string, string>(nameof(Faulty),Faulty.ToString()),
-                new KeyValuePair<string, string>(nameof(Properties), Common.StringUtilities.PropertiesToString(Properties))
-            };
-        }
     }
 }

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FeatureAdmin.Repository")]
+[assembly: AssemblyTitle("FeatureAdmin.OrigoDb")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft Corporation")]
-[assembly: AssemblyProduct("FeatureAdmin.Repository")]
-[assembly: AssemblyCopyright("Copyright © Microsoft Corporation 2018")]
+[assembly: AssemblyCompany("Achim Ismaili")]
+[assembly: AssemblyProduct("FeatureAdmin.OrigoDb")]
+[assembly: AssemblyCopyright("Copyright © Achim Ismaili 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

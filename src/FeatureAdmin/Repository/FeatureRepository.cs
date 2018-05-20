@@ -1,5 +1,7 @@
-﻿using FeatureAdmin.Core.Messages.Tasks;
+﻿using Caliburn.Micro;
+using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
+using FeatureAdmin.OrigoDb;
 using OrigoDB.Core;
 using System;
 using System.Collections.Generic;
@@ -15,11 +17,17 @@ namespace FeatureAdmin.Repository
     {
         public FeatureModel store;
 
-        public FeatureRepository()
+        private readonly IEventAggregator eventAggregator;
+
+
+        public FeatureRepository(IEventAggregator eventAggregator
+)
         {
             var config = new EngineConfiguration();
             config.PersistenceMode = PersistenceMode.ManualSnapshots;
             store = Db.For<FeatureModel>(config);
+
+            this.eventAggregator = eventAggregator;
         }
 
         public void AddFeatureDefinitions(IEnumerable<FeatureDefinition> featureDefinitions)
@@ -34,7 +42,15 @@ namespace FeatureAdmin.Repository
 
         public void AddLoadedLocations(LocationsLoaded message)
         {
-            store.AddLocations(message.ChildLocations);
+            var error = store.AddLocations(message.ChildLocations);
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                var logMsg = new Messages.LogMessage(Core.Models.Enums.LogLevel.Error, error );
+
+                eventAggregator.PublishOnUIThread(logMsg);
+            }
+
             store.AddActivatedFeatures(message.ActivatedFeatures);
             store.AddFeatureDefinitions(message.Definitions);
         }
@@ -50,6 +66,16 @@ namespace FeatureAdmin.Repository
         public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
         {
             return store.GetActivatedFeature(featureDefinitionId, locationId);
+        }
+
+        public IEnumerable<ActivatedFeature> GetActivatedFeatures(Location location)
+        {
+            return store.GetActivatedFeatures(location);
+        }
+
+        public IEnumerable<ActivatedFeature> GetActivatedFeatures(FeatureDefinition featureDefinition)
+        {
+            return store.GetActivatedFeatures(featureDefinition);
         }
 
         public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId = null)

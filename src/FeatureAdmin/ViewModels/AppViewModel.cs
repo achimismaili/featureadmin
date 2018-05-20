@@ -2,6 +2,7 @@
 using Akka.Actor;
 using Caliburn.Micro;
 using FeatureAdmin.Actors;
+using FeatureAdmin.Common;
 using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
@@ -117,17 +118,21 @@ namespace FeatureAdmin.ViewModels
 
         public void Handle(OpenWindow<ActivatedFeature> message)
         {
-            throw new NotImplementedException();
+            OpenWindow(message.ViewModel.ToDetailViewModel());
         }
 
         public void Handle(OpenWindow<FeatureDefinition> message)
         {
-            throw new NotImplementedException();
+            var vm = message.ViewModel;
+            var activatedFeatures = repository.GetActivatedFeatures(vm);
+            OpenWindow(vm.ToDetailViewModel(activatedFeatures));
         }
 
         public void Handle(OpenWindow<Location> message)
         {
-            throw new NotImplementedException();
+            var vm = message.ViewModel;
+            var activatedFeatures = repository.GetActivatedFeatures(vm);
+            OpenWindow(vm.ToDetailViewModel(activatedFeatures));
         }
     }
 }

@@ -7,8 +7,8 @@
     <ProjectGuid>{A9554C65-3BCC-4F78-9349-A63C737A19BD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FeatureAdmin.Repository</RootNamespace>
-    <AssemblyName>FeatureAdmin.Repository</AssemblyName>
+    <RootNamespace>FeatureAdmin.OrigoDb</RootNamespace>
+    <AssemblyName>FeatureAdmin.OrigoDb</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -58,8 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FeatureModel.cs" />
-    <Compile Include="IFeatureRepository.cs" />
-    <Compile Include="FeatureRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

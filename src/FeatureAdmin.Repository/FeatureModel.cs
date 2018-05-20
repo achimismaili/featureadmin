@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FeatureAdmin.Repository
+namespace FeatureAdmin.OrigoDb
 {
     [Serializable]
-    public class FeatureModel : Model 
+    public class FeatureModel : Model
     {
         private List<ActivatedFeature> ActivatedFeatures;
         private Dictionary<string, FeatureDefinition> FeatureDefinitions;
@@ -102,7 +102,28 @@ namespace FeatureAdmin.Repository
             return searchResult.ToArray();
         }
 
-        internal ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
+        public IEnumerable<ActivatedFeature> GetActivatedFeatures(FeatureDefinition featureDefinition)
+        {
+            if (featureDefinition != null)
+            {
+                return ActivatedFeatures.Where(af => af.FeatureDefinitionUniqueIdentifier == featureDefinition.UniqueIdentifier).ToList();
+            }
+
+            return null;
+        }
+
+        public IEnumerable<ActivatedFeature> GetActivatedFeatures(Location location)
+        {
+            if (location != null)
+            {
+                return ActivatedFeatures.Where(af => af.LocationId == location.Id).ToList();
+            }
+
+            return null;
+        }
+
+
+        public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
         {
             return ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
         }
@@ -115,7 +136,7 @@ namespace FeatureAdmin.Repository
         /// <param name="featureDefinitionId">feature id of the feature to check</param>
         /// <param name="locationId">location id, where to check, if null, checks for everywhere</param>
         /// <returns>true, if feature is found</returns>
-        internal bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId)
+        public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId)
         {
             if (locationId == null)
             {
@@ -127,14 +148,51 @@ namespace FeatureAdmin.Repository
             }
         }
 
-        internal void AddLocations(IEnumerable<Location> locations)
+        [Command]
+        public string AddLocations(IEnumerable<Location> locations)
         {
-            if (locations != null)
+            try
             {
-                Locations = Locations.Concat(locations.ToDictionary(l => l.Id)).ToDictionary(l => l.Key, l => l.Value); ;
+                if (locations != null)
+                {
+                    Locations = Locations.Concat(locations.ToDictionary(l => l.Id)).ToDictionary(l => l.Key, l => l.Value); ;
+                }
             }
+            catch (Exception ex)
+            {
+                string additionalInfo = string.Empty;
+
+                Location doublette = null;
+
+                // try to find location that is tried to be added twice
+                try
+                {
+                    doublette =
+                            (from newLocs in locations
+                            join l in Locations on newLocs.Id equals l.Key
+                            where newLocs.Id == l.Key
+                            select newLocs).FirstOrDefault();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+                if (doublette == null)
+                {
+                    return ex.Message;
+                }
+                else
+                {
+                    return string.Format("Error when trying to add a location. The location with id '{0}' and Url '{1}' was already loaded. Error: '{2}'", doublette.Id, doublette.Url , ex.Message);
+                }
+            }
+
+            return string.Empty;
+
         }
-        internal IEnumerable<Location> SearchLocations(string searchInput, Scope? selectedScopeFilter)
+        public IEnumerable<Location> SearchLocations(string searchInput, Scope? selectedScopeFilter)
         {
             IEnumerable<Location> searchResult;
 

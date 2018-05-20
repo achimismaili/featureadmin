@@ -114,6 +114,10 @@
       <HintPath>..\packages\NullGuard.Fody.1.6.3\lib\netstandard1.0\NullGuard.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="OrigoDB.Core, Version=0.19.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OrigoDB.Core.0.19.0\lib\net40\OrigoDB.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PropertyChanged, Version=2.1.4.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
       <HintPath>..\packages\PropertyChanged.Fody.2.1.4\lib\netstandard1.0\PropertyChanged.dll</HintPath>
       <Private>False</Private>
@@ -162,6 +166,7 @@
     <Compile Include="Caliburn.Metro.Autofac\CaliburnMetroAutofacBootstrapper.cs" />
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Caliburn.Metro.Autofac\EventAggregationAutoSubscriptionModule.cs" />
+    <Compile Include="Common\DetailViewModelConverters.cs" />
     <Compile Include="Common\NegatableBooleanToVisibilityConverter.cs" />
     <Compile Include="Messages\ItemSelected.cs" />
     <Compile Include="Messages\ProgressMessage.cs" />
@@ -169,6 +174,8 @@
     <Compile Include="Messages\OpenWindow.cs" />
     <Compile Include="Messages\SetSearchFilter.cs" />
     <Compile Include="Messages\ActionOptionsUpdate.cs" />
+    <Compile Include="Repository\FeatureRepository.cs" />
+    <Compile Include="Repository\IFeatureRepository.cs" />
     <Compile Include="ViewModels\BaseItemViewModel.cs" />
     <Compile Include="ViewModels\BaseListViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
@@ -314,9 +321,9 @@
       <Project>{4cec2e98-5a3b-4793-b606-a5250d046f02}</Project>
       <Name>FeatureAdmin.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FeatureAdmin.Repository\FeatureAdmin.Repository.csproj">
+    <ProjectReference Include="..\FeatureAdmin.Repository\FeatureAdmin.OrigoDb.csproj">
       <Project>{a9554c65-3bcc-4f78-9349-a63c737a19bd}</Project>
-      <Name>FeatureAdmin.Repository</Name>
+      <Name>FeatureAdmin.OrigoDb</Name>
     </ProjectReference>
     <ProjectReference Include="..\FeatureAdmin.SampleData\FeatureAdmin.SampleData.csproj">
       <Project>{de7fac0c-782b-4ba1-b1b8-3101955fc888}</Project>

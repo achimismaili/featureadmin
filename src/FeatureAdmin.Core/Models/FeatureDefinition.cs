@@ -83,22 +83,5 @@ namespace FeatureAdmin.Core.Models
 
         public string UniqueIdentifier { get; private set; }
         public Version Version { get; private set; }
-        public List<KeyValuePair<string, string>> GetAsPropertyList()
-        {
-            var propList = new List<KeyValuePair<string, string>>();
-
-            propList.Add(new KeyValuePair<string, string>(nameof(Title), Title));
-            propList.Add(new KeyValuePair<string, string>(nameof(Name), Name));
-            propList.Add(new KeyValuePair<string, string>(nameof(CompatibilityLevel), CompatibilityLevel.ToString()));
-            propList.Add(new KeyValuePair<string, string>(nameof(Description), Description));
-            propList.Add(new KeyValuePair<string, string>(nameof(Hidden), Hidden.ToString()));
-            propList.Add(new KeyValuePair<string, string>(nameof(SolutionId), SolutionId.ToString()));
-            propList.Add(new KeyValuePair<string, string>(nameof(UIVersion), UIVersion.ToString()));
-            propList.Add(new KeyValuePair<string, string>(nameof(Version), Version == null ? string.Empty : Version.ToString()));
-            propList.Add(new KeyValuePair<string, string>(nameof(SandBoxedSolutionLocation), SandBoxedSolutionLocation ));
-            propList.Add(new KeyValuePair<string, string>(nameof(Properties), Common.StringUtilities.PropertiesToString(Properties)));
-
-            return propList;
-        }
     }
 }
