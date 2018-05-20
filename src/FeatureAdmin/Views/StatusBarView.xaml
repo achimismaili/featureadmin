@@ -9,7 +9,8 @@
              >
     <Grid>
         <!--Status Bar-->
-        <StatusBar Grid.Row="1" >
+        <StatusBar Grid.Row="1" 
+                   Background="#33F0A30A">
             <StatusBarItem MinWidth="110">
                 <!-- Progress Section -->
                 <controls:MetroProgressBar 
@@ -18,15 +19,17 @@
                     VerticalAlignment="Center" 
                     MinWidth="100"
                     Margin="10 5" 
+                    Foreground="{DynamicResource AccentColorBrush}"
                     />
             </StatusBarItem>
-            <Separator ></Separator>
+            <!--<Separator ></Separator>-->
             <StatusBarItem>
                 <!-- Output Section -->
                 <TextBlock
                     x:Name="TextStatus"
                     VerticalAlignment="Center" 
                     Margin="10 5" 
+                    Foreground="{DynamicResource AccentColorBrush}"
                  />
             </StatusBarItem>
         </StatusBar>

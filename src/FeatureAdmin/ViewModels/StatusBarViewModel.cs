@@ -30,8 +30,11 @@ namespace FeatureAdmin.ViewModels
             {
                 await PutTaskDelay();
 
-                ProgressBarStatus = 0d;
-                TextStatus = string.Empty;
+                if (TextStatus.Equals(message.Title))
+                {
+                    ProgressBarStatus = 0d;
+                    TextStatus = string.Empty;
+                }
             }
         }
 

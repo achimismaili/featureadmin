@@ -11,7 +11,7 @@ using FeatureAdmin.Repository;
 namespace FeatureAdmin.ViewModels
 {
 
-    public class AppViewModel : Screen, IHaveDisplayName
+    public class AppViewModel : Screen
         ,Caliburn.Micro.IHandle<OpenWindow<ActivatedFeature>>
         ,Caliburn.Micro.IHandle<OpenWindow<FeatureDefinition>>
         ,Caliburn.Micro.IHandle<OpenWindow<Location>>
@@ -50,9 +50,7 @@ namespace FeatureAdmin.ViewModels
 
             TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleInitialLoad);
         }
-
-        public string DisplayName { get; set; }
-
+                
         public ActivatedFeatureViewModel ActivatedFeatureVm { get; private set; }
         public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
 
