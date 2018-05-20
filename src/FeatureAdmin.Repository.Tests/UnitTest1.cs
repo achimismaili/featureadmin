@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FeatureAdmin.Repository.Tests
+namespace FeatureAdmin.OrigoDb.Tests
 {
     [TestClass]
     public class UnitTest1

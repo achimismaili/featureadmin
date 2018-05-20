@@ -15,8 +15,8 @@ using FeatureAdmin.Repository;
 
 namespace FeatureAdmin.Actors
 {
-    public class TaskManagerActor : ReceiveActor,
-                Caliburn.Micro.IHandle<LoadTask>
+    public class TaskManagerActor : ReceiveActor
+               // ,Caliburn.Micro.IHandle<LoadTask>
     {
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IEventAggregator eventAggregator;
@@ -42,13 +42,11 @@ namespace FeatureAdmin.Actors
         /// </remarks>
         public void Handle(LoadTask message)
         {
-            Guid newId = Guid.NewGuid();
-
             IActorRef newTaskActor =
             ActorSystemReference.ActorSystem.ActorOf(LoadTaskActor.Props(eventAggregator, repository,
-           message.Title, newId, message.StartLocation), newId.ToString());
+           message.Title, message.Id, message.StartLocation), message.Id.ToString());
 
-           taskActors.Add(newId, newTaskActor);
+           taskActors.Add(message.Id, newTaskActor);
         }
     }
 }

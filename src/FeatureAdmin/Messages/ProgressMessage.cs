@@ -6,12 +6,13 @@ namespace FeatureAdmin.Messages
 {
     public class ProgressMessage
     {
-        public ProgressMessage(double progress, string title)
+        public ProgressMessage(Guid taskId, double progress, string title)
         {
+            TaskId = taskId;
             Progress = progress;
             Title = title;
         }
-
+        public Guid TaskId { get; }
         public double Progress { get; }
         public string Title { get; }
 

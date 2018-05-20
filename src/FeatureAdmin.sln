@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureAdmin.Core.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureAdmin.OrigoDb", "FeatureAdmin.Repository\FeatureAdmin.OrigoDb.csproj", "{A9554C65-3BCC-4F78-9349-A63C737A19BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureAdmin.Repository.Tests", "FeatureAdmin.Repository.Tests\FeatureAdmin.Repository.Tests.csproj", "{F0437809-165F-461B-B31E-A791D0AD87E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureAdmin.OrigoDb.Tests", "FeatureAdmin.Repository.Tests\FeatureAdmin.OrigoDb.Tests.csproj", "{F0437809-165F-461B-B31E-A791D0AD87E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

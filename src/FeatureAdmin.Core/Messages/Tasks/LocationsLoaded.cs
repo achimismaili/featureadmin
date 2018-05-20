@@ -41,7 +41,7 @@ namespace FeatureAdmin.Core.Messages.Tasks
             [NotNull] IEnumerable<Location> LoadedLocations,
             [NotNull] IEnumerable<ActivatedFeature> activatedFeatures,
             [NotNull] IEnumerable<FeatureDefinition> definitions)
-            : this(new Guid(), parent, LoadedLocations, activatedFeatures, definitions)
+            : this(Guid.Empty, parent, LoadedLocations, activatedFeatures, definitions)
         {
         }
 

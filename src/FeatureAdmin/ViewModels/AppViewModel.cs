@@ -11,14 +11,15 @@ using FeatureAdmin.Repository;
 namespace FeatureAdmin.ViewModels
 {
 
-    public class AppViewModel : IHaveDisplayName
+    public class AppViewModel : Screen, IHaveDisplayName
         ,Caliburn.Micro.IHandle<OpenWindow<ActivatedFeature>>
         ,Caliburn.Micro.IHandle<OpenWindow<FeatureDefinition>>
         ,Caliburn.Micro.IHandle<OpenWindow<Location>>
+        ,Caliburn.Micro.IHandle<ProgressMessage>
     {
 
         private readonly IEventAggregator eventAggregator;
-
+        private Guid recentLoadTask;
         private readonly IWindowManager windowManager;
         private Akka.Actor.IActorRef taskManagerActorRef;
         IFeatureRepository repository;
@@ -47,8 +48,7 @@ namespace FeatureAdmin.ViewModels
 
             InitializeActors();
 
-            InitializeFarmLoad();
-
+            TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleInitialLoad);
         }
 
         public string DisplayName { get; set; }
@@ -67,14 +67,24 @@ namespace FeatureAdmin.ViewModels
             // OpenWindow(message.ViewModel);
         }
 
-        public void InitializeFarmLoad()
+        public void Handle(ProgressMessage message)
         {
-            // repository.Reload(Common.Constants.Tasks.TaskTitleInitialLoad);
+            if (message.Progress >= 1d && message.TaskId == recentLoadTask)
+            {
+                CanReLoad = true;
+            }
+        }
 
-            taskManagerActorRef.Tell(
-               new LoadTask(Common.Constants.Tasks.TaskTitleInitialLoad,
-               Core.Factories.LocationFactory.GetDummyFarmForLoadCommand())
-               );
+        private void TriggerFarmLoadTask(string taskTitle)
+        {
+            CanReLoad = false;
+            recentLoadTask = Guid.NewGuid();
+            taskManagerActorRef.Tell(new LoadTask(recentLoadTask, taskTitle, Core.Factories.LocationFactory.GetDummyFarmForLoadCommand()));
+
+            // fyi - to do this via eventAggregator would also allow to trigger reload from other viewModels, e.g. also for single locations, 
+            // but at least the initial farm load cannot be triggered by eventaggregator, because it is not listening at that 
+            // early point in time, so all triggers from this viewModel directly call the actor ...
+            // eventAggregator.PublishOnUIThread(new LoadTask(taskTitle, Core.Factories.LocationFactory.GetDummyFarmForLoadCommand()));
         }
 
         public void OpenWindow(DetailViewModel viewModel)
@@ -100,6 +110,7 @@ namespace FeatureAdmin.ViewModels
             this.windowManager.ShowDialog(dialogVm, null, settings);
         }
 
+        public bool CanReLoad { get; private set; }
 
         public void ReLoad()
         {
@@ -110,12 +121,6 @@ namespace FeatureAdmin.ViewModels
         {
             taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Akka.Actor.Props.Create(() => new TaskManagerActor(eventAggregator, repository)));
         }
-        private void TriggerFarmLoadTask(string taskTitle)
-        {
-
-            eventAggregator.PublishOnUIThread(new LoadTask(taskTitle, Core.Factories.LocationFactory.GetDummyFarmForLoadCommand()));
-        }
-
         public void Handle(OpenWindow<ActivatedFeature> message)
         {
             OpenWindow(message.ViewModel.ToDetailViewModel());
