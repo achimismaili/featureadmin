@@ -47,6 +47,11 @@ namespace FeatureAdmin.Repository
             store.Clear();
         }
 
+        public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
+        {
+            return store.GetActivatedFeature(featureDefinitionId, locationId);
+        }
+
         public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId = null)
         {
             return store.IsFeatureActivated(featureDefinitionId, locationId);

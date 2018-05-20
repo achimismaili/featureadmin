@@ -40,7 +40,7 @@ namespace FeatureAdmin.ViewModels
 
             LocationListVm = new LocationListViewModel(eventAggregator, repository);
 
-            ActivatedFeatureVm = new ActivatedFeatureViewModel(eventAggregator);
+            ActivatedFeatureVm = new ActivatedFeatureViewModel(eventAggregator, repository);
 
             LogVm = new LogViewModel(eventAggregator);
 

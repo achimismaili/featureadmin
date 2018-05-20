@@ -102,7 +102,12 @@ namespace FeatureAdmin.Repository
             return searchResult.ToArray();
         }
 
-        
+        internal ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
+        {
+            return ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
+        }
+
+
 
         /// <summary>
         /// checks, if feature is activated in the specified location or at all

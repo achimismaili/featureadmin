@@ -18,5 +18,6 @@ namespace FeatureAdmin.Repository
 
         void Clear();
         bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId = null);
+        ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId);
     }
 }
