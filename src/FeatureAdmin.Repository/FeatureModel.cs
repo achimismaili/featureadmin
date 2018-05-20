@@ -34,8 +34,13 @@ namespace FeatureAdmin.Repository
         {
             if (farmFeatureDefinitions != null)
             {
-                FeatureDefinitions = FeatureDefinitions.Concat(
-                    farmFeatureDefinitions.ToDictionary(fd => fd.UniqueIdentifier)).ToDictionary(l => l.Key, l => l.Value); ;
+                foreach (FeatureDefinition fd in farmFeatureDefinitions)
+                {
+                    if (!FeatureDefinitions.ContainsKey(fd.UniqueIdentifier))
+                    {
+                        FeatureDefinitions.Add(fd.UniqueIdentifier, fd);
+                    }
+                }
             }
         }
         public void Clear()
@@ -95,6 +100,26 @@ namespace FeatureAdmin.Repository
             }
 
             return searchResult.ToArray();
+        }
+
+        
+
+        /// <summary>
+        /// checks, if feature is activated in the specified location or at all
+        /// </summary>
+        /// <param name="featureDefinitionId">feature id of the feature to check</param>
+        /// <param name="locationId">location id, where to check, if null, checks for everywhere</param>
+        /// <returns>true, if feature is found</returns>
+        internal bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId)
+        {
+            if (locationId == null)
+            {
+                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId);
+            }
+            else
+            {
+                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
+            }
         }
 
         internal void AddLocations(IEnumerable<Location> locations)

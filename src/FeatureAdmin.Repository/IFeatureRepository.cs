@@ -17,7 +17,6 @@ namespace FeatureAdmin.Repository
         // void AddActivatedFeatures(IEnumerable<ActivatedFeature> activatedFeatures);
 
         void Clear();
-
-
+        bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId = null);
     }
 }

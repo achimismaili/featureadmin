@@ -47,7 +47,10 @@ namespace FeatureAdmin.Repository
             store.Clear();
         }
 
-      
+        public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId = null)
+        {
+            return store.IsFeatureActivated(featureDefinitionId, locationId);
+        }
 
         public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, bool? onlyFarmFeatures)
         {
