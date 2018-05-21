@@ -24,7 +24,6 @@
 				   FontWeight="Bold"
 			   />
 			<Menu Grid.Row="1" IsMainMenu="False" Background="Transparent">
-				<MenuItem Header="_Activate" x:Name="ActivateFeatures" ToolTip="Activate/Add features"  Background="Transparent"/>
 				<MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"  Background="Transparent"/>
                 <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"  Background="Transparent"/>
                 <MenuItem x:Name="ShowDetails" ToolTip="Show details for this activated feature in new window"

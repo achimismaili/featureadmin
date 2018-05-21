@@ -2,7 +2,7 @@
 
 namespace FeatureAdmin.Core.Messages.Completed
 {
-    public class FeatureToggleCompleted : Tasks.BaseTaskMessage
+    public class FeatureDeactivationCompleted : Tasks.BaseTaskMessage
     {
         /// <summary>
         /// provides the loaded location including child locations
@@ -10,7 +10,7 @@ namespace FeatureAdmin.Core.Messages.Completed
         /// <param name="taskId">reference to task id</param>
         /// <param name="locationReference">where did action take place</param>
         /// <param name="error">was activation successful?</param>
-        public FeatureToggleCompleted(
+        public FeatureDeactivationCompleted(
             Guid taskId
             , Guid locationReference
             , string error = null

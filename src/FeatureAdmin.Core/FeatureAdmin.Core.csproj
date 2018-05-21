@@ -56,7 +56,8 @@
     <Compile Include="Factories\ActivatedFeatureFactory.cs" />
     <Compile Include="Factories\FeatureDefinitionFactory.cs" />
     <Compile Include="Factories\LocationFactory.cs" />
-    <Compile Include="Messages\Completed\FeatureToggleCompleted.cs" />
+    <Compile Include="Messages\Completed\FeatureActivationCompleted.cs" />
+    <Compile Include="Messages\Completed\FeatureDeactivationCompleted.cs" />
     <Compile Include="Messages\SettingsChanged.cs" />
     <Compile Include="Messages\Tasks\BaseTaskMessage.cs" />
     <Compile Include="Messages\Tasks\FarmFeatureDefinitionsLoaded.cs" />

@@ -43,7 +43,8 @@ namespace FeatureAdmin.Core.Models.Tasks
             jobsCompleted = new Dictionary<Guid, bool>();
 
             Receive<FeatureToggleRequest>(message => HandleFeatureToggleRequest(message));
-            Receive<FeatureToggleCompleted>(message => HandleFeatureToggleCompleted(message));
+            Receive<FeatureDeactivationCompleted>(message => HandleFeatureDeactivationCompleted(message));
+            Receive<FeatureActivationCompleted>(message => HandleFeatureActivationCompleted(message));
         }
 
         public override double PercentCompleted
@@ -93,7 +94,12 @@ namespace FeatureAdmin.Core.Models.Tasks
             force = message.Force;
         }
 
-        private void HandleFeatureToggleCompleted([NotNull] FeatureToggleCompleted message)
+        private void HandleFeatureDeactivationCompleted([NotNull] FeatureDeactivationCompleted message)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void HandleFeatureActivationCompleted([NotNull] FeatureDeactivationCompleted message)
         {
             throw new NotImplementedException();
         }

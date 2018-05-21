@@ -60,11 +60,6 @@ namespace FeatureAdmin.ViewModels
 
         public Location SelectedLocation { get; protected set; }
 
-        public void ActivateFeatures()
-        {
-            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(SelectedFeatureDefinition, SelectedLocation, true));
-        }
-
         public void DeactivateFeatures()
         {
             throw new NotImplementedException();

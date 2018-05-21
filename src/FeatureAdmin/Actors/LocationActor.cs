@@ -34,7 +34,36 @@ namespace FeatureAdmin.Actors
         {
             _log.Debug("Entered LocationActor-HandleFeatureToggleRequest");
 
-            dataService.FeatureToggle(message.Location, message.FeatureDefinition, message.Activate, message.Force, message.ElevatedPrivileges);
+            if (message.Activate)
+            {
+                ActivatedFeature af;
+                var error = dataService.ActivateFeature(
+                    message.FeatureDefinition
+                    , message.Location
+                    , message.ElevatedPrivileges
+                    , message.Force
+                    , out af);
+
+                var completed = new Core.Messages.Completed.FeatureActivationCompleted(
+               message.TaskId
+               , message.Location.Id
+               , af
+               , string.Empty
+               );
+
+                Sender.Tell(completed);
+
+            }
+            else
+            {
+                var completed = new Core.Messages.Completed.FeatureDeactivationCompleted(
+                               message.TaskId
+                               , message.Location.Id
+                               , string.Empty
+                               );
+
+                Sender.Tell(completed);
+            }
         }
 
         private void HandlyLoadLocationQuery([NotNull] LoadLocationQuery message)

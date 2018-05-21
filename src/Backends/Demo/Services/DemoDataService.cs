@@ -13,16 +13,16 @@ namespace FeatureAdmin.Backends.Demo.Services
     {
         public DemoDataService()
         {
-            demoFeaturedefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions();
-            demoLocations = SampleData.SampleLocationHierarchy.GetAllLocations();
-            demoActivatedFeatures = SampleData.SampleLocationHierarchy.GetAllActivatedFeatures(demoLocations);
+            demoFeaturedefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions().ToList();
+            demoLocations = SampleData.SampleLocationHierarchy.GetAllLocations().ToList();
+            demoActivatedFeatures = SampleData.SampleLocationHierarchy.GetAllActivatedFeatures(demoLocations).ToList();
         }
 
-        private IEnumerable<FeatureDefinition> demoFeaturedefinitions;
+        private List<FeatureDefinition> demoFeaturedefinitions;
 
-        private IEnumerable<Location> demoLocations;
+        private List<Location> demoLocations;
 
-        private IEnumerable<ActivatedFeature> demoActivatedFeatures;
+        private List<ActivatedFeature> demoActivatedFeatures;
 
         public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
         {
@@ -117,32 +117,59 @@ namespace FeatureAdmin.Backends.Demo.Services
             return loadLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
         }
 
-        public int FeatureToggle(Location location, FeatureDefinition feature, bool add, bool elevatedPrivileges, bool force)
+        
+        
+            public string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
         {
             if (location == null || feature == null)
             {
                 throw new ArgumentNullException("Location or feature must not be null!");
             }
 
-            var counter = 0;
+            var af = demoActivatedFeatures.FirstOrDefault(f => f.FeatureId == feature.Id && f.LocationId == location.Id);
+            demoActivatedFeatures.Remove(af);
+            return string.Empty;
 
-            switch (location.Scope)
-            {
-                case Core.Models.Enums.Scope.Web:
-                    break;
-                case Core.Models.Enums.Scope.Site:
-                    break;
-                case Core.Models.Enums.Scope.WebApplication:
-                    break;
-                case Core.Models.Enums.Scope.Farm:
-                    break;
-                case Core.Models.Enums.Scope.ScopeInvalid:
-                    throw new Exception("Invalid scope was not expected!");
-                default:
-                    throw new Exception("Undefined scope!");
-            }
+            //// in sharepoint, first, the containers need to be opened ...
 
-            return counter;
+            //switch (location.Scope)
+            //{
+            //    case Core.Models.Enums.Scope.Web:
+            //        // get site and web
+            //        break;
+            //    case Core.Models.Enums.Scope.Site:
+            //        // get site
+            //        break;
+            //    case Core.Models.Enums.Scope.WebApplication:
+            //        // get web app
+            //        break;
+            //    case Core.Models.Enums.Scope.Farm:
+            //        // get farm
+            //        break;
+            //    case Core.Models.Enums.Scope.ScopeInvalid:
+            //        throw new Exception("Invalid scope was not expected!");
+            //    default:
+            //        throw new Exception("Undefined scope!");
+            //}
+
+
+        }
+
+        public string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force
+            , out ActivatedFeature activatedFeature)
+        {
+            activatedFeature = Core.Factories.ActivatedFeatureFactory.GetActivatedFeature(
+                feature.Id
+                , location.Id
+                , feature
+                , false
+                ,null
+                , DateTime.Now
+                , feature.Version
+                );
+
+            demoActivatedFeatures.Add(activatedFeature);
+            return string.Empty;
         }
     }
 }

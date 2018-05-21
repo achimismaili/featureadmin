@@ -18,6 +18,11 @@ namespace FeatureAdmin.ViewModels
             SelectionChanged();
         }
 
+        public void ActivateFeatures()
+        {
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem, SelectedLocation, true));
+        }
+
         public bool CanFilterLocation { get; protected set; }
 
         public bool CanUninstallFeatureDefinition { get; private set; }

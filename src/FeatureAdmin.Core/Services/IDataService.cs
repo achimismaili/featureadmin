@@ -28,7 +28,8 @@ namespace FeatureAdmin.Core.Services
         /// <remarks>not only is the farm returned as out variable, but also included in the returned collection</remarks>
         LocationsLoaded LoadFarmAndWebApps();
         
-        int FeatureToggle(Location location, FeatureDefinition feature, bool add, bool elevatedPrivileges, bool force);
+        string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force);
+        string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
         //int FeatureUninstall(Guid featureId, bool force);
 
         //int FeatureUpdate(Models.SPObject location, bool add, Guid featureId, bool force);
