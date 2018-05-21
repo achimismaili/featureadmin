@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using FeatureAdmin.Core;
 using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
 using OrigoDB.Core;
@@ -75,6 +76,16 @@ namespace FeatureAdmin.Repository
         public IEnumerable<ActivatedFeature> GetActivatedFeatures(FeatureDefinition featureDefinition)
         {
             return store.GetActivatedFeatures(featureDefinition);
+        }
+
+        public IEnumerable<Location> GetLocationsCanActivate([NotNull] FeatureDefinition featureDefinition, [NotNull] Location location)
+        {
+            return store.GetLocationsCanActivate(featureDefinition, location);
+        }
+
+        public IEnumerable<Location> GetLocationsCanDeactivate([NotNull] FeatureDefinition featureDefinition, [NotNull] Location location)
+        {
+            return store.GetLocationsCanDeactivate(featureDefinition, location);
         }
 
         public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId = null)

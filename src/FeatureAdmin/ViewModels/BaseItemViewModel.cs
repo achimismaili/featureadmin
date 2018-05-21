@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
+using FeatureAdmin.Repository;
 using System;
 using System.Windows;
 
@@ -10,7 +11,8 @@ namespace FeatureAdmin.ViewModels
     {
 
         protected IEventAggregator eventAggregator;
-        public BaseItemViewModel(IEventAggregator eventAggregator)
+        protected IFeatureRepository repository;
+        public BaseItemViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
         {
             CanActivateFeatures = false;
             CanDeactivateFeatures = false;
@@ -18,6 +20,8 @@ namespace FeatureAdmin.ViewModels
 
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
+
+            this.repository = repository;
 
             // https://github.com/Fody/PropertyChanged/issues/269
             ActivationProcessed += (s, e) => CanShowDetails = ActiveItem != null;
@@ -58,16 +62,7 @@ namespace FeatureAdmin.ViewModels
 
         public void ActivateFeatures()
         {
-            if (ActiveItem != null && SelectedLocation != null)
-            {
-                throw new NotImplementedException();
-// tbd
-            }
-            else
-            {
-
-            }
-
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(SelectedFeatureDefinition, SelectedLocation, true));
         }
 
         public void DeactivateFeatures()

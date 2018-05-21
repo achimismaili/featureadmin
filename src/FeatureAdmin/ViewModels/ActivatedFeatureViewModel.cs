@@ -14,12 +14,9 @@ namespace FeatureAdmin.ViewModels
 {
     public class ActivatedFeatureViewModel : BaseItemViewModel<ActivatedFeature>, IHandle<ItemSelected<FeatureDefinition>>, IHandle<ItemSelected<Location>>, IHandle<ActionOptionsUpdate>
     {
-        protected IFeatureRepository repository;
-
         public ActivatedFeatureViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
-            : base(eventAggregator)
+            : base(eventAggregator, repository)
         {
-            this.repository = repository;
         }
 
   

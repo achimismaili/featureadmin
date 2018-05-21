@@ -26,20 +26,27 @@
                     <RowDefinition Height="47"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Menu IsMainMenu="True" Background="Transparent">
+                <!--<StackPanel Grid.Row="0" Orientation="Horizontal">-->
+                    <Menu IsMainMenu="True" Background="Transparent">
                     <MenuItem Header="Reload Farm" x:Name="Reload" ToolTip="Reload all locations, feature definitions and activated features."
                                Background="Transparent"/>
-                    <MenuItem Header="_Settings" Background="Transparent" >
-                        <MenuItem Header="_Elevated Privileges" x:Name="ElevatedPrivilegesSetting" ToolTip="Runs under apppool privileges, when applicable. In Production environments, make sure, compliance reasons do not prevent the activation of this setting." 
-                                  Background="Transparent"/>
-                        <MenuItem Header="_Force" x:Name="ForceSetting" ToolTip="When activated, feature modifications are executed with force, if applicable"
-                                  Background="Transparent"/>
-                    </MenuItem>
+                    <MenuItem Header="_Elevated Privileges" x:Name="ElevatedPrivileges" ToolTip="Runs under apppool privileges, when applicable. In Production environments, make sure, compliance reasons do not prevent the activation of this setting." 
+                                  Background="Transparent" IsCheckable="True" IsChecked="{Binding ElevatedPrivileges}" />
+                    <MenuItem Header="_Force" x:Name="Force" ToolTip="When activated, feature modifications are executed with force flag, if applicable"
+                                  Background="Transparent" IsCheckable="True" IsChecked="{Binding Force}"/>
                     <MenuItem Header="?"  Background="Transparent">
                         <MenuItem Header="_Help" x:Name="Help" Background="Transparent"/>
                         <MenuItem Header="_About" x:Name="About" Background="Transparent"/>
                     </MenuItem>
                 </Menu>
+                    <!--<controls:ToggleSwitch x:Name="ElevatedPrivileges" Header="Elev.Priv." OnLabel="on" OffLabel="off" 
+                                           ToolTip="Run with elevated privileges" FontSize="10">                        
+                    </controls:ToggleSwitch>
+                    <controls:ToggleSwitch x:Name="Force" Header="Force" OnLabel="on" OffLabel="off" 
+                                           ToolTip="Use the 'force' flag, if applicable">                        
+                    </controls:ToggleSwitch>
+                </StackPanel>-->
+                
                 <!-- Feature -->
                 <ContentControl cal:View.Model="{Binding FeatureDefinitionListVm}"
                                 Grid.Row="1" />

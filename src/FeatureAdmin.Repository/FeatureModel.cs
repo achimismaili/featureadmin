@@ -46,22 +46,155 @@ namespace FeatureAdmin.OrigoDb
                 }
             }
         }
+        public string AddLoadedLocations(LocationsLoaded message)
+        {
+            var error = AddLocations(message.ChildLocations);
+
+            AddActivatedFeatures(message.ActivatedFeatures);
+
+            AddFeatureDefinitions(message.Definitions);
+
+            return error;
+        }
+
+        [Command]
+        public string AddLocations(IEnumerable<Location> locations)
+        {
+            try
+            {
+                if (locations != null)
+                {
+                    Locations = Locations.Concat(locations.ToDictionary(l => l.Id)).ToDictionary(l => l.Key, l => l.Value); ;
+                }
+            }
+            catch (Exception ex)
+            {
+                string additionalInfo = string.Empty;
+
+                Location doublette = null;
+
+                // try to find location that is tried to be added twice
+                try
+                {
+                    doublette =
+                            (from newLocs in locations
+                             join l in Locations on newLocs.Id equals l.Key
+                             where newLocs.Id == l.Key
+                             select newLocs).FirstOrDefault();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+                if (doublette == null)
+                {
+                    return ex.Message;
+                }
+                else
+                {
+                    return string.Format(
+                        "Error when trying to add a location. The location with id '{0}' and Url '{1}' was already loaded. This should never happen! Try to reload or restart. Error: '{2}'",
+                        doublette.Id, doublette.Url, ex.Message);
+                }
+            }
+
+            return string.Empty;
+
+        }
+
         public void Clear()
         {
             ActivatedFeatures.Clear();
             FeatureDefinitions.Clear();
             Locations.Clear();
         }
-
-        public string AddLoadedLocations(LocationsLoaded message)
+        public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
         {
-            var error = AddLocations(message.ChildLocations);
-            
-            AddActivatedFeatures(message.ActivatedFeatures);
+            return ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
+        }
 
-            AddFeatureDefinitions(message.Definitions);
+        public IEnumerable<ActivatedFeature> GetActivatedFeatures(FeatureDefinition featureDefinition)
+        {
+            if (featureDefinition != null)
+            {
+                return ActivatedFeatures.Where(af => af.FeatureDefinitionUniqueIdentifier == featureDefinition.UniqueIdentifier)
+                    .ToList();
+            }
 
-            return error;
+            return null;
+        }
+
+        public IEnumerable<ActivatedFeature> GetActivatedFeatures(Location location)
+        {
+            return ActivatedFeatures.Where(af => af.LocationId == location.Id)
+                .ToList();
+        }
+
+        public IEnumerable<Location> GetLocationsCanActivate(FeatureDefinition featureDefinition, Location location)
+        {
+            var allLocationsOfFeatureScope = GetChildLocationsOfScope(featureDefinition.Scope, location);
+
+            var prefilteredActivatedFeatures = ActivatedFeatures.Where(f => f.FeatureId == featureDefinition.Id).ToList();
+
+            // see https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
+            var locationsCanActivate =
+                            (from loc in allLocationsOfFeatureScope
+                             join af in prefilteredActivatedFeatures on loc.Id equals af.LocationId into gj
+                             from subAf in gj.DefaultIfEmpty()
+                             // following is the only different line compared to ..can deactivate
+                             where subAf == null
+                             select loc).ToList();
+
+
+            return locationsCanActivate;
+
+        }
+
+        public IEnumerable<Location> GetLocationsCanDeactivate(FeatureDefinition featureDefinition, Location location)
+        {
+            var allLocationsOfFeatureScope = GetChildLocationsOfScope(featureDefinition.Scope, location);
+
+            var prefilteredActivatedFeatures = ActivatedFeatures.Where(f => f.FeatureId == featureDefinition.Id).ToList();
+
+            // see https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
+            var locationsCanDeactivate =
+                            (from loc in allLocationsOfFeatureScope
+                             join af in prefilteredActivatedFeatures on loc.Id equals af.LocationId into gj
+
+                             from subAf in gj.DefaultIfEmpty()
+                             // following is the only different line compared to ..can activate
+                             where subAf.FeatureId == featureDefinition.Id
+                             select loc).ToList();
+
+
+            return locationsCanDeactivate;
+        }
+
+        public IEnumerable<Location> GetLocationsDirectChildren(Location location)
+        {
+            return Locations.Where(l => l.Value.Parent == location.Id)
+                .Select(l => l.Value)
+                .ToList();
+        }
+
+        /// <summary>
+        /// checks, if feature is activated in the specified location or at all
+        /// </summary>
+        /// <param name="featureDefinitionId">feature id of the feature to check</param>
+        /// <param name="locationId">location id, where to check, if null, checks for everywhere</param>
+        /// <returns>true, if feature is found</returns>
+        public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId)
+        {
+            if (locationId.HasValue)
+            {
+                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId);
+            }
+            else
+            {
+                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
+            }
         }
 
         public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Scope? selectedScopeFilter, bool? onlyFarmFeatures)
@@ -117,96 +250,6 @@ namespace FeatureAdmin.OrigoDb
             }
 
             return searchResult.ToArray();
-        }
-
-        public IEnumerable<ActivatedFeature> GetActivatedFeatures(FeatureDefinition featureDefinition)
-        {
-            if (featureDefinition != null)
-            {
-                return ActivatedFeatures.Where(af => af.FeatureDefinitionUniqueIdentifier == featureDefinition.UniqueIdentifier)
-                    .ToList();
-            }
-
-            return null;
-        }
-
-        public IEnumerable<ActivatedFeature> GetActivatedFeatures(Location location)
-        {
-            return ActivatedFeatures.Where(af => af.LocationId == location.Id)
-                .ToList();
-        }
-
-
-        public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
-        {
-            return ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
-        }
-
-
-
-        /// <summary>
-        /// checks, if feature is activated in the specified location or at all
-        /// </summary>
-        /// <param name="featureDefinitionId">feature id of the feature to check</param>
-        /// <param name="locationId">location id, where to check, if null, checks for everywhere</param>
-        /// <returns>true, if feature is found</returns>
-        public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId)
-        {
-            if (locationId.HasValue)
-            {
-                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId);
-            }
-            else
-            {
-                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
-            }
-        }
-
-        [Command]
-        public string AddLocations(IEnumerable<Location> locations)
-        {
-            try
-            {
-                if (locations != null)
-                {
-                    Locations = Locations.Concat(locations.ToDictionary(l => l.Id)).ToDictionary(l => l.Key, l => l.Value); ;
-                }
-            }
-            catch (Exception ex)
-            {
-                string additionalInfo = string.Empty;
-
-                Location doublette = null;
-
-                // try to find location that is tried to be added twice
-                try
-                {
-                    doublette =
-                            (from newLocs in locations
-                             join l in Locations on newLocs.Id equals l.Key
-                             where newLocs.Id == l.Key
-                             select newLocs).FirstOrDefault();
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-
-                if (doublette == null)
-                {
-                    return ex.Message;
-                }
-                else
-                {
-                    return string.Format(
-                        "Error when trying to add a location. The location with id '{0}' and Url '{1}' was already loaded. This should never happen! Try to reload or restart. Error: '{2}'",
-                        doublette.Id, doublette.Url, ex.Message);
-                }
-            }
-
-            return string.Empty;
-
         }
         public IEnumerable<Location> SearchLocations(string searchInput, Scope? selectedScopeFilter)
         {
@@ -269,6 +312,73 @@ namespace FeatureAdmin.OrigoDb
             }
 
             return searchResult.ToArray();
+        }
+
+        private IEnumerable<Location> GetChildLocationsOfScope(Scope childrenScope, Location parentLocation)
+        {
+            var childLocations = new List<Location>();
+
+            switch (parentLocation.Scope)
+            {
+                case Scope.Web:
+                    if (childrenScope == Scope.Web)
+                    {
+                        childLocations.Add(parentLocation);
+                    }
+                    break;
+                case Scope.Site:
+                    if (childrenScope == Scope.Site)
+                    {
+                        childLocations.Add(parentLocation);
+                    }
+                    else if (childrenScope == Scope.Web)
+                    {
+                        childLocations = GetLocationsDirectChildren(parentLocation).ToList();
+                    }
+                    break;
+                case Scope.WebApplication:
+                    switch (childrenScope)
+                    {
+                        case Scope.Web:
+                            childLocations = GetLocationsChildrensChildren(parentLocation).ToList();
+                            break;
+                        case Scope.Site:
+                            childLocations = GetLocationsDirectChildren(parentLocation).ToList();
+                            break;
+                        case Scope.WebApplication:
+                            childLocations.Add(parentLocation);
+                            break;
+                        //case Scope.Farm:
+                        //    break;
+                        //case Scope.ScopeInvalid:
+                        //    break;
+                        default:
+                            break;
+                    }
+                    break;
+                case Scope.Farm:
+                    // if parent location is farm, 
+                    // simply get all locations of the wanted scope
+                    childLocations = Locations.Values.Where(l => l.Scope == childrenScope)
+                        .ToList();
+                    break;
+                //case Scope.ScopeInvalid:
+                //    break;
+                default:
+                    break;
+            }
+
+            return childLocations;
+        }
+
+        private IEnumerable<Location> GetLocationsChildrensChildren(Location location)
+        {
+            return Locations.Where(l => l.Value.Parent == location.Id)
+                .Join(Locations,
+                            parent => parent.Key,
+                            child => child.Value.Parent,
+                            (parent, child) => child.Value)
+                .ToList();
         }
     }
 }

@@ -21,5 +21,7 @@ namespace FeatureAdmin.Repository
         ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId);
         IEnumerable<ActivatedFeature> GetActivatedFeatures(FeatureDefinition featureDefinition);
         IEnumerable<ActivatedFeature> GetActivatedFeatures(Location location);
+        IEnumerable<Location> GetLocationsCanActivate(FeatureDefinition featureDefinition, Location location);
+        IEnumerable<Location> GetLocationsCanDeactivate(FeatureDefinition featureDefinition, Location location);
     }
 }

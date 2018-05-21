@@ -12,27 +12,40 @@ using System.Linq;
 using System.Collections.Generic;
 using FeatureAdmin.Core;
 using FeatureAdmin.Repository;
+using FeatureAdmin.Core.Messages.Request;
 
 namespace FeatureAdmin.Actors
 {
     public class TaskManagerActor : ReceiveActor
                // ,Caliburn.Micro.IHandle<LoadTask>
+               , Caliburn.Micro.IHandle<FeatureToggleRequest>
+         , Caliburn.Micro.IHandle<SettingsChanged>
     {
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IEventAggregator eventAggregator;
-        private readonly Dictionary<Guid, IActorRef> taskActors;
         private readonly IFeatureRepository repository;
-
-        public TaskManagerActor(IEventAggregator eventAggregator, IFeatureRepository repository)
+        private readonly Dictionary<Guid, IActorRef> taskActors;
+        public TaskManagerActor(
+            IEventAggregator eventAggregator
+            , IFeatureRepository repository
+            , bool elevatedPrivileges
+            , bool force
+            )
         {
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
             this.repository = repository;
+
+            this.elevatedPrivileges = elevatedPrivileges;
+            this.force = force;
+
             taskActors = new Dictionary<Guid, IActorRef>();
 
             Receive<LoadTask>(message => Handle(message));
         }
 
+        private bool elevatedPrivileges { get; set; }
+        private bool force { get; set; }
         /// <summary>
         /// send load task to load task actor
         /// </summary>
@@ -46,7 +59,32 @@ namespace FeatureAdmin.Actors
             ActorSystemReference.ActorSystem.ActorOf(LoadTaskActor.Props(eventAggregator, repository,
            message.Title, message.Id, message.StartLocation), message.Id.ToString());
 
-           taskActors.Add(message.Id, newTaskActor);
+            taskActors.Add(message.Id, newTaskActor);
+        }
+
+        public void Handle(FeatureToggleRequest message)
+        {
+            IActorRef newTaskActor =
+            ActorSystemReference.ActorSystem.ActorOf(
+                FeatureTaskActor.Props(
+                    eventAggregator
+                    , repository
+                    , message.TaskId
+                    , elevatedPrivileges
+                    , force
+                    )
+                    );
+
+            taskActors.Add(message.TaskId, newTaskActor);
+
+            // trigger feature toggle request
+            newTaskActor.Tell(message);
+        }
+
+        public void Handle(SettingsChanged message)
+        {
+            elevatedPrivileges = message.ElevatedPrivileges;
+            force = message.Force;
         }
     }
 }

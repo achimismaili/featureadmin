@@ -12,10 +12,10 @@ namespace FeatureAdmin.ViewModels
 {
 
     public class AppViewModel : Screen
-        ,Caliburn.Micro.IHandle<OpenWindow<ActivatedFeature>>
-        ,Caliburn.Micro.IHandle<OpenWindow<FeatureDefinition>>
-        ,Caliburn.Micro.IHandle<OpenWindow<Location>>
-        ,Caliburn.Micro.IHandle<ProgressMessage>
+        , Caliburn.Micro.IHandle<OpenWindow<ActivatedFeature>>
+        , Caliburn.Micro.IHandle<OpenWindow<FeatureDefinition>>
+        , Caliburn.Micro.IHandle<OpenWindow<Location>>
+        , Caliburn.Micro.IHandle<ProgressMessage>
     {
 
         private readonly IEventAggregator eventAggregator;
@@ -23,7 +23,7 @@ namespace FeatureAdmin.ViewModels
         private readonly IWindowManager windowManager;
         private Akka.Actor.IActorRef taskManagerActorRef;
         IFeatureRepository repository;
-        
+
         // private IActorRef viewModelSyncActorRef;
         public AppViewModel(IWindowManager windowManager, IEventAggregator eventAggregator, IFeatureRepository repository)
         {
@@ -48,9 +48,11 @@ namespace FeatureAdmin.ViewModels
 
             InitializeActors();
 
+            LoadSettings();
+
             TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleInitialLoad);
         }
-                
+
         public ActivatedFeatureViewModel ActivatedFeatureVm { get; private set; }
         public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
 
@@ -110,6 +112,34 @@ namespace FeatureAdmin.ViewModels
 
         public bool CanReLoad { get; private set; }
 
+        private bool elevatedPrivileges;
+        private bool force;
+        public bool ElevatedPrivileges
+        {
+            get
+            {
+                return elevatedPrivileges;
+            }
+            set
+            {
+                elevatedPrivileges = value;
+                UpdateSettings();
+            }
+        }
+        public bool Force
+        {
+            get
+            {
+                return force;
+            }
+            set
+            {
+                force = value;
+                UpdateSettings();
+            }
+        }
+
+
         public void ReLoad()
         {
             TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleReload);
@@ -117,7 +147,8 @@ namespace FeatureAdmin.ViewModels
 
         private void InitializeActors()
         {
-            taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(Akka.Actor.Props.Create(() => new TaskManagerActor(eventAggregator, repository)));
+            taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(
+                Akka.Actor.Props.Create(() => new TaskManagerActor(eventAggregator, repository, elevatedPrivileges, force)));
         }
         public void Handle(OpenWindow<ActivatedFeature> message)
         {
@@ -136,6 +167,25 @@ namespace FeatureAdmin.ViewModels
             var vm = message.ViewModel;
             var activatedFeatures = repository.GetActivatedFeatures(vm);
             OpenWindow(vm.ToDetailViewModel(activatedFeatures));
+        }
+
+        private void UpdateSettings()
+        {
+            var settings = new Core.Messages.SettingsChanged(elevatedPrivileges, force);
+
+            eventAggregator.PublishOnUIThread(settings);
+
+            // Handling Application Settings in WPF, see https://msdn.microsoft.com/en-us/library/a65txexh(v=vs.140).aspx
+            Properties.Settings.Default.elevatedPrivileges = elevatedPrivileges;
+            Properties.Settings.Default.force = force;
+            Properties.Settings.Default.Save();
+        }
+
+        private void LoadSettings()
+        {
+            // Handling Application Settings in WPF, see https://msdn.microsoft.com/en-us/library/a65txexh(v=vs.140).aspx
+            elevatedPrivileges = Properties.Settings.Default.elevatedPrivileges;
+            force = Properties.Settings.Default.force;
         }
     }
 }

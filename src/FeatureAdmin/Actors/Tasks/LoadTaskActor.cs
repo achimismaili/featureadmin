@@ -21,7 +21,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         public ProgressModule FarmFeatureDefinitions;
         public ProgressModule SitesAndWebs;
         public ProgressModule WebApps;
-
+        public int ActivatedFeaturesLoaded { get; private set; }
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IActorRef featureDefinitionActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
@@ -36,6 +36,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             featureDefinitionActor =
                    Context.ActorOf(Context.DI().Props<FeatureDefinitionActor>());
 
+            ActivatedFeaturesLoaded = 0;
        
             FarmFeatureDefinitions = new ProgressModule(
                 5d / 100,
@@ -64,14 +65,15 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             get
             {
-                return string.Format("'{0}' (ID: '{1}') - Loaded: {2} web apps, {3} sites and webs, {4} features, progress {5:F0}% \nelapsed time: {6}",
+                return string.Format("'{0}' (ID: '{1}') - Loaded: {2} web apps, {3} sites and webs, {4} feature definitions, {7} activated features, progress {5:F0}% \nelapsed time: {6}",
                     Title,
                     Id,
                     WebApps.Processed,
                     SitesAndWebs.Processed,
                     FarmFeatureDefinitions.Processed,
                     PercentCompleted * 100,
-                    ElapsedTime
+                    ElapsedTime,
+                    ActivatedFeaturesLoaded
                     );
             }
         }
@@ -120,7 +122,8 @@ namespace FeatureAdmin.Core.Models.Tasks
                     WebApps.Processed++;
                     break;
                 case Enums.Scope.Farm:
-                    WebApps.Total += location.ChildCount;
+                    // minus one, because farm is contained in child count
+                    WebApps.Total += location.ChildCount - 1;
                     Farm.Processed++;
                     break;
                 case Enums.Scope.ScopeInvalid:
@@ -140,6 +143,10 @@ namespace FeatureAdmin.Core.Models.Tasks
             {
                 TrackLocationProcessed(l);
             }
+
+            FarmFeatureDefinitions.Processed += loadedMessage.Definitions.Count();
+
+            ActivatedFeaturesLoaded += loadedMessage.ActivatedFeatures.Count();
 
             return finished;
         }

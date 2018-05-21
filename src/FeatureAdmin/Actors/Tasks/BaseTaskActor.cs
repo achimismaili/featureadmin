@@ -11,7 +11,15 @@ namespace FeatureAdmin.Core.Models.Tasks
     public abstract class BaseTaskActor : ReceiveActor
     {
         protected readonly IEventAggregator eventAggregator;
+
+        public BaseTaskActor(IEventAggregator eventAggregator, Guid id)
+            : this(eventAggregator, "Generic title to be overwritten", id)
+        {
+        }
+
+        
         public BaseTaskActor(IEventAggregator eventAggregator, string title, Guid id)
+            
         {
             this.eventAggregator = eventAggregator;
             Status = TaskStatus.Started;
@@ -31,11 +39,11 @@ namespace FeatureAdmin.Core.Models.Tasks
         }
 
         public DateTime? End { get; set; }
-        public Guid Id { get; private set; }
+        public Guid Id { get; }
 
         public abstract double PercentCompleted { get; }
         public DateTime? Start { get; set; }
-        public TaskStatus Status { get; private set; }
+        public TaskStatus Status { get; protected set; }
         public abstract string StatusReport { get; }
         public string Title { get; protected set; }
 

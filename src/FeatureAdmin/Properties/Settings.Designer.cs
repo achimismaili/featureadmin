@@ -22,5 +22,29 @@ namespace FeatureAdmin.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool force {
+            get {
+                return ((bool)(this["force"]));
+            }
+            set {
+                this["force"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool elevatedPrivileges {
+            get {
+                return ((bool)(this["elevatedPrivileges"]));
+            }
+            set {
+                this["elevatedPrivileges"] = value;
+            }
+        }
     }
 }

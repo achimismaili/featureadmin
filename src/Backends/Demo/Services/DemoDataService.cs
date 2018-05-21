@@ -117,7 +117,7 @@ namespace FeatureAdmin.Backends.Demo.Services
             return loadLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
         }
 
-        public int FeatureToggle(Location location, FeatureDefinition feature, bool add, bool force)
+        public int FeatureToggle(Location location, FeatureDefinition feature, bool add, bool elevatedPrivileges, bool force)
         {
             if (location == null || feature == null)
             {

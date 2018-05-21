@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Core.Messages.Tasks
 {
-    public class BaseTaskMessage
+    public abstract class BaseTaskMessage
     {
-        public BaseTaskMessage(Guid taskId)
+        protected BaseTaskMessage()
+        {
+        }
+        protected BaseTaskMessage(Guid taskId)
         {
             TaskId = taskId;
         }
-        public Guid TaskId { get; set; }
+        public Guid TaskId { get; protected set; }
 
+        public string Title { get; protected set; }
     }
 }

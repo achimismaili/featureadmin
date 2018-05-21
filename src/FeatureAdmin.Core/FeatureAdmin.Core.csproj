@@ -56,8 +56,11 @@
     <Compile Include="Factories\ActivatedFeatureFactory.cs" />
     <Compile Include="Factories\FeatureDefinitionFactory.cs" />
     <Compile Include="Factories\LocationFactory.cs" />
+    <Compile Include="Messages\Completed\FeatureToggleCompleted.cs" />
+    <Compile Include="Messages\SettingsChanged.cs" />
     <Compile Include="Messages\Tasks\BaseTaskMessage.cs" />
     <Compile Include="Messages\Tasks\FarmFeatureDefinitionsLoaded.cs" />
+    <Compile Include="Messages\Request\FeatureToggleRequest.cs" />
     <Compile Include="Models\Enums\LogLevel.cs" />
     <Compile Include="Models\ProgressModule.cs" />
     <Compile Include="NotNullAttribute.cs" />

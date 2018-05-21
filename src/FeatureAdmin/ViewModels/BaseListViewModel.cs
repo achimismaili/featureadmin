@@ -14,12 +14,11 @@ namespace FeatureAdmin.ViewModels
     {
 
         protected DateTime lastUpdateInitiatedSearch;
-        protected IFeatureRepository repository;
         protected string searchInput;
 
         private Scope? selectedScopeFilter;
         public BaseListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository) :
-            base(eventAggregator)
+            base(eventAggregator, repository)
         {
             ScopeFilters = new ObservableCollection<Scope>(Common.Constants.Search.ScopeFilterList);
             
@@ -27,8 +26,6 @@ namespace FeatureAdmin.ViewModels
 
             // https://github.com/Fody/PropertyChanged/issues/269
             ActivationProcessed += (s, e) => SelectionChanged();
-
-            this.repository = repository;
         }
 
         public bool CanFilterThis { get; protected set; }
