@@ -4,6 +4,7 @@ using OrigoDB.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FeatureAdmin.Core.Messages.Tasks;
 
 namespace FeatureAdmin.OrigoDb
 {
@@ -50,6 +51,17 @@ namespace FeatureAdmin.OrigoDb
             ActivatedFeatures.Clear();
             FeatureDefinitions.Clear();
             Locations.Clear();
+        }
+
+        public string AddLoadedLocations(LocationsLoaded message)
+        {
+            var error = AddLocations(message.ChildLocations);
+            
+            AddActivatedFeatures(message.ActivatedFeatures);
+
+            AddFeatureDefinitions(message.Definitions);
+
+            return error;
         }
 
         public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Scope? selectedScopeFilter, bool? onlyFarmFeatures)

@@ -25,7 +25,6 @@ namespace FeatureAdmin.Actors
 
         private void LookupLocation([NotNull] LoadLocationQuery message)
         {
-            // first, generate Location from SharePoint object
             _log.Debug("Entered LocationActor-LookupLocation");
 
             var location = message.Location;

@@ -44,7 +44,7 @@ namespace FeatureAdmin.Repository
 
         public void AddLoadedLocations(LocationsLoaded message)
         {
-            var error = store.AddLocations(message.ChildLocations);
+             var error = store.AddLoadedLocations(message);
 
             if (!string.IsNullOrEmpty(error))
             {
@@ -52,11 +52,6 @@ namespace FeatureAdmin.Repository
 
                 eventAggregator.PublishOnUIThread(logMsg);
             }
-
-            store.AddActivatedFeatures(message.ActivatedFeatures.ToList());
-
-            
-            store.AddFeatureDefinitions(message.Definitions);
         }
 
         /// <summary>
