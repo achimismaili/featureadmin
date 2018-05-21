@@ -10,24 +10,92 @@ namespace FeatureAdmin.OrigoDb
     [Serializable]
     public class FeatureModel : Model
     {
-        private List<ActivatedFeature> ActivatedFeatures;
+        /// <summary>
+        /// KeyValuePair Guid, Guid = featureId, locationId
+        /// </summary>
+        private Dictionary<KeyValuePair<Guid, Guid>, ActivatedFeature> ActivatedFeatures;
         private Dictionary<string, FeatureDefinition> FeatureDefinitions;
         private Dictionary<Guid, Location> Locations;
 
         public FeatureModel()
         {
-            ActivatedFeatures = new List<ActivatedFeature>();
+            ActivatedFeatures = new Dictionary<KeyValuePair<Guid, Guid>, ActivatedFeature>();
             FeatureDefinitions = new Dictionary<string, FeatureDefinition>();
             Locations = new Dictionary<Guid, Location>();
         }
 
-        public void AddActivatedFeatures(IEnumerable<ActivatedFeature> activatedFeatures)
+        public string AddActivatedFeatures(IEnumerable<ActivatedFeature> activatedFeatures)
         {
-            if (activatedFeatures != null)
+            try
             {
-                ActivatedFeatures.AddRange(activatedFeatures);
+               
 
+
+                if (activatedFeatures != null)
+                {
+                    foreach (var item in activatedFeatures)
+                    {
+                        var key = new KeyValuePair<Guid, Guid>(item.FeatureId, item.LocationId);
+
+                        if (ActivatedFeatures.ContainsKey(key))
+                        {
+                            throw new Exception( "Achtung!");
+                        }
+                        else
+                        {
+                            ActivatedFeatures.Add(key, item);
+                        }
+                    }
+
+
+
+                    //ActivatedFeatures = ActivatedFeatures.Concat(activatedFeatures.ToDictionary(
+                    //    f => new KeyValuePair<Guid, Guid>(f.FeatureId, f.LocationId)))
+                    //    .ToDictionary(f => f.Key, f => f.Value); ;
+                }
             }
+            catch (Exception ex)
+            {
+                string additionalInfo = string.Empty;
+
+                ActivatedFeature doublette = null;
+
+                // try to find activated feature that was tried to be added twice
+                try
+                {
+                    doublette =
+                            (from newFeatures in activatedFeatures
+                             join f in ActivatedFeatures.Values on new { newFeatures.FeatureId, newFeatures.LocationId } equals new { f.FeatureId, f.LocationId }
+                             where newFeatures.FeatureId == f.FeatureId && newFeatures.LocationId == f.LocationId
+                             select f).FirstOrDefault();
+
+                    if (doublette == null)
+                    {
+                        doublette =
+                            activatedFeatures.GroupBy(f => new { f.FeatureId, f.LocationId })
+                            .SelectMany(grp => grp.Skip(1)).FirstOrDefault();
+                    }
+
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+                if (doublette == null)
+                {
+                    return ex.Message;
+                }
+                else
+                {
+                    return string.Format(
+                        "Error when trying to add an activated feature. The following combination of location id '{0}' and feature id '{1}' was already loaded. This should never happen! Try to reload or restart. Error: '{2}'", 
+                        doublette.LocationId, doublette.FeatureId, ex.Message);
+                }
+            }
+
+            return string.Empty;
         }
 
         public void AddFeatureDefinitions(IEnumerable<FeatureDefinition> farmFeatureDefinitions)
@@ -76,7 +144,7 @@ namespace FeatureAdmin.OrigoDb
                     {
                         // see also https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-inner-joins
                         searchResult =
-                            from af in ActivatedFeatures
+                            from af in ActivatedFeatures.Values
                             where af.LocationId == idGuid
                             join fd in FeatureDefinitions on af.FeatureDefinitionUniqueIdentifier equals fd.Key
                             select fd.Value;
@@ -106,7 +174,9 @@ namespace FeatureAdmin.OrigoDb
         {
             if (featureDefinition != null)
             {
-                return ActivatedFeatures.Where(af => af.FeatureDefinitionUniqueIdentifier == featureDefinition.UniqueIdentifier).ToList();
+                return ActivatedFeatures.Where(af => af.Value.FeatureDefinitionUniqueIdentifier == featureDefinition.UniqueIdentifier)
+                    .Select(af => af.Value)
+                    .ToList();
             }
 
             return null;
@@ -116,7 +186,9 @@ namespace FeatureAdmin.OrigoDb
         {
             if (location != null)
             {
-                return ActivatedFeatures.Where(af => af.LocationId == location.Id).ToList();
+                return ActivatedFeatures.Where(af => af.Value.LocationId == location.Id)
+                    .Select(af => af.Value)
+                    .ToList(); ;
             }
 
             return null;
@@ -125,7 +197,17 @@ namespace FeatureAdmin.OrigoDb
 
         public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
         {
-            return ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
+            var key = new KeyValuePair<Guid, Guid>(featureDefinitionId, locationId);
+
+            if (ActivatedFeatures.ContainsKey(key))
+            {
+                return ActivatedFeatures[key];
+            }
+            else
+            {
+                return null;
+            }
+
         }
 
 
@@ -138,13 +220,16 @@ namespace FeatureAdmin.OrigoDb
         /// <returns>true, if feature is found</returns>
         public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId)
         {
-            if (locationId == null)
+            if (locationId.HasValue)
             {
-                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId);
+                // the key of the key is the featureId
+                return ActivatedFeatures.Keys.Any(f => f.Key == featureDefinitionId);
             }
             else
             {
-                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
+                var key = new KeyValuePair<Guid, Guid>(featureDefinitionId, locationId.Value);
+
+                return ActivatedFeatures.ContainsKey(key);
             }
         }
 
@@ -169,9 +254,9 @@ namespace FeatureAdmin.OrigoDb
                 {
                     doublette =
                             (from newLocs in locations
-                            join l in Locations on newLocs.Id equals l.Key
-                            where newLocs.Id == l.Key
-                            select newLocs).FirstOrDefault();
+                             join l in Locations on newLocs.Id equals l.Key
+                             where newLocs.Id == l.Key
+                             select newLocs).FirstOrDefault();
                 }
                 catch (Exception)
                 {
@@ -185,7 +270,9 @@ namespace FeatureAdmin.OrigoDb
                 }
                 else
                 {
-                    return string.Format("Error when trying to add a location. The location with id '{0}' and Url '{1}' was already loaded. Error: '{2}'", doublette.Id, doublette.Url , ex.Message);
+                    return string.Format(
+                        "Error when trying to add a location. The location with id '{0}' and Url '{1}' was already loaded. This should never happen! Try to reload or restart. Error: '{2}'",
+                        doublette.Id, doublette.Url, ex.Message);
                 }
             }
 
@@ -219,10 +306,19 @@ namespace FeatureAdmin.OrigoDb
                     {
                         // see also https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-inner-joins
                         searchResult =
-                            from af in ActivatedFeatures
-                            where af.FeatureId == idGuid
-                            join l in Locations on af.LocationId equals l.Key
-                            select l.Value;
+                            ActivatedFeatures.Keys
+                            .Where(f => f.Key == idGuid)
+                            .Join(
+                            Locations,
+                            f => f.Value,
+                            l => l.Key,
+                            (f, l) => l.Value);
+
+                        //from af in ActivatedFeatures
+                        //join l in Locations 
+                        //on af.LocationId equals l.Key
+                        //where af.FeatureId == idGuid
+                        //select l.Value;
                     }
 
                 }

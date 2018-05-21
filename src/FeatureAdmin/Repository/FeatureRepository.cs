@@ -51,7 +51,15 @@ namespace FeatureAdmin.Repository
                 eventAggregator.PublishOnUIThread(logMsg);
             }
 
-            store.AddActivatedFeatures(message.ActivatedFeatures);
+            error = store.AddActivatedFeatures(message.ActivatedFeatures);
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                var logMsg = new Messages.LogMessage(Core.Models.Enums.LogLevel.Error, error);
+
+                eventAggregator.PublishOnUIThread(logMsg);
+            }
+
             store.AddFeatureDefinitions(message.Definitions);
         }
 
