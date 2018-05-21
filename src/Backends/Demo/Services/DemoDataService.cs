@@ -18,11 +18,11 @@ namespace FeatureAdmin.Backends.Demo.Services
             demoActivatedFeatures = SampleData.SampleLocationHierarchy.GetAllActivatedFeatures(demoLocations);
         }
 
-        private static IEnumerable<FeatureDefinition> demoFeaturedefinitions;
+        private IEnumerable<FeatureDefinition> demoFeaturedefinitions;
 
-        private static IEnumerable<Location> demoLocations;
+        private IEnumerable<Location> demoLocations;
 
-        private static IEnumerable<ActivatedFeature> demoActivatedFeatures;
+        private IEnumerable<ActivatedFeature> demoActivatedFeatures;
 
         public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
         {
@@ -33,7 +33,7 @@ namespace FeatureAdmin.Backends.Demo.Services
 
 
 
-        private static LocationsLoaded loadLocations(Location location)
+        private LocationsLoaded loadLocations(Location location)
         {
             List<ActivatedFeature> activatedFeatures = new List<ActivatedFeature>();
             List<FeatureDefinition> definitions = new List<FeatureDefinition>();
