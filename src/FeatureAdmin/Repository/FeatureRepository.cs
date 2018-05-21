@@ -25,8 +25,8 @@ namespace FeatureAdmin.Repository
             var config = new EngineConfiguration();
             config.PersistenceMode = PersistenceMode.ManualSnapshots;
             // see https://github.com/DevrexLabs/OrigoDB/issues/24
-            // config.SetCommandStoreFactory(cfg => new OrigoDB.Core.Test.InMemoryCommandStore(cfg));
-            // config.SetSnapshotStoreFactory(cfg => new OrigoDB.Core.Test.InMemorySnapshotStore(cfg));
+            config.SetCommandStoreFactory(cfg => new OrigoDB.Core.Test.InMemoryCommandStore(cfg));
+            config.SetSnapshotStoreFactory(cfg => new OrigoDB.Core.Test.InMemorySnapshotStore(cfg));
             store = Db.For<OrigoDb.FeatureModel>(config);
 
             this.eventAggregator = eventAggregator;
