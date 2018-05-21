@@ -54,9 +54,9 @@ namespace FeatureAdmin.Backends.Demo.Services
 
             foreach (Location l in children)
             {
-                var features = demoActivatedFeatures.Where(f => f.LocationId == location.Id).AsEnumerable<ActivatedFeature>();
+                var features = demoActivatedFeatures.Where(f => f.LocationId == l.Id).AsEnumerable<ActivatedFeature>();
                 activatedFeatures.AddRange(features);
-                var defs = featuredefinitions.Where(f => f.SandBoxedSolutionLocation == location.Url).AsEnumerable<FeatureDefinition>();
+                var defs = featuredefinitions.Where(f => f.SandBoxedSolutionLocation == l.Url).AsEnumerable<FeatureDefinition>();
                 definitions.AddRange(defs);
             }
 

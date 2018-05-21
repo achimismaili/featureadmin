@@ -26,32 +26,33 @@ namespace FeatureAdmin.OrigoDb
 
         public string AddActivatedFeatures(IEnumerable<ActivatedFeature> activatedFeatures)
         {
+            // required only for debugging with foreach code in try section
+            // KeyValuePair<Guid, Guid>? key = null;
+
             try
             {
-               
-
-
                 if (activatedFeatures != null)
                 {
-                    foreach (var item in activatedFeatures)
-                    {
-                        var key = new KeyValuePair<Guid, Guid>(item.FeatureId, item.LocationId);
 
-                        if (ActivatedFeatures.ContainsKey(key))
-                        {
-                            throw new Exception( "Achtung!");
-                        }
-                        else
-                        {
-                            ActivatedFeatures.Add(key, item);
-                        }
-                    }
+                    // this is for debugging only, it is not performing well with bigger sharepoint farms ...
 
+                    //foreach (var item in activatedFeatures)
+                    //{
+                    //    key = new KeyValuePair<Guid, Guid>(item.FeatureId, item.LocationId);
 
+                    //    if (ActivatedFeatures.ContainsKey(key.Value))
+                    //    {
+                    //        throw new Exception( "Existing key: feature id: " + key.Value.Key.ToString() + " location id:" + key.Value.Value.ToString() + "!");
+                    //    }
+                    //    else
+                    //    {
+                    //        ActivatedFeatures.Add(key.Value, item);
+                    //    }
+                    //}
 
-                    //ActivatedFeatures = ActivatedFeatures.Concat(activatedFeatures.ToDictionary(
-                    //    f => new KeyValuePair<Guid, Guid>(f.FeatureId, f.LocationId)))
-                    //    .ToDictionary(f => f.Key, f => f.Value); ;
+                    ActivatedFeatures = ActivatedFeatures.Concat(activatedFeatures.ToDictionary(
+                        f => new KeyValuePair<Guid, Guid>(f.FeatureId, f.LocationId)))
+                        .ToDictionary(f => f.Key, f => f.Value); ;
                 }
             }
             catch (Exception ex)
@@ -84,14 +85,19 @@ namespace FeatureAdmin.OrigoDb
                 }
 
                 if (doublette == null)
+                    // required only for debugging with foreach code in try section
+                   // if (key == null)
                 {
                     return ex.Message;
                 }
                 else
                 {
                     return string.Format(
-                        "Error when trying to add an activated feature. The following combination of location id '{0}' and feature id '{1}' was already loaded. This should never happen! Try to reload or restart. Error: '{2}'", 
-                        doublette.LocationId, doublette.FeatureId, ex.Message);
+                        "Error when trying to add an activated feature. The following combination of location id '{0}' and feature id '{1}' was already loaded. This should never happen! Try to reload or restart. Error: '{2}'",
+                         doublette.LocationId, doublette.FeatureId, ex.Message);
+
+                    // required only for debugging with foreach code in try section
+                    // key.Value.Value, key.Value.Key, ex.Message);
                 }
             }
 

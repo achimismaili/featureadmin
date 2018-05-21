@@ -159,12 +159,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         private void HandleLocationsLoaded([NotNull] LocationsLoaded message)
         {
             TrackLocationsProcessed(message);
-#if DEBUG
-            var dbgMsg = new FeatureAdmin.Messages.LogMessage(Core.Models.Enums.LogLevel.Debug,
-                    string.Format("Debug Load progress: {0}", StatusReport)
-                    );
-            eventAggregator.PublishOnUIThread(dbgMsg);
-#endif
+
             // if web apps are loaded, load children
             if (message.Parent.Scope == Enums.Scope.Farm)
             {
