@@ -14,7 +14,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-         <TextBlock x:Name="Content" />
+         <TextBlock x:Name="DialogText" />
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Width="100" x:Name="Ok" Content="OK" IsDefault="True" IsCancel="True" />
             <Button Width="100" x:Name="Cancel" Content="Cancel" IsCancel="True"/>

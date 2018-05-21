@@ -12,13 +12,13 @@ namespace FeatureAdmin.ViewModels
 {
     public class DialogViewModel : IHaveDisplayName
     {
-        public DialogViewModel(string displayName, string content)
+        public DialogViewModel(string displayName, string dialogText)
         {
             DisplayName = string.Format("Confirmation for {0}", displayName);
-            Content = content;
+            DialogText = dialogText;
         }
 
-        public string Content { get; private set; }
+        public string DialogText { get; private set; }
 
         public string DisplayName { get; set; }
 
