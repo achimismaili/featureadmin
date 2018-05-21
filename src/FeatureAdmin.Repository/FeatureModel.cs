@@ -26,8 +26,11 @@ namespace FeatureAdmin.OrigoDb
 
         public void AddActivatedFeatures(IEnumerable<ActivatedFeature> activatedFeatures)
         {
-                if (activatedFeatures != null)
-                {
+            //TODO - just for testing
+            return;
+
+            if (activatedFeatures != null)
+            {
 
                 //    ActivatedFeatures.AddRange(activatedFeatures);
                 var counter = 0;
@@ -36,7 +39,7 @@ namespace FeatureAdmin.OrigoDb
                     ActivatedFeatures.Add(f);
                     counter++;
                 }
-                }
+            }
 
 
 
@@ -44,6 +47,9 @@ namespace FeatureAdmin.OrigoDb
 
         public void AddFeatureDefinitions(IEnumerable<FeatureDefinition> farmFeatureDefinitions)
         {
+            //TODO - just for testing
+            return;
+
             if (farmFeatureDefinitions != null)
             {
                 foreach (FeatureDefinition fd in farmFeatureDefinitions)
@@ -64,6 +70,11 @@ namespace FeatureAdmin.OrigoDb
 
         public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Scope? selectedScopeFilter, bool? onlyFarmFeatures)
         {
+            // TODO rollback, just for testing
+            return new List<FeatureDefinition>();
+
+
+
             IEnumerable<FeatureDefinition> searchResult;
 
             if (string.IsNullOrEmpty(searchInput))
@@ -119,6 +130,9 @@ namespace FeatureAdmin.OrigoDb
 
         public IEnumerable<ActivatedFeature> GetActivatedFeatures(FeatureDefinition featureDefinition)
         {
+            //TODO - just for testing
+            return null;
+
             if (featureDefinition != null)
             {
                 return ActivatedFeatures.Where(af => af.FeatureDefinitionUniqueIdentifier == featureDefinition.UniqueIdentifier)
@@ -130,13 +144,19 @@ namespace FeatureAdmin.OrigoDb
 
         public IEnumerable<ActivatedFeature> GetActivatedFeatures(Location location)
         {
-                return ActivatedFeatures.Where(af => af.LocationId == location.Id)
-                    .ToList();
+            //TODO - just for testing
+            return null;
+
+            return ActivatedFeatures.Where(af => af.LocationId == location.Id)
+                .ToList();
         }
 
 
         public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
         {
+            //TODO - just for testing
+            return null;
+
             return ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
         }
 
@@ -150,6 +170,10 @@ namespace FeatureAdmin.OrigoDb
         /// <returns>true, if feature is found</returns>
         public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId)
         {
+
+            //TODO - just for testing
+            return true;
+
             if (locationId.HasValue)
             {
                 return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId);
@@ -163,6 +187,9 @@ namespace FeatureAdmin.OrigoDb
         [Command]
         public string AddLocations(IEnumerable<Location> locations)
         {
+            //TODO - just for testing
+            return null;
+
             try
             {
                 if (locations != null)
@@ -208,6 +235,9 @@ namespace FeatureAdmin.OrigoDb
         }
         public IEnumerable<Location> SearchLocations(string searchInput, Scope? selectedScopeFilter)
         {
+            // TODO rollback, just for testing
+            return new List<Location>();
+
             IEnumerable<Location> searchResult;
 
             if (string.IsNullOrEmpty(searchInput))
