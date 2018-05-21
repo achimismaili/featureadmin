@@ -13,12 +13,12 @@ namespace FeatureAdmin.Backends.Demo.Services
     {
         public DemoDataService()
         {
-            featuredefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions();
+            demoFeaturedefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions();
             demoLocations = SampleData.SampleLocationHierarchy.GetAllLocations();
             demoActivatedFeatures = SampleData.SampleLocationHierarchy.GetAllActivatedFeatures(demoLocations);
         }
 
-        private static IEnumerable<FeatureDefinition> featuredefinitions;
+        private static IEnumerable<FeatureDefinition> demoFeaturedefinitions;
 
         private static IEnumerable<Location> demoLocations;
 
@@ -26,7 +26,9 @@ namespace FeatureAdmin.Backends.Demo.Services
 
         public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
         {
-            return featuredefinitions;
+            var farmFeatureDefinitions =  demoFeaturedefinitions.Where(fd => string.IsNullOrEmpty(fd.SandBoxedSolutionLocation)).ToList();
+
+            return farmFeatureDefinitions;
         }
 
 
@@ -49,14 +51,14 @@ namespace FeatureAdmin.Backends.Demo.Services
                 children.Add(location);
             }
 
-            children.AddRange(demoLocations.Where(f => f.Parent == location.Id).AsEnumerable<Location>());
+            children.AddRange(demoLocations.Where(f => f.Parent == location.Id).ToList());
 
 
             foreach (Location l in children)
             {
-                var features = demoActivatedFeatures.Where(f => f.LocationId == l.Id).AsEnumerable<ActivatedFeature>();
+                var features = demoActivatedFeatures.Where(f => f.LocationId == l.Id).ToList();
                 activatedFeatures.AddRange(features);
-                var defs = featuredefinitions.Where(f => f.SandBoxedSolutionLocation == l.Url).AsEnumerable<FeatureDefinition>();
+                var defs = demoFeaturedefinitions.Where(f => f.SandBoxedSolutionLocation == l.Url && f.Scope == l.Scope).ToList();
                 definitions.AddRange(defs);
             }
 
@@ -76,7 +78,7 @@ namespace FeatureAdmin.Backends.Demo.Services
             if (location.Scope == Core.Models.Enums.Scope.WebApplication && initialLoaded.ChildLocations.Count() > 0)
             {
 
-                List<FeatureDefinition> featureDefinitions = new List<FeatureDefinition>(initialLoaded.Definitions);
+                List<FeatureDefinition> fDefs = new List<FeatureDefinition>(initialLoaded.Definitions);
 
                 List<Location> locations = new List<Location>(initialLoaded.ChildLocations);
 
@@ -88,7 +90,7 @@ namespace FeatureAdmin.Backends.Demo.Services
                 {
                     var child = loadLocations(siteCollection);
 
-                    featureDefinitions.AddRange(child.Definitions);
+                    fDefs.AddRange(child.Definitions);
                     locations.AddRange(child.ChildLocations);
                     features.AddRange(child.ActivatedFeatures);
                 }
@@ -98,7 +100,7 @@ namespace FeatureAdmin.Backends.Demo.Services
                     location,
                     locations,
                     features,
-                    featuredefinitions
+                    fDefs
                     );
 
                 return loadedMessage;

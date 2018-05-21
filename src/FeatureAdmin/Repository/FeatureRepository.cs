@@ -24,9 +24,9 @@ namespace FeatureAdmin.Repository
 )
         {
             var config = new EngineConfiguration();
-            // config.PersistenceMode = PersistenceMode.ManualSnapshots;
+            config.PersistenceMode = PersistenceMode.ManualSnapshots;
             // see https://github.com/DevrexLabs/OrigoDB/issues/24
-            config.SetCommandStoreFactory(cfg => new OrigoDB.Core.Test.InMemoryCommandStore(cfg));
+            // config.SetCommandStoreFactory(cfg => new OrigoDB.Core.Test.InMemoryCommandStore(cfg));
             config.SetSnapshotStoreFactory(cfg => new OrigoDB.Core.Test.InMemorySnapshotStore(cfg));
             store = Db.For<FeatureModel>(config);
 
@@ -49,19 +49,12 @@ namespace FeatureAdmin.Repository
 
             if (!string.IsNullOrEmpty(error))
             {
-                var logMsg = new Messages.LogMessage(Core.Models.Enums.LogLevel.Error, error );
-
-                eventAggregator.PublishOnUIThread(logMsg);
-            }
-
-            error = store.AddActivatedFeatures(message.ActivatedFeatures);
-
-            if (!string.IsNullOrEmpty(error))
-            {
                 var logMsg = new Messages.LogMessage(Core.Models.Enums.LogLevel.Error, error);
 
                 eventAggregator.PublishOnUIThread(logMsg);
             }
+
+            store.AddActivatedFeatures(message.ActivatedFeatures);
 
             store.AddFeatureDefinitions(message.Definitions);
         }
