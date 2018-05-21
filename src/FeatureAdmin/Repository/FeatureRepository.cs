@@ -1,7 +1,6 @@
 ﻿using Caliburn.Micro;
 using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
-using FeatureAdmin.OrigoDb;
 using OrigoDB.Core;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ namespace FeatureAdmin.Repository
     /// </summary>
     public class FeatureRepository : IFeatureRepository
     {
-        public FeatureModel store;
+        public OrigoDb.FeatureModel store;
 
         private readonly IEventAggregator eventAggregator;
 
@@ -28,7 +27,7 @@ namespace FeatureAdmin.Repository
             // see https://github.com/DevrexLabs/OrigoDB/issues/24
             // config.SetCommandStoreFactory(cfg => new OrigoDB.Core.Test.InMemoryCommandStore(cfg));
             // config.SetSnapshotStoreFactory(cfg => new OrigoDB.Core.Test.InMemorySnapshotStore(cfg));
-            store = Db.For<FeatureModel>(config);
+            store = Db.For<OrigoDb.FeatureModel>(config);
 
             this.eventAggregator = eventAggregator;
         }
@@ -54,8 +53,9 @@ namespace FeatureAdmin.Repository
                 eventAggregator.PublishOnUIThread(logMsg);
             }
 
-            store.AddActivatedFeatures(message.ActivatedFeatures);
+            store.AddActivatedFeatures(message.ActivatedFeatures.ToList());
 
+            
             store.AddFeatureDefinitions(message.Definitions);
         }
 
