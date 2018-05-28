@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using FeatureAdmin.Repository;
 using FeatureAdmin.Core.Messages.Request;
+using FeatureAdmin.Core.Messages.Completed;
 
 namespace FeatureAdmin.Actors
 {

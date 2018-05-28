@@ -59,7 +59,7 @@
     <Compile Include="Messages\Completed\FeatureActivationCompleted.cs" />
     <Compile Include="Messages\Completed\FeatureDeactivationCompleted.cs" />
     <Compile Include="Messages\Completed\BaseFeatureToggleCompleted.cs" />
-    <Compile Include="Messages\SettingsChanged.cs" />
+    <Compile Include="Messages\Completed\SettingsChanged.cs" />
     <Compile Include="Messages\BaseTaskMessage.cs" />
     <Compile Include="Messages\Completed\FarmFeatureDefinitionsLoaded.cs" />
     <Compile Include="Messages\Request\FeatureToggleRequest.cs" />
@@ -68,9 +68,8 @@
     <Compile Include="NotNullAttribute.cs" />
     <Compile Include="Messages\Request\LoadTask.cs" />
     <Compile Include="Messages\TaskUpdate.cs" />
-    <Compile Include="Messages\LoadChildLocationsQuery.cs" />
-    <Compile Include="Messages\LoadFeatureDefinitionQuery.cs" />
-    <Compile Include="Messages\LoadLocationQuery.cs" />
+    <Compile Include="Messages\Request\LoadFeatureDefinitionQuery.cs" />
+    <Compile Include="Messages\Request\LoadLocationQuery.cs" />
     <Compile Include="Messages\Completed\LocationsLoaded.cs" />
     <Compile Include="Messages\Completed\ItemUpdated.cs" />
     <Compile Include="Models\BaseItem.cs" />

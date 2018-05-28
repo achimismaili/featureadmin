@@ -1,7 +1,6 @@
 ﻿using Akka.Actor;
 using Akka.Event;
-using FeatureAdmin.Core.Messages;
-using FeatureAdmin.Core.Models;
+using FeatureAdmin.Core.Messages.Request;
 using FeatureAdmin.Core.Services;
 
 namespace FeatureAdmin.Actors

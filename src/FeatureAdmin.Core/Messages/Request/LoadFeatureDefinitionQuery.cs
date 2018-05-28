@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin.Core.Messages
+namespace FeatureAdmin.Core.Messages.Request
 {
     public class LoadFeatureDefinitionQuery : BaseTaskMessage
     {

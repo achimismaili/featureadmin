@@ -3,8 +3,8 @@ using Akka.DI.Core;
 using Akka.Event;
 using Caliburn.Micro;
 using FeatureAdmin.Actors;
-using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Messages.Completed;
+using FeatureAdmin.Core.Messages.Request;
 using FeatureAdmin.Repository;
 using System;
 using System.Collections.Generic;
@@ -188,7 +188,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             repository.Clear();
 
             // initiate read of all feature definitions
-            var fdQuery = new LoadFeatureDefinitionQuery(Id);
+            var fdQuery = new Messages.Request.LoadFeatureDefinitionQuery(Id);
             featureDefinitionActor.Tell(fdQuery);
 
             // initiate read of locations

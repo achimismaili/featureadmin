@@ -170,7 +170,7 @@ namespace FeatureAdmin.ViewModels
 
         private void UpdateSettings()
         {
-            var settings = new Core.Messages.SettingsChanged(elevatedPrivileges, force);
+            var settings = new Core.Messages.Completed.SettingsChanged(elevatedPrivileges, force);
 
             eventAggregator.PublishOnUIThread(settings);
 
