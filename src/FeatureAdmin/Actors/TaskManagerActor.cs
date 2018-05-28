@@ -1,16 +1,10 @@
 ﻿using Akka.Actor;
-using Akka.DI.Core;
 using Akka.Event;
 using Caliburn.Micro;
 using FeatureAdmin.Core.Messages;
-using FeatureAdmin.Core.Messages.Tasks;
-using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Models.Tasks;
-using FeatureAdmin.Messages;
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using FeatureAdmin.Core;
 using FeatureAdmin.Repository;
 using FeatureAdmin.Core.Messages.Request;
 

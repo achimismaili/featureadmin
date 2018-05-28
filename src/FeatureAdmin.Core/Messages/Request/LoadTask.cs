@@ -2,7 +2,7 @@
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Models.Enums;
 
-namespace FeatureAdmin.Core.Messages.Tasks
+namespace FeatureAdmin.Core.Messages.Request
 {
     public class LoadTask
     {

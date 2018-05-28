@@ -1,12 +1,5 @@
 ﻿using Caliburn.Micro;
 using FeatureAdmin.Core.Models;
-using System.Linq;
-using System;
-using FeatureAdmin.Core.Messages;
-using System.Collections.Generic;
-using FeatureAdmin.Core.Messages.Tasks;
-using FeatureAdmin.Core;
-using FeatureAdmin.Core.Factories;
 using FeatureAdmin.Messages;
 using FeatureAdmin.Repository;
 

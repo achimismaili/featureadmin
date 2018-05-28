@@ -3,7 +3,6 @@ using Akka.Actor;
 using Caliburn.Micro;
 using FeatureAdmin.Actors;
 using FeatureAdmin.Common;
-using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
 using FeatureAdmin.Repository;
@@ -79,7 +78,7 @@ namespace FeatureAdmin.ViewModels
         {
             CanReLoad = false;
             recentLoadTask = Guid.NewGuid();
-            taskManagerActorRef.Tell(new LoadTask(recentLoadTask, taskTitle, Core.Factories.LocationFactory.GetDummyFarmForLoadCommand()));
+            taskManagerActorRef.Tell(new Core.Messages.Request.LoadTask(recentLoadTask, taskTitle, Core.Factories.LocationFactory.GetDummyFarmForLoadCommand()));
 
             // fyi - to do this via eventAggregator would also allow to trigger reload from other viewModels, e.g. also for single locations, 
             // but at least the initial farm load cannot be triggered by eventaggregator, because it is not listening at that 

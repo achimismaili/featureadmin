@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin.Core.Messages.Tasks
+namespace FeatureAdmin.Core.Messages.Completed
 {
-    public class FarmFeatureDefinitionsLoaded : Tasks.BaseTaskMessage
+    public class FarmFeatureDefinitionsLoaded : BaseTaskMessage
     {
 
 

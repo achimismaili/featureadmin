@@ -4,13 +4,10 @@ using Akka.Event;
 using Caliburn.Micro;
 using FeatureAdmin.Actors;
 using FeatureAdmin.Core.Messages;
-using FeatureAdmin.Core.Messages.Tasks;
-using FeatureAdmin.Core.Models.Enums;
-using FeatureAdmin.Messages;
+using FeatureAdmin.Core.Messages.Completed;
 using FeatureAdmin.Repository;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace FeatureAdmin.Core.Models.Tasks

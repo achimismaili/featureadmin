@@ -58,19 +58,20 @@
     <Compile Include="Factories\LocationFactory.cs" />
     <Compile Include="Messages\Completed\FeatureActivationCompleted.cs" />
     <Compile Include="Messages\Completed\FeatureDeactivationCompleted.cs" />
+    <Compile Include="Messages\Completed\BaseFeatureToggleCompleted.cs" />
     <Compile Include="Messages\SettingsChanged.cs" />
-    <Compile Include="Messages\Tasks\BaseTaskMessage.cs" />
-    <Compile Include="Messages\Tasks\FarmFeatureDefinitionsLoaded.cs" />
+    <Compile Include="Messages\BaseTaskMessage.cs" />
+    <Compile Include="Messages\Completed\FarmFeatureDefinitionsLoaded.cs" />
     <Compile Include="Messages\Request\FeatureToggleRequest.cs" />
     <Compile Include="Models\Enums\LogLevel.cs" />
     <Compile Include="Models\ProgressModule.cs" />
     <Compile Include="NotNullAttribute.cs" />
-    <Compile Include="Messages\Tasks\LoadTask.cs" />
-    <Compile Include="Messages\Tasks\TaskUpdate.cs" />
+    <Compile Include="Messages\Request\LoadTask.cs" />
+    <Compile Include="Messages\TaskUpdate.cs" />
     <Compile Include="Messages\LoadChildLocationsQuery.cs" />
     <Compile Include="Messages\LoadFeatureDefinitionQuery.cs" />
     <Compile Include="Messages\LoadLocationQuery.cs" />
-    <Compile Include="Messages\Tasks\LocationsLoaded.cs" />
+    <Compile Include="Messages\Completed\LocationsLoaded.cs" />
     <Compile Include="Messages\ItemUpdated.cs" />
     <Compile Include="Models\BaseItem.cs" />
     <Compile Include="Models\Enums\TaskUpdateType.cs" />
@@ -89,6 +90,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Messages\Tasks\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

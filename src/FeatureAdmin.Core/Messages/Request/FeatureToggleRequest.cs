@@ -4,7 +4,7 @@ using FeatureAdmin.Core.Models.Enums;
 
 namespace FeatureAdmin.Core.Messages.Request
 {
-    public class FeatureToggleRequest : Tasks.BaseTaskMessage
+    public class FeatureToggleRequest : BaseTaskMessage
     {
         /// <summary>
         /// request to activate or deactivate a feature in a location or below

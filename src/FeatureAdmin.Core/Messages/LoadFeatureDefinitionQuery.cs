@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Core.Messages
 {
-    public class LoadFeatureDefinitionQuery : Tasks.BaseTaskMessage
+    public class LoadFeatureDefinitionQuery : BaseTaskMessage
     {
         public LoadFeatureDefinitionQuery(Guid taskId) : base(taskId)
         {

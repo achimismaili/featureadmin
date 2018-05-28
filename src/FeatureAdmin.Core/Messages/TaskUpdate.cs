@@ -2,9 +2,9 @@
 using FeatureAdmin.Core.Models.Enums;
 using System;
 
-namespace FeatureAdmin.Core.Messages.Tasks
+namespace FeatureAdmin.Core.Messages
 {
-    public class TaskUpdate : Core.Messages.Tasks.BaseTaskMessage
+    public class TaskUpdate : BaseTaskMessage
     {
         public TaskUpdate(Guid taskId) : base(taskId)
         {

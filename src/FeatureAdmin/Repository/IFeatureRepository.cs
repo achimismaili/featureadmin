@@ -12,7 +12,7 @@ namespace FeatureAdmin.Repository
         IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, bool? onlyFarmFeatures);
         IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter);
 
-        void AddLoadedLocations(Core.Messages.Tasks.LocationsLoaded message);
+        void AddLoadedLocations(Core.Messages.Completed.LocationsLoaded message);
         void AddFeatureDefinitions(IEnumerable<FeatureDefinition> featureDefinitions);
         // void AddActivatedFeatures(IEnumerable<ActivatedFeature> activatedFeatures);
 

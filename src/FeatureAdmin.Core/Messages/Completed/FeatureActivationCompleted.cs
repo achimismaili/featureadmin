@@ -3,7 +3,7 @@ using System;
 
 namespace FeatureAdmin.Core.Messages.Completed
 {
-    public class FeatureActivationCompleted : FeatureDeactivationCompleted
+    public class FeatureActivationCompleted : BaseFeatureToggleCompleted
     {
         /// <summary>
         /// provides the loaded location including child locations

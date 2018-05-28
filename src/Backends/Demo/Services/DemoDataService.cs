@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Services;
+using FeatureAdmin.Core.Messages.Completed;
 
 namespace FeatureAdmin.Backends.Demo.Services
 {

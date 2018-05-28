@@ -1,11 +1,8 @@
 ﻿using Caliburn.Micro;
 using FeatureAdmin.Core;
-using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
 using FeatureAdmin.Repository;
-using System;
-using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {

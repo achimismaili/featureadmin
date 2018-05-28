@@ -99,7 +99,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             throw new NotImplementedException();
         }
 
-        private void HandleFeatureActivationCompleted([NotNull] FeatureDeactivationCompleted message)
+        private void HandleFeatureActivationCompleted([NotNull] FeatureActivationCompleted message)
         {
             throw new NotImplementedException();
         }

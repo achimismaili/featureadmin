@@ -1,10 +1,10 @@
-﻿using FeatureAdmin.Core.Models;
+﻿using FeatureAdmin.Core.Messages.Completed;
+using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Models.Enums;
 using OrigoDB.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FeatureAdmin.Core.Messages.Tasks;
 
 namespace FeatureAdmin.OrigoDb
 {
@@ -189,11 +189,11 @@ namespace FeatureAdmin.OrigoDb
         {
             if (locationId.HasValue)
             {
-                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId);
+                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
             }
             else
             {
-                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
+                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId);
             }
         }
 

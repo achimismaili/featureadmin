@@ -1,6 +1,5 @@
-﻿using FeatureAdmin.Core.Messages.Tasks;
+﻿using FeatureAdmin.Core.Messages.Completed;
 using FeatureAdmin.Core.Models;
-using System;
 using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Services

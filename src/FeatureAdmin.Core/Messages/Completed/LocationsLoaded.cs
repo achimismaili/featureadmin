@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeatureAdmin.Core.Messages.Tasks
+namespace FeatureAdmin.Core.Messages.Completed
 {
-    public class LocationsLoaded : Tasks.BaseTaskMessage
+    public class LocationsLoaded : BaseTaskMessage
     {
         /// <summary>
         /// provides the loaded location including child locations

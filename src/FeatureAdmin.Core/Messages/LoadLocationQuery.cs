@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FeatureAdmin.Core.Messages
 {
-    public class LoadLocationQuery : Tasks.BaseTaskMessage
+    public class LoadLocationQuery : BaseTaskMessage
     {
         public LoadLocationQuery(Guid taskId, [NotNull] Location location)
             : base(taskId)

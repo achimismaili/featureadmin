@@ -1,11 +1,9 @@
 ﻿using Caliburn.Micro;
 using FeatureAdmin.Core;
-using FeatureAdmin.Core.Messages.Tasks;
 using FeatureAdmin.Core.Models;
 using OrigoDB.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FeatureAdmin.Repository
 {
@@ -43,7 +41,7 @@ namespace FeatureAdmin.Repository
         //    store.AddActivatedFeatures(activatedFeatures);
         //}
 
-        public void AddLoadedLocations(LocationsLoaded message)
+        public void AddLoadedLocations(Core.Messages.Completed.LocationsLoaded message)
         {
              var error = store.AddLoadedLocations(message);
 

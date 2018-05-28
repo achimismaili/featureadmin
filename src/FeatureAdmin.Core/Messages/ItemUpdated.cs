@@ -2,7 +2,7 @@
 
 namespace FeatureAdmin.Core.Messages
 {
-    public class ItemUpdated<T> : Tasks.BaseTaskMessage where T : class
+    public class ItemUpdated<T> : BaseTaskMessage where T : class
     {
         public object i;
 
