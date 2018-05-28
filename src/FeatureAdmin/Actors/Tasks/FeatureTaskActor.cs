@@ -14,7 +14,6 @@ using System.Linq;
 namespace FeatureAdmin.Core.Models.Tasks
 {
     public class FeatureTaskActor : BaseTaskActor
-        , Caliburn.Micro.IHandle<SettingsChanged>
     {
         public Dictionary<Guid, bool> jobsCompleted;
 
@@ -22,23 +21,16 @@ namespace FeatureAdmin.Core.Models.Tasks
         private readonly Dictionary<Guid, IActorRef> executingActors;
         private readonly IFeatureRepository repository;
 
-        private bool elevatedPrivileges;
-        private bool force;
-
-
         public FeatureTaskActor(
             IEventAggregator eventAggregator
             , IFeatureRepository repository
-            , Guid taskId, bool elevatedPrivileges, bool force)
+            , Guid taskId)
             : base(eventAggregator, taskId)
         {
             this.eventAggregator.Subscribe(this);
 
             executingActors = new Dictionary<Guid, IActorRef>();
             this.repository = repository;
-
-            this.elevatedPrivileges = elevatedPrivileges;
-            this.force = force;
 
             jobsCompleted = new Dictionary<Guid, bool>();
 
@@ -83,15 +75,9 @@ namespace FeatureAdmin.Core.Models.Tasks
         /// <remarks>
         /// see also https://getakka.net/articles/actors/receive-actor-api.html
         /// </remarks>
-        public static Props Props(IEventAggregator eventAggregator, IFeatureRepository repository, Guid taskId, bool elevatedPrivileges, bool force)
+        public static Props Props(IEventAggregator eventAggregator, IFeatureRepository repository, Guid taskId)
         {
-            return Akka.Actor.Props.Create(() => new FeatureTaskActor(eventAggregator, repository, taskId, elevatedPrivileges, force));
-        }
-
-        public void Handle(SettingsChanged message)
-        {
-            elevatedPrivileges = message.ElevatedPrivileges;
-            force = message.Force;
+            return Akka.Actor.Props.Create(() => new FeatureTaskActor(eventAggregator, repository, taskId));
         }
 
         private void HandleFeatureDeactivationCompleted([NotNull] FeatureDeactivationCompleted message)
@@ -132,6 +118,8 @@ namespace FeatureAdmin.Core.Models.Tasks
                     message.FeatureDefinition
                     , l
                     , message.Activate
+                    , message.Force
+                    , message.ElevatedPrivileges
                     );
 
                 if (!executingActors.ContainsKey(l.Id))

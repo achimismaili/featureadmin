@@ -15,7 +15,7 @@ namespace FeatureAdmin.Core.Tests.Messages
             Location l = null;
             // Act
 
-            Action act = () => new Core.Messages.ItemUpdated<Location>(Guid.NewGuid(), l);
+            Action act = () => new Core.Messages.Completed.ItemUpdated<Location>(Guid.NewGuid(), l);
 
             // Assert
             Assert.Throws<ArgumentNullException>(act);

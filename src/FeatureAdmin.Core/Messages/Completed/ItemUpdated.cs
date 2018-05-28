@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FeatureAdmin.Core.Messages
+namespace FeatureAdmin.Core.Messages.Completed
 {
     public class ItemUpdated<T> : BaseTaskMessage where T : class
     {

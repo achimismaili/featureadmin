@@ -64,15 +64,15 @@ namespace FeatureAdmin.Actors
                     eventAggregator
                     , repository
                     , message.TaskId
-                    , elevatedPrivileges
-                    , force
                     )
                     );
 
             taskActors.Add(message.TaskId, newTaskActor);
 
+            var requestWithCorrectSettings = new FeatureToggleRequest(message, force, elevatedPrivileges);
+
             // trigger feature toggle request
-            newTaskActor.Tell(message);
+            newTaskActor.Tell(requestWithCorrectSettings);
         }
 
         public void Handle(SettingsChanged message)

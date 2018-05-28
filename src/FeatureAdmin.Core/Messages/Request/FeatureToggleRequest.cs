@@ -30,6 +30,23 @@ namespace FeatureAdmin.Core.Messages.Request
         }
 
         /// <summary>
+        /// to keep message immutable, you need to create new message, if you want to change force and elevated settings
+        /// </summary>
+        /// <param name="requestToBeUpdated"></param>
+        /// <param name="force"></param>
+        /// <param name="elevatedPrivileges"></param>
+        public FeatureToggleRequest([NotNull] FeatureToggleRequest requestToBeUpdated, bool force, bool elevatedPrivileges)
+            :this(
+                 requestToBeUpdated.FeatureDefinition
+                 ,requestToBeUpdated.Location
+                 ,requestToBeUpdated.Activate
+                 ,force
+                 ,elevatedPrivileges
+                 )
+        {
+        }
+
+        /// <summary>
         /// request to activate or deactivate a feature in a location or below 
         /// </summary>
         /// <param name="featureDefinition"></param>
@@ -42,6 +59,8 @@ namespace FeatureAdmin.Core.Messages.Request
             :this(featureDefinition, location, activate, false, false)
         { }
         
+
+
         public FeatureDefinition FeatureDefinition { get; }
         public Location Location { get; }
         public bool Activate { get; }

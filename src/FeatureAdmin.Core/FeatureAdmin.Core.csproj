@@ -72,7 +72,7 @@
     <Compile Include="Messages\LoadFeatureDefinitionQuery.cs" />
     <Compile Include="Messages\LoadLocationQuery.cs" />
     <Compile Include="Messages\Completed\LocationsLoaded.cs" />
-    <Compile Include="Messages\ItemUpdated.cs" />
+    <Compile Include="Messages\Completed\ItemUpdated.cs" />
     <Compile Include="Models\BaseItem.cs" />
     <Compile Include="Models\Enums\TaskUpdateType.cs" />
     <Compile Include="Models\Enums\TaskType.cs" />
@@ -91,9 +91,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Messages\Tasks\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
