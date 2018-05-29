@@ -1,7 +1,6 @@
 ﻿using Akka.Actor;
 using Akka.Event;
 using Caliburn.Micro;
-using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Models.Tasks;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using FeatureAdmin.Repository;
 using FeatureAdmin.Core.Messages.Request;
 using FeatureAdmin.Core.Messages.Completed;
 
-namespace FeatureAdmin.Actors
+namespace FeatureAdmin.Actors.Tasks
 {
     public class TaskManagerActor : ReceiveActor
                // ,Caliburn.Micro.IHandle<LoadTask>

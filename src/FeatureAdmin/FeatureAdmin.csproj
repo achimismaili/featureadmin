@@ -159,7 +159,7 @@
     <Compile Include="ActorSystemReference.cs" />
     <Compile Include="Actors\FeatureDefinitionActor.cs" />
     <Compile Include="Actors\LocationActor.cs" />
-    <Compile Include="Actors\TaskManagerActor.cs" />
+    <Compile Include="Actors\Tasks\TaskManagerActor.cs" />
     <Compile Include="Actors\Tasks\BaseTaskActor.cs" />
     <Compile Include="Actors\Tasks\FeatureTaskActor.cs" />
     <Compile Include="Actors\Tasks\LoadTaskActor.cs" />

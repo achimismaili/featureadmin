@@ -1,7 +1,6 @@
 ﻿using System;
 using Akka.Actor;
 using Caliburn.Micro;
-using FeatureAdmin.Actors;
 using FeatureAdmin.Common;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
@@ -147,7 +146,7 @@ namespace FeatureAdmin.ViewModels
         private void InitializeActors()
         {
             taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(
-                Akka.Actor.Props.Create(() => new TaskManagerActor(eventAggregator, repository, elevatedPrivileges, force)));
+                Akka.Actor.Props.Create(() => new Actors.Tasks.TaskManagerActor(eventAggregator, repository, elevatedPrivileges, force)));
         }
         public void Handle(OpenWindow<ActivatedFeature> message)
         {
