@@ -46,6 +46,22 @@ namespace FeatureAdmin.OrigoDb
                 }
             }
         }
+
+        public string AddActivatedFeature(ActivatedFeature feature)
+        {
+            var featureToAdd = ActivatedFeatures.FirstOrDefault(f => f == feature);
+
+            if (featureToAdd == null)
+            {
+                ActivatedFeatures.Add(feature);
+                    return null;
+            }
+            else
+            {
+                return string.Format("Problem in Repository. Could not add. Activated Feature already existed in repository with id '{0}' in location '{1}' - Please 'Reload'", feature.FeatureId, feature.LocationId);
+            }
+        }
+
         public string AddLoadedLocations(LocationsLoaded message)
         {
             var error = AddLocations(message.ChildLocations);
@@ -110,6 +126,28 @@ namespace FeatureAdmin.OrigoDb
             FeatureDefinitions.Clear();
             Locations.Clear();
         }
+
+        public string RemoveActivatedFeature(Guid featureId, Guid locationId)
+        {
+            var featureToRemove = ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureId && f.LocationId == locationId);
+
+            if (featureToRemove != null)
+            {
+                if (ActivatedFeatures.Remove(featureToRemove))
+                {
+                    return null;
+                }
+                else
+                {
+                    return string.Format("Repository problem when removing feature with id '{0}' in location '{1}' - Please 'Reload'", featureId, locationId);
+                }
+            }
+            else
+            {
+                return string.Format("Activated Feature not found with id '{0}' in location '{1}' - Please 'Reload'", featureId, locationId);
+            }
+        }
+
         public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
         {
             return ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);

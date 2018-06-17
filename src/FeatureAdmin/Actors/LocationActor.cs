@@ -56,6 +56,7 @@ namespace FeatureAdmin.Actors
                 var completed = new Core.Messages.Completed.FeatureDeactivationCompleted(
                                message.TaskId
                                , message.Location.Id
+                               , message.FeatureDefinition.Id
                                , string.Empty
                                );
 

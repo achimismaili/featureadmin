@@ -31,6 +31,11 @@ namespace FeatureAdmin.Repository
             this.eventAggregator = eventAggregator;
         }
 
+        public string AddActivatedFeature([NotNull] ActivatedFeature feature)
+        {
+            return store.AddActivatedFeature(feature);
+        }
+
         public void AddFeatureDefinitions(IEnumerable<FeatureDefinition> featureDefinitions)
         {
             store.AddFeatureDefinitions(featureDefinitions);
@@ -89,6 +94,11 @@ namespace FeatureAdmin.Repository
         public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId = null)
         {
             return store.IsFeatureActivated(featureDefinitionId, locationId);
+        }
+
+        public string RemoveActivatedFeature([NotNull] Guid featureId, [NotNull] Guid locationId)
+        {
+            return store.RemoveActivatedFeature(featureId, locationId);
         }
 
         public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, bool? onlyFarmFeatures)

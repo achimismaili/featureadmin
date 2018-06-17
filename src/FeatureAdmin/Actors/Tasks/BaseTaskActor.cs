@@ -84,11 +84,20 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             if (PercentCompleted < 1d)
             {
-                progressMsg = new ProgressMessage(Id, PercentCompleted, string.Format("'{0}' in progress ({1:F0}%), please wait ...", Title, PercentCompleted * 100));
+                if (Status == TaskStatus.InProgress)
+                {
+                    progressMsg = new ProgressMessage(Id, PercentCompleted, string.Format("'{0}' in progress ({1:F0}%), please wait ...", Title, PercentCompleted * 100, Status.ToString()));
+                }
+                else
+                {
+                    progressMsg = new ProgressMessage(Id, PercentCompleted, string.Format("Attention! '{0}' '{2}' ({1:F0}%), please wait ...", Title, PercentCompleted * 100, Status.ToString()));
+                    var logMsg = new LogMessage(LogLevel.Warning, progressMsg.Title);
+                    eventAggregator.PublishOnUIThread(logMsg);
+                }
             }
             else
             {
-                progressMsg = new ProgressMessage(Id, PercentCompleted, string.Format("'{0}' completed! Elapsed time: {1}", Title, ElapsedTime));
+                progressMsg = new ProgressMessage(Id, PercentCompleted, string.Format("'{0}' '{2}'! Elapsed time: {1}", Title, ElapsedTime, Status.ToString()));
             }
 
             eventAggregator.PublishOnUIThread(progressMsg);

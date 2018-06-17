@@ -126,6 +126,10 @@ namespace FeatureAdmin.Backends.Demo.Services
 
             var af = demoActivatedFeatures.FirstOrDefault(f => f.FeatureId == feature.Id && f.LocationId == location.Id);
             demoActivatedFeatures.Remove(af);
+            
+            // wait 1 second in the demo
+            System.Threading.Thread.Sleep(1000);
+
             return string.Empty;
 
             //// in sharepoint, first, the containers need to be opened ...
@@ -166,7 +170,13 @@ namespace FeatureAdmin.Backends.Demo.Services
                 , feature.Version
                 );
 
+            
+
             demoActivatedFeatures.Add(activatedFeature);
+
+            // wait 1 second in the demo
+            System.Threading.Thread.Sleep(1000);
+
             return string.Empty;
         }
     }

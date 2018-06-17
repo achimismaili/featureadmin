@@ -82,18 +82,47 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         private void HandleFeatureDeactivationCompleted([NotNull] FeatureDeactivationCompleted message)
         {
-            throw new NotImplementedException();
+            bool success;
+
+            if (string.IsNullOrEmpty(message.Error))
+            {
+                success = true;
+                repository.RemoveActivatedFeature(message.FeatureId, message.LocationReference);
+            }
+            else
+            {
+                success = false;
+            }
+
+            jobsCompleted.Add(message.LocationReference, success);
+
+            SendProgress();
         }
 
         private void HandleFeatureActivationCompleted([NotNull] FeatureActivationCompleted message)
         {
-            throw new NotImplementedException();
+            bool success;
+
+            if (string.IsNullOrEmpty(message.Error))
+            {
+                success = true;
+                repository.AddActivatedFeature(message.ActivatedFeature);
+            }
+            else
+            {
+                success = false;
+            }
+
+            jobsCompleted.Add(message.LocationReference, success);
+
+            SendProgress();
         }
 
         private void HandleFeatureToggleRequest([NotNull] FeatureToggleRequest message)
         {
             _log.Debug("Entered HandleFeatureToggleRequest with Id " + Id.ToString());
 
+            Title = message.Title;
 
             IEnumerable<Location> actionLocations;
 

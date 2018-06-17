@@ -25,8 +25,8 @@ namespace FeatureAdmin.Core.Models.Tasks
         private readonly IFeatureRepository repository;
 
         public LoadTaskActor(IEventAggregator eventAggregator, IFeatureRepository repository,
-            string title, Guid id, Location startLocation)
-            : base(eventAggregator, title, id)
+            Guid id)
+            : base(eventAggregator, id)
         {
             locationActors = new Dictionary<Guid, IActorRef>();
             this.repository = repository;
@@ -34,7 +34,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                    Context.ActorOf(Context.DI().Props<FeatureDefinitionActor>());
 
             ActivatedFeaturesLoaded = 0;
-       
+
             FarmFeatureDefinitions = new ProgressModule(
                 5d / 100,
                 0d,
@@ -52,10 +52,9 @@ namespace FeatureAdmin.Core.Models.Tasks
                1d - WebApps.MaxCumulatedQuota,
                 WebApps.MaxCumulatedQuota);
 
+            Receive<LoadTask>(message => InitiateLoadTask(message));
             Receive<LocationsLoaded>(message => HandleLocationsLoaded(message));
             Receive<FarmFeatureDefinitionsLoaded>(message => FarmFeatureDefinitionsLoaded(message));
-
-            InitiateLoadTask(startLocation);
         }
 
         public override string StatusReport
@@ -79,7 +78,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             get
             {
-                return 
+                return
                     FarmFeatureDefinitions.OuotaPercentage +
                     Farm.OuotaPercentage +
                     WebApps.OuotaPercentage +
@@ -97,10 +96,9 @@ namespace FeatureAdmin.Core.Models.Tasks
         /// <remarks>
         /// see also https://getakka.net/articles/actors/receive-actor-api.html
         /// </remarks>
-        public static Props Props(IEventAggregator eventAggregator, IFeatureRepository repository,
-            string title, Guid id, Location startLocation)
+        public static Props Props(IEventAggregator eventAggregator, IFeatureRepository repository, Guid id)
         {
-            return Akka.Actor.Props.Create(() => new LoadTaskActor(eventAggregator, repository, title, id, startLocation));
+            return Akka.Actor.Props.Create(() => new LoadTaskActor(eventAggregator, repository, id));
         }
 
         public void TrackLocationProcessed([NotNull] Location location)
@@ -152,7 +150,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
 
             FarmFeatureDefinitions.Processed = message.FarmFeatureDefinitions.Count();
-            
+
             if (FarmFeatureDefinitions.Completed)
             {
                 repository.AddFeatureDefinitions(message.FarmFeatureDefinitions);
@@ -183,8 +181,12 @@ namespace FeatureAdmin.Core.Models.Tasks
             SendProgress();
         }
 
-        private void InitiateLoadTask(Location startLocation)
+        private void InitiateLoadTask(LoadTask loadTask)
         {
+            Start = DateTime.Now;
+
+            Title = loadTask.Title;
+
             repository.Clear();
 
             // initiate read of all feature definitions
@@ -192,7 +194,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             featureDefinitionActor.Tell(fdQuery);
 
             // initiate read of locations
-            var loadQuery = new LoadLocationQuery(Id, startLocation);
+            var loadQuery = new LoadLocationQuery(Id, loadTask.StartLocation);
             LoadTask(loadQuery);
         }
 

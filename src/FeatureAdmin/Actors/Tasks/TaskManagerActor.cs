@@ -51,9 +51,11 @@ namespace FeatureAdmin.Actors.Tasks
         {
             IActorRef newTaskActor =
             ActorSystemReference.ActorSystem.ActorOf(LoadTaskActor.Props(eventAggregator, repository,
-           message.Title, message.Id, message.StartLocation), message.Id.ToString());
+           message.Id), message.Id.ToString());
 
             taskActors.Add(message.Id, newTaskActor);
+
+            newTaskActor.Tell(message);
         }
 
         public void Handle(FeatureToggleRequest message)
