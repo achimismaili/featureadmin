@@ -12,7 +12,10 @@ namespace FeatureAdmin.ViewModels
         {
         }
 
-  
+        public void DeactivateFeatures()
+        {
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(SelectedFeatureDefinition, SelectedLocation, false));
+        }
 
         public void Handle(ItemSelected<FeatureDefinition> message)
         {

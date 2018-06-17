@@ -20,6 +20,11 @@ namespace FeatureAdmin.ViewModels
             eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem, SelectedLocation, true));
         }
 
+        public void DeactivateFeatures()
+        {
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem, SelectedLocation, false));
+        }
+
         public bool CanFilterLocation { get; protected set; }
 
         public bool CanUninstallFeatureDefinition { get; private set; }

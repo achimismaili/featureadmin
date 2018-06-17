@@ -53,11 +53,17 @@ namespace FeatureAdmin.Actors
             }
             else
             {
+                var error = dataService.DeactivateFeature(
+                    message.FeatureDefinition
+                    , message.Location
+                    , message.ElevatedPrivileges
+                    , message.Force);
+
                 var completed = new Core.Messages.Completed.FeatureDeactivationCompleted(
                                message.TaskId
                                , message.Location.Id
                                , message.FeatureDefinition.Id
-                               , string.Empty
+                               , error
                                );
 
                 Sender.Tell(completed);

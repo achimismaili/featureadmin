@@ -60,11 +60,6 @@ namespace FeatureAdmin.ViewModels
 
         public Location SelectedLocation { get; protected set; }
 
-        public void DeactivateFeatures()
-        {
-            throw new NotImplementedException();
-        }
-
         public void UpgradeFeatures()
         {
             throw new NotImplementedException();
