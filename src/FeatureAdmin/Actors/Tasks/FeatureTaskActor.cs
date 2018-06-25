@@ -137,6 +137,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                 actionLocations = repository.GetLocationsCanDeactivate(message.FeatureDefinition, message.Location);
             }
 
+            throw new NotImplementedException("Add confirmation here, add information, how many features will be added / removed, ...");
 
             // create Location actors and trigger feature actions
 
