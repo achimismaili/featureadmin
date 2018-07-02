@@ -1,12 +1,10 @@
 ﻿using Caliburn.Micro;
-using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System;
 using FeatureAdmin.Core.Models.Enums;
-using FeatureAdmin.Repository;
+using FeatureAdmin.Core.Repository;
 
 namespace FeatureAdmin.ViewModels
 {

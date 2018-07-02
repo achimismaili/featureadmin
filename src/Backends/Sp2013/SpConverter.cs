@@ -36,7 +36,7 @@ namespace FeatureAdmin.Backends.Sp2013
                 }
                 else
                 {
-                    definition = FeatureDefinitionFactory.GetFaultyDefinition(spFeature.DefinitionId, parentScope, spFeature.Version, definitionInstallationScope);
+                    definition = FeatureDefinitionFactory.GetFaultyDefinition(spFeature.DefinitionId, parentScope, spFeature.Version);
                     faulty = true;
                 }
             }
@@ -97,7 +97,7 @@ namespace FeatureAdmin.Backends.Sp2013
 
             var webAppsCount = Services.SpDataService.GetAllWebApplications().Count();
 
-            var location = LocationFactory.GetFarm(id, activatedFeatures, webAppsCount);
+            var location = LocationFactory.GetFarm(id, webAppsCount);
 
             return location;
         }
@@ -129,7 +129,7 @@ namespace FeatureAdmin.Backends.Sp2013
                 parentId,
                 Scope.WebApplication,
                 url,
-                activatedFeatures,
+              //  activatedFeatures,
                 webApp.Sites.Count);
 
             return location;
@@ -157,7 +157,7 @@ namespace FeatureAdmin.Backends.Sp2013
                 parentId,
                 Scope.Site,
                 site.Url,
-                activatedFeatures,
+                // activatedFeatures,
                 site.AllWebs.Count
                 );
 
@@ -176,7 +176,7 @@ namespace FeatureAdmin.Backends.Sp2013
                 parentId,
                 Scope.Web,
                 webUrl,
-                activatedFeatures,
+             //   activatedFeatures,
                 0
                 );
 

@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
 using FeatureAdmin.Core.Services;
-using FeatureAdmin.Repository;
+using FeatureAdmin.Core.Repository;
 using FeatureAdmin.ViewModels;
 using Moq;
 using System;

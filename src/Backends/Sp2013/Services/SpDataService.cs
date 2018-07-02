@@ -6,6 +6,7 @@ using FeatureAdmin.Core.Services;
 using Microsoft.SharePoint.Administration;
 using Microsoft.SharePoint;
 using FeatureAdmin.Core.Models.Enums;
+using FeatureAdmin.Core.Messages.Completed;
 
 namespace FeatureAdmin.Backends.Sp2013.Services
 {
@@ -387,5 +388,24 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             return featuresModifiedCounter;
         }
 
+        public LocationsLoaded LoadNonFarmLocationAndChildren(Location location)
+        {
+            throw new NotImplementedException();
+        }
+
+        public LocationsLoaded LoadFarmAndWebApps()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

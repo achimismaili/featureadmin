@@ -2,7 +2,7 @@
 using FeatureAdmin.Core;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
-using FeatureAdmin.Repository;
+using FeatureAdmin.Core.Repository;
 
 namespace FeatureAdmin.ViewModels
 {

@@ -12,7 +12,7 @@ namespace FeatureAdmin
             builder.RegisterType<AppWindowManager>().As<IWindowManager>().SingleInstance();
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
 
-            builder.RegisterType<Repository.FeatureRepository>().As<Repository.IFeatureRepository>().SingleInstance();
+            builder.RegisterType<Repository.FeatureRepository>().As<Core.Repository.IFeatureRepository>().SingleInstance();
 
             var assembly = typeof(AppViewModel).Assembly;
             builder.RegisterAssemblyTypes(assembly)

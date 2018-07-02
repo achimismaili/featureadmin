@@ -1,10 +1,10 @@
-﻿using Caliburn.Micro;
-using FeatureAdmin.Core;
+﻿using FeatureAdmin.Core;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Repository;
 using OrigoDB.Core;
 using System;
 using System.Collections.Generic;
+using FeatureAdmin.Core.Messages.Completed;
 
 namespace FeatureAdmin.Repository
 {
@@ -12,15 +12,11 @@ namespace FeatureAdmin.Repository
     /// The feature repository manages all locations, feautre definitions and activated features
     /// in a in memory database and also talks to SharePoint via the SharePoint Backends
     /// </summary>
-    public class FeatureRepository : IFeatureRepository
+    public class DemoRepository : IFeatureRepository
     {
         public OrigoDb.FeatureModel store;
 
-        private readonly IEventAggregator eventAggregator;
-
-
-        public FeatureRepository(IEventAggregator eventAggregator
-)
+        public DemoRepository()
         {
             var config = new EngineConfiguration();
             config.PersistenceMode = PersistenceMode.ManualSnapshots;
@@ -28,8 +24,6 @@ namespace FeatureAdmin.Repository
             config.SetCommandStoreFactory(cfg => new OrigoDB.Core.Test.InMemoryCommandStore(cfg));
             config.SetSnapshotStoreFactory(cfg => new OrigoDB.Core.Test.InMemorySnapshotStore(cfg));
             store = Db.For<OrigoDb.FeatureModel>(config);
-
-            this.eventAggregator = eventAggregator;
         }
 
         public string AddActivatedFeature([NotNull] ActivatedFeature feature)
@@ -47,16 +41,9 @@ namespace FeatureAdmin.Repository
         //    store.AddActivatedFeatures(activatedFeatures);
         //}
 
-        public void AddLoadedLocations(Core.Messages.Completed.LocationsLoaded message)
+        public string AddLoadedLocations(Core.Messages.Completed.LocationsLoaded message)
         {
-             var error = store.AddLoadedLocations(message);
-
-            if (!string.IsNullOrEmpty(error))
-            {
-                var logMsg = new Messages.LogMessage(Core.Models.Enums.LogLevel.Error, error);
-
-                eventAggregator.PublishOnUIThread(logMsg);
-            }
+             return store.AddLoadedLocations(message);
         }
 
         /// <summary>
@@ -109,6 +96,11 @@ namespace FeatureAdmin.Repository
         public IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter)
         {
             return store.SearchLocations(searchInput, selectedScopeFilter);
+        }
+
+        void IFeatureRepository.AddLoadedLocations(LocationsLoaded message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

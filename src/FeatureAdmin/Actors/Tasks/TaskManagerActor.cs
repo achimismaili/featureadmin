@@ -4,7 +4,7 @@ using Caliburn.Micro;
 using FeatureAdmin.Core.Models.Tasks;
 using System;
 using System.Collections.Generic;
-using FeatureAdmin.Repository;
+using FeatureAdmin.Core.Repository;
 using FeatureAdmin.Core.Messages.Request;
 using FeatureAdmin.Core.Messages.Completed;
 using FeatureAdmin.Messages;

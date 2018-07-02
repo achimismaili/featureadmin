@@ -44,6 +44,10 @@
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="OrigoDB.Core, Version=0.19.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OrigoDB.Core.0.19.0\lib\net40\OrigoDB.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Collections.Immutable.1.4.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
@@ -59,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Repository\DemoRepository.cs" />
     <Compile Include="Services\DemoDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -66,6 +71,10 @@
     <ProjectReference Include="..\..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
       <Project>{4CEC2E98-5A3B-4793-B606-A5250D046F02}</Project>
       <Name>FeatureAdmin.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FeatureAdmin.Repository\FeatureAdmin.OrigoDb.csproj">
+      <Project>{a9554c65-3bcc-4f78-9349-a63c737a19bd}</Project>
+      <Name>FeatureAdmin.OrigoDb</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\FeatureAdmin.SampleData\FeatureAdmin.SampleData.csproj">
       <Project>{de7fac0c-782b-4ba1-b1b8-3101955fc888}</Project>

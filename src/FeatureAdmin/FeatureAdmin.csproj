@@ -178,7 +178,6 @@
     <Compile Include="Messages\SetSearchFilter.cs" />
     <Compile Include="Messages\ActionOptionsUpdate.cs" />
     <Compile Include="Repository\FeatureRepository.cs" />
-    <Compile Include="Repository\IFeatureRepository.cs" />
     <Compile Include="ViewModels\BaseItemViewModel.cs" />
     <Compile Include="ViewModels\BaseListViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />

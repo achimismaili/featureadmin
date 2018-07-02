@@ -81,6 +81,7 @@
     <Compile Include="Models\Enums\SPObjectType.cs" />
     <Compile Include="Models\FeatureDefinition.cs" />
     <Compile Include="Models\Location.cs" />
+    <Compile Include="Repository\IFeatureRepository.cs" />
     <Compile Include="Services\IDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

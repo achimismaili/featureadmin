@@ -1,10 +1,8 @@
 ﻿using FeatureAdmin.Core.Models;
-using OrigoDB.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace FeatureAdmin.Repository
+namespace FeatureAdmin.Core.Repository
 {
     public interface IFeatureRepository 
     {

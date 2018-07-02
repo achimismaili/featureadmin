@@ -1,7 +1,7 @@
 ﻿using Caliburn.Micro;
 using FeatureAdmin.Core.Models;
+using FeatureAdmin.Core.Repository;
 using FeatureAdmin.Messages;
-using FeatureAdmin.Repository;
 using System;
 using System.Windows;
 

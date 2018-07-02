@@ -3,18 +3,17 @@ using Akka.DI.Core;
 using Akka.Event;
 using Caliburn.Micro;
 using FeatureAdmin.Actors;
-using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Messages.Completed;
 using FeatureAdmin.Core.Messages.Request;
 using FeatureAdmin.Messages;
-using FeatureAdmin.Repository;
+using FeatureAdmin.Core.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace FeatureAdmin.Core.Models.Tasks
 {
-    
+
 
     public class FeatureTaskActor : BaseTaskActor
     {

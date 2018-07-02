@@ -5,7 +5,7 @@ using Caliburn.Micro;
 using FeatureAdmin.Actors;
 using FeatureAdmin.Core.Messages.Completed;
 using FeatureAdmin.Core.Messages.Request;
-using FeatureAdmin.Repository;
+using FeatureAdmin.Core.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
