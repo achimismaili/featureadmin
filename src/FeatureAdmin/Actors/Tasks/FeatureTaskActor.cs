@@ -10,6 +10,7 @@ using FeatureAdmin.Core.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FeatureAdmin.Core.Services;
 
 namespace FeatureAdmin.Core.Models.Tasks
 {
@@ -25,18 +26,20 @@ namespace FeatureAdmin.Core.Models.Tasks
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly Dictionary<Guid, IActorRef> executingActors;
         private readonly IFeatureRepository repository;
+        private readonly IDataService dataService;
 
         public FeatureTaskActor(
-            IEventAggregator eventAggregator
-            , IFeatureRepository repository
-            , Guid taskId)
+            IEventAggregator eventAggregator,
+            IFeatureRepository repository,
+            IDataService dataService,
+            Guid taskId)
             : base(eventAggregator, taskId)
         {
             this.eventAggregator.Subscribe(this);
 
             executingActors = new Dictionary<Guid, IActorRef>();
             this.repository = repository;
-
+            this.dataService = dataService;
             jobsCompleted = new Dictionary<Guid, bool>();
 
             Receive<Confirmation>(message => HandleConfirmation(message));
@@ -82,9 +85,17 @@ namespace FeatureAdmin.Core.Models.Tasks
         /// <remarks>
         /// see also https://getakka.net/articles/actors/receive-actor-api.html
         /// </remarks>
-        public static Props Props(IEventAggregator eventAggregator, IFeatureRepository repository, Guid taskId)
+        public static Props Props(IEventAggregator eventAggregator, 
+            IFeatureRepository repository,
+            IDataService dataService,
+            Guid taskId)
         {
-            return Akka.Actor.Props.Create(() => new FeatureTaskActor(eventAggregator, repository, taskId));
+            return Akka.Actor.Props.Create(() => 
+            new FeatureTaskActor(
+                eventAggregator, 
+                repository,
+                dataService,
+                taskId));
         }
 
         private void HandleFeatureDeactivationCompleted([NotNull] FeatureDeactivationCompleted message)
@@ -179,15 +190,22 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             foreach (FeatureToggleRequest ftr in featureToggleRequestsToBeConfirmed)
             {
-                
-            // create Location actors and trigger feature actions
 
-            if (!executingActors.ContainsKey(ftr.Location.Id))
+                var locationId = ftr.Location.Id;
+
+                // create Location actors and trigger feature actions
+
+                if (!executingActors.ContainsKey(locationId))
                 {
-                    IActorRef newLocationActor =
-                        Context.ActorOf(Context.DI().Props<LocationActor>());
+                    
 
-                    executingActors.Add(ftr.Location.Id, newLocationActor);
+                    IActorRef newLocationActor =
+                        // Context.ActorOf(Context.DI().Props<LocationActor>());
+                        ActorSystemReference.ActorSystem.ActorOf(LocationActor.Props(
+           dataService), locationId.ToString());
+
+
+                    executingActors.Add(locationId, newLocationActor);
 
                     newLocationActor.Tell(ftr);
                 }

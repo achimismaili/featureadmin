@@ -37,5 +37,19 @@ namespace FeatureAdmin.Actors
 
             //TODO: maybe check, if feature definitions from here have more data, than from activated features ...
         }
+
+        /// <summary>
+        /// Props provider
+        /// </summary>
+        /// <param name="dataService">SharePoint data service</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// see also https://getakka.net/articles/actors/receive-actor-api.html
+        /// </remarks>
+        public static Props Props(IDataService dataService)
+        {
+            return Akka.Actor.Props.Create(() => new FeatureDefinitionActor(
+                   dataService));
+        }
     }
 }

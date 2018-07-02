@@ -85,5 +85,19 @@ namespace FeatureAdmin.Actors
                 Sender.Tell(dataService.LoadNonFarmLocationAndChildren(location));
             }
         }
+
+        /// <summary>
+        /// Props provider
+        /// </summary>
+        /// <param name="dataService">SharePoint data service</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// see also https://getakka.net/articles/actors/receive-actor-api.html
+        /// </remarks>
+        public static Props Props(IDataService dataService)
+        {
+            return Akka.Actor.Props.Create(() => new LocationActor(
+                   dataService));
+        }
     }
 }

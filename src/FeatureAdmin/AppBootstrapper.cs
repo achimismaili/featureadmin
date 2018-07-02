@@ -14,6 +14,12 @@ namespace FeatureAdmin
 
             builder.RegisterType<Repository.FeatureRepository>().As<Core.Repository.IFeatureRepository>().SingleInstance();
 
+#if (SP2013)
+            builder.RegisterType<Backends.Sp2013.Services.SpDataService>().As<Core.Services.IDataService>().SingleInstance();
+#else
+            builder.RegisterType<Backends.Demo.Services.DemoDataService>().As<Core.Services.IDataService>().SingleInstance();
+#endif
+
             var assembly = typeof(AppViewModel).Assembly;
             builder.RegisterAssemblyTypes(assembly)
                 .Where(item => item.Name.EndsWith("ViewModel") && item.IsAbstract == false)

@@ -5,6 +5,7 @@ using FeatureAdmin.Common;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Messages;
 using FeatureAdmin.Core.Repository;
+using FeatureAdmin.Core.Services;
 
 namespace FeatureAdmin.ViewModels
 {
@@ -22,9 +23,13 @@ namespace FeatureAdmin.ViewModels
         private readonly IWindowManager windowManager;
         private Akka.Actor.IActorRef taskManagerActorRef;
         IFeatureRepository repository;
-
+        IDataService dataService;
         // private IActorRef viewModelSyncActorRef;
-        public AppViewModel(IWindowManager windowManager, IEventAggregator eventAggregator, IFeatureRepository repository)
+        public AppViewModel(
+            IWindowManager windowManager, 
+            IEventAggregator eventAggregator, 
+            IFeatureRepository repository,
+            IDataService dataService)
         {
             DisplayName = "Feature Admin 3 for SharePoint 2013";
 
@@ -34,7 +39,7 @@ namespace FeatureAdmin.ViewModels
             this.eventAggregator.Subscribe(this);
 
             this.repository = repository;
-
+            this.dataService = dataService;
             StatusBarVm = new StatusBarViewModel(eventAggregator);
 
             FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator, repository);
@@ -147,7 +152,13 @@ namespace FeatureAdmin.ViewModels
         private void InitializeActors()
         {
             taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(
-                Akka.Actor.Props.Create(() => new Actors.Tasks.TaskManagerActor(eventAggregator, repository, elevatedPrivileges, force)));
+                Akka.Actor.Props.Create(() => 
+                new Actors.Tasks.TaskManagerActor(
+                    eventAggregator, 
+                    repository, 
+                    dataService,
+                    elevatedPrivileges, 
+                    force)));
         }
         public void Handle(OpenWindow<ActivatedFeature> message)
         {

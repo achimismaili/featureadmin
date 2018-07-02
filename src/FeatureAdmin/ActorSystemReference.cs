@@ -36,11 +36,11 @@ namespace FeatureAdmin
             //// Setup Autofac
             ContainerBuilder builder = new ContainerBuilder();
 
-#if (SP2013)
-            builder.RegisterType<Backends.Sp2013.Services.SpDataService>().As<IDataService>().SingleInstance();
-#else
-            builder.RegisterType<Backends.Demo.Services.DemoDataService>().As<IDataService>().SingleInstance();
-#endif
+//#if (SP2013)
+//            builder.RegisterType<Backends.Sp2013.Services.SpDataService>().As<IDataService>();
+//#else
+//            builder.RegisterType<Backends.Demo.Services.DemoDataService>().As<IDataService>();
+//#endif
             builder.RegisterType<Actors.LocationActor>();
             builder.RegisterType<Actors.FeatureDefinitionActor>();
             IContainer container = builder.Build();

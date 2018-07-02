@@ -9,6 +9,7 @@ using FeatureAdmin.Core.Messages.Request;
 using FeatureAdmin.Core.Messages.Completed;
 using FeatureAdmin.Messages;
 using FeatureAdmin.Core;
+using FeatureAdmin.Core.Services;
 
 namespace FeatureAdmin.Actors.Tasks
 {
@@ -19,20 +20,22 @@ namespace FeatureAdmin.Actors.Tasks
         , Caliburn.Micro.IHandle<Confirmation>
     {
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
+        private readonly IDataService dataService;
         private readonly IEventAggregator eventAggregator;
         private readonly IFeatureRepository repository;
         private readonly Dictionary<Guid, IActorRef> taskActors;
         public TaskManagerActor(
-            IEventAggregator eventAggregator
-            , IFeatureRepository repository
-            , bool elevatedPrivileges
-            , bool force
+            IEventAggregator eventAggregator,
+            IFeatureRepository repository,
+            IDataService dataService,
+            bool elevatedPrivileges,
+            bool force
             )
         {
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
             this.repository = repository;
-
+            this.dataService = dataService;
             this.elevatedPrivileges = elevatedPrivileges;
             this.force = force;
 
@@ -53,8 +56,11 @@ namespace FeatureAdmin.Actors.Tasks
         public void Handle(LoadTask message)
         {
             IActorRef newTaskActor =
-            ActorSystemReference.ActorSystem.ActorOf(LoadTaskActor.Props(eventAggregator, repository,
-           message.Id), message.Id.ToString());
+            ActorSystemReference.ActorSystem.ActorOf(LoadTaskActor.Props(
+                eventAggregator, 
+                repository,
+                dataService,
+                message.Id), message.Id.ToString());
 
             taskActors.Add(message.Id, newTaskActor);
 
@@ -66,11 +72,11 @@ namespace FeatureAdmin.Actors.Tasks
             IActorRef newTaskActor =
             ActorSystemReference.ActorSystem.ActorOf(
                 FeatureTaskActor.Props(
-                    eventAggregator
-                    , repository
-                    , message.TaskId
-                    )
-                    );
+                    eventAggregator,
+                    repository,
+                    dataService,
+                    message.TaskId
+                    ));
 
             taskActors.Add(message.TaskId, newTaskActor);
 

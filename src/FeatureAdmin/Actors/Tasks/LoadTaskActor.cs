@@ -6,6 +6,7 @@ using FeatureAdmin.Actors;
 using FeatureAdmin.Core.Messages.Completed;
 using FeatureAdmin.Core.Messages.Request;
 using FeatureAdmin.Core.Repository;
+using FeatureAdmin.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,15 +24,22 @@ namespace FeatureAdmin.Core.Models.Tasks
         private readonly IActorRef featureDefinitionActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
         private readonly IFeatureRepository repository;
+        private readonly IDataService dataService;
 
-        public LoadTaskActor(IEventAggregator eventAggregator, IFeatureRepository repository,
+        public LoadTaskActor(
+            IEventAggregator eventAggregator, 
+            IFeatureRepository repository,
+            IDataService dataService,
             Guid id)
             : base(eventAggregator, id)
         {
             locationActors = new Dictionary<Guid, IActorRef>();
             this.repository = repository;
+            this.dataService = dataService;
             featureDefinitionActor =
-                   Context.ActorOf(Context.DI().Props<FeatureDefinitionActor>());
+                 //   Context.ActorOf(Context.DI().Props<FeatureDefinitionActor>());
+                 ActorSystemReference.ActorSystem.ActorOf(FeatureDefinitionActor.Props(
+           dataService), "FeatureDefinitionActor");
 
             ActivatedFeaturesLoaded = 0;
 
@@ -89,16 +97,25 @@ namespace FeatureAdmin.Core.Models.Tasks
         /// <summary>
         /// Props provider
         /// </summary>
-        /// <param name="eventAggregator"></param>
-        /// <param name="title"></param>
-        /// <param name="id"></param>
+        /// <param name="eventAggregator">the event aggregator</param>
+        /// <param name="repository">feature repository</param>
+        /// <param name="dataService">SharePoint data service</param>
+        /// <param name="id">task Id</param>
         /// <returns></returns>
         /// <remarks>
         /// see also https://getakka.net/articles/actors/receive-actor-api.html
         /// </remarks>
-        public static Props Props(IEventAggregator eventAggregator, IFeatureRepository repository, Guid id)
+        public static Props Props(
+            IEventAggregator eventAggregator, 
+            IFeatureRepository repository, 
+            IDataService dataService,
+            Guid id)
         {
-            return Akka.Actor.Props.Create(() => new LoadTaskActor(eventAggregator, repository, id));
+            return Akka.Actor.Props.Create(() => new LoadTaskActor(
+                eventAggregator, 
+                repository,
+                dataService,
+                id));
         }
 
         public void TrackLocationProcessed([NotNull] Location location)
@@ -207,16 +224,16 @@ namespace FeatureAdmin.Core.Models.Tasks
             if (!locationActors.ContainsKey(locationId))
             {
                 IActorRef newLocationActor =
-                    Context.ActorOf(Context.DI().Props<LocationActor>());
+                  //  Context.ActorOf(Context.DI().Props<LocationActor>());
+                  ActorSystemReference.ActorSystem.ActorOf(LocationActor.Props(
+           dataService), locationId.ToString());
+
 
                 locationActors.Add(locationId, newLocationActor);
 
-                newLocationActor.Tell(loadQuery);
             }
-            else
-            {
-                locationActors[locationId].Tell(loadQuery);
-            }
+
+            locationActors[locationId].Tell(loadQuery);
         }
     }
 }

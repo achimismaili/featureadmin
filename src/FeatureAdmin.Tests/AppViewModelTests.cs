@@ -21,6 +21,7 @@ namespace FeatureAdmin.Tests
         Mock<IWindowManager> _windowManager;
         Mock<IEventAggregator> _eventAggregator;
         Mock<IFeatureRepository> _repository;
+        Mock<IDataService> _dataService;
 
         public AppViewModelTests()
         {
@@ -31,11 +32,15 @@ namespace FeatureAdmin.Tests
             _eventAggregator = new Mock<IEventAggregator>();
 
             _repository = new Mock<IFeatureRepository>();
-          
+
+            _dataService = new Mock<IDataService>();
             // Create the main VM injecting the mocked interfaces
             // Mocking interfaces is always good as there is a lot of freedom
             // Use mock.Object to get hold of the object, the mock is just a proxy that decorates the original object
-            _mainVM = new AppViewModel(_windowManager.Object, _eventAggregator.Object, _repository.Object);
+            _mainVM = new AppViewModel(_windowManager.Object, 
+                _eventAggregator.Object, 
+                _repository.Object,
+                _dataService.Object);
         }
 
         /// <summary>
