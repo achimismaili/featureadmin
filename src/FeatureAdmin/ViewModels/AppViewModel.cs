@@ -10,6 +10,7 @@ namespace FeatureAdmin.ViewModels
 {
 
     public class AppViewModel : Screen
+        , Caliburn.Micro.IHandle<ConfirmationRequest>
         , Caliburn.Micro.IHandle<OpenWindow<ActivatedFeature>>
         , Caliburn.Micro.IHandle<OpenWindow<FeatureDefinition>>
         , Caliburn.Micro.IHandle<OpenWindow<Location>>
@@ -93,9 +94,9 @@ namespace FeatureAdmin.ViewModels
             this.windowManager.ShowWindow(viewModel, null, settings);
         }
 
-        public void OpenDialog(string title, string message)
+        public void Handle(ConfirmationRequest message)
         {
-            DialogViewModel dialogVm = new DialogViewModel(title, message);
+            DialogViewModel dialogVm = new DialogViewModel(eventAggregator, message);
 
             dynamic settings = new System.Dynamic.ExpandoObject();
             settings.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;

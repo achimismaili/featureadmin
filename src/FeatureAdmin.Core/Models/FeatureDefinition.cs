@@ -83,5 +83,16 @@ namespace FeatureAdmin.Core.Models
 
         public string UniqueIdentifier { get; private set; }
         public Version Version { get; private set; }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "{0}:{1},Id:'{2}'\n{3}",
+                this.Scope,
+                this.DisplayName,
+                this.Id,
+                this.Description
+                );
+        }
     }
 }

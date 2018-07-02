@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using FeatureAdmin.Repository;
 using FeatureAdmin.Core.Messages.Request;
 using FeatureAdmin.Core.Messages.Completed;
+using FeatureAdmin.Messages;
+using FeatureAdmin.Core;
 
 namespace FeatureAdmin.Actors.Tasks
 {
@@ -14,6 +16,7 @@ namespace FeatureAdmin.Actors.Tasks
                // ,Caliburn.Micro.IHandle<LoadTask>
                , Caliburn.Micro.IHandle<FeatureToggleRequest>
          , Caliburn.Micro.IHandle<SettingsChanged>
+        , Caliburn.Micro.IHandle<Confirmation>
     {
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IEventAggregator eventAggregator;
@@ -81,6 +84,25 @@ namespace FeatureAdmin.Actors.Tasks
         {
             elevatedPrivileges = message.ElevatedPrivileges;
             force = message.Force;
+        }
+
+        /// <summary>
+        /// Handles confirmation from a dialog box and forwards to the waiting task
+        /// </summary>
+        /// <param name="message"></param>
+        public void Handle([NotNull] Confirmation message)
+        {
+            if (taskActors.ContainsKey(message.TaskId))
+            {
+                taskActors[message.TaskId].Tell(message);
+            }
+            else
+            {
+                eventAggregator.PublishOnUIThread(
+                    new Messages.LogMessage(Core.Models.Enums.LogLevel.Error,
+                    string.Format("Internal error. Confirmed task with task id {0} was not found anymore!",message.TaskId)
+                    ));
+            }
         }
     }
 }

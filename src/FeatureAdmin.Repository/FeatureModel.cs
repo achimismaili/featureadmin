@@ -203,7 +203,7 @@ namespace FeatureAdmin.OrigoDb
 
                              from subAf in gj.DefaultIfEmpty()
                              // following is the only different line compared to ..can activate
-                             where subAf.FeatureId == featureDefinition.Id
+                             where subAf != null && subAf.FeatureId == featureDefinition.Id
                              select loc).ToList();
 
 
@@ -327,7 +327,7 @@ namespace FeatureAdmin.OrigoDb
                         //from af in ActivatedFeatures
                         //join l in Locations 
                         //on af.LocationId equals l.Key
-                        //where af.FeatureId == idGuid
+                        //where af != null && af.FeatureId == idGuid
                         //select l.Value;
                     }
 

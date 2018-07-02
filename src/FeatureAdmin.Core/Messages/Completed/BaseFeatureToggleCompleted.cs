@@ -16,7 +16,8 @@ namespace FeatureAdmin.Core.Messages.Completed
             , string error = null
             ) : base (taskId)
         {
-            
+            LocationReference = locationReference;
+            Error = error;
          }
 
 

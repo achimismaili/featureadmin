@@ -7,15 +7,21 @@ using FeatureAdmin.Core.Models.Enums;
 using FeatureAdmin.Core.Models;
 using Caliburn.Micro;
 using System.Windows;
+using FeatureAdmin.Messages;
 
 namespace FeatureAdmin.ViewModels
 {
     public class DialogViewModel : IHaveDisplayName
     {
-        public DialogViewModel(string displayName, string dialogText)
+        private readonly IEventAggregator eventAggregator;
+
+        private readonly Guid taskId;
+        public DialogViewModel(IEventAggregator eventAggregator, ConfirmationRequest confirmationRequest)
         {
-            DisplayName = string.Format("Confirmation for {0}", displayName);
-            DialogText = dialogText;
+            this.eventAggregator = eventAggregator;
+            this.taskId = confirmationRequest.TaskId;
+            DisplayName = string.Format("Confirmation for {0}", confirmationRequest.Title);
+            DialogText = confirmationRequest.DialogText;
         }
 
         public string DialogText { get; private set; }
@@ -23,15 +29,15 @@ namespace FeatureAdmin.ViewModels
         public string DisplayName { get; set; }
 
         public void Ok()
-        {
-            //TODO: get task id and publish it
-            MessageBox.Show("OK");
+        {            
+            var confirmationMessage = new Confirmation(taskId);
+            eventAggregator.PublishOnUIThread(confirmationMessage);
         }
 
         public void Cancel()
         {
-            //TODO: Log dialog canceled
-            MessageBox.Show("Cancel");
+            var log = new LogMessage(LogLevel.Information, string.Format("'{0}' canceled.", DisplayName) );
+            eventAggregator.PublishOnUIThread(log);
         }
     }
 }

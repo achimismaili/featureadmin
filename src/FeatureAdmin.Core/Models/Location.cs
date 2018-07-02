@@ -36,5 +36,13 @@ namespace FeatureAdmin.Core.Models
 
         public int ChildCount { get; set; }
 
+        public override string ToString()
+        {
+            return string.Format(
+                "{0}: {1}, URL:'{2}'",
+                this.Scope,
+                this.DisplayName,
+                this.Url);
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace FeatureAdmin.Backends.Demo.Services
 
         public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
         {
-            var farmFeatureDefinitions =  demoFeaturedefinitions.Where(fd => string.IsNullOrEmpty(fd.SandBoxedSolutionLocation)).ToList();
+            var farmFeatureDefinitions = demoFeaturedefinitions.Where(fd => string.IsNullOrEmpty(fd.SandBoxedSolutionLocation)).ToList();
 
             return farmFeatureDefinitions;
         }
@@ -115,18 +115,24 @@ namespace FeatureAdmin.Backends.Demo.Services
             return loadLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
         }
 
-        
-        
-            public string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
+
+
+        public string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
         {
             if (location == null || feature == null)
             {
                 throw new ArgumentNullException("Location or feature must not be null!");
             }
 
-            var af = demoActivatedFeatures.FirstOrDefault(f => f.FeatureId == feature.Id && f.LocationId == location.Id);
-            demoActivatedFeatures.Remove(af);
-            
+            if (demoActivatedFeatures != null)
+            {
+                demoActivatedFeatures.RemoveAll(f => f.FeatureId == feature.Id && f.LocationId == location.Id);
+            }
+            else
+            {
+                return string.Format("demoActivatedFeatures was null at feature ID {0} and location ID {1}.", feature.Id, location.Id);
+            }
+
             // wait 1 second in the demo
             System.Threading.Thread.Sleep(1000);
 
@@ -165,12 +171,12 @@ namespace FeatureAdmin.Backends.Demo.Services
                 , location.Id
                 , feature
                 , false
-                ,null
+                , null
                 , DateTime.Now
                 , feature.Version
                 );
 
-            
+
 
             demoActivatedFeatures.Add(activatedFeature);
 

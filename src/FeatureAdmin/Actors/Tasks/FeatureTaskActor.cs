@@ -6,6 +6,7 @@ using FeatureAdmin.Actors;
 using FeatureAdmin.Core.Messages;
 using FeatureAdmin.Core.Messages.Completed;
 using FeatureAdmin.Core.Messages.Request;
+using FeatureAdmin.Messages;
 using FeatureAdmin.Repository;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,14 @@ using System.Linq;
 
 namespace FeatureAdmin.Core.Models.Tasks
 {
+    
+
     public class FeatureTaskActor : BaseTaskActor
     {
         public Dictionary<Guid, bool> jobsCompleted;
+
+        private List<FeatureToggleRequest> featureToggleRequestsToBeConfirmed;
+
 
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly Dictionary<Guid, IActorRef> executingActors;
@@ -34,11 +40,13 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             jobsCompleted = new Dictionary<Guid, bool>();
 
+            Receive<Confirmation>(message => HandleConfirmation(message));
             Receive<FeatureToggleRequest>(message => HandleFeatureToggleRequest(message));
             Receive<FeatureDeactivationCompleted>(message => HandleFeatureDeactivationCompleted(message));
             Receive<FeatureActivationCompleted>(message => HandleFeatureActivationCompleted(message));
         }
 
+        
         public override double PercentCompleted
         {
             get
@@ -124,24 +132,22 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             Title = message.Title;
 
-            IEnumerable<Location> actionLocations;
+            IEnumerable<Location> targetLocations;
 
             if (message.Activate)
             {
                 // retrieve locations where to activate 
-                actionLocations = repository.GetLocationsCanActivate(message.FeatureDefinition, message.Location);
+                targetLocations = repository.GetLocationsCanActivate(message.FeatureDefinition, message.Location);
             }
             else
             {
                 // retrieve locations where to deactivate 
-                actionLocations = repository.GetLocationsCanDeactivate(message.FeatureDefinition, message.Location);
+                targetLocations = repository.GetLocationsCanDeactivate(message.FeatureDefinition, message.Location);
             }
 
-            throw new NotImplementedException("Add confirmation here, add information, how many features will be added / removed, ...");
-
-            // create Location actors and trigger feature actions
-
-            foreach (Location l in actionLocations)
+            featureToggleRequestsToBeConfirmed = new List<FeatureToggleRequest>();
+            
+            foreach (Location l in targetLocations)
             {
 
                 var toggleRequestForThisLocation = new FeatureToggleRequest(
@@ -151,19 +157,44 @@ namespace FeatureAdmin.Core.Models.Tasks
                     , message.Force
                     , message.ElevatedPrivileges
                     );
+                featureToggleRequestsToBeConfirmed.Add(toggleRequestForThisLocation);
+            }
 
-                if (!executingActors.ContainsKey(l.Id))
+            var action = message.Activate ? "activate" : "deactivate";
+
+            var confirmRequest = new ConfirmationRequest(
+                    Title,
+                    string.Format("Please confirm to {0} feature {1} in location {2}\nFeatureAdmin found '{3}' location(s) where to {0}.", 
+                        action,
+                        message.FeatureDefinition.ToString(), 
+                        message.Location.ToString(),
+                        targetLocations.Count()),
+                    Id
+                    );
+
+
+            eventAggregator.PublishOnUIThread(confirmRequest);
+        }
+
+        private void HandleConfirmation(Confirmation message)
+        {
+            foreach (FeatureToggleRequest ftr in featureToggleRequestsToBeConfirmed)
+            {
+                
+            // create Location actors and trigger feature actions
+
+            if (!executingActors.ContainsKey(ftr.Location.Id))
                 {
                     IActorRef newLocationActor =
                         Context.ActorOf(Context.DI().Props<LocationActor>());
 
-                    executingActors.Add(l.Id, newLocationActor);
+                    executingActors.Add(ftr.Location.Id, newLocationActor);
 
-                    newLocationActor.Tell(toggleRequestForThisLocation);
+                    newLocationActor.Tell(ftr);
                 }
                 else
                 {
-                    executingActors[l.Id].Tell(toggleRequestForThisLocation);
+                    executingActors[ftr.Location.Id].Tell(ftr);
                 }
             }
         }

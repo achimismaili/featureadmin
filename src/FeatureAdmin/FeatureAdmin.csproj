@@ -169,6 +169,8 @@
     <Compile Include="Caliburn.Metro.Autofac\EventAggregationAutoSubscriptionModule.cs" />
     <Compile Include="Common\DetailViewModelConverters.cs" />
     <Compile Include="Common\NegatableBooleanToVisibilityConverter.cs" />
+    <Compile Include="Messages\Confirmation.cs" />
+    <Compile Include="Messages\ConfirmationRequest.cs" />
     <Compile Include="Messages\ItemSelected.cs" />
     <Compile Include="Messages\ProgressMessage.cs" />
     <Compile Include="Messages\LogMessage.cs" />
