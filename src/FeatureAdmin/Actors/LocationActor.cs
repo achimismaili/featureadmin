@@ -19,7 +19,7 @@ namespace FeatureAdmin.Actors
         {
             this.dataService = dataService;
 
-            Receive<LoadLocationQuery>(message => HandlyLoadLocationQuery(message));
+            Receive<LoadLocationQuery>(message => HandleLoadLocationQuery(message));
             Receive<FeatureToggleRequest>(message => HandleFeatureToggleRequest(message));
         }
 
@@ -70,7 +70,7 @@ namespace FeatureAdmin.Actors
             }
         }
 
-        private void HandlyLoadLocationQuery([NotNull] LoadLocationQuery message)
+        private void HandleLoadLocationQuery(LoadLocationQuery message)
         {
             _log.Debug("Entered LocationActor-LookupLocationHandlyLoadLocationQuery");
 

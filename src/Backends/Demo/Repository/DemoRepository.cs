@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using FeatureAdmin.Core.Messages.Completed;
 
-namespace FeatureAdmin.Repository
+namespace FeatureAdmin.Backends.Demo.Repository
 {
     /// <summary>
     /// The feature repository manages all locations, feautre definitions and activated features
@@ -14,7 +14,7 @@ namespace FeatureAdmin.Repository
     /// </summary>
     public class DemoRepository : IFeatureRepository
     {
-        public OrigoDb.FeatureModel store;
+        public DemoFeatureModel store;
 
         public DemoRepository()
         {
@@ -23,7 +23,7 @@ namespace FeatureAdmin.Repository
             // see https://github.com/DevrexLabs/OrigoDB/issues/24
             config.SetCommandStoreFactory(cfg => new OrigoDB.Core.Test.InMemoryCommandStore(cfg));
             config.SetSnapshotStoreFactory(cfg => new OrigoDB.Core.Test.InMemorySnapshotStore(cfg));
-            store = Db.For<OrigoDb.FeatureModel>(config);
+            store = Db.For<DemoFeatureModel>(config);
         }
 
         public string AddActivatedFeature([NotNull] ActivatedFeature feature)
@@ -41,9 +41,9 @@ namespace FeatureAdmin.Repository
         //    store.AddActivatedFeatures(activatedFeatures);
         //}
 
-        public string AddLoadedLocations(Core.Messages.Completed.LocationsLoaded message)
+        public void AddLoadedLocations(Core.Messages.Completed.LocationsLoaded message)
         {
-             return store.AddLoadedLocations(message);
+             store.AddLoadedLocations(message.LoadedElements);
         }
 
         /// <summary>
@@ -98,9 +98,5 @@ namespace FeatureAdmin.Repository
             return store.SearchLocations(searchInput, selectedScopeFilter);
         }
 
-        void IFeatureRepository.AddLoadedLocations(LocationsLoaded message)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

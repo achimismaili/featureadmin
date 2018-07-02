@@ -132,16 +132,16 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             bool finished = false;
 
-            var parent = loadedMessage.Parent;
+            var parent = loadedMessage.LoadedElements.Parent;
 
-            foreach (Location l in loadedMessage.ChildLocations)
+            foreach (Location l in loadedMessage.LoadedElements.ChildLocations)
             {
                 TrackLocationProcessed(l);
             }
 
-            FarmFeatureDefinitions.Processed += loadedMessage.Definitions.Count();
+            FarmFeatureDefinitions.Processed += loadedMessage.LoadedElements.Definitions.Count();
 
-            ActivatedFeaturesLoaded += loadedMessage.ActivatedFeatures.Count();
+            ActivatedFeaturesLoaded += loadedMessage.LoadedElements.ActivatedFeatures.Count();
 
             return finished;
         }
@@ -163,9 +163,9 @@ namespace FeatureAdmin.Core.Models.Tasks
             TrackLocationsProcessed(message);
 
             // if web apps are loaded, load children
-            if (message.Parent.Scope == Enums.Scope.Farm)
+            if (message.LoadedElements.Parent.Scope == Enums.Scope.Farm)
             {
-                foreach (Location l in message.ChildLocations)
+                foreach (Location l in message.LoadedElements.ChildLocations)
                 {
                     if (l.Scope == Enums.Scope.WebApplication)
                     {

@@ -18,8 +18,8 @@ namespace FeatureAdmin
         {
             ActorSystem = ActorSystem.Create("FeatureAdminActorSystem",
                 @"akka {
-                stdout - loglevel = WARNING
-                    loglevel = WARNING
+                stdout - loglevel = DEBUG
+                    loglevel = DEBUG
                     log - config - on - start = on
                     actor {
                             debug {
@@ -29,7 +29,7 @@ namespace FeatureAdmin
                                 event-stream = on
                                 unhandled = on
                                   }
-                          }"  
+                          }"
                 );
 
 

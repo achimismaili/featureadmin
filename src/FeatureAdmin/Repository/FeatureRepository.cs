@@ -49,7 +49,7 @@ namespace FeatureAdmin.Repository
 
         public void AddLoadedLocations(Core.Messages.Completed.LocationsLoaded message)
         {
-             var error = store.AddLoadedLocations(message);
+             var error = store.AddLoadedLocations(message.LoadedElements);
 
             if (!string.IsNullOrEmpty(error))
             {

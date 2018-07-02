@@ -64,6 +64,7 @@
     <Compile Include="Messages\Completed\FarmFeatureDefinitionsLoaded.cs" />
     <Compile Include="Messages\Request\FeatureToggleRequest.cs" />
     <Compile Include="Models\Enums\LogLevel.cs" />
+    <Compile Include="Models\LoadedDto.cs" />
     <Compile Include="Models\ProgressModule.cs" />
     <Compile Include="NotNullAttribute.cs" />
     <Compile Include="Messages\Request\LoadTask.cs" />

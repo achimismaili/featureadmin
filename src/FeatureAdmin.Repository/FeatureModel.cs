@@ -25,6 +25,7 @@ namespace FeatureAdmin.OrigoDb
             Locations = new Dictionary<Guid, Location>();
         }
 
+        [Command]
         public void AddActivatedFeatures(IEnumerable<ActivatedFeature> activatedFeatures)
         {
             if (activatedFeatures != null)
@@ -33,6 +34,7 @@ namespace FeatureAdmin.OrigoDb
             }
         }
 
+        [Command]
         public void AddFeatureDefinitions(IEnumerable<FeatureDefinition> farmFeatureDefinitions)
         {
             if (farmFeatureDefinitions != null)
@@ -47,14 +49,17 @@ namespace FeatureAdmin.OrigoDb
             }
         }
 
+        [Command]
         public string AddActivatedFeature(ActivatedFeature feature)
         {
-            var featureToAdd = ActivatedFeatures.FirstOrDefault(f => f == feature);
+            ActivatedFeature featureToAdd;
+
+            featureToAdd = ActivatedFeatures.FirstOrDefault(f => f == feature);
 
             if (featureToAdd == null)
             {
                 ActivatedFeatures.Add(feature);
-                    return null;
+                return null;
             }
             else
             {
@@ -62,13 +67,14 @@ namespace FeatureAdmin.OrigoDb
             }
         }
 
-        public string AddLoadedLocations(LocationsLoaded message)
+        [Command]
+        public string AddLoadedLocations(LoadedDto loadedElements)
         {
-            var error = AddLocations(message.ChildLocations);
+            var error = AddLocations(loadedElements.ChildLocations);
 
-            AddActivatedFeatures(message.ActivatedFeatures);
+            AddActivatedFeatures(loadedElements.ActivatedFeatures);
 
-            AddFeatureDefinitions(message.Definitions);
+            AddFeatureDefinitions(loadedElements.Definitions);
 
             return error;
         }
@@ -127,6 +133,7 @@ namespace FeatureAdmin.OrigoDb
             Locations.Clear();
         }
 
+        [Command]
         public string RemoveActivatedFeature(Guid featureId, Guid locationId)
         {
             var featureToRemove = ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureId && f.LocationId == locationId);
@@ -181,7 +188,7 @@ namespace FeatureAdmin.OrigoDb
                             (from loc in allLocationsOfFeatureScope
                              join af in prefilteredActivatedFeatures on loc.Id equals af.LocationId into gj
                              from subAf in gj.DefaultIfEmpty()
-                             // following is the only different line compared to ..can deactivate
+                                 // following is the only different line compared to ..can deactivate
                              where subAf == null
                              select loc).ToList();
 
@@ -202,7 +209,7 @@ namespace FeatureAdmin.OrigoDb
                              join af in prefilteredActivatedFeatures on loc.Id equals af.LocationId into gj
 
                              from subAf in gj.DefaultIfEmpty()
-                             // following is the only different line compared to ..can activate
+                                 // following is the only different line compared to ..can activate
                              where subAf != null && subAf.FeatureId == featureDefinition.Id
                              select loc).ToList();
 
