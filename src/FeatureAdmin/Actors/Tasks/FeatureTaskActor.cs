@@ -177,7 +177,7 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             var confirmRequest = new ConfirmationRequest(
                     Title,
-                    string.Format("Please confirm to {0} feature {1} in location {2}\nFeatureAdmin found '{3}' location(s) where to {0}.", 
+                    string.Format("Please confirm to {0} feature \n\n{1} \n\nacross location \n\n{2}\n\n\nFeatureAdmin found '{3}' location(s) where to {0}.", 
                         action,
                         message.FeatureDefinition.ToString(), 
                         message.Location.ToString(),

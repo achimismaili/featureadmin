@@ -8,14 +8,18 @@
              xmlns:Micro="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
              xmlns:local="clr-namespace:FeatureAdmin.Views"
              mc:Ignorable="d" 
+             Background="#33F0A30A"
              >
-    <Grid Background="#33F0A30A" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBlock x:Name="DialogText" Background="#33F0A30A" />
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="DialogText" Margin="10"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
             <Button Width="100" x:Name="Ok" Content="OK" IsDefault="True" IsCancel="True" />
             <Button Width="100" x:Name="Cancel" Content="Cancel" IsCancel="True"/>
         </StackPanel>

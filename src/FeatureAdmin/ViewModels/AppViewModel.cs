@@ -105,9 +105,8 @@ namespace FeatureAdmin.ViewModels
 
             dynamic settings = new System.Dynamic.ExpandoObject();
             settings.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
-            settings.ResizeMode = System.Windows.ResizeMode.NoResize;
-            settings.Width = 300;
-            settings.Height = 200;
+            settings.ResizeMode = System.Windows.ResizeMode.CanResizeWithGrip;
+            settings.SizeToContent = System.Windows.SizeToContent.WidthAndHeight;
             // settings.Title = "window title";
             // settings.Icon = new BitmapImage(new Uri("pack://application:,,,/MyApplication;component/Assets/myicon.ico"));
 
