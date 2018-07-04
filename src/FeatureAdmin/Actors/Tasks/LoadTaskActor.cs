@@ -38,7 +38,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             this.dataService = dataService;
             featureDefinitionActor =
                  //   Context.ActorOf(Context.DI().Props<FeatureDefinitionActor>());
-                 ActorSystemReference.ActorSystem.ActorOf(FeatureDefinitionActor.Props(
+                 Context.ActorOf(FeatureDefinitionActor.Props(
            dataService), "FeatureDefinitionActor");
 
             ActivatedFeaturesLoaded = 0;
@@ -225,7 +225,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             {
                 IActorRef newLocationActor =
                   //  Context.ActorOf(Context.DI().Props<LocationActor>());
-                  ActorSystemReference.ActorSystem.ActorOf(LocationActor.Props(
+                  Context.ActorOf(LocationActor.Props(
            dataService), locationId.ToString());
 
 

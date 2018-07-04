@@ -14,21 +14,21 @@ namespace FeatureAdmin.Backends.Demo.Services
         {
             repository = new Repository.DemoRepository();
 
-            var demoLocations = SampleData.SampleLocationHierarchy.GetAllLocations().ToList();
-            var demoActivatedFeatures = SampleData.SampleLocationHierarchy.GetAllActivatedFeatures(demoLocations).ToList();
-            var demoFeaturedefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions().ToList();
+            //var demoLocations = SampleData.SampleLocationHierarchy.GetAllLocations().ToList();
+            //var demoActivatedFeatures = SampleData.SampleLocationHierarchy.GetAllActivatedFeatures(demoLocations).ToList();
+            //var demoFeaturedefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions().ToList();
 
-            var loadedElements = new LoadedDto(
-                SampleData.Locations.TestFarm.Location,
-                demoLocations,
-                demoActivatedFeatures,
-                demoFeaturedefinitions
-                );
+            //var loadedElements = new LoadedDto(
+            //    SampleData.Locations.TestFarm.Location,
+            //    demoLocations,
+            //    demoActivatedFeatures,
+            //    demoFeaturedefinitions
+            //    );
 
-            var initialContent = new LocationsLoaded(loadedElements);
+            //var initialContent = new LocationsLoaded(loadedElements);
                 
 
-            repository.AddLoadedLocations(initialContent);
+            //repository.AddLoadedLocations(initialContent);
         }
 
         public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()

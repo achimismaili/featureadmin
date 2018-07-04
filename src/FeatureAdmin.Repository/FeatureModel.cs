@@ -14,9 +14,9 @@ namespace FeatureAdmin.OrigoDb
         /// <summary>
         /// KeyValuePair Guid, Guid = featureId, locationId
         /// </summary>
-        private List<ActivatedFeature> ActivatedFeatures;
-        private Dictionary<string, FeatureDefinition> FeatureDefinitions;
-        private Dictionary<Guid, Location> Locations;
+        protected List<ActivatedFeature> ActivatedFeatures;
+        protected Dictionary<string, FeatureDefinition> FeatureDefinitions;
+        protected Dictionary<Guid, Location> Locations;
 
         public FeatureModel()
         {
@@ -91,7 +91,7 @@ namespace FeatureAdmin.OrigoDb
             }
             catch (Exception ex)
             {
-                string additionalInfo = string.Empty;
+                string errInfo = ex.Message;
 
                 Location doublette = null;
 
@@ -104,21 +104,21 @@ namespace FeatureAdmin.OrigoDb
                              where newLocs.Id == l.Key
                              select newLocs).FirstOrDefault();
                 }
-                catch (Exception)
+                catch (Exception ex2)
                 {
 
-                    throw;
+                    errInfo += ex2.Message;
                 }
 
                 if (doublette == null)
                 {
-                    return ex.Message;
+                    return errInfo;
                 }
                 else
                 {
                     return string.Format(
                         "Error when trying to add a location. The location with id '{0}' and Url '{1}' was already loaded. This should never happen! Try to reload or restart. Error: '{2}'",
-                        doublette.Id, doublette.Url, ex.Message);
+                        doublette.Id, doublette.Url, errInfo);
                 }
             }
 

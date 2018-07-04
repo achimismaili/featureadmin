@@ -18,8 +18,11 @@ namespace FeatureAdmin.Core.Models.Tasks
 
     public class FeatureTaskActor : BaseTaskActor
     {
+        /// <summary>
+        /// null is not completed, true is completed successfully and false is failed to complete
+        /// </summary>
         public Dictionary<Guid, bool> jobsCompleted;
-
+        public int jobsTotal = 0;
         private List<FeatureToggleRequest> featureToggleRequestsToBeConfirmed;
 
 
@@ -53,10 +56,10 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             get
             {
-                double completed = jobsCompleted.Where(j => j.Value == true).Count();
-                double total = jobsCompleted.Count();
+                // double completedSuccess = jobsCompleted.Where(j => j.Value == true).Count();
+                double totalCompleted = jobsCompleted.Count();
 
-                return completed / total;
+                return totalCompleted / jobsTotal;
             }
         }
 
@@ -64,11 +67,11 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             get
             {
-                return string.Format("'{0}' (ID: '{1}') - {2} of {3} task(s) completed, progress {4:F0}% \nelapsed time: {5}",
+                return string.Format("'{0}' (ID: '{1}') - {2} of {3} (de)activation(s) completed successfully, progress {4:F0}% \nelapsed time: {5}",
                     Title,
                     Id,
                     jobsCompleted.Where(j => j.Value == true).Count(),
-                    jobsCompleted.Count(),
+                    jobsTotal,
                     PercentCompleted * 100,
                     ElapsedTime
                     );
@@ -188,11 +191,15 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         private void HandleConfirmation(Confirmation message)
         {
+            jobsTotal = featureToggleRequestsToBeConfirmed.Count;
+
+            Start = DateTime.Now;
+            
             foreach (FeatureToggleRequest ftr in featureToggleRequestsToBeConfirmed)
             {
 
                 var locationId = ftr.Location.Id;
-
+                
                 // create Location actors and trigger feature actions
 
                 if (!executingActors.ContainsKey(locationId))
@@ -201,7 +208,7 @@ namespace FeatureAdmin.Core.Models.Tasks
 
                     IActorRef newLocationActor =
                         // Context.ActorOf(Context.DI().Props<LocationActor>());
-                        ActorSystemReference.ActorSystem.ActorOf(LocationActor.Props(
+                        Context.ActorOf(LocationActor.Props(
            dataService), locationId.ToString());
 
 
