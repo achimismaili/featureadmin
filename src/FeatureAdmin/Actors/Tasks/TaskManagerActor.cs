@@ -80,7 +80,7 @@ namespace FeatureAdmin.Actors.Tasks
 
             taskActors.Add(message.TaskId, newTaskActor);
 
-            var requestWithCorrectSettings = new FeatureToggleRequest(message, force, elevatedPrivileges);
+            var requestWithCorrectSettings = message.GetUpdatedFeatureToggleRequest(force, elevatedPrivileges);
 
             // trigger feature toggle request
             newTaskActor.Tell(requestWithCorrectSettings);

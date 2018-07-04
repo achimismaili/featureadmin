@@ -37,8 +37,8 @@ namespace FeatureAdmin.Actors
                 var error = dataService.ActivateFeature(
                     message.FeatureDefinition
                     , message.Location
-                    , message.ElevatedPrivileges
-                    , message.Force
+                    , message.ElevatedPrivileges.Value
+                    , message.Force.Value
                     , out af);
 
                 var completed = new Core.Messages.Completed.FeatureActivationCompleted(
@@ -56,8 +56,8 @@ namespace FeatureAdmin.Actors
                 var error = dataService.DeactivateFeature(
                     message.FeatureDefinition
                     , message.Location
-                    , message.ElevatedPrivileges
-                    , message.Force);
+                    , message.ElevatedPrivileges.Value
+                    , message.Force.Value);
 
                 var completed = new Core.Messages.Completed.FeatureDeactivationCompleted(
                                message.TaskId

@@ -13,11 +13,13 @@ namespace FeatureAdmin.Core.Messages.Request
         /// <param name="location">the location or top location</param>
         /// <param name="activate">true = activate, false = deactivate</param>
         /// <remarks>force and elevated privileges are system wide settings</remarks>
-        public FeatureToggleRequest([NotNull] FeatureDefinition featureDefinition, [NotNull] Location location, bool activate, bool force, bool elevatedPrivileges)
+        public FeatureToggleRequest([NotNull] FeatureDefinition featureDefinition, [NotNull] Location location, bool activate, bool? force = null, bool? elevatedPrivileges = null)
         {
             FeatureDefinition = featureDefinition;
             Location = location;
             Activate = activate;
+            Force = force;
+            ElevatedPrivileges = elevatedPrivileges;
             TaskId = Guid.NewGuid();
 
             var activationPrefix = activate ? "" : "de";
@@ -29,42 +31,12 @@ namespace FeatureAdmin.Core.Messages.Request
                 , activationPrefix);
         }
 
-        /// <summary>
-        /// to keep message immutable, you need to create new message, if you want to change force and elevated settings
-        /// </summary>
-        /// <param name="requestToBeUpdated"></param>
-        /// <param name="force"></param>
-        /// <param name="elevatedPrivileges"></param>
-        public FeatureToggleRequest([NotNull] FeatureToggleRequest requestToBeUpdated, bool force, bool elevatedPrivileges)
-            :this(
-                 requestToBeUpdated.FeatureDefinition
-                 ,requestToBeUpdated.Location
-                 ,requestToBeUpdated.Activate
-                 ,force
-                 ,elevatedPrivileges
-                 )
-        {
-        }
-
-        /// <summary>
-        /// request to activate or deactivate a feature in a location or below 
-        /// </summary>
-        /// <param name="featureDefinition"></param>
-        /// <param name="location"></param>
-        /// <param name="activate"></param>
-        /// <remarks>
-        /// From UI, force and elevated privileges are not required, these must be known by FeatureTaskActor
-        /// </remarks>
-        public FeatureToggleRequest([NotNull] FeatureDefinition featureDefinition, [NotNull] Location location, bool activate)
-            :this(featureDefinition, location, activate, false, false)
-        { }
-        
-
-
         public FeatureDefinition FeatureDefinition { get; }
         public Location Location { get; }
         public bool Activate { get; }
-        public bool Force { get;}
-        public bool ElevatedPrivileges { get;}
+        // From UI, force and elevated privileges are not required, therefore set to null if not set
+        public bool? Force { get; }
+        // From UI, force and elevated privileges are not required, therefore set to null if not set
+        public bool? ElevatedPrivileges { get; }
     }
 }

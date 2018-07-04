@@ -31,6 +31,9 @@ namespace FeatureAdmin.ViewModels
             IFeatureRepository repository,
             IDataService dataService)
         {
+            // Load settings at the very beginning, so that they are up to date
+            LoadSettings();
+
             DisplayName = "Feature Admin 3 for SharePoint 2013";
 
             this.windowManager = windowManager;
@@ -51,8 +54,6 @@ namespace FeatureAdmin.ViewModels
             LogVm = new LogViewModel(eventAggregator);
 
             InitializeActors();
-
-            LoadSettings();
 
             TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleInitialLoad);
         }
