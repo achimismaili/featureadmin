@@ -39,7 +39,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DEMO</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SP2013</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -318,6 +318,10 @@
     <ProjectReference Include="..\Backends\Demo\Demo.csproj">
       <Project>{e4a06935-054f-446a-b2af-996dc615d775}</Project>
       <Name>Demo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Backends\Sp2013\Sp2013.csproj">
+      <Project>{5d1949a6-17ed-4203-98f8-2b82415f97c1}</Project>
+      <Name>Sp2013</Name>
     </ProjectReference>
     <ProjectReference Include="..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
       <Project>{4cec2e98-5a3b-4793-b606-a5250d046f02}</Project>

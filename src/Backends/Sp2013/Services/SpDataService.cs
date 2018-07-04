@@ -200,7 +200,7 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             {
                 foreach (SPFeatureDefinition spFd in spFeatureDefinitions)
                 {
-                    var fd = spFd.ToFeatureDefinition("Farm");
+                    var fd = spFd.ToFeatureDefinition(null);
 
                     features.Add(fd);
                 }

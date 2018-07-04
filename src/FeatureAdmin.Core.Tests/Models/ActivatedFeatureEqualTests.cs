@@ -19,7 +19,7 @@ namespace FeatureAdmin.Core.Tests.Models
         public static string DisplayName = "Test Display Name";
         public static string Description = "Test description";
         public static bool Hidden = false;
-        public static string DefinitioninstallationScope = Core.Common.Constants.Defaults.DefinitionInstallationScopeFarm;
+        public static FeatureDefinitionScope DefinitioninstallationScope = FeatureDefinitionScope.Farm;
         public static Scope Scope = Scope.Web;
         public static Version Version = new Version("3.0.0.0");
         public static bool Faulty = false;
@@ -35,7 +35,7 @@ namespace FeatureAdmin.Core.Tests.Models
         public static string DisplayNameDifferent = "Different Test Display Name";
         public static string DescriptionDifferent = "Different Test description";
         public static bool HiddenDifferent = !Hidden;
-        public static string DefinitioninstallationScopeDifferent = "Different";
+        public static FeatureDefinitionScope DefinitioninstallationScopeDifferent = FeatureDefinitionScope.None;
         public static Scope ScopeDifferent = Scope.Site;
         public static Version VersionDifferent = new Version("3.0.0.1");
         public static bool FaultyDifferent = !Faulty;
@@ -50,9 +50,6 @@ namespace FeatureAdmin.Core.Tests.Models
         // FeatureId, LocationId
         public void ActiveFeaturesWithSameFeatureIdAndLocationIdAreEqual()
         {
-
-
-
             // Arrange
             var referenceFeatureDefinition = FeatureDefinitionFactory.GetFeatureDefinition(
                             Id, CompatibilityLevel,
@@ -62,7 +59,7 @@ namespace FeatureAdmin.Core.Tests.Models
                             Scope,
                             Title,
                             SolutionId, UiVersion,
-                            Version, null
+                            Version
                            );
 
             ActivatedFeature referenceFeature = ActivatedFeatureFactory.GetActivatedFeature(
@@ -70,7 +67,7 @@ namespace FeatureAdmin.Core.Tests.Models
                   Locations.ActivatedRootWeb.Guid,
                   referenceFeatureDefinition,
                   Faulty, Properties, TimeActivated,
-                  Version, null
+                  Version
                   );
 
 
@@ -102,7 +99,7 @@ namespace FeatureAdmin.Core.Tests.Models
                  Locations.ActivatedRootWeb.Guid,
                  null,
                  FaultyDifferent, null, DateTime.MinValue,
-                 null, null
+                 null
                  );
 
             // Assert
@@ -131,7 +128,7 @@ namespace FeatureAdmin.Core.Tests.Models
                           Scope,
                           Title,
                           SolutionId, UiVersion,
-                          Version, null
+                          Version
                          );
 
             ActivatedFeature referenceFeature = ActivatedFeatureFactory.GetActivatedFeature(
@@ -139,7 +136,7 @@ namespace FeatureAdmin.Core.Tests.Models
                   SolutionId,
                   referenceFeatureDefinition,
                   Faulty, Properties, TimeActivated,
-                  Version, null
+                  Version
                   );
 
 
@@ -149,7 +146,7 @@ namespace FeatureAdmin.Core.Tests.Models
                   SolutionId,
                   referenceFeatureDefinition,
                   Faulty, Properties, TimeActivated,
-                  Version, null
+                  Version
                   );
 
             var notEqualLocationId = ActivatedFeatureFactory.GetActivatedFeature(
@@ -157,7 +154,7 @@ namespace FeatureAdmin.Core.Tests.Models
                   SolutionIdDifferent,
                   referenceFeatureDefinition,
                   Faulty, Properties, TimeActivated,
-                  Version, null
+                  Version
                   );
 
             // Assert

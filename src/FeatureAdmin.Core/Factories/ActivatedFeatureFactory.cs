@@ -16,7 +16,7 @@ namespace FeatureAdmin.Core.Factories
                 Dictionary<string, string> properties,
                 DateTime timeActivated,
                 Version version,
-                string definitionInstallationScope = "Farm"
+                FeatureDefinitionScope featureDefinitionScope = FeatureDefinitionScope.Farm
             )
         {
             var activatedFeature = new ActivatedFeature(
@@ -27,7 +27,7 @@ namespace FeatureAdmin.Core.Factories
                 properties,
                 timeActivated,
                 version,
-                definitionInstallationScope);
+                featureDefinitionScope);
 
             return activatedFeature;
         }
