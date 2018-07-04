@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace FeatureAdmin.Core.Models
 {
+    [Equals]
     [Serializable]
     public class Location 
     {
@@ -17,11 +18,13 @@ namespace FeatureAdmin.Core.Models
             Url = url == null ? string.Empty : url;
             ChildCount = childCount;
         }
+
+        [IgnoreDuringEquals]
         public string DisplayName { get; protected set; }
         public Guid Id { get; protected set; }
         public Scope Scope { get; protected set; }
-    
 
+        [IgnoreDuringEquals]
         public bool CanHaveChildren
         {
             get
@@ -30,10 +33,12 @@ namespace FeatureAdmin.Core.Models
             }
         }
 
+        [IgnoreDuringEquals]
         public Guid Parent { get;  }
 
         public string Url { get;  }
 
+        [IgnoreDuringEquals]
         public int ChildCount { get; set; }
 
         public override string ToString()
