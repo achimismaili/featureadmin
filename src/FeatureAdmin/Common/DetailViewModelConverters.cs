@@ -70,7 +70,7 @@ namespace FeatureAdmin.Common
             items.Add(new KeyValuePair<string, string>(nameof(vm.SolutionId), vm.SolutionId.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.UIVersion), vm.UIVersion.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Version), vm.Version == null ? string.Empty : vm.Version.ToString()));
-            items.Add(new KeyValuePair<string, string>(nameof(vm.SandBoxedSolutionLocation), vm.SandBoxedSolutionLocation));
+            items.Add(new KeyValuePair<string, string>(nameof(vm.SandBoxedSolutionLocation), vm.SandBoxedSolutionLocation.HasValue ? vm.SandBoxedSolutionLocation.Value.ToString() : string.Empty));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Properties), PropertiesToString(vm.Properties)));
 
 

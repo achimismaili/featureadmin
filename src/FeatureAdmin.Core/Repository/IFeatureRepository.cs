@@ -23,14 +23,12 @@ namespace FeatureAdmin.Core.Repository
         IEnumerable<Location> GetLocationsCanActivate(FeatureDefinition featureDefinition, Location location);
 
         IEnumerable<Location> GetLocationsCanDeactivate(FeatureDefinition featureDefinition, Location location);
-
-        // void AddActivatedFeatures(IEnumerable<ActivatedFeature> activatedFeatures);
         bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId = null);
 
         string RemoveActivatedFeature(Guid featureId, Guid locationId);
 
-        //IEnumerable<ActivatedFeature> SearchActivatedFeatures();
         IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, bool? onlyFarmFeatures);
         IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter);
+        bool IsItPossibleToActivateFeature(FeatureDefinition featureDefinition);
     }
 }

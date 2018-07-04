@@ -126,6 +126,56 @@ namespace FeatureAdmin.OrigoDb
 
         }
 
+        /// <summary>
+        /// checks, if feature can be activated in current farm
+        /// </summary>
+        /// <param name="featureDefinition">the feature definition to check</param>
+        /// <returns>true, if feature can be activated in current farm</returns>
+        public bool IsItPossibleToActivateFeature(FeatureDefinition featureDefinition)
+        {
+            if (featureDefinition == null)
+            {
+                return false;
+            }
+
+            if (!featureDefinition.SandBoxedSolutionLocation.HasValue)
+            {
+                // Farm Features: Return true, if there are less locations with that scope, where the feature is activated, than total locations
+                var activatedCount = ActivatedFeatures.Count(f => f.FeatureId == featureDefinition.Id);
+                var totalLocationsWithThisFeatureScope = Locations.Count(l => l.Value.Scope == featureDefinition.Scope);
+
+                return totalLocationsWithThisFeatureScope > activatedCount;
+            }
+            else
+            {
+                if (featureDefinition.Scope == Scope.Site)
+                {
+                    // only need to check, if it is activated in current site collection
+                    return IsFeatureActivated(featureDefinition.Id, featureDefinition.SandBoxedSolutionLocation.Value);
+                }
+                else
+                {
+                    // only other valid scope to activate a sandboxed feature is Web
+                    if (featureDefinition.Scope != Scope.Web)
+                    {
+                        return false;
+                    }
+                    // need to check, if it is activated in current root web and all webs below
+                    var totalLocationsWithThisParent = Locations.Values.Where(l => l.Parent == featureDefinition.SandBoxedSolutionLocation.Value);
+
+                    // TODO: test, if this does what it should do - get number of activated features within the locations with this parent.
+                    var activatedCount =
+                            (from locscope in totalLocationsWithThisParent
+                             join f in ActivatedFeatures on locscope.Id equals f.LocationId 
+                             where f.FeatureId == featureDefinition.Id
+                             select locscope.Id
+                             ).Count();
+
+                    return totalLocationsWithThisParent.Count() > activatedCount;
+                }
+            }            
+        }
+
         public void Clear()
         {
             ActivatedFeatures.Clear();

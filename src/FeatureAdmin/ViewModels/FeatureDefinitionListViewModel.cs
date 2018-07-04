@@ -38,7 +38,7 @@ namespace FeatureAdmin.ViewModels
 
         protected override void FilterResults()
         {
-            var searchResult = repository.SearchFeatureDefinitions(searchInput, SelectedScopeFilter, null );
+            var searchResult = repository.SearchFeatureDefinitions(searchInput, SelectedScopeFilter, null);
 
             ShowResults(searchResult);
         }
@@ -69,21 +69,70 @@ namespace FeatureAdmin.ViewModels
 
             if (ActiveItem != null && SelectedLocation != null)
             {
-                // check for activated feature
+                // check for SAME SCOPE
                 if (ActiveItem.Scope == SelectedLocation.Scope)
                 {
-                    var isActivated = repository.IsFeatureActivated(ActiveItem.Id, SelectedLocation.Id);
+                    // NOT Sandboxed Solution
+                    if (ActiveItem.SandBoxedSolutionLocation == null)
+                    {
 
-                    canActivate = !isActivated;
-                    canDeactivate = isActivated;
+                        var isActivated = repository.IsFeatureActivated(ActiveItem.Id, SelectedLocation.Id);
+
+                        canActivate = !isActivated;
+                        canDeactivate = isActivated;
+
+
+                    }
+                    // Same Scope AND Sandboxed Solution
+                    else
+                    {
+                        // SANDBOX scope SITE
+                        if (ActiveItem.Scope == Core.Models.Enums.Scope.Site)
+                        {
+                            if (ActiveItem.SandBoxedSolutionLocation == SelectedLocation.Id)
+                            {
+                                var isActivated = repository.IsFeatureActivated(ActiveItem.Id, SelectedLocation.Id);
+
+                                canActivate = !isActivated;
+                                canDeactivate = isActivated;
+                            }
+                            else
+                            {
+                                // sandboxed solution site feature cannot be activated in different site -->
+                                canActivate = false;
+                                canDeactivate = false;
+                            }
+                        }
+
+
+                        // SANDBOX scope WEB
+                        else if (ActiveItem.Scope == Core.Models.Enums.Scope.Web)
+                        {
+                            if (ActiveItem.SandBoxedSolutionLocation == SelectedLocation.Parent)
+                            {
+                                var isActivated = repository.IsFeatureActivated(ActiveItem.Id, SelectedLocation.Id);
+
+                                canActivate = !isActivated;
+                                canDeactivate = isActivated;
+                            }
+                            else
+                            {
+                                // sandboxed solution site feature cannot be activated in different site -->
+                                canActivate = false;
+                                canDeactivate = false;
+                            }
+                        }
+                    }
                 }
-                // check for bulk feature toggle, check if scope is ok and if feature is activated at all
+                // check for DIFFERENT SCOPE - bulk feature toggle, check if scope-relation is ok and if feature is activated at all
                 else if (ActiveItem.Scope < SelectedLocation.Scope && SelectedLocation.ChildCount > 0)
                 {
-                    canActivate = true;
+                    // only needs to check, if it is active or inactive anywhere in the farm, as the scope of feature definition is lower than location scope
+                    canActivate = repository.IsItPossibleToActivateFeature(ActiveItem);
                     canDeactivate = repository.IsFeatureActivated(ActiveItem.Id);
                 }
             }
+
 
             // TODO: Implement check for can upgrade
 

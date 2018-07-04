@@ -28,7 +28,7 @@ namespace FeatureAdmin.SampleData
             List<FeatureDefinition> sandBoxFeatureDefinitions = new List<FeatureDefinition>();
 
             sandBoxFeatureDefinitions.Add(FeatureDefinitionFactory.GetFeatureDefinition(
-                new Guid("001f4bd7-746c-403c-aa09-a6cc43de7942"), 15, "Sandbox Definition", "Sandbox Definition", false, "Sandbox Definition", new Dictionary<string, string>() { { "propKey1", "property value 1" }, { "propKey2", "property value 2" } }, Core.Models.Enums.Scope.Site, "PublishingStapling", Guid.Empty, "4", new Version("15.0.0.0"), "https://www.featureadmin.com/"));
+                new Guid("001f4bd7-746c-403c-aa09-a6cc43de7942"), 15, "Sandbox Definition", "Sandbox Definition", false, "Sandbox Definition", new Dictionary<string, string>() { { "propKey1", "property value 1" }, { "propKey2", "property value 2" } }, Core.Models.Enums.Scope.Site, "PublishingStapling", Guid.Empty, "4", new Version("15.0.0.0"), new Guid("46e32221-9b8e-4262-8469-8b54ee205111"))); // location ID of root demo www site collection / root web 
 
             return sandBoxFeatureDefinitions;
         }

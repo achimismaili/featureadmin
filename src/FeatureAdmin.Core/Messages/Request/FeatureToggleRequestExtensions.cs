@@ -12,7 +12,7 @@ namespace FeatureAdmin.Core.Messages.Request
         /// <param name="requestToBeUpdated">the request to be updated</param>
         /// <param name="force">new force setting</param>
         /// <param name="elevatedPrivileges">new ep setting</param>
-        public static FeatureToggleRequest GetUpdatedFeatureToggleRequest(this FeatureToggleRequest requestToBeUpdated, bool force, bool elevatedPrivileges)
+        public static FeatureToggleRequest GetFeatureToggleRequest(this FeatureToggleRequest requestToBeUpdated, bool force, bool elevatedPrivileges)
         {
             var updatedRequest = new FeatureToggleRequest(
                 requestToBeUpdated.FeatureDefinition,

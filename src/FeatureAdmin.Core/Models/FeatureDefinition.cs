@@ -21,7 +21,7 @@ namespace FeatureAdmin.Core.Models
              Guid solutionId,
              string uIVersion,
              Version version,
-            string sandBoxedSolutionLocation = null
+            Guid? sandBoxedSolutionLocation = null
             ) 
         {
             Id = id;
@@ -41,7 +41,7 @@ namespace FeatureAdmin.Core.Models
                 "{0}-{1}{2}",
                 id.ToString(),
                 compatibilityLevel,
-                sandBoxedSolutionLocation == null ? string.Empty : "-" + sandBoxedSolutionLocation
+                sandBoxedSolutionLocation.HasValue ? "-" + sandBoxedSolutionLocation.Value : string.Empty
                 );
         }
 
@@ -62,13 +62,13 @@ namespace FeatureAdmin.Core.Models
         public Dictionary<string, string> Properties { get; private set; }
 
         /// <summary>
-        /// The location url, if this is a sandboxed solution feature definition
+        /// The location Id, if this is a sandboxed solution feature definition
         /// </summary>
         /// <remarks>
         /// All Farm Solutions have value null
-        /// Sandboxed Solutions have the url
+        /// Sandboxed Solutions have the locationId of the site collection
         /// </remarks>
-        public string SandBoxedSolutionLocation { get; private set; }
+        public Guid? SandBoxedSolutionLocation { get; private set; }
 
         public Scope Scope { get; protected set; }
 

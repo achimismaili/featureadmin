@@ -62,7 +62,7 @@ namespace FeatureAdmin.Core.Tests.Models
                             Scope,
                             Title,
                             SolutionId, UiVersion,
-                            Version, DefinitioninstallationScope
+                            Version, null
                            );
 
             ActivatedFeature referenceFeature = ActivatedFeatureFactory.GetActivatedFeature(
@@ -70,7 +70,7 @@ namespace FeatureAdmin.Core.Tests.Models
                   Locations.ActivatedRootWeb.Guid,
                   referenceFeatureDefinition,
                   Faulty, Properties, TimeActivated,
-                  Version, DefinitioninstallationScope
+                  Version, null
                   );
 
 
@@ -85,7 +85,8 @@ namespace FeatureAdmin.Core.Tests.Models
                    Scope,
                    null,
                    Guid.Empty, null,
-                   null, DefinitioninstallationScope
+                   null, 
+                   null
                   );
 
             var equalFeature = ActivatedFeatureFactory.GetActivatedFeature(
@@ -130,7 +131,7 @@ namespace FeatureAdmin.Core.Tests.Models
                           Scope,
                           Title,
                           SolutionId, UiVersion,
-                          Version, DefinitioninstallationScope
+                          Version, null
                          );
 
             ActivatedFeature referenceFeature = ActivatedFeatureFactory.GetActivatedFeature(
@@ -138,7 +139,7 @@ namespace FeatureAdmin.Core.Tests.Models
                   SolutionId,
                   referenceFeatureDefinition,
                   Faulty, Properties, TimeActivated,
-                  Version, DefinitioninstallationScope
+                  Version, null
                   );
 
 
@@ -148,7 +149,7 @@ namespace FeatureAdmin.Core.Tests.Models
                   SolutionId,
                   referenceFeatureDefinition,
                   Faulty, Properties, TimeActivated,
-                  Version, DefinitioninstallationScope
+                  Version, null
                   );
 
             var notEqualLocationId = ActivatedFeatureFactory.GetActivatedFeature(
@@ -156,7 +157,7 @@ namespace FeatureAdmin.Core.Tests.Models
                   SolutionIdDifferent,
                   referenceFeatureDefinition,
                   Faulty, Properties, TimeActivated,
-                  Version, DefinitioninstallationScope
+                  Version, null
                   );
 
             // Assert

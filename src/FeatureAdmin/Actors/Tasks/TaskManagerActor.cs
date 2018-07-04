@@ -41,7 +41,7 @@ namespace FeatureAdmin.Actors.Tasks
 
             taskActors = new Dictionary<Guid, IActorRef>();
 
-            Receive<LoadTask>(message => Handle(message));
+            Receive<LoadTask>(message => Receive(message));
         }
 
         private bool elevatedPrivileges { get; set; }
@@ -53,10 +53,10 @@ namespace FeatureAdmin.Actors.Tasks
         /// <remarks>in the future, this may be enhanced with a start
         /// location, so that it might not only have to be a full farm reload
         /// </remarks>
-        public void Handle(LoadTask message)
+        public void Receive(LoadTask message)
         {
             IActorRef newTaskActor =
-            ActorSystemReference.ActorSystem.ActorOf(LoadTaskActor.Props(
+            Context.ActorOf(LoadTaskActor.Props(
                 eventAggregator, 
                 repository,
                 dataService,
@@ -69,6 +69,7 @@ namespace FeatureAdmin.Actors.Tasks
 
         public void Handle(FeatureToggleRequest message)
         {
+            // as this comes from WPF, no akka context available here yet.
             IActorRef newTaskActor =
             ActorSystemReference.ActorSystem.ActorOf(
                 FeatureTaskActor.Props(
@@ -80,7 +81,7 @@ namespace FeatureAdmin.Actors.Tasks
 
             taskActors.Add(message.TaskId, newTaskActor);
 
-            var requestWithCorrectSettings = message.GetUpdatedFeatureToggleRequest(force, elevatedPrivileges);
+            var requestWithCorrectSettings = message.GetFeatureToggleRequest(force, elevatedPrivileges);
 
             // trigger feature toggle request
             newTaskActor.Tell(requestWithCorrectSettings);
