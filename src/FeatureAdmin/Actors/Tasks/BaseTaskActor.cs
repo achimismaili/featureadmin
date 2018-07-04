@@ -84,7 +84,7 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             if (PercentCompleted < 1d)
             {
-                if (Status == TaskStatus.InProgress)
+                if (Status == TaskStatus.InProgress || (Status == TaskStatus.Started && PercentCompleted == 0))
                 {
                     progressMsg = new ProgressMessage(Id, PercentCompleted, string.Format("'{0}' in progress ({1:F0}%), please wait ...", Title, PercentCompleted * 100, Status.ToString()));
                 }

@@ -22,7 +22,7 @@ namespace FeatureAdmin.Core.Messages.Request
 
             var activationPrefix = activate ? "" : "de";
 
-            Title = string.Format("Feature {3}activation of feature '{0}' starting at {1} '{2}'"
+            Title = string.Format("Feature {3}activation of feature '{0}' across {1} '{2}'"
                 , featureDefinition.DisplayName
                 , location.Scope.ToString()
                 , location.DisplayName

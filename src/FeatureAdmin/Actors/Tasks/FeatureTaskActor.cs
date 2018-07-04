@@ -194,7 +194,10 @@ namespace FeatureAdmin.Core.Models.Tasks
             jobsTotal = featureToggleRequestsToBeConfirmed.Count;
 
             Start = DateTime.Now;
-            
+
+            // start status progress bar
+            SendProgress();
+
             foreach (FeatureToggleRequest ftr in featureToggleRequestsToBeConfirmed)
             {
 
