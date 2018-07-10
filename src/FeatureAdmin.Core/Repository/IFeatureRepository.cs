@@ -10,7 +10,7 @@ namespace FeatureAdmin.Core.Repository
 
         void AddFeatureDefinitions(IEnumerable<FeatureDefinition> featureDefinitions);
 
-        void AddLoadedLocations(Core.Messages.Completed.LocationsLoaded message);
+        void AddLoadedLocations(LoadedDto message);
 
         void Clear();
 

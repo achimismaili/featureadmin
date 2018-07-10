@@ -22,12 +22,13 @@ namespace FeatureAdmin.Core.Models.Tasks
         public int ActivatedFeaturesLoaded { get; private set; }
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IActorRef featureDefinitionActor;
+        private readonly IActorRef farmLoadActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
         private readonly IFeatureRepository repository;
         private readonly IDataService dataService;
 
         public LoadTaskActor(
-            IEventAggregator eventAggregator, 
+            IEventAggregator eventAggregator,
             IFeatureRepository repository,
             IDataService dataService,
             Guid id)
@@ -37,9 +38,13 @@ namespace FeatureAdmin.Core.Models.Tasks
             this.repository = repository;
             this.dataService = dataService;
             featureDefinitionActor =
-                 //   Context.ActorOf(Context.DI().Props<FeatureDefinitionActor>());
                  Context.ActorOf(FeatureDefinitionActor.Props(
            dataService), "FeatureDefinitionActor");
+
+            farmLoadActor =
+                             Context.ActorOf(LocationActor.Props(
+                       dataService), "FarmLoadActor");
+
 
             ActivatedFeaturesLoaded = 0;
 
@@ -61,7 +66,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                 WebApps.MaxCumulatedQuota);
 
             Receive<LoadTask>(message => InitiateLoadTask(message));
-            Receive<LocationsLoaded>(message => HandleLocationsLoaded(message));
+            Receive<LoadedDto>(message => ReceiveLocationsLoaded(message));
             Receive<FarmFeatureDefinitionsLoaded>(message => FarmFeatureDefinitionsLoaded(message));
         }
 
@@ -106,13 +111,13 @@ namespace FeatureAdmin.Core.Models.Tasks
         /// see also https://getakka.net/articles/actors/receive-actor-api.html
         /// </remarks>
         public static Props Props(
-            IEventAggregator eventAggregator, 
-            IFeatureRepository repository, 
+            IEventAggregator eventAggregator,
+            IFeatureRepository repository,
             IDataService dataService,
             Guid id)
         {
             return Akka.Actor.Props.Create(() => new LoadTaskActor(
-                eventAggregator, 
+                eventAggregator,
                 repository,
                 dataService,
                 id));
@@ -134,8 +139,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                     WebApps.Processed++;
                     break;
                 case Enums.Scope.Farm:
-                    // minus one, because farm is contained in child count
-                    WebApps.Total += location.ChildCount - 1;
+                    WebApps.Total += location.ChildCount;
                     Farm.Processed++;
                     break;
                 case Enums.Scope.ScopeInvalid:
@@ -145,20 +149,20 @@ namespace FeatureAdmin.Core.Models.Tasks
             }
         }
 
-        public bool TrackLocationsProcessed(LocationsLoaded loadedMessage)
+        public bool TrackLocationsProcessed(LoadedDto loadedMessage)
         {
             bool finished = false;
 
-            var parent = loadedMessage.LoadedElements.Parent;
+            var parent = loadedMessage.Parent;
 
-            foreach (Location l in loadedMessage.LoadedElements.ChildLocations)
+            foreach (Location l in loadedMessage.ChildLocations)
             {
                 TrackLocationProcessed(l);
             }
 
-            FarmFeatureDefinitions.Processed += loadedMessage.LoadedElements.Definitions.Count();
+            FarmFeatureDefinitions.Processed += loadedMessage.Definitions.Count();
 
-            ActivatedFeaturesLoaded += loadedMessage.LoadedElements.ActivatedFeatures.Count();
+            ActivatedFeaturesLoaded += loadedMessage.ActivatedFeatures.Count();
 
             return finished;
         }
@@ -175,24 +179,24 @@ namespace FeatureAdmin.Core.Models.Tasks
             }
         }
 
-        private void HandleLocationsLoaded([NotNull] LocationsLoaded message)
+        private void ReceiveLocationsLoaded([NotNull] LoadedDto message)
         {
             TrackLocationsProcessed(message);
 
             // if web apps are loaded, load children
-            if (message.LoadedElements.Parent.Scope == Enums.Scope.Farm)
+            if (message.Parent.Scope == Enums.Scope.Farm)
             {
-                foreach (Location l in message.LoadedElements.ChildLocations)
+                foreach (Location l in message.ChildLocations)
                 {
                     if (l.Scope == Enums.Scope.WebApplication)
                     {
                         // initiate read of locations
-                        var loadWebAppChildren = new LoadLocationQuery(Id, l);
-                        LoadTask(loadWebAppChildren);
+                        var loadWebAppChildren = new LoadChildLocationQuery(Id, l);
+                        ReceiveLoadChildrenTask(loadWebAppChildren);
                     }
                 }
             }
-
+            
             repository.AddLoadedLocations(message);
 
             SendProgress();
@@ -204,36 +208,58 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             Title = loadTask.Title;
 
-            repository.Clear();
+            // cleanup repository
+            if (loadTask.StartLocation.Scope == Enums.Scope.Farm)
+            {
+                repository.Clear();
 
-            // initiate read of all feature definitions
-            var fdQuery = new Messages.Request.LoadFeatureDefinitionQuery(Id);
-            featureDefinitionActor.Tell(fdQuery);
+                // initiate read of all feature definitions
+                var fdQuery = new Messages.Request.LoadFeatureDefinitionQuery(Id);
+                featureDefinitionActor.Tell(fdQuery);
 
-            // initiate read of locations
-            var loadQuery = new LoadLocationQuery(Id, loadTask.StartLocation);
-            LoadTask(loadQuery);
+                // initiate read of farm location, start location is null
+                var loadFarm = new LoadChildLocationQuery(Id, null);
+                ReceiveLoadChildrenTask(loadFarm);
+            }
+            else
+            {
+                //TODO: clear only start location and belonging activatedfeatures and definitions ...
+                throw new NotImplementedException("As start location for load task, currently only farm level is supported.");
+            }
+
+            
+            // initiate read of child locations
+            // in case farm is start location, web apps will be read
+            var loadQuery = new LoadChildLocationQuery(Id, loadTask.StartLocation);
+            ReceiveLoadChildrenTask(loadQuery);
         }
 
-        private void LoadTask([NotNull] LoadLocationQuery loadQuery)
+        private void ReceiveLoadChildrenTask([NotNull] LoadChildLocationQuery loadQuery)
         {
             _log.Debug("Entered LoadTask");
 
-            var locationId = loadQuery.Location.Id;
-
-            if (!locationActors.ContainsKey(locationId))
+            if (loadQuery.Location == null)
             {
-                IActorRef newLocationActor =
-                  //  Context.ActorOf(Context.DI().Props<LocationActor>());
-                  Context.ActorOf(LocationActor.Props(
-           dataService), locationId.ToString());
-
-
-                locationActors.Add(locationId, newLocationActor);
-
+                farmLoadActor.Tell(loadQuery);
             }
+            else
+            {
+                var locationId = loadQuery.Location.Id;
 
-            locationActors[locationId].Tell(loadQuery);
+                if (!locationActors.ContainsKey(locationId))
+                {
+                    IActorRef newLocationActor =
+                      //  Context.ActorOf(Context.DI().Props<LocationActor>());
+                      Context.ActorOf(LocationActor.Props(
+               dataService), locationId.ToString());
+
+
+                    locationActors.Add(locationId, newLocationActor);
+
+                }
+
+                locationActors[locationId].Tell(loadQuery);
+            }
         }
     }
 }

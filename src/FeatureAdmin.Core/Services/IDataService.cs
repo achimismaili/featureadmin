@@ -7,26 +7,19 @@ namespace FeatureAdmin.Core.Services
     public interface IDataService
     {
 
-        /// <summary>
-        /// Loads a web application and all its children site collections and their children webs 
-        /// </summary>
-        /// <param name="location">the start location, what to load. This is in version 3.0 always a web application, which is already up to date</param>
-        /// <returns>all children site collections and webs within a locations loaded message</returns>
-        /// <remarks>
-        /// Web application itself is not included in returned collection, because then it would be forwarded twice, 
-        /// once in this collection and once as child collection of farm
-        /// </remarks>
-        LocationsLoaded LoadNonFarmLocationAndChildren(Location location);
-
         IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions();
 
+        LoadedDto LoadFarm(bool elevatedPrivileges);
+
+        LoadedDto LoadWebApps(bool elevatedPrivileges);
+
         /// <summary>
-        /// Loads farm and all web applications including central administration
+        /// loads site collections and webs of a web application
         /// </summary>
-        /// <returns>list of normalized web applications and farm within a locations loaded message</returns>
-        /// <remarks>not only is the farm returned as out variable, but also included in the returned collection</remarks>
-        LocationsLoaded LoadFarmAndWebApps();
-        
+        /// <param name="location">the web app location</param>
+        /// <returns>all site collections and webs of a web application including their activated features and some (non farm) feature definitions</returns>
+        LoadedDto LoadWebAppChildren(Location location, bool elevatedPrivileges);
+
         string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force);
         string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
         //int FeatureUninstall(Guid featureId, bool force);

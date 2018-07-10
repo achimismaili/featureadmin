@@ -4,7 +4,6 @@ using FeatureAdmin.Core.Repository;
 using OrigoDB.Core;
 using System;
 using System.Collections.Generic;
-using FeatureAdmin.Core.Messages.Completed;
 
 namespace FeatureAdmin.Backends.Demo.Repository
 {
@@ -41,9 +40,9 @@ namespace FeatureAdmin.Backends.Demo.Repository
         //    store.AddActivatedFeatures(activatedFeatures);
         //}
 
-        public void AddLoadedLocations(Core.Messages.Completed.LocationsLoaded message)
+        public void AddLoadedLocations(LoadedDto message)
         {
-             store.AddLoadedLocations(message.LoadedElements);
+             store.AddLoadedLocations(message);
         }
 
         /// <summary>

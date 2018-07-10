@@ -47,9 +47,9 @@ namespace FeatureAdmin.Repository
         //    store.AddActivatedFeatures(activatedFeatures);
         //}
 
-        public void AddLoadedLocations(Core.Messages.Completed.LocationsLoaded message)
+        public void AddLoadedLocations(LoadedDto message)
         {
-             var error = store.AddLoadedLocations(message.LoadedElements);
+             var error = store.AddLoadedLocations(message);
 
             if (!string.IsNullOrEmpty(error))
             {

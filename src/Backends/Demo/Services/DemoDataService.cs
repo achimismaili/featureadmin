@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Services;
-using FeatureAdmin.Core.Messages.Completed;
 
 namespace FeatureAdmin.Backends.Demo.Services
 {
@@ -13,22 +12,6 @@ namespace FeatureAdmin.Backends.Demo.Services
         public DemoDataService()
         {
             repository = new Repository.DemoRepository();
-
-            //var demoLocations = SampleData.SampleLocationHierarchy.GetAllLocations().ToList();
-            //var demoActivatedFeatures = SampleData.SampleLocationHierarchy.GetAllActivatedFeatures(demoLocations).ToList();
-            //var demoFeaturedefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions().ToList();
-
-            //var loadedElements = new LoadedDto(
-            //    SampleData.Locations.TestFarm.Location,
-            //    demoLocations,
-            //    demoActivatedFeatures,
-            //    demoFeaturedefinitions
-            //    );
-
-            //var initialContent = new LocationsLoaded(loadedElements);
-                
-
-            //repository.AddLoadedLocations(initialContent);
         }
 
         public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
@@ -40,33 +23,68 @@ namespace FeatureAdmin.Backends.Demo.Services
             return farmFeatureDefinitions;
         }
 
-
-
-        private LocationsLoaded loadLocations(Location location)
+        public LoadedDto LoadFarm(bool elevatedPrivileges)
         {
-            List<ActivatedFeature> activatedFeatures = new List<ActivatedFeature>();
-            List<FeatureDefinition> definitions = new List<FeatureDefinition>();
-            if (location == null)
+            var loadedFarm = new LoadedDto(null);
+
+            var location = repository.SearchLocations(string.Empty, Core.Models.Enums.Scope.Farm).FirstOrDefault();
+
+            var activatedFeatures = GetDemoActivatedFeatures(location);
+            var definitions = GetDemoFeatureDefinitions(location);
+
+            loadedFarm.AddChild(location, activatedFeatures, definitions);
+
+            return loadedFarm;
+
+        }
+
+        public LoadedDto LoadWebApps(bool elevatedPrivileges)
+        {
+            return loadChildLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
+        }
+
+        public LoadedDto LoadWebAppChildren(Location location, bool elevatedPrivileges)
+        {
+            var siCos = loadChildLocations(location);
+
+            var allChildren = siCos;
+
+            foreach (var s in siCos.ChildLocations)
             {
-                return null;
+                var webs = loadChildLocations(s);
+
+                allChildren.AddChildren(webs.ChildLocations, webs.ActivatedFeatures, webs.Definitions);
             }
 
-            List<Location> children = new List<Location>();
+            return allChildren;
+        }
 
-            //if farm is loaded, set loaded farm as parent and add farm as children, too
-            if (location.Scope == Core.Models.Enums.Scope.Farm)
-            {
-                location = repository.SearchLocations(string.Empty, Core.Models.Enums.Scope.Farm).FirstOrDefault();
-                children.Add(location);
-            }
+        private IEnumerable<FeatureDefinition> GetDemoFeatureDefinitions(Location location)
+        {
+            var defs = repository.SearchFeatureDefinitions(location.Id.ToString(), location.Scope, false);
+
+            return defs;
+        }
+
+        private IEnumerable<ActivatedFeature> GetDemoActivatedFeatures(Location location)
+        {
+            var f = repository.GetActivatedFeatures(location);
+
+            return f;
+        }
+
+        private LoadedDto loadChildLocations(Location location)
+        {
+
+            var loadedElements = new LoadedDto(location);
+
 
             Core.Models.Enums.Scope? childScope;
 
             switch (location.Scope)
             {
                 case Core.Models.Enums.Scope.Web:
-                    childScope = null;
-                    break;
+                    throw new ArgumentException("FeatureAdmin should never load child locations for a web.");
                 case Core.Models.Enums.Scope.Site:
                     childScope = Core.Models.Enums.Scope.Web;
                     break;
@@ -80,87 +98,30 @@ namespace FeatureAdmin.Backends.Demo.Services
                     childScope = null;
                     break;
                 default:
-                    childScope = null;
-                    break;
+                    throw new ArgumentException("FeatureAdmin should never reach default scope in load child locations.");
             }
 
+            List<Location> children = new List<Location>();
 
             if (childScope != null)
             {
-                children.AddRange(repository.SearchLocations(location.Id.ToString(), childScope.Value));
-            }
+                children = repository.SearchLocations(location.Id.ToString(), childScope.Value).ToList();
 
-            foreach (Location l in children)
-            {
-                var features = repository.GetActivatedFeatures(l);
-                activatedFeatures.AddRange(features);
-                var defs = repository.SearchFeatureDefinitions(l.Id.ToString(), l.Scope, false); ;
-                definitions.AddRange(defs);
-            }
+                // add all child locations at once
+                loadedElements.AddChildLocations(children);
 
-            var loadedElements = new LoadedDto(
-                location,
-                children,
-                activatedFeatures,
-                definitions
-                );
-
-            var loadedMessage = new LocationsLoaded(loadedElements);
-
-            return loadedMessage;
-        }
-
-        public LocationsLoaded LoadNonFarmLocationAndChildren(Location location)
-        {
-
-
-            var loadedPackage = loadLocations(location);
-
-
-            if (location.Scope == Core.Models.Enums.Scope.WebApplication && loadedPackage.LoadedElements.ChildLocations.Count() > 0)
-            {
-
-                List<FeatureDefinition> fDefs = new List<FeatureDefinition>(loadedPackage.LoadedElements.Definitions);
-
-                List<Location> locations = new List<Location>(loadedPackage.LoadedElements.ChildLocations);
-
-                List<ActivatedFeature> features = new List<ActivatedFeature>(loadedPackage.LoadedElements.ActivatedFeatures);
-
-
-
-                foreach (Location siteCollection in loadedPackage.LoadedElements.ChildLocations)
+                foreach (var l in children)
                 {
-                    var child = loadLocations(siteCollection);
+                    var activatedFeatures = GetDemoActivatedFeatures(l);
+                    loadedElements.AddActivatedFeatures(activatedFeatures);
 
-                    fDefs.AddRange(child.LoadedElements.Definitions);
-                    locations.AddRange(child.LoadedElements.ChildLocations);
-                    features.AddRange(child.LoadedElements.ActivatedFeatures);
+                    var definitions = GetDemoFeatureDefinitions(l);
+                    loadedElements.AddFeatureDefinitions(definitions);
                 }
-
-                var loadedElements = new LoadedDto(
-                    location,
-                    locations,
-                    features,
-                    fDefs
-                    );
-
-                var loadedMessage = new LocationsLoaded(loadedElements);
-
-                return loadedMessage;
-            }
-            else
-            {
-                return loadedPackage;
             }
 
+            return loadedElements;
         }
-
-        public LocationsLoaded LoadFarmAndWebApps()
-        {
-            return loadLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
-        }
-
-
 
         public string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
         {

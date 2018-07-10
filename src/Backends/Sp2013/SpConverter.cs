@@ -11,27 +11,12 @@ namespace FeatureAdmin.Backends.Sp2013
 {
     public static class SpConverter
     {
-       public static FeatureDefinitionScope ToFeatureDefinitionScope (this SPFeatureDefinitionScope scope)
+        public static ActivatedFeature ToActivatedFeature(
+            this SPFeature spFeature, 
+            Location location,
+            out FeatureDefinition nonFarmFeatureDefinition)
         {
-            switch (scope)
-            {
-                case SPFeatureDefinitionScope.None:
-                    return FeatureDefinitionScope.None;
-                case SPFeatureDefinitionScope.Farm:
-                    return FeatureDefinitionScope.Farm;
-                case SPFeatureDefinitionScope.Site:
-                    return FeatureDefinitionScope.Site;
-                case SPFeatureDefinitionScope.Web:
-                    return FeatureDefinitionScope.Web;
-                default:
-                    throw new ArgumentException(
-                        string.Format("Unexpected, undefined SPFeatureDefinitionScope '{0}' found", scope.ToString()));
-            }
-        }
-
-
-        public static ActivatedFeature ToActivatedFeature(this SPFeature spFeature, Location location)
-        {
+            nonFarmFeatureDefinition = null;
             FeatureDefinition definition = null;
             bool faulty = false;
 
@@ -44,8 +29,9 @@ namespace FeatureAdmin.Backends.Sp2013
                     if (spFeature.FeatureDefinitionScope == SPFeatureDefinitionScope.Web)
                     {
                         definition = fDef.ToFeatureDefinition(location.Id);
+                        nonFarmFeatureDefinition = definition;
                     }
-                    else if (spFeature.FeatureDefinitionScope == SPFeatureDefinitionScope.Site )
+                    else if (spFeature.FeatureDefinitionScope == SPFeatureDefinitionScope.Site)
                     {
                         if (location.Scope == Scope.Web)
                         {
@@ -57,18 +43,20 @@ namespace FeatureAdmin.Backends.Sp2013
                             // therefore, location id for sandboxed solution is current location (site)
                             definition = fDef.ToFeatureDefinition(location.Id);
                         }
+                        nonFarmFeatureDefinition = definition;
                     }
                     else
                     {
                         // Featuredefinitionscope must be farm or none now, in both cases, no location will be assigned to feature definition ...
                         definition = fDef.ToFeatureDefinition(null);
                     }
-                    
+
                 }
                 else
                 {
                     definition = FeatureDefinitionFactory.GetFaultyDefinition(spFeature.DefinitionId, location.Scope, spFeature.Version);
                     faulty = true;
+                    nonFarmFeatureDefinition = definition;
                 }
             }
             catch (Exception)
@@ -97,22 +85,108 @@ namespace FeatureAdmin.Backends.Sp2013
         /// </summary>
         /// <param name="spFeatures">the features</param>
         /// <param name="location">parent location container</param>
-        /// <returns></returns>
+        /// <returns>SPFeatures converted to ActivatedFeatures</returns>
         public static IEnumerable<ActivatedFeature> ToActivatedFeatures(this SPFeatureCollection spFeatures, Location location)
         {
+            IEnumerable<FeatureDefinition> nonFarmFeatureDefinitions;
+
+            return ToActivatedFeatures(spFeatures,
+                location,
+                out nonFarmFeatureDefinitions);
+
+        }
+
+        /// <summary>
+        /// Converts SPFeatures to ActivatedFeatures
+        /// </summary>
+        /// <param name="spFeatures">the features</param>
+        /// <param name="location">parent location container</param>
+        /// <param name="nonFarmFeatureDefinitions">collection of feature definitions that
+        /// are not installed in the farm, rather on site or web level</param>
+        /// <returns>SPFeatures converted to ActivatedFeatures</returns>
+        /// <remarks>
+        /// Only following features need to get in there:
+        /// feature definitions from sandboxed solutions
+        /// feature definitions from add ins
+        /// definitions from faulty features
+        /// </remarks>
+        public static IEnumerable<ActivatedFeature> ToActivatedFeatures(
+            this SPFeatureCollection spFeatures, 
+            Location location,
+            out IEnumerable<FeatureDefinition> nonFarmFeatureDefinitions)
+        {
             var features = new List<ActivatedFeature>();
+
+            List<FeatureDefinition> nonFarmFeatureDefinitionsTracker = null;
 
             if (spFeatures != null && spFeatures.Count > 0)
             {
                 foreach (var f in spFeatures)
                 {
-                    features.Add(f.ToActivatedFeature(location));
+                    FeatureDefinition nffd;
+                    features.Add(f.ToActivatedFeature(location, out nffd));
+
+                    if (nffd != null)
+                    {
+                        if (nonFarmFeatureDefinitionsTracker == null)
+                        {
+                            nonFarmFeatureDefinitionsTracker = new List<FeatureDefinition>();
+                        }
+
+                        nonFarmFeatureDefinitionsTracker.Add(nffd);
+                    }
                 }
             }
 
+            nonFarmFeatureDefinitions = nonFarmFeatureDefinitionsTracker;
             return features;
         }
 
+        public static FeatureDefinition ToFeatureDefinition(this SPFeatureDefinition spFeatureDefinition, Guid? sandboxedSolutionLocation)
+        {
+            var cultureInfo = new System.Globalization.CultureInfo(1033);
+
+            if (spFeatureDefinition == null)
+            {
+                return null;
+            }
+
+            var fd = FeatureDefinitionFactory.GetFeatureDefinition(
+                spFeatureDefinition.Id,
+                spFeatureDefinition.CompatibilityLevel,
+                spFeatureDefinition.GetDescription(cultureInfo),
+                spFeatureDefinition.DisplayName,
+                spFeatureDefinition.Hidden,
+                spFeatureDefinition.Name,
+                spFeatureDefinition.Properties == null ? null :
+                spFeatureDefinition.Properties.ToProperties(),
+                spFeatureDefinition.Scope.ToScope(),
+                spFeatureDefinition.GetTitle(cultureInfo),
+                spFeatureDefinition.SolutionId,
+                spFeatureDefinition.UIVersion,
+                spFeatureDefinition.Version,
+                sandboxedSolutionLocation);
+
+            return fd;
+        }
+
+        public static FeatureDefinitionScope ToFeatureDefinitionScope(this SPFeatureDefinitionScope scope)
+        {
+            switch (scope)
+            {
+                case SPFeatureDefinitionScope.None:
+                    return FeatureDefinitionScope.None;
+                case SPFeatureDefinitionScope.Farm:
+                    return FeatureDefinitionScope.Farm;
+                case SPFeatureDefinitionScope.Site:
+                    return FeatureDefinitionScope.Site;
+                case SPFeatureDefinitionScope.Web:
+                    return FeatureDefinitionScope.Web;
+                default:
+                    throw new ArgumentException(
+                        string.Format("Unexpected, undefined SPFeatureDefinitionScope '{0}' found", scope.ToString()));
+            }
+        }
         public static Location ToLocation(this SPWebService farm)
         {
             var id = farm.Id;
@@ -195,67 +269,6 @@ var location = LocationFactory.GetLocation(
 
             return location;
         }
-
-        public static FeatureDefinition ToFeatureDefinition(this SPFeatureDefinition spFeatureDefinition, Guid? sandboxedSolutionLocation)
-        {
-            var cultureInfo = new System.Globalization.CultureInfo(1033);
-
-            if (spFeatureDefinition == null)
-            {
-                return null;
-            }
-
-            var fd = FeatureDefinitionFactory.GetFeatureDefinition(
-                spFeatureDefinition.Id,
-                spFeatureDefinition.CompatibilityLevel,
-                spFeatureDefinition.GetDescription(cultureInfo),
-                spFeatureDefinition.DisplayName,
-                spFeatureDefinition.Hidden,
-                spFeatureDefinition.Name,
-                spFeatureDefinition.Properties == null ? null :
-                spFeatureDefinition.Properties.ToProperties(),
-                spFeatureDefinition.Scope.ToScope(),
-                spFeatureDefinition.GetTitle(cultureInfo),
-                spFeatureDefinition.SolutionId,
-                spFeatureDefinition.UIVersion,
-                spFeatureDefinition.Version,
-                sandboxedSolutionLocation);
-
-            return fd;
-        }
-
-        public static Dictionary<string, string> ToProperties(this SPFeaturePropertyCollection featureProperties)
-        {
-            var properties = new Dictionary<string, string>();
-
-            foreach (SPFeatureProperty p in featureProperties)
-            {
-                properties.Add(p.Name, p.Value);
-            }
-
-            return properties;
-        }
-
-
-        public static Scope ToScope(this SPFeatureScope spFeatureScope)
-        {
-            switch (spFeatureScope)
-            {
-                //case SPFeatureScope.ScopeInvalid:
-                //    return Scope.ScopeInvalid;
-                case SPFeatureScope.Farm:
-                    return Scope.Farm;
-                case SPFeatureScope.WebApplication:
-                    return Scope.WebApplication;
-                case SPFeatureScope.Site:
-                    return Scope.Site;
-                case SPFeatureScope.Web:
-                    return Scope.Web;
-                default:
-                    return Scope.ScopeInvalid;
-            }
-        }
-
         public static IEnumerable<Location> ToLocations(this SPWebCollection spLocations, Guid parentId)
         {
 
@@ -306,7 +319,6 @@ var location = LocationFactory.GetLocation(
             return locations;
         }
 
-
         public static IEnumerable<Location> ToLocations(this SPWebApplicationCollection spLocations, Guid parentId)
         {
             if (spLocations == null)
@@ -324,6 +336,38 @@ var location = LocationFactory.GetLocation(
             }
 
             return locations;
+        }
+
+        public static Dictionary<string, string> ToProperties(this SPFeaturePropertyCollection featureProperties)
+        {
+            var properties = new Dictionary<string, string>();
+
+            foreach (SPFeatureProperty p in featureProperties)
+            {
+                properties.Add(p.Name, p.Value);
+            }
+
+            return properties;
+        }
+
+
+        public static Scope ToScope(this SPFeatureScope spFeatureScope)
+        {
+            switch (spFeatureScope)
+            {
+                //case SPFeatureScope.ScopeInvalid:
+                //    return Scope.ScopeInvalid;
+                case SPFeatureScope.Farm:
+                    return Scope.Farm;
+                case SPFeatureScope.WebApplication:
+                    return Scope.WebApplication;
+                case SPFeatureScope.Site:
+                    return Scope.Site;
+                case SPFeatureScope.Web:
+                    return Scope.Web;
+                default:
+                    return Scope.ScopeInvalid;
+            }
         }
     }
 }

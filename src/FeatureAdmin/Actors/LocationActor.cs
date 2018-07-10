@@ -19,15 +19,15 @@ namespace FeatureAdmin.Actors
         {
             this.dataService = dataService;
 
-            Receive<LoadLocationQuery>(message => HandleLoadLocationQuery(message));
-            Receive<FeatureToggleRequest>(message => HandleFeatureToggleRequest(message));
+            Receive<LoadChildLocationQuery>(message => ReceiveLoadChildLocationQuery(message));
+            Receive<FeatureToggleRequest>(message => ReceiveFeatureToggleRequest(message));
         }
 
         /// <summary>
         /// at this time, there is always only one feature to be activated or deactivated in a location with same scope
         /// </summary>
         /// <param name="message"></param>
-        private void HandleFeatureToggleRequest(FeatureToggleRequest message)
+        private void ReceiveFeatureToggleRequest(FeatureToggleRequest message)
         {
             _log.Debug("Entered LocationActor-HandleFeatureToggleRequest");
 
@@ -70,19 +70,26 @@ namespace FeatureAdmin.Actors
             }
         }
 
-        private void HandleLoadLocationQuery(LoadLocationQuery message)
+        private void ReceiveLoadChildLocationQuery(LoadChildLocationQuery message)
         {
             _log.Debug("Entered LocationActor-LookupLocationHandlyLoadLocationQuery");
 
             var location = message.Location;
-
-            if (location.Scope == Core.Models.Enums.Scope.Farm)
+            
+            if (location == null)
             {
-                Sender.Tell(dataService.LoadFarmAndWebApps());
+                Sender.Tell(dataService.LoadFarm());
             }
             else
             {
-                Sender.Tell(dataService.LoadNonFarmLocationAndChildren(location));
+                if (location.Scope == Core.Models.Enums.Scope.Farm)
+                {
+                    Sender.Tell(dataService.LoadWebApps());
+                }
+                else
+                {
+                    Sender.Tell(dataService.LoadWebAppChildren(location));
+                }
             }
         }
 

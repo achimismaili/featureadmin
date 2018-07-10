@@ -6,7 +6,7 @@ namespace FeatureAdmin.Core.Messages.Request
 {
     public class LoadTask
     {
-        public LoadTask(Guid id, string title, Location startLocation = null)
+        public LoadTask(Guid id, string title, [NotNull] Location startLocation)
         {
             Id = id;
             Title = title;

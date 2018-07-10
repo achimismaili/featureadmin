@@ -73,7 +73,6 @@
     <Compile Include="Messages\TaskUpdate.cs" />
     <Compile Include="Messages\Request\LoadFeatureDefinitionQuery.cs" />
     <Compile Include="Messages\Request\LoadLocationQuery.cs" />
-    <Compile Include="Messages\Completed\LocationsLoaded.cs" />
     <Compile Include="Messages\Completed\ItemUpdated.cs" />
     <Compile Include="Models\BaseItem.cs" />
     <Compile Include="Models\Enums\TaskUpdateType.cs" />
