@@ -47,17 +47,41 @@ namespace FeatureAdmin.Backends.Sp2013.Common
         /// <param name="location">location of sharepoint object to return as SPWeb</param>
         /// <returns>undisposed SPWeb object</returns>
         /// <remarks>please dispose, if not needed anymore</remarks>
-        internal static SPWeb GetWeb(Location location)
+        internal static SPWeb GetWeb(Location location, bool elevatedPrivileges)
         {
             if (location == null)
             {
                 return null;
             }
 
-            SPSite oSPsite = new SPSite(location.Parent);
-            return oSPsite.OpenWeb(location.Id);
+            SPSite spSite = new SPSite(location.Parent);
 
+            if (elevatedPrivileges)
+            {
+                return SpSiteElevation.SelectAsSystem(spSite, GetWeb, location.Id);
+            }
+            else
+            {
+                return spSite.OpenWeb(location.Id);
+            }
+            
             //TODO: hm, think how to refactor so that it is possible to dispose the spsite object here
+        }
+
+        /// <summary>
+        /// Helper method for getting web with elevated privileges
+        /// </summary>
+        /// <param name="site">SPSite</param>
+        /// <param name="webId">id of the SPWeb to return</param>
+        /// <returns>SPWeb with webId from within the site</returns>
+        private static SPWeb GetWeb(SPSite site, Guid webId)
+        {
+            if (site == null)
+            {
+                return null;
+            }
+
+            return site.OpenWeb(webId);
         }
 
         internal static IEnumerable<SPWebApplication> GetAllWebApplications()

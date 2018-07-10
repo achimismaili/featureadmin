@@ -16,10 +16,9 @@ namespace FeatureAdmin.Core.Messages.Completed
             Guid taskId
             , Guid locationReference
             , ActivatedFeature activatedFeature
-            , string error = null
             )
 
-            : base(taskId, locationReference, error)
+            : base(taskId, locationReference)
         {
             ActivatedFeature = activatedFeature;
 

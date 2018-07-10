@@ -309,7 +309,7 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
             try
             {
-                spWeb = SpLocationHelper.GetWeb(location);
+                spWeb = SpLocationHelper.GetWeb(location, elevatedPrivileges);
 
                 SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spWeb, elevatedPrivileges);
 
@@ -339,7 +339,7 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
             try
             {
-                spWeb = SpLocationHelper.GetWeb(location);
+                spWeb = SpLocationHelper.GetWeb(location, elevatedPrivileges);
                 SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spWeb, elevatedPrivileges);
 
                 var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(featureCollection, feature.Id, force);

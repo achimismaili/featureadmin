@@ -13,20 +13,11 @@ namespace FeatureAdmin.Core.Messages.Completed
         public BaseFeatureToggleCompleted(
             Guid taskId
             , Guid locationReference
-            , string error = null
             ) : base (taskId)
         {
             LocationReference = locationReference;
-            Error = error;
          }
-
-
+        
         public Guid LocationReference { get; }
-
-        /// <summary>
-        /// Only add a string, if action was not successful
-        /// </summary>
-        public string Error { get; }
-
     }
 }

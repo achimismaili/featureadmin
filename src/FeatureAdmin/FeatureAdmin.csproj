@@ -160,6 +160,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ActorSystemReference.cs" />
+    <Compile Include="Actors\BaseActor.cs" />
     <Compile Include="Actors\FeatureDefinitionActor.cs" />
     <Compile Include="Actors\LocationActor.cs" />
     <Compile Include="Actors\Tasks\TaskManagerActor.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Caliburn.Metro.Autofac\EventAggregationAutoSubscriptionModule.cs" />
     <Compile Include="Common\DetailViewModelConverters.cs" />
     <Compile Include="Common\NegatableBooleanToVisibilityConverter.cs" />
+    <Compile Include="Messages\CancelMessage.cs" />
     <Compile Include="Messages\Confirmation.cs" />
     <Compile Include="Messages\ConfirmationRequest.cs" />
     <Compile Include="Messages\ItemSelected.cs" />
