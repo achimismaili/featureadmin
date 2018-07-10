@@ -14,13 +14,44 @@ namespace FeatureAdmin.Backends.Demo.Services
             demoRepository = new Repository.DemoRepository();
         }
 
-        public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
+        public string ActivateFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
         {
-            var farmFeatureDefinitions =
+            return ActivateFeature(feature, location, false, force, out activatedFeature);
+        }
 
-                demoRepository.SearchFeatureDefinitions(string.Empty, null, true);
+        public string ActivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
+        {
+            return ActivateFeature(feature, location, elevatedPrivileges, force, out activatedFeature);
+        }
 
-            return farmFeatureDefinitions;
+        public string ActivateWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
+        {
+            return ActivateFeature(feature, location, false, force, out activatedFeature);
+        }
+
+        public string ActivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
+        {
+            return ActivateFeature(feature, location, elevatedPrivileges, force, out activatedFeature);
+        }
+
+        public string DeactivateFarmFeature(FeatureDefinition feature, Location location, bool force)
+        {
+            return DeactivateFeature(feature, location, false, force);
+        }
+
+        public string DeactivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
+        {
+            return DeactivateFeature(feature, location, elevatedPrivileges, force);
+        }
+
+        public string DeactivateWebAppFeature(FeatureDefinition feature, Location location, bool force)
+        {
+            return DeactivateFeature(feature, location, false, force);
+        }
+
+        public string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
+        {
+            return DeactivateFeature(feature, location, elevatedPrivileges, force);
         }
 
         public LoadedDto LoadFarm()
@@ -38,11 +69,14 @@ namespace FeatureAdmin.Backends.Demo.Services
 
         }
 
-        public LoadedDto LoadWebApps()
+        public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
         {
-            return loadChildLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
-        }
+            var farmFeatureDefinitions =
 
+                demoRepository.SearchFeatureDefinitions(string.Empty, null, true);
+
+            return farmFeatureDefinitions;
+        }
         public LoadedDto LoadWebAppChildren(Location location, bool elevatedPrivileges)
         {
             var siCos = loadChildLocations(location);
@@ -59,11 +93,76 @@ namespace FeatureAdmin.Backends.Demo.Services
             return allChildren;
         }
 
-        private IEnumerable<FeatureDefinition> GetDemoFeatureDefinitions(Location location)
+        public LoadedDto LoadWebApps()
         {
-            var defs = demoRepository.SearchFeatureDefinitions(location.Id.ToString(), location.Scope, false);
+            return loadChildLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
+        }
+        private string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force
+            , out ActivatedFeature activatedFeature)
+        {
+            var props = new Dictionary<string, string>() {
+                { "demo activation 'elevatedPrivileges' setting", elevatedPrivileges.ToString() },
+                 { "demo activation 'force' setting", force.ToString() }
 
-            return defs;
+            };
+
+            activatedFeature = Core.Factories.ActivatedFeatureFactory.GetActivatedFeature(
+                feature.Id
+                , location.Id
+                , feature
+                , false
+                , props
+                , DateTime.Now
+                , feature.Version
+                );
+
+
+
+            demoRepository.AddActivatedFeature(activatedFeature);
+
+            // wait 1 second in the demo
+            System.Threading.Thread.Sleep(1000);
+
+            return string.Empty;
+        }
+
+        private string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
+        {
+            if (location == null || feature == null)
+            {
+                throw new ArgumentNullException("Location or feature must not be null!");
+            }
+
+            var returnMsg = demoRepository.RemoveActivatedFeature(feature.Id, location.Id);
+
+            // wait 1 second in the demo
+            System.Threading.Thread.Sleep(1000);
+
+            return string.Empty;
+
+            //// in sharepoint, first, the containers need to be opened ...
+
+            //switch (location.Scope)
+            //{
+            //    case Core.Models.Enums.Scope.Web:
+            //        // get site and web
+            //        break;
+            //    case Core.Models.Enums.Scope.Site:
+            //        // get site
+            //        break;
+            //    case Core.Models.Enums.Scope.WebApplication:
+            //        // get web app
+            //        break;
+            //    case Core.Models.Enums.Scope.Farm:
+            //        // get farm
+            //        break;
+            //    case Core.Models.Enums.Scope.ScopeInvalid:
+            //        throw new Exception("Invalid scope was not expected!");
+            //    default:
+            //        throw new Exception("Undefined scope!");
+            //}
+
+
         }
 
         private IEnumerable<ActivatedFeature> GetDemoActivatedFeatures(Location location)
@@ -73,6 +172,12 @@ namespace FeatureAdmin.Backends.Demo.Services
             return f;
         }
 
+        private IEnumerable<FeatureDefinition> GetDemoFeatureDefinitions(Location location)
+        {
+            var defs = demoRepository.SearchFeatureDefinitions(location.Id.ToString(), location.Scope, false);
+
+            return defs;
+        }
         private LoadedDto loadChildLocations(Location location)
         {
 
@@ -121,74 +226,6 @@ namespace FeatureAdmin.Backends.Demo.Services
             }
 
             return loadedElements;
-        }
-
-        public string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
-        {
-            if (location == null || feature == null)
-            {
-                throw new ArgumentNullException("Location or feature must not be null!");
-            }
-
-            var returnMsg = demoRepository.RemoveActivatedFeature(feature.Id, location.Id);
-
-            // wait 1 second in the demo
-            System.Threading.Thread.Sleep(1000);
-
-            return string.Empty;
-
-            //// in sharepoint, first, the containers need to be opened ...
-
-            //switch (location.Scope)
-            //{
-            //    case Core.Models.Enums.Scope.Web:
-            //        // get site and web
-            //        break;
-            //    case Core.Models.Enums.Scope.Site:
-            //        // get site
-            //        break;
-            //    case Core.Models.Enums.Scope.WebApplication:
-            //        // get web app
-            //        break;
-            //    case Core.Models.Enums.Scope.Farm:
-            //        // get farm
-            //        break;
-            //    case Core.Models.Enums.Scope.ScopeInvalid:
-            //        throw new Exception("Invalid scope was not expected!");
-            //    default:
-            //        throw new Exception("Undefined scope!");
-            //}
-
-
-        }
-
-        public string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force
-            , out ActivatedFeature activatedFeature)
-        {
-            var props = new Dictionary<string, string>() {
-                { "demo activation 'elevatedPrivileges' setting", elevatedPrivileges.ToString() },
-                 { "demo activation 'force' setting", force.ToString() }
-
-            };
-
-            activatedFeature = Core.Factories.ActivatedFeatureFactory.GetActivatedFeature(
-                feature.Id
-                , location.Id
-                , feature
-                , false
-                , props
-                , DateTime.Now
-                , feature.Version
-                );
-
-
-
-            demoRepository.AddActivatedFeature(activatedFeature);
-
-            // wait 1 second in the demo
-            System.Threading.Thread.Sleep(1000);
-
-            return string.Empty;
         }
     }
 }

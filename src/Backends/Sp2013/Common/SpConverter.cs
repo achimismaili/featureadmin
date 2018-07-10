@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FeatureAdmin.Backends.Sp2013
+namespace FeatureAdmin.Backends.Sp2013.Common
 {
     public static class SpConverter
     {
@@ -191,7 +191,7 @@ namespace FeatureAdmin.Backends.Sp2013
         {
             var id = farm.Id;
 
-            var webAppsCount = Services.SpDataService.GetAllWebApplications().Count();
+            var webAppsCount = SpLocationHelper.GetAllWebApplications().Count();
 
             var location = LocationFactory.GetFarm(id, webAppsCount);
 

@@ -10,15 +10,18 @@ namespace FeatureAdmin.Core.Messages.Request
         /// </summary>
         /// <param name="taskId">the task id for this load request</param>
         /// <param name="location">the parent location, null for farm load</param>
-        public LoadChildLocationQuery(Guid taskId, Location location)
+        public LoadChildLocationQuery(Guid taskId, Location location, bool? elevatedPrivileges)
             : base(taskId)
         {
             Location = location;
+            ElevatedPrivileges = elevatedPrivileges.HasValue ? false : elevatedPrivileges.Value;
         }
 
         /// <summary>
         /// parent location to load children, null for farm load
         /// </summary>
         public Location Location { get; private set; }
+
+        public bool ElevatedPrivileges { get; private set; }
     }
 }

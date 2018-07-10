@@ -26,6 +26,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         private readonly Dictionary<Guid, IActorRef> locationActors;
         private readonly IFeatureRepository repository;
         private readonly IDataService dataService;
+        private bool elevatedPrivileges = false;
 
         public LoadTaskActor(
             IEventAggregator eventAggregator,
@@ -191,7 +192,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                     if (l.Scope == Enums.Scope.WebApplication)
                     {
                         // initiate read of locations
-                        var loadWebAppChildren = new LoadChildLocationQuery(Id, l);
+                        var loadWebAppChildren = new LoadChildLocationQuery(Id, l, elevatedPrivileges);
                         ReceiveLoadChildrenTask(loadWebAppChildren);
                     }
                 }
@@ -204,6 +205,8 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         private void InitiateLoadTask(LoadTask loadTask)
         {
+            this.elevatedPrivileges = loadTask.ElevatedPrivileges.Value;
+
             Start = DateTime.Now;
 
             Title = loadTask.Title;
@@ -218,7 +221,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                 featureDefinitionActor.Tell(fdQuery);
 
                 // initiate read of farm location, start location is null
-                var loadFarm = new LoadChildLocationQuery(Id, null);
+                var loadFarm = new LoadChildLocationQuery(Id, null, elevatedPrivileges);
                 ReceiveLoadChildrenTask(loadFarm);
             }
             else
@@ -230,7 +233,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             
             // initiate read of child locations
             // in case farm is start location, web apps will be read
-            var loadQuery = new LoadChildLocationQuery(Id, loadTask.StartLocation);
+            var loadQuery = new LoadChildLocationQuery(Id, loadTask.StartLocation, elevatedPrivileges);
             ReceiveLoadChildrenTask(loadQuery);
         }
 

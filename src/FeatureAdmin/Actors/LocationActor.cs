@@ -30,21 +30,59 @@ namespace FeatureAdmin.Actors
         {
             _log.Debug("Entered LocationActor-HandleFeatureToggleRequest");
 
+            string errorMsg = null;
+
             if (message.Activate)
             {
                 ActivatedFeature af;
-                var error = dataService.ActivateFeature(
-                    message.FeatureDefinition
-                    , message.Location
-                    , message.ElevatedPrivileges.Value
-                    , message.Force.Value
-                    , out af);
+
+                switch (message.Location.Scope)
+                {
+                    case Core.Models.Enums.Scope.Web:
+                        errorMsg += dataService.ActivateWebFeature(
+                            message.FeatureDefinition,
+                            message.Location,
+                            message.ElevatedPrivileges.Value,
+                            message.Force.Value,
+                            out af);
+                        break;
+                    case Core.Models.Enums.Scope.Site:
+                        errorMsg += dataService.ActivateSiteFeature(
+                            message.FeatureDefinition,
+                            message.Location,
+                            message.ElevatedPrivileges.Value,
+                            message.Force.Value,
+                            out af);
+                        break;
+                    case Core.Models.Enums.Scope.WebApplication:
+                        errorMsg += dataService.ActivateWebAppFeature(
+                            message.FeatureDefinition,
+                            message.Location,
+                            message.Force.Value,
+                            out af);
+                        break;
+                    case Core.Models.Enums.Scope.Farm:
+                        errorMsg += dataService.ActivateFarmFeature(
+                            message.FeatureDefinition,
+                            message.Location,
+                            message.Force.Value,
+                            out af);
+                        break;
+                    case Core.Models.Enums.Scope.ScopeInvalid:
+                        errorMsg += string.Format("Location '{0}' has invalid scope - not supported for feature activation.", message.Location.Id);
+                        af = null;
+                        break;
+                    default:
+                        errorMsg += string.Format("Location '{0}' has unidentified scope - not supported for feature activation.", message.Location.Id);
+                        af = null;
+                        break;
+                }
 
                 var completed = new Core.Messages.Completed.FeatureActivationCompleted(
-               message.TaskId
-               , message.Location.Id
-               , af
-               , string.Empty
+               message.TaskId,
+               message.Location.Id,
+               af,
+               errorMsg
                );
 
                 Sender.Tell(completed);
@@ -52,17 +90,50 @@ namespace FeatureAdmin.Actors
             }
             else
             {
-                var error = dataService.DeactivateFeature(
-                    message.FeatureDefinition
-                    , message.Location
-                    , message.ElevatedPrivileges.Value
-                    , message.Force.Value);
+                switch (message.Location.Scope)
+                {
+                    case Core.Models.Enums.Scope.Web:
+                        errorMsg += dataService.DeactivateWebFeature(
+                            message.FeatureDefinition,
+                            message.Location,
+                            message.ElevatedPrivileges.Value,
+                            message.Force.Value);
+                        break;
+                    case Core.Models.Enums.Scope.Site:
+                        errorMsg += dataService.DeactivateSiteFeature(
+                            message.FeatureDefinition,
+                            message.Location,
+                            message.ElevatedPrivileges.Value,
+                            message.Force.Value
+                            );
+                        break;
+                    case Core.Models.Enums.Scope.WebApplication:
+                        errorMsg += dataService.DeactivateWebAppFeature(
+                            message.FeatureDefinition,
+                            message.Location,
+                            message.Force.Value
+                            );
+                        break;
+                    case Core.Models.Enums.Scope.Farm:
+                        errorMsg += dataService.DeactivateFarmFeature(
+                            message.FeatureDefinition,
+                            message.Location,
+                            message.Force.Value
+                            );
+                        break;
+                    case Core.Models.Enums.Scope.ScopeInvalid:
+                        errorMsg += string.Format("Location '{0}' has invalid scope - not supported for feature deactivation.", message.Location.Id);
+                        break;
+                    default:
+                        errorMsg += string.Format("Location '{0}' has unidentified scope - not supported for feature deactivation.", message.Location.Id);
+                        break;
+                }
 
                 var completed = new Core.Messages.Completed.FeatureDeactivationCompleted(
                                message.TaskId
                                , message.Location.Id
                                , message.FeatureDefinition.Id
-                               , error
+                               , errorMsg
                                );
 
                 Sender.Tell(completed);
@@ -74,7 +145,7 @@ namespace FeatureAdmin.Actors
             _log.Debug("Entered LocationActor-LookupLocationHandlyLoadLocationQuery");
 
             var location = message.Location;
-            
+
             if (location == null)
             {
                 Sender.Tell(dataService.LoadFarm());
@@ -87,7 +158,7 @@ namespace FeatureAdmin.Actors
                 }
                 else
                 {
-                    Sender.Tell(dataService.LoadWebAppChildren(location));
+                    Sender.Tell(dataService.LoadWebAppChildren(location,message.ElevatedPrivileges));
                 }
             }
         }

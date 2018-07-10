@@ -20,8 +20,22 @@ namespace FeatureAdmin.Core.Services
         /// <returns>all site collections and webs of a web application including their activated features and some (non farm) feature definitions</returns>
         LoadedDto LoadWebAppChildren(Location location, bool elevatedPrivileges);
 
-        string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force);
-        string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
+        string DeactivateFarmFeature(FeatureDefinition feature, Location location, bool force);
+        string ActivateFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature);
+
+        string DeactivateWebAppFeature(FeatureDefinition feature, Location location, bool force);
+        string ActivateWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature);
+
+        string DeactivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force);
+        string ActivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
+
+        string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force);
+        string ActivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
+
+
+
+
+
         //int FeatureUninstall(Guid featureId, bool force);
 
         //int FeatureUpdate(Models.SPObject location, bool add, Guid featureId, bool force);

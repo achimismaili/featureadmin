@@ -64,7 +64,10 @@ namespace FeatureAdmin.Actors.Tasks
 
             taskActors.Add(message.Id, newTaskActor);
 
-            newTaskActor.Tell(message);
+            var requestWithCurrentSettings = message.GetWithUpdatedSettings(elevatedPrivileges);
+
+            // trigger feature toggle request
+            newTaskActor.Tell(requestWithCurrentSettings);
         }
 
         public void Handle(FeatureToggleRequest message)
@@ -81,7 +84,7 @@ namespace FeatureAdmin.Actors.Tasks
 
             taskActors.Add(message.TaskId, newTaskActor);
 
-            var requestWithCorrectSettings = message.GetFeatureToggleRequest(force, elevatedPrivileges);
+            var requestWithCorrectSettings = message.GetWithUpdatedSettings(force, elevatedPrivileges);
 
             // trigger feature toggle request
             newTaskActor.Tell(requestWithCorrectSettings);
