@@ -14,7 +14,7 @@ namespace FeatureAdmin.Core.Messages.Request
             : base(taskId)
         {
             Location = location;
-            ElevatedPrivileges = elevatedPrivileges.HasValue ? false : elevatedPrivileges.Value;
+            ElevatedPrivileges = elevatedPrivileges.HasValue ? elevatedPrivileges.Value : false;
         }
 
         /// <summary>

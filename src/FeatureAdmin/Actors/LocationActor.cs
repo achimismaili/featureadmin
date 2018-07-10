@@ -148,17 +148,20 @@ namespace FeatureAdmin.Actors
 
             if (location == null)
             {
-                Sender.Tell(dataService.LoadFarm());
+                var loadedFarm = dataService.LoadFarm();
+                Sender.Tell(loadedFarm);
             }
             else
             {
                 if (location.Scope == Core.Models.Enums.Scope.Farm)
                 {
-                    Sender.Tell(dataService.LoadWebApps());
+                    var loadedWebApps = dataService.LoadWebApps();
+                    Sender.Tell(loadedWebApps);
                 }
                 else
                 {
-                    Sender.Tell(dataService.LoadWebAppChildren(location,message.ElevatedPrivileges));
+                    var loadedChildren = dataService.LoadWebAppChildren(location, message.ElevatedPrivileges);
+                    Sender.Tell(loadedChildren);
                 }
             }
         }

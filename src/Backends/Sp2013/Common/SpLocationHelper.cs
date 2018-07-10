@@ -23,7 +23,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
         /// <param name="location">location of sharepoint object to return as SPSite</param>
         /// <returns>undisposed SPSite object</returns>
         /// <remarks>please dispose, if not needed anymore</remarks>
-        internal static SPSite GetSite(Location location, bool elevatedPrivileges)
+        internal static SPSite GetSite(Location location)
         {
             if (location == null)
             {
@@ -38,7 +38,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
         /// <param name="location">location of sharepoint object to return as SPWeb</param>
         /// <returns>undisposed SPWeb object</returns>
         /// <remarks>please dispose, if not needed anymore</remarks>
-        internal static SPWeb GetWeb(Location location, bool elevatedPrivileges)
+        internal static SPWeb GetWeb(Location location)
         {
             if (location == null)
             {
@@ -79,7 +79,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
         /// </summary>
         /// <param name="content">true, if content is requested, false for admin</param>
         /// <returns>content or admin web application</returns>
-        internal static SPWebApplication GetWebApplication(Guid id, bool content, bool elevatedPrivileges)
+        internal static SPWebApplication GetWebApplication(Guid id, bool content)
         {
             var webApps = GetWebApplications(content);
             if (webApps == null)
@@ -89,16 +89,16 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             return webApps.FirstOrDefault(wa => wa.Id == id);
         }
 
-        internal static SPWebApplication GetWebApplication(Guid id, bool elevatedPrivileges)
+        internal static SPWebApplication GetWebApplication(Guid id)
         {
-            var wa = GetWebApplication(id, true, elevatedPrivileges);
+            var wa = GetWebApplication(id, true);
 
             if (wa != null)
             {
                 return wa;
             }
 
-            return GetWebApplication(id, false, elevatedPrivileges);
+            return GetWebApplication(id, false);
         }
 
 

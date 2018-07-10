@@ -81,7 +81,7 @@ namespace FeatureAdmin.Backends.Demo.Services
         {
             var siCos = loadChildLocations(location);
 
-            var allChildren = siCos;
+            var allChildren = new LoadedDto(location);
 
             foreach (var s in siCos.ChildLocations)
             {
@@ -89,6 +89,8 @@ namespace FeatureAdmin.Backends.Demo.Services
 
                 allChildren.AddChildren(webs.ChildLocations, webs.ActivatedFeatures, webs.Definitions);
             }
+
+            allChildren.AddChildren(siCos.ChildLocations, siCos.ActivatedFeatures, siCos.Definitions);
 
             return allChildren;
         }
@@ -210,7 +212,14 @@ namespace FeatureAdmin.Backends.Demo.Services
 
             if (childScope != null)
             {
-                children = demoRepository.SearchLocations(location.Id.ToString(), childScope.Value).ToList();
+                if (childScope.Value == Core.Models.Enums.Scope.WebApplication)
+                {
+                    children = demoRepository.SearchLocations(null, childScope.Value).ToList();
+                }
+                else
+                {
+                    children = demoRepository.SearchLocations(location.Id.ToString(), childScope.Value).ToList();
+                }
 
                 // add all child locations at once
                 loadedElements.AddChildLocations(children);

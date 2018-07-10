@@ -185,7 +185,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             TrackLocationsProcessed(message);
 
             // if web apps are loaded, load children
-            if (message.Parent.Scope == Enums.Scope.Farm)
+            if (message.Parent != null && message.Parent.Scope == Enums.Scope.Farm)
             {
                 foreach (Location l in message.ChildLocations)
                 {
@@ -197,7 +197,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                     }
                 }
             }
-            
+
             repository.AddLoadedLocations(message);
 
             SendProgress();
@@ -222,7 +222,9 @@ namespace FeatureAdmin.Core.Models.Tasks
 
                 // initiate read of farm location, start location is null
                 var loadFarm = new LoadChildLocationQuery(Id, null, elevatedPrivileges);
-                ReceiveLoadChildrenTask(loadFarm);
+
+
+                farmLoadActor.Tell(loadFarm);
             }
             else
             {
@@ -230,11 +232,13 @@ namespace FeatureAdmin.Core.Models.Tasks
                 throw new NotImplementedException("As start location for load task, currently only farm level is supported.");
             }
 
-            
-            // initiate read of child locations
-            // in case farm is start location, web apps will be read
-            var loadQuery = new LoadChildLocationQuery(Id, loadTask.StartLocation, elevatedPrivileges);
-            ReceiveLoadChildrenTask(loadQuery);
+            var loadChildren = new LoadChildLocationQuery(
+                    Id,
+                    loadTask.StartLocation,
+                    elevatedPrivileges);
+
+            // load web applications as farm children
+            ReceiveLoadChildrenTask(loadChildren);
         }
 
         private void ReceiveLoadChildrenTask([NotNull] LoadChildLocationQuery loadQuery)
@@ -243,26 +247,22 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             if (loadQuery.Location == null)
             {
-                farmLoadActor.Tell(loadQuery);
+                throw new ArgumentException("The location must not be empty ");
             }
-            else
+
+            var locationId = loadQuery.Location.Id;
+
+            if (!locationActors.ContainsKey(locationId))
             {
-                var locationId = loadQuery.Location.Id;
+                IActorRef newLocationActor =
+                  Context.ActorOf(LocationActor.Props(
+                  dataService), locationId.ToString());
 
-                if (!locationActors.ContainsKey(locationId))
-                {
-                    IActorRef newLocationActor =
-                      //  Context.ActorOf(Context.DI().Props<LocationActor>());
-                      Context.ActorOf(LocationActor.Props(
-               dataService), locationId.ToString());
-
-
-                    locationActors.Add(locationId, newLocationActor);
-
-                }
-
-                locationActors[locationId].Tell(loadQuery);
+                locationActors.Add(locationId, newLocationActor);
             }
+
+            locationActors[locationId].Tell(loadQuery);
+
         }
     }
 }

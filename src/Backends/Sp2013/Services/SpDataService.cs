@@ -140,37 +140,200 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
         public string ActivateFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
         {
-            throw new NotImplementedException();
+            activatedFeature = null;
+
+            try
+            {
+                var farm = SpLocationHelper.GetFarm();
+
+               var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(farm.Features, feature.Id, force);
+
+                if (spActivatedFeature != null)
+                {
+                    FeatureDefinition nffd; // feature definition is not relevant in case of activation
+                    activatedFeature = spActivatedFeature.ToActivatedFeature(location, out nffd);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+
+            return string.Empty;
         }
 
         public string DeactivateWebAppFeature(FeatureDefinition feature, Location location, bool force)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var wa = SpLocationHelper.GetWebApplication(location.Id);
+
+                SpFeatureHelper.DeactivateFeatureInFeatureCollection(wa.Features, feature.Id, force);
+
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+
+            return string.Empty;
         }
 
         public string ActivateWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
         {
-            throw new NotImplementedException();
+            activatedFeature = null;
+
+            try
+            {
+                var wa = SpLocationHelper.GetWebApplication(location.Id);
+
+                var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(wa.Features, feature.Id, force);
+
+                if (spActivatedFeature != null)
+                {
+                    FeatureDefinition nffd; // feature definition is not relevant in case of activation
+                    activatedFeature = spActivatedFeature.ToActivatedFeature(location, out nffd);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+
+            return string.Empty;
         }
 
         public string DeactivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
         {
-            throw new NotImplementedException();
+            try
+            {
+                SPFeatureCollection featureCollection;
+
+                var spSite = SpLocationHelper.GetSite(location);
+
+                if (elevatedPrivileges)
+                {
+                    featureCollection = SpSiteElevation.SelectAsSystem(spSite, SpFeatureHelper.GetFeatureCollection);
+                }
+                else
+                {
+                    featureCollection = spSite.Features;
+                }
+
+                SpFeatureHelper.DeactivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
+
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+
+            return string.Empty;
         }
 
         public string ActivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
         {
-            throw new NotImplementedException();
+            activatedFeature = null;
+
+            try
+            {
+                SPFeatureCollection featureCollection;
+
+                var spSite = SpLocationHelper.GetSite(location);
+
+                if (elevatedPrivileges)
+                {
+                    featureCollection = SpSiteElevation.SelectAsSystem(spSite, SpFeatureHelper.GetFeatureCollection);
+                }
+                else
+                {
+                    featureCollection = spSite.Features;
+                }
+
+                var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
+
+                if (spActivatedFeature != null)
+                {
+                    FeatureDefinition nffd; // feature definition is not relevant in case of activation
+                    activatedFeature = spActivatedFeature.ToActivatedFeature(location, out nffd);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+
+            return string.Empty;
         }
 
         public string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
         {
-            throw new NotImplementedException();
+            try
+            {
+                SPFeatureCollection featureCollection;
+
+                var spWeb = SpLocationHelper.GetWeb(location);
+
+                if (elevatedPrivileges)
+                {
+                    featureCollection = SpSiteElevation.SelectAsSystem(spWeb, SpFeatureHelper.GetFeatureCollection);
+                }
+                else
+                {
+                    featureCollection = spWeb.Features;
+                }
+
+                SpFeatureHelper.DeactivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
+
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+
+            return string.Empty;
         }
 
         public string ActivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
         {
-            throw new NotImplementedException();
+            activatedFeature = null;
+
+            try
+            {
+                SPFeatureCollection featureCollection;
+
+                var spWeb = SpLocationHelper.GetWeb(location);
+
+                if (elevatedPrivileges)
+                {
+                    featureCollection = SpSiteElevation.SelectAsSystem(spWeb, SpFeatureHelper.GetFeatureCollection);
+                }
+                else
+                {
+                    featureCollection = spWeb.Features;
+                }
+
+                var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
+
+                if (spActivatedFeature != null)
+                {
+                    FeatureDefinition nffd; // feature definition is not relevant in case of activation
+                    activatedFeature = spActivatedFeature.ToActivatedFeature(location, out nffd);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+
+            return string.Empty;
         }
 
         //private LoadedDto loadLocations(Location location)
