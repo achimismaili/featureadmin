@@ -12,11 +12,11 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 {
     public class SpDataService : IDataService
     {
-        public LoadedDto LoadFarm(bool elevatedPrivileges)
+        public LoadedDto LoadFarm()
         {
             var loadedFarm = new LoadedDto(null);
 
-            var farm = Common.SpLocationHelper.GetFarm(elevatedPrivileges);
+            var farm = Common.SpLocationHelper.GetFarm();
 
             var farmLocation = SpConverter.ToLocation(farm);
 
@@ -31,16 +31,16 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
         }
 
-        public LoadedDto LoadWebApps(bool elevatedPrivileges)
+        public LoadedDto LoadWebApps()
         {
-            var spFarm = Common.SpLocationHelper.GetFarm(elevatedPrivileges);
+            var spFarm = Common.SpLocationHelper.GetFarm();
 
             var farmLocation = SpConverter.ToLocation(spFarm);
 
             // this variable will save all loaded information of all web applications
             var loadedElements = new LoadedDto(farmLocation);
 
-            var spWebApps = Common.SpLocationHelper.GetAllWebApplications(elevatedPrivileges);
+            var spWebApps = Common.SpLocationHelper.GetAllWebApplications();
 
             foreach (var wa in spWebApps)
             {

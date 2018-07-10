@@ -9,9 +9,9 @@ namespace FeatureAdmin.Core.Services
 
         IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions();
 
-        LoadedDto LoadFarm(bool elevatedPrivileges);
+        LoadedDto LoadFarm();
 
-        LoadedDto LoadWebApps(bool elevatedPrivileges);
+        LoadedDto LoadWebApps();
 
         /// <summary>
         /// loads site collections and webs of a web application

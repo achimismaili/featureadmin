@@ -12,7 +12,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
     internal static class SpLocationHelper
     {
 
-        internal static SPWebService GetFarm(bool elevatedPrivileges)
+        internal static SPWebService GetFarm()
         {
             return SPWebService.ContentService;
         }
@@ -49,7 +49,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             return oSPsite.OpenWeb(location.Id);
         }
 
-        internal static IEnumerable<SPWebApplication> GetAllWebApplications(bool elevatedPrivileges)
+        internal static IEnumerable<SPWebApplication> GetAllWebApplications()
         {
             var webApps = GetWebApplications(true);
 
