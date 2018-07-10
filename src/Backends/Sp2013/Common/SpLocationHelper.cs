@@ -32,6 +32,15 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             return new SPSite(location.Id);
         }
 
+        internal static SPWebCollection GetAllWebs(SPSite site)
+        {
+            if (site == null)
+            {
+                return null;
+            }
+            return site.AllWebs;
+        }
+
         /// <summary>
         /// get web based on location id
         /// </summary>
@@ -47,6 +56,8 @@ namespace FeatureAdmin.Backends.Sp2013.Common
 
             SPSite oSPsite = new SPSite(location.Parent);
             return oSPsite.OpenWeb(location.Id);
+
+            //TODO: hm, think how to refactor so that it is possible to dispose the spsite object here
         }
 
         internal static IEnumerable<SPWebApplication> GetAllWebApplications()
@@ -79,7 +90,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
         /// </summary>
         /// <param name="content">true, if content is requested, false for admin</param>
         /// <returns>content or admin web application</returns>
-        internal static SPWebApplication GetWebApplication(Guid id, bool content)
+        private static SPWebApplication GetWebApplication(Guid id, bool content)
         {
             var webApps = GetWebApplications(content);
             if (webApps == null)

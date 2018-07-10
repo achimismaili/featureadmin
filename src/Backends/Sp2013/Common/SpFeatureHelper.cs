@@ -67,7 +67,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
         }
 
 
-        internal static SPFeatureCollection GetFeatureCollection (SPWeb web)
+        private static SPFeatureCollection GetFeatureCollection (SPWeb web)
         {
             if (web == null)
             {
@@ -77,7 +77,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             return web.Features;
         }
 
-        internal static SPFeatureCollection GetFeatureCollection(SPSite site)
+        private static SPFeatureCollection GetFeatureCollection(SPSite site)
         {
             if (site == null)
             {
@@ -86,6 +86,38 @@ namespace FeatureAdmin.Backends.Sp2013.Common
 
             return site.Features;
         }
- 
+
+        internal static SPFeatureCollection GetFeatureCollection(SPWeb spWeb, bool elevatedPrivileges)
+        {
+            SPFeatureCollection featureCollection;
+
+            if (elevatedPrivileges)
+            {
+                featureCollection = SpSiteElevation.SelectAsSystem(spWeb, GetFeatureCollection);
+            }
+            else
+            {
+                featureCollection = spWeb.Features;
+            }
+
+            return featureCollection;
+        }
+
+        internal static SPFeatureCollection GetFeatureCollection(SPSite spSite, bool elevatedPrivileges)
+        {
+            SPFeatureCollection featureCollection;
+
+            if (elevatedPrivileges)
+            {
+                featureCollection = SpSiteElevation.SelectAsSystem(spSite, GetFeatureCollection);
+            }
+            else
+            {
+                featureCollection = spSite.Features;
+            }
+
+            return featureCollection;
+        }
+
     }
 }

@@ -61,7 +61,7 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             // this variable will save all loaded information of all web applications
             var loadedElements = new LoadedDto(location);
 
-            var spWebApp = SpLocationHelper.GetWebApplication(location.Id, elevatedPrivileges);
+            var spWebApp = SpLocationHelper.GetWebApplication(location.Id);
 
             if (spWebApp == null)
             {
@@ -74,30 +74,62 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
             foreach (SPSite spSite in siCos)
             {
-                var siteLocation = SpConverter.ToLocation(spSite, location.Id);
+                Location siteLocation;
+
+                if (elevatedPrivileges)
+                {
+                    siteLocation = SpSiteElevation.SelectAsSystem(spSite, SpConverter.ToLocation, location.Id);
+                }
+                else
+                {
+                    siteLocation = SpConverter.ToLocation(spSite, location.Id);
+                }
+
 
                 // meaning that they are not installed in the farm, rather on site or web level
                 IEnumerable<FeatureDefinition> nonFarmFeatureDefinitions;
 
-                var activatedSiteFeatures = spSite.Features.ToActivatedFeatures(siteLocation, out nonFarmFeatureDefinitions);
+                SPFeatureCollection siteFeatureCollection = SpFeatureHelper.GetFeatureCollection(spSite, elevatedPrivileges);
+
+                var activatedSiteFeatures = siteFeatureCollection.ToActivatedFeatures(siteLocation, out nonFarmFeatureDefinitions);
 
                 loadedElements.AddChild(siteLocation, activatedSiteFeatures, nonFarmFeatureDefinitions);
 
                 if (spSite != null && spSite.AllWebs != null)
                 {
-                    foreach (SPWeb spWeb in spSite.AllWebs)
+                    SPWebCollection allWebs;
+
+                    if (elevatedPrivileges)
+                    {
+                        allWebs = SpSiteElevation.SelectAsSystem(spSite, SpLocationHelper.GetAllWebs);
+                    }
+                    else
+                    {
+                        allWebs = spSite.AllWebs;
+                    }
+
+                    foreach (SPWeb spWeb in allWebs)
                     {
                         var webLocation = SpConverter.ToLocation(spWeb, siteLocation.Id);
 
                         nonFarmFeatureDefinitions = null;
 
-                        var activatedWebFeatures = spWeb.Features.ToActivatedFeatures(webLocation, out nonFarmFeatureDefinitions);
+                        SPFeatureCollection webFeatureCollection = SpFeatureHelper.GetFeatureCollection(spWeb, elevatedPrivileges);
+
+                        var activatedWebFeatures = webFeatureCollection.ToActivatedFeatures(webLocation, out nonFarmFeatureDefinitions);
 
                         loadedElements.AddChild(webLocation, activatedWebFeatures, nonFarmFeatureDefinitions);
 
+                        // https://blogs.technet.microsoft.com/stefan_gossner/2008/12/05/disposing-spweb-and-spsite-objects/
+                        spWeb.Dispose();
                     }
                 }
+
+                spSite.Dispose();
             }
+
+
+
             return loadedElements;
         }
 
@@ -146,7 +178,7 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             {
                 var farm = SpLocationHelper.GetFarm();
 
-               var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(farm.Features, feature.Id, force);
+                var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(farm.Features, feature.Id, force);
 
                 if (spActivatedFeature != null)
                 {
@@ -208,20 +240,13 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
         public string DeactivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
         {
+            SPSite spSite = null;
+
             try
             {
-                SPFeatureCollection featureCollection;
+                spSite = SpLocationHelper.GetSite(location);
 
-                var spSite = SpLocationHelper.GetSite(location);
-
-                if (elevatedPrivileges)
-                {
-                    featureCollection = SpSiteElevation.SelectAsSystem(spSite, SpFeatureHelper.GetFeatureCollection);
-                }
-                else
-                {
-                    featureCollection = spSite.Features;
-                }
+                SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spSite, elevatedPrivileges);
 
                 SpFeatureHelper.DeactivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
 
@@ -230,6 +255,13 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             {
 
                 return ex.Message;
+            }
+            finally
+            {
+                if (spSite != null)
+                {
+                    spSite.Dispose();
+                }
             }
 
             return string.Empty;
@@ -239,20 +271,13 @@ namespace FeatureAdmin.Backends.Sp2013.Services
         {
             activatedFeature = null;
 
+            SPSite spSite = null;
+
             try
             {
-                SPFeatureCollection featureCollection;
+                spSite = SpLocationHelper.GetSite(location);
 
-                var spSite = SpLocationHelper.GetSite(location);
-
-                if (elevatedPrivileges)
-                {
-                    featureCollection = SpSiteElevation.SelectAsSystem(spSite, SpFeatureHelper.GetFeatureCollection);
-                }
-                else
-                {
-                    featureCollection = spSite.Features;
-                }
+                SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spSite, elevatedPrivileges);
 
                 var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
 
@@ -267,26 +292,26 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
                 return ex.Message;
             }
+            finally
+            {
+                if (spSite != null)
+                {
+                    spSite.Dispose();
+                }
+            }
 
             return string.Empty;
         }
 
         public string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
         {
+            SPWeb spWeb = null;
+
             try
             {
-                SPFeatureCollection featureCollection;
+                spWeb = SpLocationHelper.GetWeb(location);
 
-                var spWeb = SpLocationHelper.GetWeb(location);
-
-                if (elevatedPrivileges)
-                {
-                    featureCollection = SpSiteElevation.SelectAsSystem(spWeb, SpFeatureHelper.GetFeatureCollection);
-                }
-                else
-                {
-                    featureCollection = spWeb.Features;
-                }
+                SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spWeb, elevatedPrivileges);
 
                 SpFeatureHelper.DeactivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
 
@@ -296,7 +321,13 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
                 return ex.Message;
             }
-
+            finally
+            {
+                if (spWeb != null)
+                {
+                    spWeb.Dispose();
+                }
+            }
             return string.Empty;
         }
 
@@ -304,20 +335,12 @@ namespace FeatureAdmin.Backends.Sp2013.Services
         {
             activatedFeature = null;
 
+            SPWeb spWeb = null;
+
             try
             {
-                SPFeatureCollection featureCollection;
-
-                var spWeb = SpLocationHelper.GetWeb(location);
-
-                if (elevatedPrivileges)
-                {
-                    featureCollection = SpSiteElevation.SelectAsSystem(spWeb, SpFeatureHelper.GetFeatureCollection);
-                }
-                else
-                {
-                    featureCollection = spWeb.Features;
-                }
+                spWeb = SpLocationHelper.GetWeb(location);
+                SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spWeb, elevatedPrivileges);
 
                 var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
 
@@ -331,6 +354,13 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             {
 
                 return ex.Message;
+            }
+            finally
+            {
+                if (spWeb != null)
+                {
+                    spWeb.Dispose();
+                }
             }
 
             return string.Empty;

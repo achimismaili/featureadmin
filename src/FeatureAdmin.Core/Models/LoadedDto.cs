@@ -45,14 +45,28 @@ namespace FeatureAdmin.Core.Models
 
         public void AddActivatedFeatures(IEnumerable<ActivatedFeature> features)
         {
-            ActivatedFeatures.AddRange(features);
+            if (features != null)
+            {
+                ActivatedFeatures.AddRange(features);
+            }
         }
 
         public void AddChild(Location location, IEnumerable<ActivatedFeature> activatedFeatures, IEnumerable<FeatureDefinition> definitions)
         {
-            ChildLocations.Add(location);
-            ActivatedFeatures.AddRange(activatedFeatures);
-            Definitions.AddRange(definitions);
+            if (location != null)
+            {
+                ChildLocations.Add(location);
+            }
+
+            if (activatedFeatures != null)
+            {
+                ActivatedFeatures.AddRange(activatedFeatures);
+            }
+
+            if (definitions != null)
+            {
+                Definitions.AddRange(definitions);
+            }
         }
         public void AddChildLocations(IEnumerable<Location> childLocations)
         {
@@ -61,13 +75,27 @@ namespace FeatureAdmin.Core.Models
 
         public void AddChildren(List<Location> childLocations, List<ActivatedFeature> activatedFeatures, List<FeatureDefinition> definitions)
         {
-            ChildLocations.AddRange(childLocations);
-            ActivatedFeatures.AddRange(activatedFeatures);
-            Definitions.AddRange(definitions);
+            if (childLocations != null)
+            {
+                ChildLocations.AddRange(childLocations);
+            }
+
+            if (activatedFeatures != null)
+            {
+                ActivatedFeatures.AddRange(activatedFeatures);
+            }
+
+            if (definitions != null)
+            {
+                Definitions.AddRange(definitions);
+            }
         }
         public void AddFeatureDefinitions(IEnumerable<FeatureDefinition> definitions)
         {
-            Definitions.AddRange(definitions);
+            if (definitions != null)
+            {
+                Definitions.AddRange(definitions);
+            }
         }
     }
 }
