@@ -229,9 +229,12 @@ namespace FeatureAdmin.Actors
                 }
                 catch (Exception ex)
                 {
+                    string tip = message.ElevatedPrivileges ? string.Empty : " Please try to check the option 'Elevated Privileges'.";
+
+
                     var cancelationMsg = new CancelMessage(
                                                 message.TaskId,
-                                                "Error loading farm hierarchy.",
+                                                "Error loading farm hierarchy." + tip,
                                                 ex
                                                 );
 
