@@ -26,6 +26,24 @@ namespace FeatureAdmin.OrigoDb
         }
 
         [Command]
+        public string AddActivatedFeature(ActivatedFeature feature)
+        {
+            ActivatedFeature featureToAdd;
+
+            featureToAdd = ActivatedFeatures.FirstOrDefault(f => f == feature);
+
+            if (featureToAdd == null)
+            {
+                ActivatedFeatures.Add(feature);
+                return null;
+            }
+            else
+            {
+                return string.Format("Problem in Repository. Could not add. Activated Feature already existed in repository with id '{0}' in location '{1}' - Please 'Reload'", feature.FeatureId, feature.LocationId);
+            }
+        }
+
+        [Command]
         public void AddActivatedFeatures(IEnumerable<ActivatedFeature> activatedFeatures)
         {
             if (activatedFeatures != null)
@@ -48,25 +66,6 @@ namespace FeatureAdmin.OrigoDb
                 }
             }
         }
-
-        [Command]
-        public string AddActivatedFeature(ActivatedFeature feature)
-        {
-            ActivatedFeature featureToAdd;
-
-            featureToAdd = ActivatedFeatures.FirstOrDefault(f => f == feature);
-
-            if (featureToAdd == null)
-            {
-                ActivatedFeatures.Add(feature);
-                return null;
-            }
-            else
-            {
-                return string.Format("Problem in Repository. Could not add. Activated Feature already existed in repository with id '{0}' in location '{1}' - Please 'Reload'", feature.FeatureId, feature.LocationId);
-            }
-        }
-
         [Command]
         public string AddLoadedLocations(LoadedDto loadedElements)
         {
@@ -126,83 +125,11 @@ namespace FeatureAdmin.OrigoDb
 
         }
 
-        /// <summary>
-        /// checks, if feature can be activated in current farm
-        /// </summary>
-        /// <param name="featureDefinition">the feature definition to check</param>
-        /// <returns>true, if feature can be activated in current farm</returns>
-        public bool IsItPossibleToActivateFeature(FeatureDefinition featureDefinition)
-        {
-            if (featureDefinition == null)
-            {
-                return false;
-            }
-
-            if (!featureDefinition.SandBoxedSolutionLocation.HasValue)
-            {
-                // Farm Features: Return true, if there are less locations with that scope, where the feature is activated, than total locations
-                var activatedCount = ActivatedFeatures.Count(f => f.FeatureId == featureDefinition.Id);
-                var totalLocationsWithThisFeatureScope = Locations.Count(l => l.Value.Scope == featureDefinition.Scope);
-
-                return totalLocationsWithThisFeatureScope > activatedCount;
-            }
-            else
-            {
-                if (featureDefinition.Scope == Scope.Site)
-                {
-                    // only need to check, if it is activated in current site collection
-                    return IsFeatureActivated(featureDefinition.Id, featureDefinition.SandBoxedSolutionLocation.Value);
-                }
-                else
-                {
-                    // only other valid scope to activate a sandboxed feature is Web
-                    if (featureDefinition.Scope != Scope.Web)
-                    {
-                        return false;
-                    }
-                    // need to check, if it is activated in current root web and all webs below
-                    var totalLocationsWithThisParent = Locations.Values.Where(l => l.Parent == featureDefinition.SandBoxedSolutionLocation.Value);
-
-                    // TODO: test, if this does what it should do - get number of activated features within the locations with this parent.
-                    var activatedCount =
-                            (from locscope in totalLocationsWithThisParent
-                             join f in ActivatedFeatures on locscope.Id equals f.LocationId 
-                             where f.FeatureId == featureDefinition.Id
-                             select locscope.Id
-                             ).Count();
-
-                    return totalLocationsWithThisParent.Count() > activatedCount;
-                }
-            }            
-        }
-
         public void Clear()
         {
             ActivatedFeatures.Clear();
             FeatureDefinitions.Clear();
             Locations.Clear();
-        }
-
-        [Command]
-        public string RemoveActivatedFeature(Guid featureId, Guid locationId)
-        {
-            var featureToRemove = ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureId && f.LocationId == locationId);
-
-            if (featureToRemove != null)
-            {
-                if (ActivatedFeatures.Remove(featureToRemove))
-                {
-                    return null;
-                }
-                else
-                {
-                    return string.Format("Repository problem when removing feature with id '{0}' in location '{1}' - Please 'Reload'", featureId, locationId);
-                }
-            }
-            else
-            {
-                return string.Format("Activated Feature not found with id '{0}' in location '{1}' - Please 'Reload'", featureId, locationId);
-            }
         }
 
         public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
@@ -229,7 +156,7 @@ namespace FeatureAdmin.OrigoDb
 
         public IEnumerable<Location> GetLocationsCanActivate(FeatureDefinition featureDefinition, Location location)
         {
-            var allLocationsOfFeatureScope = GetChildLocationsOfScope(featureDefinition.Scope, location);
+            var allLocationsOfFeatureScope = GetChildLocationsOfScope(featureDefinition.Scope, location, featureDefinition.SandBoxedSolutionLocation);
 
             var prefilteredActivatedFeatures = ActivatedFeatures.Where(f => f.FeatureId == featureDefinition.Id).ToList();
 
@@ -249,8 +176,8 @@ namespace FeatureAdmin.OrigoDb
 
         public IEnumerable<Location> GetLocationsCanDeactivate(FeatureDefinition featureDefinition, Location location)
         {
-            var allLocationsOfFeatureScope = GetChildLocationsOfScope(featureDefinition.Scope, location);
-
+            var allLocationsOfFeatureScope = GetChildLocationsOfScope(featureDefinition.Scope, location, featureDefinition.SandBoxedSolutionLocation);
+            
             var prefilteredActivatedFeatures = ActivatedFeatures.Where(f => f.FeatureId == featureDefinition.Id).ToList();
 
             // see https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
@@ -274,24 +201,27 @@ namespace FeatureAdmin.OrigoDb
                 .ToList();
         }
 
-        /// <summary>
-        /// checks, if feature is activated in the specified location or at all
-        /// </summary>
-        /// <param name="featureDefinitionId">feature id of the feature to check</param>
-        /// <param name="locationId">location id, where to check, if null, checks for everywhere</param>
-        /// <returns>true, if feature is found</returns>
-        public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId)
+        [Command]
+        public string RemoveActivatedFeature(Guid featureId, Guid locationId)
         {
-            if (locationId.HasValue)
+            var featureToRemove = ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureId && f.LocationId == locationId);
+
+            if (featureToRemove != null)
             {
-                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
+                if (ActivatedFeatures.Remove(featureToRemove))
+                {
+                    return null;
+                }
+                else
+                {
+                    return string.Format("Repository problem when removing feature with id '{0}' in location '{1}' - Please 'Reload'", featureId, locationId);
+                }
             }
             else
             {
-                return ActivatedFeatures.Any(f => f.FeatureId == featureDefinitionId);
+                return string.Format("Activated Feature not found with id '{0}' in location '{1}' - Please 'Reload'", featureId, locationId);
             }
         }
-
         public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Scope? selectedScopeFilter, bool? onlyFarmFeatures)
         {
             IEnumerable<FeatureDefinition> searchResult;
@@ -409,7 +339,14 @@ namespace FeatureAdmin.OrigoDb
             return searchResult.ToArray();
         }
 
-        private IEnumerable<Location> GetChildLocationsOfScope(Scope childrenScope, Location parentLocation)
+        /// <summary>
+        /// Gets all locations that are available for feature de- and activation
+        /// </summary>
+        /// <param name="childrenScope">scope of locations (webs, sicos, web apps, farm)</param>
+        /// <param name="parentLocation">parent location, all must be below</param>
+        /// <param name="featureDefinitionLocation">if feature definition is sandbox or add in, definition is not farm wide, but in site or web</param>
+        /// <returns></returns>
+        private IEnumerable<Location> GetChildLocationsOfScope(Scope childrenScope, Location parentLocation, Guid? featureDefinitionLocation)
         {
             var childLocations = new List<Location>();
 
@@ -418,7 +355,7 @@ namespace FeatureAdmin.OrigoDb
                 case Scope.Web:
                     if (childrenScope == Scope.Web)
                     {
-                        childLocations.Add(parentLocation);
+                            childLocations.Add(parentLocation);
                     }
                     break;
                 case Scope.Site:
@@ -463,7 +400,21 @@ namespace FeatureAdmin.OrigoDb
                     break;
             }
 
-            return childLocations;
+            // now filter for featureDefinitionLocation ids in the location id or parent id of all childlocations
+            if (featureDefinitionLocation.HasValue)
+            {
+                var DefinitionScopedChildLocations =
+                    childLocations
+                    .Where(l => l.Id == featureDefinitionLocation.Value ||
+                                l.Parent == featureDefinitionLocation.Value)
+                    .ToList();
+
+                return DefinitionScopedChildLocations;
+            }
+            else
+            {
+                return childLocations;
+            }    
         }
 
         private IEnumerable<Location> GetLocationsChildrensChildren(Location location)

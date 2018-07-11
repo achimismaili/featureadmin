@@ -4,6 +4,7 @@ using System;
 using FeatureAdmin.Core;
 using FeatureAdmin.Messages;
 using FeatureAdmin.Core.Repository;
+using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {
@@ -69,68 +70,14 @@ namespace FeatureAdmin.ViewModels
 
             if (ActiveItem != null && SelectedLocation != null)
             {
-                // check for SAME SCOPE
-                if (ActiveItem.Scope == SelectedLocation.Scope)
-                {
-                    // NOT Sandboxed Solution
-                    if (ActiveItem.SandBoxedSolutionLocation == null)
-                    {
+                int locationsThatCanActivate = repository.GetLocationsCanActivate
+                    (ActiveItem, SelectedLocation).Count();
 
-                        var isActivated = repository.IsFeatureActivated(ActiveItem.Id, SelectedLocation.Id);
+                canActivate = locationsThatCanActivate > 0;
 
-                        canActivate = !isActivated;
-                        canDeactivate = isActivated;
-
-
-                    }
-                    // Same Scope AND Sandboxed Solution
-                    else
-                    {
-                        // SANDBOX scope SITE
-                        if (ActiveItem.Scope == Core.Models.Enums.Scope.Site)
-                        {
-                            if (ActiveItem.SandBoxedSolutionLocation == SelectedLocation.Id)
-                            {
-                                var isActivated = repository.IsFeatureActivated(ActiveItem.Id, SelectedLocation.Id);
-
-                                canActivate = !isActivated;
-                                canDeactivate = isActivated;
-                            }
-                            else
-                            {
-                                // sandboxed solution site feature cannot be activated in different site -->
-                                canActivate = false;
-                                canDeactivate = false;
-                            }
-                        }
-
-
-                        // SANDBOX scope WEB
-                        else if (ActiveItem.Scope == Core.Models.Enums.Scope.Web)
-                        {
-                            if (ActiveItem.SandBoxedSolutionLocation == SelectedLocation.Parent)
-                            {
-                                var isActivated = repository.IsFeatureActivated(ActiveItem.Id, SelectedLocation.Id);
-
-                                canActivate = !isActivated;
-                                canDeactivate = isActivated;
-                            }
-                            else
-                            {
-                                // sandboxed solution site feature cannot be activated in different site -->
-                                canActivate = false;
-                                canDeactivate = false;
-                            }
-                        }
-                    }
-                }
-                // check for DIFFERENT SCOPE - bulk feature toggle, check if scope-relation is ok and if feature is activated at all
-                else if (ActiveItem.Scope < SelectedLocation.Scope && SelectedLocation.ChildCount > 0)
-                {
-                    // only needs to check, if it is active or inactive anywhere in the farm, as the scope of feature definition is lower than location scope
-                    canActivate = repository.IsItPossibleToActivateFeature(ActiveItem);
-                    canDeactivate = repository.IsFeatureActivated(ActiveItem.Id);
-                }
+                int locationsThatCanDeactivate = repository.GetLocationsCanDeactivate
+                    (ActiveItem, SelectedLocation).Count();
+                canDeactivate = locationsThatCanDeactivate > 0;
             }
 
 

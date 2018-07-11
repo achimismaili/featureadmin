@@ -77,17 +77,7 @@ namespace FeatureAdmin.Backends.Demo.Repository
         {
             return store.GetLocationsCanDeactivate(featureDefinition, location);
         }
-
-        public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId = null)
-        {
-            return store.IsFeatureActivated(featureDefinitionId, locationId);
-        }
-
-        public bool IsItPossibleToActivateFeature(FeatureDefinition featureDefinition)
-        {
-            return store.IsItPossibleToActivateFeature(featureDefinition);
-        }
-
+        
         public string RemoveActivatedFeature([NotNull] Guid featureId, [NotNull] Guid locationId)
         {
             return store.RemoveActivatedFeature(featureId, locationId);
