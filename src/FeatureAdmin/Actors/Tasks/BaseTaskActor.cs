@@ -30,7 +30,11 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             if (!TaskCanceled) // prevent multiple log entries
             {
-                HandleCancelation(message);
+                if (message.CancelCompleteTask)
+                {
+                    HandleCancelation(message);
+                }
+
                 Status = TaskStatus.Canceled;
                 CancelationMessage = message.CancelationMessage;
                 End = DateTime.Now;

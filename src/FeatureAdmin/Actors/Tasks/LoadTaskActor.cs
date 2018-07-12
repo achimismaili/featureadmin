@@ -160,6 +160,10 @@ namespace FeatureAdmin.Core.Models.Tasks
             return finished;
         }
 
+        /// <summary>
+        /// send cancelation message to all sub actors
+        /// </summary>
+        /// <param name="cancelMessage"></param>
         protected override void HandleCancelation(FeatureAdmin.Messages.CancelMessage cancelMessage)
         {
             farmLoadActor.Tell(cancelMessage);
@@ -197,17 +201,26 @@ namespace FeatureAdmin.Core.Models.Tasks
                 // cleanup repository
                 if (loadTask.StartLocation.Scope == Enums.Scope.Farm)
                 {
+                    // clear repository synchronous before loading
                     repository.Clear();
 
-                    // initiate read of all feature definitions
-                    var fdQuery = new Messages.Request.LoadFeatureDefinitionQuery(Id);
-                    featureDefinitionActor.Tell(fdQuery);
+                    // it could take some time to clear the repository, and errors could happen, 
+                    // so the task could be canceled meanwhile ...
+                    if (!TaskCanceled)
+                    { 
+                        // initiate read of all feature definitions
+                        var fdQuery = new Messages.Request.LoadFeatureDefinitionQuery(Id);
 
+                    
+                        featureDefinitionActor.Tell(fdQuery);
+                    
+                    
                     // initiate read of farm location, start location is null
                     var loadFarm = new LoadChildLocationQuery(Id, null, elevatedPrivileges);
 
-
                     farmLoadActor.Tell(loadFarm);
+
+                    }
                 }
                 else
                 {

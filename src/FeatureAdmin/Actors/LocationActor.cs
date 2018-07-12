@@ -117,7 +117,8 @@ namespace FeatureAdmin.Actors
                         {
                             var cancelationMsg = new CancelMessage(
                                 message.TaskId,
-                                errorMsg
+                                errorMsg,
+                                true
                                 );
 
                             Sender.Tell(cancelationMsg);
@@ -178,7 +179,8 @@ namespace FeatureAdmin.Actors
                         {
                             var cancelationMsg = new CancelMessage(
                                 message.TaskId,
-                                errorMsg
+                                errorMsg,
+                                true
                                 );
 
                             Sender.Tell(cancelationMsg);
@@ -188,10 +190,11 @@ namespace FeatureAdmin.Actors
                 catch (Exception ex)
                 {
                     var cancelationMsg = new CancelMessage(
-                                                message.TaskId,
-                                                errorMsg,
-                                                ex
-                                                );
+                                message.TaskId,
+                                errorMsg,
+                                true,
+                                ex
+                                );
 
                     Sender.Tell(cancelationMsg);
                 }
@@ -235,6 +238,7 @@ namespace FeatureAdmin.Actors
                     var cancelationMsg = new CancelMessage(
                                                 message.TaskId,
                                                 "Error loading farm hierarchy." + tip,
+                                                true,
                                                 ex
                                                 );
 

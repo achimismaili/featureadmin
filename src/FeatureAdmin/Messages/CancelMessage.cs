@@ -8,9 +8,10 @@ namespace FeatureAdmin.Messages
 {
     public class CancelMessage
     {
-        public CancelMessage(Guid taskId, string cancelationMessage, Exception ex = null)
+        public CancelMessage(Guid taskId, string cancelationMessage, bool cancelCompleteTask, Exception ex = null)
         {
             TaskId = taskId;
+            CancelCompleteTask = cancelCompleteTask;
 
             if (ex != null && !string.IsNullOrEmpty(ex.Message))
             {
@@ -23,6 +24,11 @@ namespace FeatureAdmin.Messages
                 CancelationMessage = cancelationMessage;
             }
         }
+
+        /// <summary>
+        /// if set to false, other tasks in taskmanager will not be canceled
+        /// </summary>
+        public bool CancelCompleteTask { get; set; }
 
         public Guid TaskId { get; private set; }
 

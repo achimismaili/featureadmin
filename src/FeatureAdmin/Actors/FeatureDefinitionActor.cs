@@ -48,6 +48,7 @@ namespace FeatureAdmin.Actors
                     var cancelationMsg = new CancelMessage(
                                                 message.TaskId,
                                                 "Error loading feature definitions.",
+                                                true,
                                                 ex
                                                 );
 
