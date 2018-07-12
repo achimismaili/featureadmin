@@ -1,14 +1,16 @@
-﻿using Akka.Actor;
+﻿using System;
+using Akka.Actor;
 using Akka.Event;
 using FeatureAdmin.Core.Messages.Request;
 using FeatureAdmin.Core.Services;
+using FeatureAdmin.Messages;
 
 namespace FeatureAdmin.Actors
 {
     /// <summary>
     /// class to convert a SharePoint location and its children to SPLocation objects
     /// </summary>
-    public class FeatureDefinitionActor : ReceiveActor
+    public class FeatureDefinitionActor : BaseActor
     {
         private readonly IDataService dataService;
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
@@ -22,20 +24,36 @@ namespace FeatureAdmin.Actors
 
         private void LoadFarmFeatures(LoadFeatureDefinitionQuery message)
         {
-
             _log.Debug("Entered LoadFarmFeatures");
 
-            var farmFeatureDefinitions = dataService.LoadFarmFeatureDefinitions();
-
-            if (farmFeatureDefinitions == null)
+            if (!TaskCanceled)
             {
-                _log.Error("Farm Feature Definitions not found!");
-            }
-                Sender.Tell(new Core.Messages.Completed.FarmFeatureDefinitionsLoaded(
-                    message.TaskId,
-                    farmFeatureDefinitions));
+                try
+                {
+                    var farmFeatureDefinitions = dataService.LoadFarmFeatureDefinitions();
 
-            //TODO: maybe check, if feature definitions from here have more data, than from activated features ...
+                    if (farmFeatureDefinitions == null)
+                    {
+                        _log.Error("Farm Feature Definitions not found!");
+                    }
+                    Sender.Tell(new Core.Messages.Completed.FarmFeatureDefinitionsLoaded(
+                        message.TaskId,
+                        farmFeatureDefinitions));
+
+                    //TODO: maybe check, if feature definitions from here have more data, than from activated features ...
+
+                }
+                catch (Exception ex)
+                {
+                    var cancelationMsg = new CancelMessage(
+                                                message.TaskId,
+                                                "Error loading feature definitions.",
+                                                ex
+                                                );
+
+                    Sender.Tell(cancelationMsg);
+                }
+            }
         }
 
         /// <summary>
@@ -50,6 +68,11 @@ namespace FeatureAdmin.Actors
         {
             return Akka.Actor.Props.Create(() => new FeatureDefinitionActor(
                    dataService));
+        }
+
+        protected override void ReceiveCancelMessage(CancelMessage message)
+        {
+            CancelationMessage = message.CancelationMessage;
         }
     }
 }

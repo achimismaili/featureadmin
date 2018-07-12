@@ -65,6 +65,7 @@
     <Compile Include="Messages\Request\FeatureToggleRequestExtensions.cs" />
     <Compile Include="Messages\Request\FeatureToggleRequest.cs" />
     <Compile Include="Models\Enums\LogLevel.cs" />
+    <Compile Include="Models\Enums\FeatureDefinitionScope.cs" />
     <Compile Include="Models\LoadedDto.cs" />
     <Compile Include="Models\ProgressModule.cs" />
     <Compile Include="NotNullAttribute.cs" />
@@ -72,7 +73,6 @@
     <Compile Include="Messages\TaskUpdate.cs" />
     <Compile Include="Messages\Request\LoadFeatureDefinitionQuery.cs" />
     <Compile Include="Messages\Request\LoadLocationQuery.cs" />
-    <Compile Include="Messages\Completed\LocationsLoaded.cs" />
     <Compile Include="Messages\Completed\ItemUpdated.cs" />
     <Compile Include="Models\BaseItem.cs" />
     <Compile Include="Models\Enums\TaskUpdateType.cs" />

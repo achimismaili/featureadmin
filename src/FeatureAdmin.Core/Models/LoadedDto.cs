@@ -13,24 +13,89 @@ namespace FeatureAdmin.Core.Models
         /// Data transfer object for loaded locations, activated features and definitions
         /// </summary>
         /// <param name="parent">parent location</param>
-        /// <param name="loadedLocations">loaded locations</param>
+        /// <param name="loadedChildLocations">loaded child locations</param>
         /// <param name="activatedFeatures">loaded activated features</param>
         /// <param name="definitions">usually feature definitions of sandboxed features</param>
         public LoadedDto(Location parent,
-            [NotNull] IEnumerable<Location> loadedLocations,
+            [NotNull] IEnumerable<Location> loadedChildLocations,
             [NotNull] IEnumerable<ActivatedFeature> activatedFeatures,
             [NotNull] IEnumerable<FeatureDefinition> definitions)
         {
-            this.ChildLocations = loadedLocations;
+            ChildLocations = new List<Location>(loadedChildLocations);
             Parent = parent;
-            ActivatedFeatures = activatedFeatures;
-            Definitions = definitions;
+            ActivatedFeatures = new List<ActivatedFeature>(activatedFeatures);
+            Definitions = new List<FeatureDefinition>(definitions);
         }
-        public IEnumerable<ActivatedFeature> ActivatedFeatures { get; private set; }
-        public IEnumerable<Location> ChildLocations { get; private set; }
+
+        public LoadedDto(Location parent)
+        {
+            ActivatedFeatures = new List<ActivatedFeature>();
+            Definitions = new List<FeatureDefinition>();
+            ChildLocations = new List<Location>();
+            Parent = parent;
+        }
+
+        public List<ActivatedFeature> ActivatedFeatures { get; private set; }
+
+        public List<Location> ChildLocations { get; private set; }
+
+        public List<FeatureDefinition> Definitions { get; private set; }
 
         public Location Parent { get; private set; }
-        public IEnumerable<FeatureDefinition> Definitions { get; private set; }
 
+        public void AddActivatedFeatures(IEnumerable<ActivatedFeature> features)
+        {
+            if (features != null)
+            {
+                ActivatedFeatures.AddRange(features);
+            }
+        }
+
+        public void AddChild(Location location, IEnumerable<ActivatedFeature> activatedFeatures, IEnumerable<FeatureDefinition> definitions)
+        {
+            if (location != null)
+            {
+                ChildLocations.Add(location);
+            }
+
+            if (activatedFeatures != null)
+            {
+                ActivatedFeatures.AddRange(activatedFeatures);
+            }
+
+            if (definitions != null)
+            {
+                Definitions.AddRange(definitions);
+            }
+        }
+        public void AddChildLocations(IEnumerable<Location> childLocations)
+        {
+            ChildLocations.AddRange(childLocations);
+        }
+
+        public void AddChildren(List<Location> childLocations, List<ActivatedFeature> activatedFeatures, List<FeatureDefinition> definitions)
+        {
+            if (childLocations != null)
+            {
+                ChildLocations.AddRange(childLocations);
+            }
+
+            if (activatedFeatures != null)
+            {
+                ActivatedFeatures.AddRange(activatedFeatures);
+            }
+
+            if (definitions != null)
+            {
+                Definitions.AddRange(definitions);
+            }
+        }
+        public void AddFeatureDefinitions(IEnumerable<FeatureDefinition> definitions)
+        {
+            if (definitions != null)
+            {
+                Definitions.AddRange(definitions);
+            }
+        }
     }
 }

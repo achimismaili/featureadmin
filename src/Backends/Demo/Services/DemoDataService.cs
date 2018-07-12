@@ -3,173 +3,139 @@ using System.Collections.Generic;
 using System.Linq;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Services;
-using FeatureAdmin.Core.Messages.Completed;
 
 namespace FeatureAdmin.Backends.Demo.Services
 {
     public class DemoDataService : IDataService
     {
-        private Repository.DemoRepository repository;
+        private Repository.DemoRepository demoRepository;
         public DemoDataService()
         {
-            repository = new Repository.DemoRepository();
+            demoRepository = new Repository.DemoRepository();
+        }
 
-            //var demoLocations = SampleData.SampleLocationHierarchy.GetAllLocations().ToList();
-            //var demoActivatedFeatures = SampleData.SampleLocationHierarchy.GetAllActivatedFeatures(demoLocations).ToList();
-            //var demoFeaturedefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions().ToList();
+        public string ActivateFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
+        {
+            return ActivateFeature(feature, location, false, force, out activatedFeature);
+        }
 
-            //var loadedElements = new LoadedDto(
-            //    SampleData.Locations.TestFarm.Location,
-            //    demoLocations,
-            //    demoActivatedFeatures,
-            //    demoFeaturedefinitions
-            //    );
+        public string ActivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
+        {
+            return ActivateFeature(feature, location, elevatedPrivileges, force, out activatedFeature);
+        }
 
-            //var initialContent = new LocationsLoaded(loadedElements);
-                
+        public string ActivateWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
+        {
+            return ActivateFeature(feature, location, false, force, out activatedFeature);
+        }
 
-            //repository.AddLoadedLocations(initialContent);
+        public string ActivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
+        {
+            return ActivateFeature(feature, location, elevatedPrivileges, force, out activatedFeature);
+        }
+
+        public string DeactivateFarmFeature(FeatureDefinition feature, Location location, bool force)
+        {
+            return DeactivateFeature(feature, location, false, force);
+        }
+
+        public string DeactivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
+        {
+            return DeactivateFeature(feature, location, elevatedPrivileges, force);
+        }
+
+        public string DeactivateWebAppFeature(FeatureDefinition feature, Location location, bool force)
+        {
+            return DeactivateFeature(feature, location, false, force);
+        }
+
+        public string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
+        {
+            return DeactivateFeature(feature, location, elevatedPrivileges, force);
+        }
+
+        public LoadedDto LoadFarm()
+        {
+            var loadedFarm = new LoadedDto(null);
+
+            var location = demoRepository.SearchLocations(string.Empty, Core.Models.Enums.Scope.Farm).FirstOrDefault();
+
+            var activatedFeatures = GetDemoActivatedFeatures(location);
+            var definitions = GetDemoFeatureDefinitions(location);
+
+            loadedFarm.AddChild(location, activatedFeatures, definitions);
+
+            return loadedFarm;
+
         }
 
         public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
         {
             var farmFeatureDefinitions =
 
-                repository.SearchFeatureDefinitions(string.Empty, null, true);
+                demoRepository.SearchFeatureDefinitions(string.Empty, null, true);
 
             return farmFeatureDefinitions;
         }
-
-
-
-        private LocationsLoaded loadLocations(Location location)
+        public LoadedDto LoadWebAppChildren(Location location, bool elevatedPrivileges)
         {
-            List<ActivatedFeature> activatedFeatures = new List<ActivatedFeature>();
-            List<FeatureDefinition> definitions = new List<FeatureDefinition>();
-            if (location == null)
+            var siCos = loadChildLocations(location);
+
+            var allChildren = new LoadedDto(location);
+
+            foreach (var s in siCos.ChildLocations)
             {
-                return null;
+                var webs = loadChildLocations(s);
+
+                allChildren.AddChildren(webs.ChildLocations, webs.ActivatedFeatures, webs.Definitions);
             }
 
-            List<Location> children = new List<Location>();
+            allChildren.AddChildren(siCos.ChildLocations, siCos.ActivatedFeatures, siCos.Definitions);
 
-            //if farm is loaded, set loaded farm as parent and add farm as children, too
-            if (location.Scope == Core.Models.Enums.Scope.Farm)
-            {
-                location = repository.SearchLocations(string.Empty, Core.Models.Enums.Scope.Farm).FirstOrDefault();
-                children.Add(location);
-            }
+            return allChildren;
+        }
 
-            Core.Models.Enums.Scope? childScope;
+        public LoadedDto LoadWebApps()
+        {
+            return loadChildLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
+        }
+        private string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force
+            , out ActivatedFeature activatedFeature)
+        {
+            var props = new Dictionary<string, string>() {
+                { "demo activation 'elevatedPrivileges' setting", elevatedPrivileges.ToString() },
+                 { "demo activation 'force' setting", force.ToString() }
 
-            switch (location.Scope)
-            {
-                case Core.Models.Enums.Scope.Web:
-                    childScope = null;
-                    break;
-                case Core.Models.Enums.Scope.Site:
-                    childScope = Core.Models.Enums.Scope.Web;
-                    break;
-                case Core.Models.Enums.Scope.WebApplication:
-                    childScope = Core.Models.Enums.Scope.Site;
-                    break;
-                case Core.Models.Enums.Scope.Farm:
-                    childScope = Core.Models.Enums.Scope.WebApplication;
-                    break;
-                case Core.Models.Enums.Scope.ScopeInvalid:
-                    childScope = null;
-                    break;
-                default:
-                    childScope = null;
-                    break;
-            }
+            };
 
-
-            if (childScope != null)
-            {
-                children.AddRange(repository.SearchLocations(location.Id.ToString(), childScope.Value));
-            }
-
-            foreach (Location l in children)
-            {
-                var features = repository.GetActivatedFeatures(l);
-                activatedFeatures.AddRange(features);
-                var defs = repository.SearchFeatureDefinitions(l.Id.ToString(), l.Scope, false); ;
-                definitions.AddRange(defs);
-            }
-
-            var loadedElements = new LoadedDto(
-                location,
-                children,
-                activatedFeatures,
-                definitions
+            activatedFeature = Core.Factories.ActivatedFeatureFactory.GetActivatedFeature(
+                feature.Id
+                , location.Id
+                , feature
+                , false
+                , props
+                , DateTime.Now
+                , feature.Version
                 );
 
-            var loadedMessage = new LocationsLoaded(loadedElements);
 
-            return loadedMessage;
+
+            demoRepository.AddActivatedFeature(activatedFeature);
+
+            // wait 1 second in the demo
+            System.Threading.Thread.Sleep(1000);
+
+            return string.Empty;
         }
 
-        public LocationsLoaded LoadNonFarmLocationAndChildren(Location location)
-        {
-
-
-            var loadedPackage = loadLocations(location);
-
-
-            if (location.Scope == Core.Models.Enums.Scope.WebApplication && loadedPackage.LoadedElements.ChildLocations.Count() > 0)
-            {
-
-                List<FeatureDefinition> fDefs = new List<FeatureDefinition>(loadedPackage.LoadedElements.Definitions);
-
-                List<Location> locations = new List<Location>(loadedPackage.LoadedElements.ChildLocations);
-
-                List<ActivatedFeature> features = new List<ActivatedFeature>(loadedPackage.LoadedElements.ActivatedFeatures);
-
-
-
-                foreach (Location siteCollection in loadedPackage.LoadedElements.ChildLocations)
-                {
-                    var child = loadLocations(siteCollection);
-
-                    fDefs.AddRange(child.LoadedElements.Definitions);
-                    locations.AddRange(child.LoadedElements.ChildLocations);
-                    features.AddRange(child.LoadedElements.ActivatedFeatures);
-                }
-
-                var loadedElements = new LoadedDto(
-                    location,
-                    locations,
-                    features,
-                    fDefs
-                    );
-
-                var loadedMessage = new LocationsLoaded(loadedElements);
-
-                return loadedMessage;
-            }
-            else
-            {
-                return loadedPackage;
-            }
-
-        }
-
-        public LocationsLoaded LoadFarmAndWebApps()
-        {
-            return loadLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
-        }
-
-
-
-        public string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
+        private string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
         {
             if (location == null || feature == null)
             {
                 throw new ArgumentNullException("Location or feature must not be null!");
             }
 
-            var returnMsg = repository.RemoveActivatedFeature(feature.Id, location.Id);
+            var returnMsg = demoRepository.RemoveActivatedFeature(feature.Id, location.Id);
 
             // wait 1 second in the demo
             System.Threading.Thread.Sleep(1000);
@@ -201,33 +167,74 @@ namespace FeatureAdmin.Backends.Demo.Services
 
         }
 
-        public string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force
-            , out ActivatedFeature activatedFeature)
+        private IEnumerable<ActivatedFeature> GetDemoActivatedFeatures(Location location)
         {
-            var props = new Dictionary<string, string>() {
-                { "demo activation 'elevatedPrivileges' setting", elevatedPrivileges.ToString() },
-                 { "demo activation 'force' setting", force.ToString() }
+            var f = demoRepository.GetActivatedFeatures(location);
 
-            };
+            return f;
+        }
 
-            activatedFeature = Core.Factories.ActivatedFeatureFactory.GetActivatedFeature(
-                feature.Id
-                , location.Id
-                , feature
-                , false
-                , props
-                , DateTime.Now
-                , feature.Version
-                );
+        private IEnumerable<FeatureDefinition> GetDemoFeatureDefinitions(Location location)
+        {
+            var defs = demoRepository.SearchFeatureDefinitions(location.Id.ToString(), location.Scope, false);
+
+            return defs;
+        }
+        private LoadedDto loadChildLocations(Location location)
+        {
+
+            var loadedElements = new LoadedDto(location);
 
 
+            Core.Models.Enums.Scope? childScope;
 
-            repository.AddActivatedFeature(activatedFeature);
+            switch (location.Scope)
+            {
+                case Core.Models.Enums.Scope.Web:
+                    throw new ArgumentException("FeatureAdmin should never load child locations for a web.");
+                case Core.Models.Enums.Scope.Site:
+                    childScope = Core.Models.Enums.Scope.Web;
+                    break;
+                case Core.Models.Enums.Scope.WebApplication:
+                    childScope = Core.Models.Enums.Scope.Site;
+                    break;
+                case Core.Models.Enums.Scope.Farm:
+                    childScope = Core.Models.Enums.Scope.WebApplication;
+                    break;
+                case Core.Models.Enums.Scope.ScopeInvalid:
+                    childScope = null;
+                    break;
+                default:
+                    throw new ArgumentException("FeatureAdmin should never reach default scope in load child locations.");
+            }
 
-            // wait 1 second in the demo
-            System.Threading.Thread.Sleep(1000);
+            List<Location> children = new List<Location>();
 
-            return string.Empty;
+            if (childScope != null)
+            {
+                if (childScope.Value == Core.Models.Enums.Scope.WebApplication)
+                {
+                    children = demoRepository.SearchLocations(null, childScope.Value).ToList();
+                }
+                else
+                {
+                    children = demoRepository.SearchLocations(location.Id.ToString(), childScope.Value).ToList();
+                }
+
+                // add all child locations at once
+                loadedElements.AddChildLocations(children);
+
+                foreach (var l in children)
+                {
+                    var activatedFeatures = GetDemoActivatedFeatures(l);
+                    loadedElements.AddActivatedFeatures(activatedFeatures);
+
+                    var definitions = GetDemoFeatureDefinitions(l);
+                    loadedElements.AddFeatureDefinitions(definitions);
+                }
+            }
+
+            return loadedElements;
         }
     }
 }

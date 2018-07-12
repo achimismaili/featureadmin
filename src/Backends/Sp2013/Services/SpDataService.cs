@@ -1,193 +1,136 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Services;
 using Microsoft.SharePoint.Administration;
 using Microsoft.SharePoint;
-using FeatureAdmin.Core.Models.Enums;
-using FeatureAdmin.Core.Messages.Completed;
+using FeatureAdmin.Backends.Sp2013.Common;
+using System;
 
 namespace FeatureAdmin.Backends.Sp2013.Services
 {
     public class SpDataService : IDataService
     {
-        private static SPWebService GetFarm()
+        public LoadedDto LoadFarm()
         {
-            return SPWebService.ContentService;
+            var loadedFarm = new LoadedDto(null);
+
+            var farm = SpLocationHelper.GetFarm();
+
+            var farmLocation = SpConverter.ToLocation(farm);
+
+            var activatedFeatures = SpConverter.ToActivatedFeatures(farm.Features, farmLocation);
+
+            // no non full trust farm features expected on scope farm
+            // (sand boxed and add-in features are only scoped site and web)
+
+            loadedFarm.AddChild(farmLocation, activatedFeatures, null);
+
+            return loadedFarm;
+
         }
 
-        /// <summary>
-        /// get sitecollection based on location id
-        /// </summary>
-        /// <param name="location">location of sharepoint object to return as SPSite</param>
-        /// <returns>undisposed SPSite object</returns>
-        /// <remarks>please dispose, if not needed anymore</remarks>
-        private SPSite GetSite(Location location)
+        public LoadedDto LoadWebApps()
         {
-            if (location == null)
+            var spFarm = SpLocationHelper.GetFarm();
+
+            var farmLocation = SpConverter.ToLocation(spFarm);
+
+            // this variable will save all loaded information of all web applications
+            var loadedElements = new LoadedDto(farmLocation);
+
+            var spWebApps = SpLocationHelper.GetAllWebApplications();
+
+            foreach (var wa in spWebApps)
             {
+                var waLocation = wa.ToLocation(farmLocation.Id);
+
+                var activatedFeatures = wa.Features.ToActivatedFeatures(waLocation);
+                loadedElements.AddActivatedFeatures(activatedFeatures);
+
+                // no non full trust farm features expected on scope web app
+                // (sand boxed and add-in features are only scoped site and web)
+
+                loadedElements.AddChild(waLocation, activatedFeatures, null);
+            }
+
+            return loadedElements;
+        }
+
+        public LoadedDto LoadWebAppChildren(Location location, bool elevatedPrivileges)
+        {
+            // this variable will save all loaded information of all web applications
+            var loadedElements = new LoadedDto(location);
+
+            var spWebApp = SpLocationHelper.GetWebApplication(location.Id);
+
+            if (spWebApp == null)
+            {
+                // The web application might have got deleted!?
+                // throw?
                 return null;
             }
-            return new SPSite(location.Id);
-        }
 
-        /// <summary>
-        /// get web based on location id
-        /// </summary>
-        /// <param name="location">location of sharepoint object to return as SPWeb</param>
-        /// <returns>undisposed SPWeb object</returns>
-        /// <remarks>please dispose, if not needed anymore</remarks>
-        private SPWeb GetWeb(Location location)
-        {
-            if (location == null)
+            var siCos = spWebApp.Sites;
+
+            foreach (SPSite spSite in siCos)
             {
-                return null;
-            }
+                Location siteLocation;
 
-            SPSite oSPsite = new SPSite(location.Parent);
-            return oSPsite.OpenWeb(location.Id);
-        }
+                if (elevatedPrivileges)
+                {
+                    siteLocation = SpSiteElevation.SelectAsSystem(spSite, SpConverter.ToLocation, location.Id);
+                }
+                else
+                {
+                    siteLocation = SpConverter.ToLocation(spSite, location.Id);
+                }
 
-        public static IEnumerable<SPWebApplication> GetAllWebApplications()
-        {
-            var webApps = GetWebApplications(true);
 
-            return webApps.Concat(GetWebApplications(false).AsEnumerable());
-        }
+                // meaning that they are not installed in the farm, rather on site or web level
+                IEnumerable<FeatureDefinition> nonFarmFeatureDefinitions;
 
-        /// <summary>
-        /// returns web applications of type content or admin
-        /// </summary>
-        /// <param name="content">true, if content is requested, false for admin</param>
-        /// <returns>content or admin web applications</returns>
-        private static SPWebApplicationCollection GetWebApplications(bool content)
-        {
-            if (content)
-            {
-                return SPWebService.ContentService.WebApplications;
-            }
-            else
-            {
-                return SPWebService.AdministrationService.WebApplications;
-            }
-        }
+                SPFeatureCollection siteFeatureCollection = SpFeatureHelper.GetFeatureCollection(spSite, elevatedPrivileges);
 
-        /// <summary>
-        /// returns a web application of type content or admin
-        /// </summary>
-        /// <param name="content">true, if content is requested, false for admin</param>
-        /// <returns>content or admin web application</returns>
-        private SPWebApplication GetWebApplication(Guid id, bool content)
-        {
-            var webApps = GetWebApplications(content);
-            if (webApps == null)
-            {
-                return null;
-            }
-            return webApps.FirstOrDefault(wa => wa.Id == id);
-        }
+                var activatedSiteFeatures = siteFeatureCollection.ToActivatedFeatures(siteLocation, out nonFarmFeatureDefinitions);
 
-        private SPWebApplication GetWebApplication(Guid id)
-        {
-            var wa = GetWebApplication(id, true);
+                loadedElements.AddChild(siteLocation, activatedSiteFeatures, nonFarmFeatureDefinitions);
 
-            if (wa != null)
-            {
-                return wa;
-            }
+                if (spSite != null && spSite.AllWebs != null)
+                {
+                    SPWebCollection allWebs;
 
-            return GetWebApplication(id, false);
-        }
-
-        public IEnumerable<Location> LoadNonFarmLocationAndChildren(Location location, out Location parent)
-        {
-            Location updatedLocation = null;
-
-            if (location == null)
-            {
-                parent = updatedLocation;
-                return null;
-            };
-
-            var locations = new List<Location>();
-
-            if (location.Scope == Core.Models.Enums.Scope.Farm)
-            {
-                throw new Exception("This method must not be called with farm location");
-            }
-
-            switch (location.Scope)
-            {
-                case Core.Models.Enums.Scope.Web:
-                    SPSecurity.RunWithElevatedPrivileges(delegate ()
+                    if (elevatedPrivileges)
                     {
-                        using (SPSite sc = new SPSite(location.Parent))
-                        {
-                            using (SPWeb w = sc.OpenWeb(location.Id))
-                            {
-                                updatedLocation = w.ToLocation(location.Parent);
-
-                                locations.Add(updatedLocation);
-                            }
-                        }
-                    });
-                    break;
-                case Core.Models.Enums.Scope.Site:
-                    SPSecurity.RunWithElevatedPrivileges(delegate ()
-                    {
-                        using (SPSite sc = new SPSite(location.Id))
-                        {
-                            updatedLocation = sc.ToLocation(location.Parent);
-
-                            locations.Add(updatedLocation);
-
-                            locations.AddRange(sc.AllWebs.ToLocations(location.Id));
-                        }
-                    });
-                    break;
-                case Core.Models.Enums.Scope.WebApplication:
-
-                    var wa = GetWebApplication(location.Id);
-
-                    if (wa != null)
-                    {
-                        updatedLocation = wa.ToLocation(location.Parent);
-                        locations.Add(updatedLocation);
-
-                        SPSecurity.RunWithElevatedPrivileges(delegate ()
-                        {
-                            locations.AddRange(wa.Sites.ToLocations(location.Id));
-                        });
+                        allWebs = SpSiteElevation.SelectAsSystem(spSite, SpLocationHelper.GetAllWebs);
                     }
-                    break;
-                //case Core.Models.Enums.Scope.Farm:
-                //    // invalid
-                //    break;
-                //case Core.Models.Enums.Scope.ScopeInvalid:
-                //    break;
-                default:
-                    // TODO Log error: scope was not web, web app or site!
-                    break;
+                    else
+                    {
+                        allWebs = spSite.AllWebs;
+                    }
+
+                    foreach (SPWeb spWeb in allWebs)
+                    {
+                        var webLocation = SpConverter.ToLocation(spWeb, siteLocation.Id);
+
+                        nonFarmFeatureDefinitions = null;
+
+                        SPFeatureCollection webFeatureCollection = SpFeatureHelper.GetFeatureCollection(spWeb, elevatedPrivileges);
+
+                        var activatedWebFeatures = webFeatureCollection.ToActivatedFeatures(webLocation, out nonFarmFeatureDefinitions);
+
+                        loadedElements.AddChild(webLocation, activatedWebFeatures, nonFarmFeatureDefinitions);
+
+                        // https://blogs.technet.microsoft.com/stefan_gossner/2008/12/05/disposing-spweb-and-spsite-objects/
+                        spWeb.Dispose();
+                    }
+                }
+
+                spSite.Dispose();
             }
 
-            parent = updatedLocation;
 
-            return locations;
 
-        }
-
-        private IEnumerable<Location> GetAllWebApplications(Guid farmId)
-        {
-            var spWebAppsContent = GetWebApplications(true);
-
-            var webApps = new List<Location>(spWebAppsContent.ToLocations(farmId));
-
-            var spWebAppsAdmin = GetWebApplications(false);
-
-            webApps.AddRange(spWebAppsAdmin.ToLocations(farmId));
-
-            return webApps;
+            return loadedElements;
         }
 
         public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
@@ -200,7 +143,7 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             {
                 foreach (SPFeatureDefinition spFd in spFeatureDefinitions)
                 {
-                    var fd = spFd.ToFeatureDefinition("Farm");
+                    var fd = spFd.ToFeatureDefinition(null);
 
                     features.Add(fd);
                 }
@@ -209,203 +152,312 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             return features;
         }
 
-        public IEnumerable<Location> LoadFarmAndWebApps(out Location farm)
+        public string DeactivateFarmFeature(FeatureDefinition feature, Location location, bool force)
         {
-            var locations = new List<Location>();
+            try
+            {
+                var farm = SpLocationHelper.GetFarm();
 
-            var spFarm = GetFarm();
+                SpFeatureHelper.DeactivateFeatureInFeatureCollection(farm.Features, feature.Id, force);
 
-            farm = spFarm.ToLocation();
+            }
+            catch (Exception ex)
+            {
 
-            locations.Add(farm);
+                return ex.Message;
+            }
 
-            var farmId = farm.Id;
-
-            var webApps = GetAllWebApplications(farmId);
-
-            locations.AddRange(webApps);
-
-            return locations;
+            return string.Empty;
         }
 
-        public int FeatureToggle(Location location, FeatureDefinition feature, bool add, bool force)
+        public string ActivateFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
         {
-            if (location == null || feature == null)
+            activatedFeature = null;
+
+            try
             {
-                throw new ArgumentNullException("Location or feature must not be null!");
-            }
+                var farm = SpLocationHelper.GetFarm();
 
-            var counter = 0;
+                var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(farm.Features, feature.Id, force);
 
-            switch (location.Scope)
-            {
-                case Core.Models.Enums.Scope.Web:
-                    if (feature.Scope == Core.Models.Enums.Scope.Web)
-                    {
-                        SPSecurity.RunWithElevatedPrivileges(delegate ()
-                        {
-                            using (var site = new SPSite(location.Url))
-                            {
-                                using (var web = site.OpenWeb())
-                                {
-                                    FeatureToggleWeb(web, feature.Id, add, force);
-                                }
-                            };
-                        });
-                    }
-                    break;
-                case Core.Models.Enums.Scope.Site:
-
-                    SPSecurity.RunWithElevatedPrivileges(delegate ()
-                    {
-                        using (var site = new SPSite(location.Url))
-                        {
-                            FeatureToggleSite(site, feature.Id, feature.Scope, add, force);
-                        };
-                    });
-
-                    break;
-                case Core.Models.Enums.Scope.WebApplication:
-
-                    var wa = GetWebApplication(location.Id);
-
-                    if (wa != null)
-                    {
-                        FeatureToggleWebApp(wa, feature.Id, feature.Scope, add, force);
-                    }
-                        break;
-                case Core.Models.Enums.Scope.Farm:
-                    FeatureToggleFarm(feature.Id, feature.Scope, add, force);
-                    break;
-                case Core.Models.Enums.Scope.ScopeInvalid:
-                    throw new Exception("Invalid scope was not expected!");
-                default:
-                    throw new Exception("Undefined scope!");
-            }
-
-            return counter;
-        }
-
-        private static int FeatureToggleFarm(Guid featureId, Scope featureScope, bool add, bool force)
-        {
-            var processingCounter = 0;
-
-            var farm = GetFarm();
-
-            if (featureScope == Scope.Farm)
-            {
-                processingCounter += ToggleFeatureInFeatureCollection(farm.Features, featureId, add, force);
-            }
-
-            else
-            {
-                var webApps = GetAllWebApplications();
-
-                foreach (SPWebApplication webApp in webApps)
+                if (spActivatedFeature != null)
                 {
-                    FeatureToggleWebApp(webApp, featureId, featureScope, add, force);
+                    FeatureDefinition nffd; // feature definition is not relevant in case of activation
+                    activatedFeature = spActivatedFeature.ToActivatedFeature(location, out nffd);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+
+            return string.Empty;
+        }
+
+        public string DeactivateWebAppFeature(FeatureDefinition feature, Location location, bool force)
+        {
+            try
+            {
+                var wa = SpLocationHelper.GetWebApplication(location.Id);
+
+                SpFeatureHelper.DeactivateFeatureInFeatureCollection(wa.Features, feature.Id, force);
+
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+
+            return string.Empty;
+        }
+
+        public string ActivateWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
+        {
+            activatedFeature = null;
+
+            try
+            {
+                var wa = SpLocationHelper.GetWebApplication(location.Id);
+
+                var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(wa.Features, feature.Id, force);
+
+                if (spActivatedFeature != null)
+                {
+                    FeatureDefinition nffd; // feature definition is not relevant in case of activation
+                    activatedFeature = spActivatedFeature.ToActivatedFeature(location, out nffd);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+
+            return string.Empty;
+        }
+
+        public string DeactivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
+        {
+            SPSite spSite = null;
+
+            try
+            {
+                spSite = SpLocationHelper.GetSite(location);
+
+                SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spSite, elevatedPrivileges);
+
+                SpFeatureHelper.DeactivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
+
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+            finally
+            {
+                if (spSite != null)
+                {
+                    spSite.Dispose();
                 }
             }
 
-            return processingCounter;
+            return string.Empty;
         }
 
-        private static int FeatureToggleWebApp(SPWebApplication webApp, Guid featureId, Scope featureScope, bool add, bool force)
+        public string ActivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
         {
-            var processingCounter = 0;
+            activatedFeature = null;
 
-            if (featureScope == Scope.WebApplication)
-            {
-                processingCounter += ToggleFeatureInFeatureCollection(webApp.Features, featureId, add, force);
-            }
+            SPSite spSite = null;
 
-            else if (featureScope == Scope.Site || featureScope == Scope.Web)
+            try
             {
-                foreach (SPSite site in webApp.Sites)
+                spSite = SpLocationHelper.GetSite(location);
+
+                SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spSite, elevatedPrivileges);
+
+                var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
+
+                if (spActivatedFeature != null)
                 {
-                    processingCounter += FeatureToggleSite(site, featureId, featureScope, add, force);
+                    FeatureDefinition nffd; // feature definition is not relevant in case of activation
+                    activatedFeature = spActivatedFeature.ToActivatedFeature(location, out nffd);
                 }
             }
-            return processingCounter;
-        }
-
-
-
-        public static int FeatureToggleSite(SPSite site, Guid featureId, Scope featureScope, bool activate, bool force)
-        {
-            var processingCounter = 0;
-
-
-            if (featureScope == Scope.Site)
+            catch (Exception ex)
             {
-                processingCounter += ToggleFeatureInFeatureCollection(site.Features, featureId, activate, force);
+
+                return ex.Message;
             }
-            else if (featureScope == Scope.Web)
+            finally
             {
-                foreach (SPWeb web in site.AllWebs)
+                if (spSite != null)
                 {
-                    processingCounter += ToggleFeatureInFeatureCollection(web.Features, featureId, activate, force);
-                }
-            }
-            return processingCounter;
-        }
-        public static int FeatureToggleWeb(SPWeb web, Guid featureId, bool add, bool force)
-        {
-            var processingCounter = 0;
-
-
-            processingCounter += ToggleFeatureInFeatureCollection(web.Features, featureId, add, force);
-
-            return processingCounter;
-        }
-        private static int ToggleFeatureInFeatureCollection(SPFeatureCollection features, Guid featureId, bool activate, bool force)
-        {
-
-            var featuresModifiedCounter = 0;
-
-
-            if (activate)
-            {
-                // activate feature
-                var feature = features.Add(featureId, force);
-                if (feature != null)
-                {
-                    featuresModifiedCounter++;
-                }
-            }
-            else
-            {
-                // deactivate feature
-                var featuresActiveBefore = features.Count();
-
-                features.Remove(featureId, force);
-                if (featuresActiveBefore > features.Count)
-                {
-                    featuresModifiedCounter++;
+                    spSite.Dispose();
                 }
             }
 
-            return featuresModifiedCounter;
+            return string.Empty;
         }
 
-        public LocationsLoaded LoadNonFarmLocationAndChildren(Location location)
+        public string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
         {
-            throw new NotImplementedException();
+            SPWeb spWeb = null;
+
+            try
+            {
+                spWeb = SpLocationHelper.GetWeb(location, elevatedPrivileges);
+
+                SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spWeb, elevatedPrivileges);
+
+                SpFeatureHelper.DeactivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
+
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+            finally
+            {
+                if (spWeb != null)
+                {
+                    spWeb.Dispose();
+                }
+            }
+            return string.Empty;
         }
 
-        public LocationsLoaded LoadFarmAndWebApps()
+        public string ActivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
         {
-            throw new NotImplementedException();
+            activatedFeature = null;
+
+            SPWeb spWeb = null;
+
+            try
+            {
+                spWeb = SpLocationHelper.GetWeb(location, elevatedPrivileges);
+                SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spWeb, elevatedPrivileges);
+
+                var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
+
+                if (spActivatedFeature != null)
+                {
+                    FeatureDefinition nffd; // feature definition is not relevant in case of activation
+                    activatedFeature = spActivatedFeature.ToActivatedFeature(location, out nffd);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+            finally
+            {
+                if (spWeb != null)
+                {
+                    spWeb.Dispose();
+                }
+            }
+
+            return string.Empty;
         }
 
-        public string DeactivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
-        {
-            throw new NotImplementedException();
-        }
+        //private LoadedDto loadLocations(Location location)
+        //{
+        //    List<ActivatedFeature> activatedFeatures = new List<ActivatedFeature>();
+        //    List<FeatureDefinition> definitions = new List<FeatureDefinition>();
+        //    List<Location> children = new List<Location>();
 
-        public string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
-        {
-            throw new NotImplementedException();
-        }
+        //    if (location == null)
+        //    {
+        //        return null;
+        //    }
+
+
+
+        //    //if farm is loaded, set loaded farm as parent and add farm as children, too
+        //    if (location.Scope == Core.Models.Enums.Scope.Farm)
+        //    {
+        //       children.Add(location);
+        //    }
+
+        //    Core.Models.Enums.Scope? childScope;
+
+        //    switch (location.Scope)
+        //    {
+        //        case Core.Models.Enums.Scope.Web:
+        //            childScope = null;
+        //            break;
+        //        case Core.Models.Enums.Scope.Site:
+        //            childScope = Core.Models.Enums.Scope.Web;
+        //            break;
+        //        case Core.Models.Enums.Scope.WebApplication:
+        //            childScope = Core.Models.Enums.Scope.Site;
+        //            break;
+        //        case Core.Models.Enums.Scope.Farm:
+        //            var webApps = GetAllWebApplications(location.Id);
+
+        //            children.AddRange(webApps);
+
+
+        //            break;
+        //        case Core.Models.Enums.Scope.ScopeInvalid:
+        //            childScope = null;
+        //            break;
+        //        default:
+        //            childScope = null;
+        //            break;
+        //    }
+
+
+        //    if (childScope != null)
+        //    {
+        //        children.AddRange(repository.SearchLocations(location.Id.ToString(), childScope.Value));
+        //    }
+
+        //    foreach (Location l in children)
+        //    {
+        //        var features = repository.GetActivatedFeatures(l);
+        //        activatedFeatures.AddRange(features);
+        //        var defs = repository.SearchFeatureDefinitions(l.Id.ToString(), l.Scope, false); ;
+        //        definitions.AddRange(defs);
+        //    }
+
+        //    var loadedElements = new LoadedDto(
+        //        location,
+        //        children,
+        //        activatedFeatures,
+        //        definitions
+        //        );
+
+        //    var loadedMessage = new LocationsLoaded(loadedElements);
+
+        //    return loadedMessage;
+        //}
+
+
+
+        ///// <summary>
+        ///// Loads farm and web apps
+        ///// </summary>
+        ///// <returns>farm and web apps as children</returns>
+        ///// <remarks>
+        ///// adds farm as children, too
+        ///// </remarks>
+        //public LoadedDto LoadFarmAndWebApps()
+        //{
+        //    var spFarm = GetFarm();
+
+        //    var farm = spFarm.ToLocation();
+
+        //    return loadLocations(farm);
+        //}
+
+
+
     }
 }

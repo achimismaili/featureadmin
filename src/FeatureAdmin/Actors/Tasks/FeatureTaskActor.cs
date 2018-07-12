@@ -1,5 +1,4 @@
 ﻿using Akka.Actor;
-using Akka.DI.Core;
 using Akka.Event;
 using Caliburn.Micro;
 using FeatureAdmin.Actors;
@@ -14,8 +13,6 @@ using FeatureAdmin.Core.Services;
 
 namespace FeatureAdmin.Core.Models.Tasks
 {
-
-
     public class FeatureTaskActor : BaseTaskActor
     {
         /// <summary>
@@ -23,14 +20,11 @@ namespace FeatureAdmin.Core.Models.Tasks
         /// </summary>
         public Dictionary<Guid, bool> jobsCompleted;
         public int jobsTotal = 0;
-        private List<FeatureToggleRequest> featureToggleRequestsToBeConfirmed;
-
-
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
+        private readonly IDataService dataService;
         private readonly Dictionary<Guid, IActorRef> executingActors;
         private readonly IFeatureRepository repository;
-        private readonly IDataService dataService;
-
+        private List<FeatureToggleRequest> featureToggleRequestsToBeConfirmed;
         public FeatureTaskActor(
             IEventAggregator eventAggregator,
             IFeatureRepository repository,
@@ -51,14 +45,13 @@ namespace FeatureAdmin.Core.Models.Tasks
             Receive<FeatureActivationCompleted>(message => HandleFeatureActivationCompleted(message));
         }
 
-        
+
         public override double PercentCompleted
         {
             get
             {
                 // double completedSuccess = jobsCompleted.Where(j => j.Value == true).Count();
                 double totalCompleted = jobsCompleted.Count();
-
                 return totalCompleted / jobsTotal;
             }
         }
@@ -67,7 +60,8 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             get
             {
-                return string.Format("'{0}' (ID: '{1}') - {2} of {3} (de)activation(s) completed successfully, progress {4:F0}% \nelapsed time: {5}",
+                return string.Format(
+                    "'{0}' (ID: '{1}') - {2} of {3} (de)activation(s) completed successfully, progress {4:F0}% \nelapsed time: {5}",
                     Title,
                     Id,
                     jobsCompleted.Where(j => j.Value == true).Count(),
@@ -88,141 +82,135 @@ namespace FeatureAdmin.Core.Models.Tasks
         /// <remarks>
         /// see also https://getakka.net/articles/actors/receive-actor-api.html
         /// </remarks>
-        public static Props Props(IEventAggregator eventAggregator, 
+        public static Props Props(
+            IEventAggregator eventAggregator,
             IFeatureRepository repository,
             IDataService dataService,
             Guid taskId)
         {
-            return Akka.Actor.Props.Create(() => 
+            return Akka.Actor.Props.Create(() =>
             new FeatureTaskActor(
-                eventAggregator, 
+                eventAggregator,
                 repository,
                 dataService,
                 taskId));
         }
 
-        private void HandleFeatureDeactivationCompleted([NotNull] FeatureDeactivationCompleted message)
+        protected override void HandleCancelation(CancelMessage cancelMessage)
         {
-            bool success;
-
-            if (string.IsNullOrEmpty(message.Error))
+            foreach (var featureActor in executingActors.Values)
             {
-                success = true;
-                repository.RemoveActivatedFeature(message.FeatureId, message.LocationReference);
+                featureActor.Tell(cancelMessage);
             }
-            else
-            {
-                success = false;
-            }
-
-            jobsCompleted.Add(message.LocationReference, success);
-
-            SendProgress();
-        }
-
-        private void HandleFeatureActivationCompleted([NotNull] FeatureActivationCompleted message)
-        {
-            bool success;
-
-            if (string.IsNullOrEmpty(message.Error))
-            {
-                success = true;
-                repository.AddActivatedFeature(message.ActivatedFeature);
-            }
-            else
-            {
-                success = false;
-            }
-
-            jobsCompleted.Add(message.LocationReference, success);
-
-            SendProgress();
-        }
-
-        private void HandleFeatureToggleRequest([NotNull] FeatureToggleRequest message)
-        {
-            _log.Debug("Entered HandleFeatureToggleRequest with Id " + Id.ToString());
-
-            Title = message.Title;
-
-            IEnumerable<Location> targetLocations;
-
-            if (message.Activate)
-            {
-                // retrieve locations where to activate 
-                targetLocations = repository.GetLocationsCanActivate(message.FeatureDefinition, message.Location);
-            }
-            else
-            {
-                // retrieve locations where to deactivate 
-                targetLocations = repository.GetLocationsCanDeactivate(message.FeatureDefinition, message.Location);
-            }
-
-            featureToggleRequestsToBeConfirmed = new List<FeatureToggleRequest>();
-            
-            foreach (Location l in targetLocations)
-            {
-
-                var toggleRequestForThisLocation = new FeatureToggleRequest(
-                    message.FeatureDefinition
-                    , l
-                    , message.Activate
-                    , message.Force
-                    , message.ElevatedPrivileges
-                    );
-                featureToggleRequestsToBeConfirmed.Add(toggleRequestForThisLocation);
-            }
-
-            var action = message.Activate ? "activate" : "deactivate";
-
-            var confirmRequest = new ConfirmationRequest(
-                    Title,
-                    string.Format("Please confirm to {0} feature \n\n{1} \n\nacross location \n\n{2}\n\n\nFeatureAdmin found '{3}' location(s) where to {0}.", 
-                        action,
-                        message.FeatureDefinition.ToString(), 
-                        message.Location.ToString(),
-                        targetLocations.Count()),
-                    Id
-                    );
-
-
-            eventAggregator.PublishOnUIThread(confirmRequest);
         }
 
         private void HandleConfirmation(Confirmation message)
         {
-            jobsTotal = featureToggleRequestsToBeConfirmed.Count;
+            if (!TaskCanceled)
+            {
+                jobsTotal = featureToggleRequestsToBeConfirmed.Count;
 
-            Start = DateTime.Now;
+                Start = DateTime.Now;
 
-            // start status progress bar
+                // start status progress bar
+                SendProgress();
+
+                foreach (FeatureToggleRequest ftr in featureToggleRequestsToBeConfirmed)
+                {
+
+                    var locationId = ftr.Location.Id;
+
+                    // create Location actors and trigger feature actions
+
+                    if (!executingActors.ContainsKey(locationId))
+                    {
+                        IActorRef newLocationActor = Context.ActorOf(
+                            LocationActor.Props(dataService),
+                            locationId.ToString()
+                            );
+
+                        executingActors.Add(locationId, newLocationActor);
+
+                        newLocationActor.Tell(ftr);
+                    }
+                    else
+                    {
+                        executingActors[ftr.Location.Id].Tell(ftr);
+                    }
+                }
+            }
+        }
+
+        private void HandleFeatureActivationCompleted([NotNull] FeatureActivationCompleted message)
+        {
+            bool success = true;
+            repository.AddActivatedFeature(message.ActivatedFeature);
+
+            jobsCompleted.Add(message.LocationReference, success);
+
             SendProgress();
+        }
 
-            foreach (FeatureToggleRequest ftr in featureToggleRequestsToBeConfirmed)
+        private void HandleFeatureDeactivationCompleted([NotNull] FeatureDeactivationCompleted message)
+        {
+            bool success = true;
+            repository.RemoveActivatedFeature(message.FeatureId, message.LocationReference);
+
+            jobsCompleted.Add(message.LocationReference, success);
+
+            SendProgress();
+        }
+        private void HandleFeatureToggleRequest([NotNull] FeatureToggleRequest message)
+        {
+            _log.Debug("Entered HandleFeatureToggleRequest with Id " + Id.ToString());
+
+            if (!TaskCanceled)
             {
 
-                var locationId = ftr.Location.Id;
-                
-                // create Location actors and trigger feature actions
+                Title = message.Title;
 
-                if (!executingActors.ContainsKey(locationId))
+                IEnumerable<Location> targetLocations;
+
+                if (message.Activate)
                 {
-                    
-
-                    IActorRef newLocationActor =
-                        // Context.ActorOf(Context.DI().Props<LocationActor>());
-                        Context.ActorOf(LocationActor.Props(
-           dataService), locationId.ToString());
-
-
-                    executingActors.Add(locationId, newLocationActor);
-
-                    newLocationActor.Tell(ftr);
+                    // retrieve locations where to activate 
+                    targetLocations = repository.GetLocationsCanActivate(message.FeatureDefinition, message.Location);
                 }
                 else
                 {
-                    executingActors[ftr.Location.Id].Tell(ftr);
+                    // retrieve locations where to deactivate 
+                    targetLocations = repository.GetLocationsCanDeactivate(message.FeatureDefinition, message.Location);
                 }
+
+                featureToggleRequestsToBeConfirmed = new List<FeatureToggleRequest>();
+
+                foreach (Location l in targetLocations)
+                {
+
+                    var toggleRequestForThisLocation = new FeatureToggleRequest(
+                        message.FeatureDefinition
+                        , l
+                        , message.Activate
+                        , message.Force
+                        , message.ElevatedPrivileges
+                        );
+                    featureToggleRequestsToBeConfirmed.Add(toggleRequestForThisLocation);
+                }
+
+                var action = message.Activate ? "activate" : "deactivate";
+
+                var confirmRequest = new ConfirmationRequest(
+                        Title,
+                        string.Format("Please confirm to {0} feature \n\n{1} \n\nacross location \n\n{2}\n\n\nFeatureAdmin found '{3}' location(s) where to {0}.",
+                            action,
+                            message.FeatureDefinition.ToString(),
+                            message.Location.ToString(),
+                            targetLocations.Count()),
+                        Id
+                        );
+
+
+                eventAggregator.PublishOnUIThread(confirmRequest);
             }
         }
     }

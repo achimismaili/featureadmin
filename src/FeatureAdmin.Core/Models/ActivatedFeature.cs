@@ -16,7 +16,7 @@ namespace FeatureAdmin.Core.Models
                 Dictionary<string, string> properties,
                 DateTime timeActivated,
                 Version version,
-                string sandBoxedSolutionLocation = null
+                FeatureDefinitionScope featureDefinitionScope = FeatureDefinitionScope.Farm
             ) 
         {
             FeatureId = featureId;
@@ -28,8 +28,7 @@ namespace FeatureAdmin.Core.Models
             TimeActivated = timeActivated;
             Version = version;
             CanUpgrade = definition.Version < version;
-            
-            
+            FeatureDefinitionScope = featureDefinitionScope;
         }
 
         [IgnoreDuringEquals]
@@ -57,7 +56,11 @@ namespace FeatureAdmin.Core.Models
 
         [IgnoreDuringEquals]
         public DateTime TimeActivated { get; private set; }
+
         [IgnoreDuringEquals]
         public Version Version { get; private set; }
+
+        [IgnoreDuringEquals]
+        public FeatureDefinitionScope FeatureDefinitionScope { get; private set; }
     }
 }

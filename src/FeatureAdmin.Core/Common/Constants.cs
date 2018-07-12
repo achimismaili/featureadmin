@@ -10,7 +10,7 @@ namespace FeatureAdmin.Core.Common
     {
         public static class Defaults
         {
-            public const string DefinitionInstallationScopeFarm = "Farm";
+           
         }
          
     }

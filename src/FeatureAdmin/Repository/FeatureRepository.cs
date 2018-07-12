@@ -47,9 +47,9 @@ namespace FeatureAdmin.Repository
         //    store.AddActivatedFeatures(activatedFeatures);
         //}
 
-        public void AddLoadedLocations(Core.Messages.Completed.LocationsLoaded message)
+        public void AddLoadedLocations(LoadedDto message)
         {
-             var error = store.AddLoadedLocations(message.LoadedElements);
+             var error = store.AddLoadedLocations(message);
 
             if (!string.IsNullOrEmpty(error))
             {
@@ -91,17 +91,6 @@ namespace FeatureAdmin.Repository
         {
             return store.GetLocationsCanDeactivate(featureDefinition, location);
         }
-
-        public bool IsFeatureActivated(Guid featureDefinitionId, Guid? locationId = null)
-        {
-            return store.IsFeatureActivated(featureDefinitionId, locationId);
-        }
-
-        public bool IsItPossibleToActivateFeature(FeatureDefinition featureDefinition)
-        {
-            return store.IsItPossibleToActivateFeature(featureDefinition);
-        }
-
         public string RemoveActivatedFeature([NotNull] Guid featureId, [NotNull] Guid locationId)
         {
             return store.RemoveActivatedFeature(featureId, locationId);

@@ -19,15 +19,15 @@ namespace FeatureAdmin.Core.Models.Tasks
         public ProgressModule FarmFeatureDefinitions;
         public ProgressModule SitesAndWebs;
         public ProgressModule WebApps;
-        public int ActivatedFeaturesLoaded { get; private set; }
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
+        private readonly IDataService dataService;
+        private readonly IActorRef farmLoadActor;
         private readonly IActorRef featureDefinitionActor;
         private readonly Dictionary<Guid, IActorRef> locationActors;
         private readonly IFeatureRepository repository;
-        private readonly IDataService dataService;
-
+        private bool elevatedPrivileges = false;
         public LoadTaskActor(
-            IEventAggregator eventAggregator, 
+            IEventAggregator eventAggregator,
             IFeatureRepository repository,
             IDataService dataService,
             Guid id)
@@ -36,24 +36,22 @@ namespace FeatureAdmin.Core.Models.Tasks
             locationActors = new Dictionary<Guid, IActorRef>();
             this.repository = repository;
             this.dataService = dataService;
-            featureDefinitionActor =
-                 //   Context.ActorOf(Context.DI().Props<FeatureDefinitionActor>());
-                 Context.ActorOf(FeatureDefinitionActor.Props(
-           dataService), "FeatureDefinitionActor");
+
+            featureDefinitionActor = Context.ActorOf(
+                FeatureDefinitionActor.Props(dataService), "FeatureDefinitionActor");
+
+            farmLoadActor = Context.ActorOf(
+                LocationActor.Props(dataService), "FarmLoadActor");
 
             ActivatedFeaturesLoaded = 0;
 
-            FarmFeatureDefinitions = new ProgressModule(
-                5d / 100,
-                0d,
-                1);
+            FarmFeatureDefinitions =
+                new ProgressModule(5d / 100, 0d, 1);
 
-            Farm = new ProgressModule(
-                5d / 100,
-                FarmFeatureDefinitions.MaxCumulatedQuota,
-                1);
-            WebApps = new ProgressModule(
-                10d / 100,
+            Farm = new ProgressModule(5d / 100,
+                FarmFeatureDefinitions.MaxCumulatedQuota, 1);
+
+            WebApps = new ProgressModule(10d / 100,
                 Farm.MaxCumulatedQuota);
 
             SitesAndWebs = new ProgressModule(
@@ -61,8 +59,21 @@ namespace FeatureAdmin.Core.Models.Tasks
                 WebApps.MaxCumulatedQuota);
 
             Receive<LoadTask>(message => InitiateLoadTask(message));
-            Receive<LocationsLoaded>(message => HandleLocationsLoaded(message));
+            Receive<LoadedDto>(message => ReceiveLocationsLoaded(message));
             Receive<FarmFeatureDefinitionsLoaded>(message => FarmFeatureDefinitionsLoaded(message));
+        }
+
+        public int ActivatedFeaturesLoaded { get; private set; }
+        public override double PercentCompleted
+        {
+            get
+            {
+                return
+                    FarmFeatureDefinitions.OuotaPercentage +
+                    Farm.OuotaPercentage +
+                    WebApps.OuotaPercentage +
+                    SitesAndWebs.OuotaPercentage;
+            }
         }
 
         public override string StatusReport
@@ -81,19 +92,6 @@ namespace FeatureAdmin.Core.Models.Tasks
                     );
             }
         }
-
-        public override double PercentCompleted
-        {
-            get
-            {
-                return
-                    FarmFeatureDefinitions.OuotaPercentage +
-                    Farm.OuotaPercentage +
-                    WebApps.OuotaPercentage +
-                    SitesAndWebs.OuotaPercentage;
-            }
-        }
-
         /// <summary>
         /// Props provider
         /// </summary>
@@ -106,13 +104,13 @@ namespace FeatureAdmin.Core.Models.Tasks
         /// see also https://getakka.net/articles/actors/receive-actor-api.html
         /// </remarks>
         public static Props Props(
-            IEventAggregator eventAggregator, 
-            IFeatureRepository repository, 
+            IEventAggregator eventAggregator,
+            IFeatureRepository repository,
             IDataService dataService,
             Guid id)
         {
             return Akka.Actor.Props.Create(() => new LoadTaskActor(
-                eventAggregator, 
+                eventAggregator,
                 repository,
                 dataService,
                 id));
@@ -134,8 +132,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                     WebApps.Processed++;
                     break;
                 case Enums.Scope.Farm:
-                    // minus one, because farm is contained in child count
-                    WebApps.Total += location.ChildCount - 1;
+                    WebApps.Total += location.ChildCount;
                     Farm.Processed++;
                     break;
                 case Enums.Scope.ScopeInvalid:
@@ -145,22 +142,34 @@ namespace FeatureAdmin.Core.Models.Tasks
             }
         }
 
-        public bool TrackLocationsProcessed(LocationsLoaded loadedMessage)
+        public bool TrackLocationsProcessed(LoadedDto loadedMessage)
         {
             bool finished = false;
 
-            var parent = loadedMessage.LoadedElements.Parent;
+            var parent = loadedMessage.Parent;
 
-            foreach (Location l in loadedMessage.LoadedElements.ChildLocations)
+            foreach (Location l in loadedMessage.ChildLocations)
             {
                 TrackLocationProcessed(l);
             }
 
-            FarmFeatureDefinitions.Processed += loadedMessage.LoadedElements.Definitions.Count();
+            FarmFeatureDefinitions.Processed += loadedMessage.Definitions.Count();
 
-            ActivatedFeaturesLoaded += loadedMessage.LoadedElements.ActivatedFeatures.Count();
+            ActivatedFeaturesLoaded += loadedMessage.ActivatedFeatures.Count();
 
             return finished;
+        }
+
+        protected override void HandleCancelation(FeatureAdmin.Messages.CancelMessage cancelMessage)
+        {
+            farmLoadActor.Tell(cancelMessage);
+
+            featureDefinitionActor.Tell(cancelMessage);
+
+            foreach (var featureActor in locationActors.Values)
+            {
+                featureActor.Tell(cancelMessage);
+            }
         }
 
         private void FarmFeatureDefinitionsLoaded(FarmFeatureDefinitionsLoaded message)
@@ -175,20 +184,87 @@ namespace FeatureAdmin.Core.Models.Tasks
             }
         }
 
-        private void HandleLocationsLoaded([NotNull] LocationsLoaded message)
+        private void InitiateLoadTask(LoadTask loadTask)
+        {
+            if (!TaskCanceled)
+            {
+                this.elevatedPrivileges = loadTask.ElevatedPrivileges.Value;
+
+                Start = DateTime.Now;
+
+                Title = loadTask.Title;
+
+                // cleanup repository
+                if (loadTask.StartLocation.Scope == Enums.Scope.Farm)
+                {
+                    repository.Clear();
+
+                    // initiate read of all feature definitions
+                    var fdQuery = new Messages.Request.LoadFeatureDefinitionQuery(Id);
+                    featureDefinitionActor.Tell(fdQuery);
+
+                    // initiate read of farm location, start location is null
+                    var loadFarm = new LoadChildLocationQuery(Id, null, elevatedPrivileges);
+
+
+                    farmLoadActor.Tell(loadFarm);
+                }
+                else
+                {
+                    //TODO: clear only start location and belonging activatedfeatures and definitions ...
+                    throw new NotImplementedException("As start location for load task, currently only farm level is supported.");
+                }
+
+                var loadChildren = new LoadChildLocationQuery(
+                        Id,
+                        loadTask.StartLocation,
+                        elevatedPrivileges);
+
+                // load web applications as farm children
+                ReceiveLoadChildrenTask(loadChildren);
+            }
+        }
+
+        private void ReceiveLoadChildrenTask([NotNull] LoadChildLocationQuery loadQuery)
+        {
+            if (!TaskCanceled)
+            {
+                _log.Debug("Entered LoadTask");
+
+                if (loadQuery.Location == null)
+                {
+                    throw new ArgumentException("The location must not be empty ");
+                }
+
+                var locationId = loadQuery.Location.Id;
+
+                if (!locationActors.ContainsKey(locationId))
+                {
+                    IActorRef newLocationActor =
+                      Context.ActorOf(LocationActor.Props(
+                      dataService), locationId.ToString());
+
+                    locationActors.Add(locationId, newLocationActor);
+                }
+
+                locationActors[locationId].Tell(loadQuery);
+            }
+        }
+
+        private void ReceiveLocationsLoaded([NotNull] LoadedDto message)
         {
             TrackLocationsProcessed(message);
 
             // if web apps are loaded, load children
-            if (message.LoadedElements.Parent.Scope == Enums.Scope.Farm)
+            if (message.Parent != null && message.Parent.Scope == Enums.Scope.Farm)
             {
-                foreach (Location l in message.LoadedElements.ChildLocations)
+                foreach (Location l in message.ChildLocations)
                 {
                     if (l.Scope == Enums.Scope.WebApplication)
                     {
                         // initiate read of locations
-                        var loadWebAppChildren = new LoadLocationQuery(Id, l);
-                        LoadTask(loadWebAppChildren);
+                        var loadWebAppChildren = new LoadChildLocationQuery(Id, l, elevatedPrivileges);
+                        ReceiveLoadChildrenTask(loadWebAppChildren);
                     }
                 }
             }
@@ -196,44 +272,6 @@ namespace FeatureAdmin.Core.Models.Tasks
             repository.AddLoadedLocations(message);
 
             SendProgress();
-        }
-
-        private void InitiateLoadTask(LoadTask loadTask)
-        {
-            Start = DateTime.Now;
-
-            Title = loadTask.Title;
-
-            repository.Clear();
-
-            // initiate read of all feature definitions
-            var fdQuery = new Messages.Request.LoadFeatureDefinitionQuery(Id);
-            featureDefinitionActor.Tell(fdQuery);
-
-            // initiate read of locations
-            var loadQuery = new LoadLocationQuery(Id, loadTask.StartLocation);
-            LoadTask(loadQuery);
-        }
-
-        private void LoadTask([NotNull] LoadLocationQuery loadQuery)
-        {
-            _log.Debug("Entered LoadTask");
-
-            var locationId = loadQuery.Location.Id;
-
-            if (!locationActors.ContainsKey(locationId))
-            {
-                IActorRef newLocationActor =
-                  //  Context.ActorOf(Context.DI().Props<LocationActor>());
-                  Context.ActorOf(LocationActor.Props(
-           dataService), locationId.ToString());
-
-
-                locationActors.Add(locationId, newLocationActor);
-
-            }
-
-            locationActors[locationId].Tell(loadQuery);
         }
     }
 }
