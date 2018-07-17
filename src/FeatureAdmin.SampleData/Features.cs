@@ -206,11 +206,11 @@ namespace FeatureAdmin.SampleData
                 }
             }
 
-            public static ActivatedFeature FaultyWeb15ActivatedInActivatedRootWeb()
+            public static ActivatedFeature GetFaultyWebFeature(Guid locationId)
             {
                 return ActivatedFeatureFactory.GetActivatedFeature(
                         Id,
-                        Locations.ActivatedRootWeb.Guid,
+                        locationId,
                         FeatureDefinitionFaultyWeb15,
                         Faulty, null, DateTime.Now,
                         Version
@@ -246,11 +246,11 @@ namespace FeatureAdmin.SampleData
                 }
             }
 
-            public static ActivatedFeature FaultySite15ActivatedInActivatedSite()
+            public static ActivatedFeature GetFaultySiteFeature(Guid locationId)
             {
                 return ActivatedFeatureFactory.GetActivatedFeature(
                         Id,
-                        Locations.ActivatedRootWeb.Guid,
+                        locationId, // Locations.ActivatedRootWeb.Guid,
                         FeatureDefinitionFaultySite15,
                         Faulty, null, DateTime.Now,
                         Version

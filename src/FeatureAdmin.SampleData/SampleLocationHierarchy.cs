@@ -12,7 +12,7 @@ namespace FeatureAdmin.SampleData
 {
     public static class SampleLocationHierarchy
     {
-        private static IEnumerable<ActivatedFeature> loadActivatedFeatures(Scope scope, Guid LocationId)
+        private static IEnumerable<ActivatedFeature> loadActivatedFeatures(Scope scope, Guid locationId)
         {
             var featureList = new List<ActivatedFeature>();
 
@@ -46,13 +46,36 @@ namespace FeatureAdmin.SampleData
             var share = (int)(featureDefinitions.Count * .8);
             featureList = featureDefinitions.Take(share).Select(fd => new ActivatedFeature(
                 fd.Id,
-                LocationId,
+                locationId,
                 fd,
                 false,
                 null,
                 DateTime.Now.AddMonths(-6).AddDays(-15),
                 fd.Version
                 )).ToList();
+
+
+            // upgrade
+            var demoUpgradeWebId = new Guid("fb21ec62-9179-40ef-bd3d-0e0ac36a1bf2"); // "Demo Update Web"
+            var demoUpgradeSiteId = new Guid("9ec2c73d-760d-438f-9b30-c1d966441c5b"); // "Demo Update Site"
+
+
+
+            // faulty
+            var demoFaultyWebId = new Guid("331ce544-75e1-4c9f-8329-29a749b31cd9"); // "Demo Faulty Web"
+            var demoFaultySiteId = new Guid("9a63d6d3-47a9-4948-896d-b196c546bf01"); // "Demo Faulty Site"
+
+            if (locationId == demoFaultyWebId)
+            {
+                var featureToAdd = Features.FaultyWeb.GetFaultyWebFeature(locationId);
+                featureList.Add(featureToAdd);
+            }
+            else if (locationId == demoFaultySiteId)
+            {
+                var featureToAdd = Features.FaultySite.GetFaultySiteFeature(locationId);
+                featureList.Add(featureToAdd);
+            }
+
 
             return featureList;
         }

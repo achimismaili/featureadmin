@@ -127,7 +127,9 @@ namespace FeatureAdmin.OrigoDb
 
         public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToCleanup(string searchInput, Scope? selectedScopeFilter)
         {
-            throw new NotImplementedException();
+            var allFeaturesToCleanup = ActivatedFeatures.Where(f => f.Faulty);
+
+            return SearchSpecialFeatures(allFeaturesToCleanup, searchInput, selectedScopeFilter);
         }
 
         public void Clear()
@@ -139,7 +141,67 @@ namespace FeatureAdmin.OrigoDb
 
         public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToUpgrade(string searchInput, Scope? selectedScopeFilter)
         {
-            throw new NotImplementedException();
+            // get all special activated features to upgrade
+            var allFeaturesToUpgrade = ActivatedFeatures.Where(f => f.CanUpgrade);
+
+            return SearchSpecialFeatures(allFeaturesToUpgrade, searchInput, selectedScopeFilter);
+        }
+
+        /// <summary>
+        /// searches for special features with search input and scope-filter
+        /// </summary>
+        /// <param name="source">collection of special features to search in</param>
+        /// <param name="searchInput">search input</param>
+        /// <param name="selectedScopeFilter">scope filter</param>
+        /// <returns></returns>
+        private IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(IEnumerable<ActivatedFeature> source, string searchInput, Scope? selectedScopeFilter)
+        {
+            
+
+            if (source == null || source.Count() < 1)
+            {
+                return new List<ActivatedFeatureSpecial>();
+            }
+
+            var searchResult = 
+                from af in source
+                 join l in Locations on af.LocationId equals l.Key
+                 select new ActivatedFeatureSpecial(af, l.Value);  
+                 
+
+            if (!string.IsNullOrEmpty(searchInput))
+            {
+                Guid idGuid;
+                Guid.TryParse(searchInput, out idGuid);
+
+                // if searchInput is not a guid, seachstring will always be a guid.empty
+                // to also catch, if user intentionally wants to search for guid empty, this is checked here, too
+                if (searchInput.Equals(Guid.Empty.ToString()) || idGuid != Guid.Empty)
+                {
+                    searchResult = searchResult.Where(
+                        f => f.ActivatedFeature.FeatureId == idGuid
+                       || f.ActivatedFeature.LocationId == idGuid
+                        ).Select(f => f);
+                }
+                else
+                {
+                    var lowerCaseSearchInput = searchInput.ToLower();
+                    searchResult = searchResult.Where(
+                       f => f.ActivatedFeature.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
+                       f.Location.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
+                       f.Location.Url.ToLower().Contains(lowerCaseSearchInput)
+                        );
+                }
+
+            }
+
+            if (selectedScopeFilter != null)
+            {
+                searchResult =
+                    searchResult.Where(f => f.Location.Scope == selectedScopeFilter.Value);
+            }
+
+            return searchResult.ToArray();
         }
 
         public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)

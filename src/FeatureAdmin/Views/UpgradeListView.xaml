@@ -60,13 +60,13 @@
 			CanUserAddRows="False">
             <DataGrid.Columns>
                 <!-- set mode to one way, because two way was causing issues, when selected item was 'clicked on' again ... -->
-                <DataGridTextColumn Binding="{Binding Version,Mode=OneWay}" Header="Version" />
-                <DataGridTextColumn Binding="{Binding FeatureDisplayName,Mode=OneWay}" Header="Feature-Title" />
-                <DataGridTextColumn Binding="{Binding Scope,Mode=OneWay}" Header="Scope" />
-                <DataGridTextColumn Binding="{Binding Url,Mode=OneWay}" Header="Url" />
-                <DataGridTextColumn Binding="{Binding FeatureId,Mode=OneWay}" Header="Feature-Id" />
-                <DataGridTextColumn Binding="{Binding LocationId,Mode=OneWay}" Header="Location-Id" />
-                <DataGridTextColumn Binding="{Binding LocationDisplayName,Mode=OneWay}" Header="Location-Title" />
+                <DataGridTextColumn Binding="{Binding ActivatedFeature_Version,Mode=OneWay}" Header="Version" />
+                <DataGridTextColumn Binding="{Binding ActivatedFeature_DisplayName,Mode=OneWay}" Header="Feature-Title" />
+                <DataGridTextColumn Binding="{Binding Location_Scope,Mode=OneWay}" Header="Scope" />
+                <DataGridTextColumn Binding="{Binding Location_Url,Mode=OneWay}" Header="Url" />
+                <DataGridTextColumn Binding="{Binding ActivatedFeature_FeatureId,Mode=OneWay}" Header="Feature-Id" />
+                <DataGridTextColumn Binding="{Binding ActivatedFeature_LocationId,Mode=OneWay}" Header="Location-Id" />
+                <DataGridTextColumn Binding="{Binding Location_DisplayName,Mode=OneWay}" Header="Location-Title" />
             </DataGrid.Columns>
         </DataGrid>
 
@@ -133,13 +133,13 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Label Content="Title:" 
+                    <Label Content="Feature Title:" 
 			   Grid.Row="1" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_DisplayName" 
+                    <TextBlock x:Name="ActiveItem_ActivatedFeature_DisplayName" 
 		   Padding="5"
 			   Grid.Row="1" Grid.Column="1" />
                     <Button Name="CopyTitle" Style="{DynamicResource MetroCircleButtonStyle}"
-						cal:Message.Attach="CopyToClipBoard(ActiveItem_DisplayName)"
+						cal:Message.Attach="CopyToClipBoard(ActiveItem_ActivatedFeature_DisplayName)"
                         Background="Transparent" Height="30" Width="30"
 				        controls:ControlsHelper.ContentCharacterCasing="Normal"
 				        Grid.Row="1" Grid.Column="2">
@@ -148,41 +148,35 @@
 
                     <Label Content="Scope:" 
 			   Grid.Row="2" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_Scope" 
+                    <TextBlock x:Name="ActiveItem_Location_Scope" 
 	                            Padding="5"
 			   Grid.Row="2" Grid.Column="1" />
 
                     <Label Content="Url:" 
 			   Grid.Row="3" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_Url" 
+                    <TextBlock x:Name="ActiveItem_Location_Url" 
 			                    Padding="5"
 			   Grid.Row="3" Grid.Column="1" />
                     <Button Name="CopyUrl" Style="{DynamicResource MetroCircleButtonStyle}"
-						cal:Message.Attach="CopyToClipBoard(ActiveItem_Url)"
+						cal:Message.Attach="CopyToClipBoard(ActiveItem_Location_Url)"
                         Background="Transparent" Height="30" Width="30"
 				        controls:ControlsHelper.ContentCharacterCasing="Normal"
 				        Grid.Row="3" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
                     </Button>
 
-                    <Label Content="Id:" 
+                    <Label Content="Feature Id:" 
 				   Grid.Row="4" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_Id" 
+                    <TextBlock x:Name="ActiveItem_ActivatedFeature_FeatureId" 
 					Padding="5"
 			   Grid.Row="4" Grid.Column="1" />
                     <Button Name="CopyId" Style="{DynamicResource MetroCircleButtonStyle}"
-						cal:Message.Attach="CopyToClipBoard(ActiveItem_Id)"
+						cal:Message.Attach="CopyToClipBoard(ActiveItem_ActivatedFeature_FeatureId)"
                         Background="Transparent" Height="30" Width="30"
 				        controls:ControlsHelper.ContentCharacterCasing="Normal"
 				        Grid.Row="4" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
                     </Button>
-                    <Label 
-					Content="Child Locations:" 
-			   Grid.Row="6" Grid.Column="0" />
-                    <Label 
-					Content="Activated Features:"
-			   Grid.Row="6" Grid.Column="1" />
                 </Grid>
             </ScrollViewer>
         </Grid>

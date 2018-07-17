@@ -6,7 +6,7 @@ using FeatureAdmin.Core.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class UpgradeListViewModel : BaseListViewModel<Location>, IHandle<ItemSelected<FeatureDefinition>>
+    public class UpgradeListViewModel : BaseListViewModel<ActivatedFeatureSpecial>, IHandle<ItemSelected<FeatureDefinition>>
     {
         public UpgradeListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
             : base(eventAggregator, repository)
@@ -20,7 +20,7 @@ namespace FeatureAdmin.ViewModels
         {
             var searchFilter = new SetSearchFilter<FeatureDefinition>(
 
-                ActiveItem == null ? string.Empty : ActiveItem.Id.ToString(), null);
+                ActiveItem == null ? string.Empty : ActiveItem.ActivatedFeature.FeatureId.ToString(), null);
             eventAggregator.BeginPublishOnUIThread(searchFilter);
         }
 
@@ -37,7 +37,7 @@ namespace FeatureAdmin.ViewModels
 
         protected override void FilterResults()
         {
-            var searchResult = repository.SearchLocations(searchInput, SelectedScopeFilter);
+            var searchResult = repository.SearchFeaturesToUpgrade(searchInput, SelectedScopeFilter);
 
             ShowResults(searchResult);
         }

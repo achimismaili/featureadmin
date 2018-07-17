@@ -19,8 +19,26 @@ namespace FeatureAdmin.SampleData
             fdList.AddRange(GetWebAppFeatureDefinitions());
             fdList.AddRange(GetWebFeatureDefinitions());
             fdList.AddRange(GetSandBoxFeatureDefinitions());
+            fdList.AddRange(GetSpecialFeatureDefinitions());
 
             return fdList;
+        }
+
+        public static List<FeatureDefinition> GetSpecialFeatureDefinitions()
+        {
+            List<FeatureDefinition> definitions = new List<FeatureDefinition>();
+
+            // upgrade
+
+
+            // faulty
+            var webFeatureDef = Features.FaultyWeb.FeatureDefinitionFaultyWeb15;
+            definitions.Add(webFeatureDef);
+
+            var siteFeatureDef = Features.FaultySite.FeatureDefinitionFaultySite15;
+            definitions.Add(siteFeatureDef);
+
+            return definitions;
         }
 
         public static List<FeatureDefinition> GetSandBoxFeatureDefinitions()
