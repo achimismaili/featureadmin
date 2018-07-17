@@ -27,7 +27,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <!--<StackPanel Grid.Row="0" Orientation="Horizontal">-->
-                    <Menu IsMainMenu="True" Background="Transparent">
+                <Menu IsMainMenu="True" Background="Transparent">
                     <MenuItem Header="Reload Farm" x:Name="Reload" ToolTip="Reload all locations, feature definitions and activated features."
                                Background="Transparent"/>
                     <MenuItem Header="_Elevated Privileges" x:Name="ElevatedPrivileges" ToolTip="Runs under apppool privileges, when applicable. In Production environments, make sure, compliance reasons do not prevent the activation of this setting." 
@@ -39,14 +39,14 @@
                         <MenuItem Header="_About" x:Name="About" Background="Transparent"/>
                     </MenuItem>
                 </Menu>
-                    <!--<controls:ToggleSwitch x:Name="ElevatedPrivileges" Header="Elev.Priv." OnLabel="on" OffLabel="off" 
+                <!--<controls:ToggleSwitch x:Name="ElevatedPrivileges" Header="Elev.Priv." OnLabel="on" OffLabel="off" 
                                            ToolTip="Run with elevated privileges" FontSize="10">                        
                     </controls:ToggleSwitch>
                     <controls:ToggleSwitch x:Name="Force" Header="Force" OnLabel="on" OffLabel="off" 
                                            ToolTip="Use the 'force' flag, if applicable">                        
                     </controls:ToggleSwitch>
                 </StackPanel>-->
-                
+
                 <!-- Feature -->
                 <ContentControl cal:View.Model="{Binding FeatureDefinitionListVm}"
                                 Grid.Row="1" />
@@ -57,29 +57,17 @@
                           HorizontalAlignment="Stretch"/>
 
             <TabControl Grid.Column="2">
+                <!-- Location -->
                 <TabItem Header="Activation" Background="Transparent">
-                    <!-- Location -->
                     <ContentControl cal:View.Model="{Binding LocationListVm}" />
                 </TabItem>
+                <!-- Feature Upgrade -->
                 <TabItem Header="Upgrade" Background="Transparent" >
-                    <Grid >
-                        <TextBlock HorizontalAlignment="Left"
-                               Margin="10"
-                               TextWrapping="Wrap"
-                               Text="The upgrade functionality will be implemented in a future version."
-                               VerticalAlignment="Top"
-                               Width="471"/>
-                    </Grid>
+                    <ContentControl cal:View.Model="{Binding UpgradeListVm}" />
                 </TabItem>
+                <!-- Faulty Feature Cleanup -->
                 <TabItem Header="Cleanup" Background="Transparent">
-                    <Grid>
-                        <TextBlock HorizontalAlignment="Left"
-                               Margin="10"
-                               TextWrapping="Wrap"
-                               Text="The faulty feature Cleanup functionality is not implemented yet ... soon to come."
-                               VerticalAlignment="Top"
-                               Width="471"/>
-                    </Grid>
+                    <ContentControl cal:View.Model="{Binding CleanupListVm}" />
                 </TabItem>
             </TabControl>
 

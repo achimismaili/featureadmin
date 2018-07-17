@@ -190,6 +190,8 @@
     <Compile Include="ViewModels\DialogViewModel.cs" />
     <Compile Include="ViewModels\FeatureDefinitionListViewModel.cs" />
     <Compile Include="ViewModels\DetailViewModel.cs" />
+    <Compile Include="ViewModels\CleanupListViewModel.cs" />
+    <Compile Include="ViewModels\UpgradeListViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />
     <Compile Include="ViewModels\LocationListViewModel.cs" />
@@ -207,6 +209,12 @@
     </Compile>
     <Compile Include="Views\FeatureDefinitionListView.xaml.cs">
       <DependentUpon>FeatureDefinitionListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CleanupListView.xaml.cs">
+      <DependentUpon>CleanupListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UpgradeListView.xaml.cs">
+      <DependentUpon>UpgradeListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LocationListView.xaml.cs">
       <DependentUpon>LocationListView.xaml</DependentUpon>
@@ -261,6 +269,14 @@
     <Page Include="Views\FeatureDefinitionListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CleanupListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\UpgradeListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\LocationListView.xaml">
       <SubType>Designer</SubType>

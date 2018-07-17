@@ -26,8 +26,8 @@ namespace FeatureAdmin.ViewModels
         IDataService dataService;
         // private IActorRef viewModelSyncActorRef;
         public AppViewModel(
-            IWindowManager windowManager, 
-            IEventAggregator eventAggregator, 
+            IWindowManager windowManager,
+            IEventAggregator eventAggregator,
             IFeatureRepository repository,
             IDataService dataService)
         {
@@ -48,6 +48,8 @@ namespace FeatureAdmin.ViewModels
             FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator, repository);
 
             LocationListVm = new LocationListViewModel(eventAggregator, repository);
+            UpgradeListVm = new UpgradeListViewModel(eventAggregator, repository);
+            CleanupListVm = new CleanupListViewModel(eventAggregator, repository);
 
             ActivatedFeatureVm = new ActivatedFeatureViewModel(eventAggregator, repository);
 
@@ -62,7 +64,8 @@ namespace FeatureAdmin.ViewModels
         public FeatureDefinitionListViewModel FeatureDefinitionListVm { get; private set; }
 
         public LocationListViewModel LocationListVm { get; private set; }
-
+        public UpgradeListViewModel UpgradeListVm { get; private set; }
+        public CleanupListViewModel CleanupListVm { get; private set; }
         public LogViewModel LogVm { get; private set; }
 
         public StatusBarViewModel StatusBarVm { get; private set; }
@@ -152,12 +155,12 @@ namespace FeatureAdmin.ViewModels
         private void InitializeActors()
         {
             taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(
-                Akka.Actor.Props.Create(() => 
+                Akka.Actor.Props.Create(() =>
                 new Actors.Tasks.TaskManagerActor(
-                    eventAggregator, 
-                    repository, 
+                    eventAggregator,
+                    repository,
                     dataService,
-                    elevatedPrivileges, 
+                    elevatedPrivileges,
                     force)));
         }
         public void Handle(OpenWindow<ActivatedFeature> message)

@@ -5,9 +5,9 @@ namespace FeatureAdmin.Views
     /// <summary>
     /// Interaction logic for LocationListView.xaml
     /// </summary>
-    public partial class LocationListView : UserControl
+    public partial class CleanupListView : UserControl
     {
-        public LocationListView()
+        public CleanupListView()
         {
             InitializeComponent();
         }
