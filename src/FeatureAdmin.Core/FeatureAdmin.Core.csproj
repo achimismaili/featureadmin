@@ -64,6 +64,7 @@
     <Compile Include="Messages\Completed\FarmFeatureDefinitionsLoaded.cs" />
     <Compile Include="Messages\Request\FeatureToggleRequestExtensions.cs" />
     <Compile Include="Messages\Request\FeatureToggleRequest.cs" />
+    <Compile Include="Models\ActivatedFeatureSpecial.cs" />
     <Compile Include="Models\Enums\LogLevel.cs" />
     <Compile Include="Models\Enums\FeatureDefinitionScope.cs" />
     <Compile Include="Models\LoadedDto.cs" />

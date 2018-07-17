@@ -60,9 +60,13 @@
 			CanUserAddRows="False">
             <DataGrid.Columns>
                 <!-- set mode to one way, because two way was causing issues, when selected item was 'clicked on' again ... -->
-                <DataGridTextColumn Binding="{Binding DisplayName,Mode=OneWay}" Header="Title" />
+                <DataGridTextColumn Binding="{Binding Version,Mode=OneWay}" Header="Version" />
+                <DataGridTextColumn Binding="{Binding FeatureDisplayName,Mode=OneWay}" Header="Feature-Title" />
                 <DataGridTextColumn Binding="{Binding Scope,Mode=OneWay}" Header="Scope" />
                 <DataGridTextColumn Binding="{Binding Url,Mode=OneWay}" Header="Url" />
+                <DataGridTextColumn Binding="{Binding FeatureId,Mode=OneWay}" Header="Feature-Id" />
+                <DataGridTextColumn Binding="{Binding LocationId,Mode=OneWay}" Header="Location-Id" />
+                <DataGridTextColumn Binding="{Binding LocationDisplayName,Mode=OneWay}" Header="Location-Title" />
             </DataGrid.Columns>
         </DataGrid>
 

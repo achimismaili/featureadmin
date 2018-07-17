@@ -125,11 +125,21 @@ namespace FeatureAdmin.OrigoDb
 
         }
 
+        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToCleanup(string searchInput, Scope? selectedScopeFilter)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Clear()
         {
             ActivatedFeatures.Clear();
             FeatureDefinitions.Clear();
             Locations.Clear();
+        }
+
+        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToUpgrade(string searchInput, Scope? selectedScopeFilter)
+        {
+            throw new NotImplementedException();
         }
 
         public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)

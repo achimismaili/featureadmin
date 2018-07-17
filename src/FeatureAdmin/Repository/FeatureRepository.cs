@@ -5,6 +5,7 @@ using FeatureAdmin.Core.Repository;
 using OrigoDB.Core;
 using System;
 using System.Collections.Generic;
+using FeatureAdmin.Core.Models.Enums;
 
 namespace FeatureAdmin.Repository
 {
@@ -100,6 +101,17 @@ namespace FeatureAdmin.Repository
         {
             return store.SearchFeatureDefinitions(searchInput, selectedScopeFilter, onlyFarmFeatures);
         }
+
+        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToCleanup(string searchInput, Scope? selectedScopeFilter)
+        {
+            return store.SearchFeaturesToCleanup(searchInput, selectedScopeFilter);
+        }
+
+        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToUpgrade(string searchInput, Scope? selectedScopeFilter)
+        {
+            return store.SearchFeaturesToUpgrade(searchInput, selectedScopeFilter);
+        }
+
         public IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter)
         {
             return store.SearchLocations(searchInput, selectedScopeFilter);

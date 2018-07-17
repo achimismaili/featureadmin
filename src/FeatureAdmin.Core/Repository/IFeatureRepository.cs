@@ -27,5 +27,9 @@ namespace FeatureAdmin.Core.Repository
 
         IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, bool? onlyFarmFeatures);
         IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter);
+
+        IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToCleanup(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter);
+
+        IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToUpgrade(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter);
     }
 }

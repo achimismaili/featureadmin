@@ -4,6 +4,7 @@ using FeatureAdmin.Core.Repository;
 using OrigoDB.Core;
 using System;
 using System.Collections.Generic;
+using FeatureAdmin.Core.Models.Enums;
 
 namespace FeatureAdmin.Backends.Demo.Repository
 {
@@ -87,6 +88,17 @@ namespace FeatureAdmin.Backends.Demo.Repository
         {
             return store.SearchFeatureDefinitions(searchInput, selectedScopeFilter, onlyFarmFeatures);
         }
+
+        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToCleanup(string searchInput, Scope? selectedScopeFilter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToUpgrade(string searchInput, Scope? selectedScopeFilter)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter)
         {
             return store.SearchLocations(searchInput, selectedScopeFilter);
