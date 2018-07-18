@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>, IHandle<ItemSelected<Location>>
+    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>, IHandle<ItemSelected<Location>>, IHandle<SetSearchFilter<FeatureDefinition>>
     {
         public FeatureDefinitionListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
          : base(eventAggregator, repository)

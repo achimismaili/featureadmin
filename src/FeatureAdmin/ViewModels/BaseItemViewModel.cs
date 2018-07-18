@@ -46,7 +46,7 @@ namespace FeatureAdmin.ViewModels
             }
 
         }
-        #region only relevant for LocationListViewModel and ActivatedFeatureViewModel
+        #region only relevant for Location-, Upgrade, CleanupListViewModel and ActivatedFeatureViewModel
 
         public FeatureDefinition SelectedFeatureDefinition { get; protected set; }
         #endregion only relevant for LocationListViewModel and ActivatedFeatureViewModel

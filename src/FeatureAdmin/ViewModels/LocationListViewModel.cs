@@ -6,7 +6,7 @@ using FeatureAdmin.Core.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class LocationListViewModel : BaseListViewModel<Location>, IHandle<ItemSelected<FeatureDefinition>>
+    public class LocationListViewModel : BaseListViewModel<Location>, IHandle<ItemSelected<FeatureDefinition>>, IHandle<SetSearchFilter<Location>>
     {
         public LocationListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
             : base(eventAggregator, repository)

@@ -8,7 +8,8 @@ using FeatureAdmin.Core.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : BaseItemViewModel<T>, IHandle<ProgressMessage>, IHandle<SetSearchFilter<T>> where T : class
+    public abstract class BaseListViewModel<T> : BaseItemViewModel<T>, IHandle<ProgressMessage> where T : class 
+        // , IHandle<SetSearchFilter<T>>  where T : class // search filter is handled in derivate classes
     {
 
         protected DateTime lastUpdateInitiatedSearch;
