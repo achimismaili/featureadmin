@@ -11,6 +11,11 @@ namespace FeatureAdmin.ViewModels
         public LocationListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
             : base(eventAggregator, repository)
         {
+            DisplayName = "Activation";
+        }
+
+        protected override void OnActivate()
+        {
             SelectionChanged();
         }
 

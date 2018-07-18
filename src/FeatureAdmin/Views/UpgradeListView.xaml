@@ -1,100 +1,100 @@
 ﻿<UserControl x:Class="FeatureAdmin.Views.UpgradeListView"
-			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-			 xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
-			 xmlns:cal="http://www.caliburnproject.org"
-			 xmlns:comm="clr-namespace:FeatureAdmin.Common"
-			 xmlns:local="clr-namespace:FeatureAdmin.Views"
-			 mc:Ignorable="d"
-			 d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Background="LightGray">
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:comm="clr-namespace:FeatureAdmin.Common"
+             xmlns:local="clr-namespace:FeatureAdmin.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="5" />
             <RowDefinition Height="146" />
         </Grid.RowDefinitions>
-        <Label Content="Feature Upgrade"
-				 Grid.Row="0"
-			   FontWeight="Bold"
-				  HorizontalAlignment="Center"
-			   />
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="0" Background="Tan">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Label Content="Search:"
-				   HorizontalAlignment="Left"
-				   Margin="5,2"
-				   Grid.Row="0" Grid.Column="0" />
-            <TextBox x:Name="SearchInput"
-					controls:TextBoxHelper.ClearTextButton="True"
-					Margin="5,2"
-					 Grid.Row="0" Grid.Column="1" />
-            <Label Content="Scope Filter:"
-				   HorizontalAlignment="Left"
-					   Margin="5,2"
-						   Grid.Row="1" Grid.Column="0" />
-            <ComboBox x:Name="ScopeFilters"
-				Margin="5,2"
-				IsEditable="True"
-				controls:TextBoxHelper.ClearTextButton="True"
-				Grid.Row="1" Grid.Column="1">
-            </ComboBox>
+            <Label Content="Features to upgrade"
+                 Grid.Row="0"
+               FontWeight="Bold"
+                  HorizontalAlignment="Center"
+               />
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label Content="Search:"
+                   HorizontalAlignment="Left"
+                   Margin="5,2"
+                   Grid.Row="0" Grid.Column="0" />
+                <TextBox x:Name="SearchInput"
+                    controls:TextBoxHelper.ClearTextButton="True"
+                    Margin="5,2"
+                     Grid.Row="0" Grid.Column="1" />
+                <Label Content="Scope Filter:"
+                   HorizontalAlignment="Left"
+                       Margin="5,2"
+                           Grid.Row="1" Grid.Column="0" />
+                <ComboBox x:Name="ScopeFilters"
+                Margin="5,2"
+                IsEditable="True"
+                controls:TextBoxHelper.ClearTextButton="True"
+                Grid.Row="1" Grid.Column="1">
+                </ComboBox>
+            </Grid>
+            <DataGrid x:Name="Items"
+                  Margin="5"
+                  AutoGenerateColumns="False"
+                  SelectionMode="Single" 
+                  SelectionUnit="FullRow"
+            Grid.Row="2"
+            CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <!-- set mode to one way, because two way was causing issues, when selected item was 'clicked on' again ... -->
+                    <DataGridTextColumn Binding="{Binding ActivatedFeature.Version,Mode=OneWay}" Header="Version" />
+                    <DataGridTextColumn Binding="{Binding ActivatedFeature.DisplayName,Mode=OneWay}" Header="Feature-Title" />
+                    <DataGridTextColumn Binding="{Binding Location.Scope,Mode=OneWay}" Header="Scope" />
+                    <DataGridTextColumn Binding="{Binding Location.Url,Mode=OneWay}" Header="Url" />
+                    <DataGridTextColumn Binding="{Binding ActivatedFeature.FeatureId,Mode=OneWay}" Header="Feature-Id" />
+                    <DataGridTextColumn Binding="{Binding ActivatedFeature.LocationId,Mode=OneWay}" Header="Location-Id" />
+                    <DataGridTextColumn Binding="{Binding Location.DisplayName,Mode=OneWay}" Header="Location-Title" />
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
-        <DataGrid x:Name="Items"
-				  Margin="5"
-				  AutoGenerateColumns="False"
-				  SelectionMode="Single" 
-				  SelectionUnit="FullRow"
-			Grid.Row="2"
-			CanUserAddRows="False">
-            <DataGrid.Columns>
-                <!-- set mode to one way, because two way was causing issues, when selected item was 'clicked on' again ... -->
-                <DataGridTextColumn Binding="{Binding ActivatedFeature.Version,Mode=OneWay}" Header="Version" />
-                <DataGridTextColumn Binding="{Binding ActivatedFeature.DisplayName,Mode=OneWay}" Header="Feature-Title" />
-                <DataGridTextColumn Binding="{Binding Location.Scope,Mode=OneWay}" Header="Scope" />
-                <DataGridTextColumn Binding="{Binding Location.Url,Mode=OneWay}" Header="Url" />
-                <DataGridTextColumn Binding="{Binding ActivatedFeature.FeatureId,Mode=OneWay}" Header="Feature-Id" />
-                <DataGridTextColumn Binding="{Binding ActivatedFeature.LocationId,Mode=OneWay}" Header="Location-Id" />
-                <DataGridTextColumn Binding="{Binding Location.DisplayName,Mode=OneWay}" Header="Location-Title" />
-            </DataGrid.Columns>
-        </DataGrid>
-
         <GridSplitter 
-			Grid.Row="3" 
-						  VerticalAlignment="Stretch"
-						  HorizontalAlignment="Stretch"/>
-        <GridSplitter Grid.Row="3" 
-					  Background="LightGray"
-						  VerticalAlignment="Stretch"
-						  HorizontalAlignment="Stretch"/>
-
+            Grid.Row="1" 
+            Background="Transparent"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"/>
         <!-- Active WorkSpace -->
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="2" Background="Tan">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Label Content="Selected location"
-			Grid.Row="0"  
-			HorizontalAlignment="Center"
-				   FontWeight="Bold"
-			   />
+            <Label Content="Selected feature to upgrade"
+            Grid.Row="0"  
+            HorizontalAlignment="Center"
+                   FontWeight="Bold"
+               />
             <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent">
-                <MenuItem x:Name="FilterFeatures" ToolTip="Filter activated features for this location"
+                <MenuItem x:Name="FilterFeatures" ToolTip="Filter definitions for this activated feature"
                           Background="Transparent" FontSize="18"
-				 cal:Message.Attach="FilterFeature" >
+                 cal:Message.Attach="FilterFeature" >
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <fa:FontAwesome Icon="MailReply" />
@@ -102,14 +102,14 @@
                         </StackPanel>
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem x:Name="FilterLocation" ToolTip="Filter this location &amp; children"
+                <MenuItem x:Name="FilterLocation" ToolTip="Show all features with this feature ID"
                           Background="Transparent" 
-				FontSize="18"  cal:Message.Attach="FilterThis(ActiveItem_Id)" >
+                FontSize="18"  cal:Message.Attach="FilterThis(ActiveItem_Id)" >
                     <MenuItem.Header>
                             <fa:FontAwesome Icon="Filter" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem x:Name="ShowDetails" ToolTip="Show details for this location in new window"
+                <MenuItem x:Name="ShowDetails" ToolTip="Show details for this feature in new window"
                           Background="Transparent" FontSize="18">
                     <MenuItem.Header>
                         <fa:FontAwesome Icon="Eye" />
@@ -126,6 +126,9 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -133,50 +136,96 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Label Content="Feature Title:" 
-			   Grid.Row="1" Grid.Column="0" />
+                    <Label Content="Feature Name:" 
+               Grid.Row="1" Grid.Column="0" />
                     <TextBlock x:Name="ActiveItem_ActivatedFeature_DisplayName" 
-		   Padding="5"
-			   Grid.Row="1" Grid.Column="1" />
-                    <Button Name="CopyTitle" Style="{DynamicResource MetroCircleButtonStyle}"
-						cal:Message.Attach="CopyToClipBoard(ActiveItem_ActivatedFeature_DisplayName)"
+           Padding="5"
+               Grid.Row="1" Grid.Column="1" />
+                    <Button Name="CopyFeatureName" Style="{DynamicResource MetroCircleButtonStyle}"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_ActivatedFeature_DisplayName)"
                         Background="Transparent" Height="30" Width="30"
-				        controls:ControlsHelper.ContentCharacterCasing="Normal"
-				        Grid.Row="1" Grid.Column="2">
+                        controls:ControlsHelper.ContentCharacterCasing="Normal"
+                        Grid.Row="1" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
                     </Button>
 
                     <Label Content="Scope:" 
-			   Grid.Row="2" Grid.Column="0" />
+               Grid.Row="2" Grid.Column="0" />
                     <TextBlock x:Name="ActiveItem_Location_Scope" 
-	                            Padding="5"
-			   Grid.Row="2" Grid.Column="1" />
+                                Padding="5"
+               Grid.Row="2" Grid.Column="1" />
 
                     <Label Content="Url:" 
-			   Grid.Row="3" Grid.Column="0" />
+               Grid.Row="3" Grid.Column="0" />
                     <TextBlock x:Name="ActiveItem_Location_Url" 
-			                    Padding="5"
-			   Grid.Row="3" Grid.Column="1" />
+                                Padding="5"
+               Grid.Row="3" Grid.Column="1" />
                     <Button Name="CopyUrl" Style="{DynamicResource MetroCircleButtonStyle}"
-						cal:Message.Attach="CopyToClipBoard(ActiveItem_Location_Url)"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Location_Url)"
                         Background="Transparent" Height="30" Width="30"
-				        controls:ControlsHelper.ContentCharacterCasing="Normal"
-				        Grid.Row="3" Grid.Column="2">
+                        controls:ControlsHelper.ContentCharacterCasing="Normal"
+                        Grid.Row="3" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
                     </Button>
 
                     <Label Content="Feature Id:" 
-				   Grid.Row="4" Grid.Column="0" />
+                   Grid.Row="4" Grid.Column="0" />
                     <TextBlock x:Name="ActiveItem_ActivatedFeature_FeatureId" 
-					Padding="5"
-			   Grid.Row="4" Grid.Column="1" />
-                    <Button Name="CopyId" Style="{DynamicResource MetroCircleButtonStyle}"
-						cal:Message.Attach="CopyToClipBoard(ActiveItem_ActivatedFeature_FeatureId)"
+                    Padding="5"
+               Grid.Row="4" Grid.Column="1" />
+                    <Button Name="CopyFeatureId" Style="{DynamicResource MetroCircleButtonStyle}"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_ActivatedFeature_FeatureId)"
                         Background="Transparent" Height="30" Width="30"
-				        controls:ControlsHelper.ContentCharacterCasing="Normal"
-				        Grid.Row="4" Grid.Column="2">
+                        controls:ControlsHelper.ContentCharacterCasing="Normal"
+                        Grid.Row="4" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
                     </Button>
+                    <Label Content="Location Id:" 
+               Grid.Row="5" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_Location_Id" 
+                                Padding="5"
+               Grid.Row="5" Grid.Column="1" />
+                    <Button Name="CopyLocationId" Style="{DynamicResource MetroCircleButtonStyle}"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Location_Id)"
+                        Background="Transparent" Height="30" Width="30"
+                        controls:ControlsHelper.ContentCharacterCasing="Normal"
+                        Grid.Row="5" Grid.Column="2">
+                        <fa:FontAwesome Icon="Clone" />
+                    </Button>
+                    <Label Content="Location title" 
+               Grid.Row="6" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_Location_DisplayName" 
+                                Padding="5"
+               Grid.Row="6" Grid.Column="1" />
+                    <Button Name="CopyLocationTitle" Style="{DynamicResource MetroCircleButtonStyle}"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Location_DisplayName)"
+                        Background="Transparent" Height="30" Width="30"
+                        controls:ControlsHelper.ContentCharacterCasing="Normal"
+                        Grid.Row="6" Grid.Column="2">
+                        <fa:FontAwesome Icon="Clone" />
+                    </Button>
+                    <Label Content="Feature title:" 
+               Grid.Row="7" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_ActivatedFeature_Definition_Title" 
+                                Padding="5"
+               Grid.Row="7" Grid.Column="1" />
+                    <Button Name="CopyFeatureTitle" Style="{DynamicResource MetroCircleButtonStyle}"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_ActivatedFeature_Definition_Title)"
+                        Background="Transparent" Height="30" Width="30"
+                        controls:ControlsHelper.ContentCharacterCasing="Normal"
+                        Grid.Row="7" Grid.Column="2">
+                        <fa:FontAwesome Icon="Clone" />
+                    </Button>
+                    <Label Content="Feature Version:" 
+               Grid.Row="8" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_ActivatedFeature_Version" 
+                                Padding="5"
+               Grid.Row="8" Grid.Column="1" />
+                    <Label Content="Definition Version:" 
+               Grid.Row="9" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_ActivatedFeature_Definition_Version" 
+                                Padding="5"
+               Grid.Row="9" Grid.Column="1" />
                 </Grid>
             </ScrollViewer>
         </Grid>

@@ -19,7 +19,7 @@
             <RowDefinition Height="5" />
             <RowDefinition Height="150" />
         </Grid.RowDefinitions>
-        <Label Content="Features"
+        <Label Content="Feature definitions"
             Grid.Row="0" 
                    Foreground="#FFB17807"
                FontWeight="Bold"
@@ -81,7 +81,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Label Content="Selected feature"
+            <Label Content="Selected feature definition"
             Grid.Row="0"  
             HorizontalAlignment="Center"
                    Foreground="#FFB17807"
@@ -90,9 +90,9 @@
             <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent">
                 <MenuItem Header="_Activate" x:Name="ActivateFeatures" ToolTip="Activate/Add features"  Background="Transparent"/>
                 <MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"  Background="Transparent"/>
-                <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"  Background="Transparent"/>
+                <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"  Background="Transparent" ToolTip="Upgrade all activated feature instances with lower version to this version"/>
                 <MenuItem Header="Uninstall" x:Name="UninstallFeatureDefinition" ToolTip="Uninstall feature definition"  Background="Transparent"/>
-                <MenuItem x:Name="FilterLocation" ToolTip="Filter locations where this feature is activated"
+                <MenuItem x:Name="FilterLocation" ToolTip="Filter right window with activated features based on this definition"
                           Background="Transparent" FontSize="18"
                  cal:Message.Attach="FilterFeature" >
                     <MenuItem.Header>

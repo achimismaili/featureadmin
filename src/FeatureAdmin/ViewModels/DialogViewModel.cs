@@ -16,11 +16,18 @@ namespace FeatureAdmin.ViewModels
         private readonly IEventAggregator eventAggregator;
 
         private readonly Guid taskId;
+
+        private readonly bool Confirmation;
+
         public DialogViewModel(IEventAggregator eventAggregator, ConfirmationRequest confirmationRequest)
         {
+            Confirmation = confirmationRequest.Confirmation;
             this.eventAggregator = eventAggregator;
             this.taskId = confirmationRequest.TaskId;
-            DisplayName = string.Format("Confirmation for {0}", confirmationRequest.Title);
+            DisplayName = string.Format(
+                "{0}{1}",
+                Confirmation ? "Confirmation for " : string.Empty,
+                confirmationRequest.Title);
             DialogText = confirmationRequest.DialogText;
         }
 
@@ -29,15 +36,21 @@ namespace FeatureAdmin.ViewModels
         public string DisplayName { get; set; }
 
         public void Ok()
-        {            
-            var confirmationMessage = new Confirmation(taskId);
-            eventAggregator.PublishOnUIThread(confirmationMessage);
+        {
+            if (Confirmation)
+            {
+                var confirmationMessage = new Confirmation(taskId);
+                eventAggregator.PublishOnUIThread(confirmationMessage);
+            }
         }
 
         public void Cancel()
         {
-            var log = new LogMessage(LogLevel.Information, string.Format("'{0}' canceled.", DisplayName) );
-            eventAggregator.PublishOnUIThread(log);
+            if (Confirmation)
+            {
+                var log = new LogMessage(LogLevel.Information, string.Format("'{0}' canceled.", DisplayName));
+                eventAggregator.PublishOnUIThread(log);
+            }
         }
     }
 }

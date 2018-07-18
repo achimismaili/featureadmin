@@ -10,7 +10,7 @@ using FeatureAdmin.Core.Services;
 namespace FeatureAdmin.ViewModels
 {
 
-    public class AppViewModel : Screen
+    public class AppViewModel : Conductor<Screen>.Collection.OneActive
         , Caliburn.Micro.IHandle<ConfirmationRequest>
         , Caliburn.Micro.IHandle<OpenWindow<ActivatedFeature>>
         , Caliburn.Micro.IHandle<OpenWindow<FeatureDefinition>>
@@ -50,6 +50,12 @@ namespace FeatureAdmin.ViewModels
             LocationListVm = new LocationListViewModel(eventAggregator, repository);
             UpgradeListVm = new UpgradeListViewModel(eventAggregator, repository);
             CleanupListVm = new CleanupListViewModel(eventAggregator, repository);
+
+            Items.Add(LocationListVm);
+            Items.Add(UpgradeListVm);
+            Items.Add(CleanupListVm);
+
+            ActivateItem(LocationListVm);            
 
             ActivatedFeatureVm = new ActivatedFeatureViewModel(eventAggregator, repository);
 

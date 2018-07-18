@@ -10,74 +10,74 @@
              xmlns:local="clr-namespace:FeatureAdmin.Views"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Background="LightGray">
+    <Grid Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="5" />
             <RowDefinition Height="146" />
         </Grid.RowDefinitions>
-        <Label Content="Locations"
+        <Grid Grid.Row="0" Background="LightGray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label Content="Locations"
                  Grid.Row="0"
                FontWeight="Bold"
                   HorizontalAlignment="Center"
                />
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Label Content="Search:"
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label Content="Search:"
                    HorizontalAlignment="Left"
                    Margin="5,2"
                    Grid.Row="0" Grid.Column="0" />
-            <TextBox x:Name="SearchInput"
+                <TextBox x:Name="SearchInput"
                     controls:TextBoxHelper.ClearTextButton="True"
                     Margin="5,2"
                      Grid.Row="0" Grid.Column="1" />
-            <Label Content="Scope Filter:"
+                <Label Content="Scope Filter:"
                    HorizontalAlignment="Left"
                        Margin="5,2"
                            Grid.Row="1" Grid.Column="0" />
-            <ComboBox x:Name="ScopeFilters"
+                <ComboBox x:Name="ScopeFilters"
                 Margin="5,2"
                 IsEditable="True"
                 controls:TextBoxHelper.ClearTextButton="True"
                 Grid.Row="1" Grid.Column="1">
-            </ComboBox>
-        </Grid>
-        <DataGrid x:Name="Items"
+                </ComboBox>
+            </Grid>
+            <DataGrid x:Name="Items"
                   Margin="5"
                   AutoGenerateColumns="False"
                   SelectionMode="Single" 
                   SelectionUnit="FullRow"
             Grid.Row="2"
             CanUserAddRows="False">
-            <DataGrid.Columns>
-                <!-- set mode to one way, because two way was causing issues, when selected item was 'clicked on' again ... -->
-                <DataGridTextColumn Binding="{Binding DisplayName,Mode=OneWay}" Header="Location-Title" />
-                <DataGridTextColumn Binding="{Binding Scope,Mode=OneWay}" Header="Scope" />
-                <DataGridTextColumn Binding="{Binding Url,Mode=OneWay}" Header="Url" />
-                <DataGridTextColumn Binding="{Binding Id,Mode=OneWay}" Header="Location-Id" />
-            </DataGrid.Columns>
-        </DataGrid>
-
+                <DataGrid.Columns>
+                    <!-- set mode to one way, because two way was causing issues, when selected item was 'clicked on' again ... -->
+                    <DataGridTextColumn Binding="{Binding DisplayName,Mode=OneWay}" Header="Location-Title" />
+                    <DataGridTextColumn Binding="{Binding Scope,Mode=OneWay}" Header="Scope" />
+                    <DataGridTextColumn Binding="{Binding Url,Mode=OneWay}" Header="Url" />
+                    <DataGridTextColumn Binding="{Binding Id,Mode=OneWay}" Header="Location-Id" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
         <GridSplitter 
-            Grid.Row="3" 
-                          VerticalAlignment="Stretch"
-                          HorizontalAlignment="Stretch"/>
-        <GridSplitter Grid.Row="3" 
-                      Background="LightGray"
-                          VerticalAlignment="Stretch"
-                          HorizontalAlignment="Stretch"/>
-
+            Grid.Row="1" 
+            Background="Transparent"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"/>
         <!-- Active WorkSpace -->
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="2" Background="LightGray">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -89,7 +89,7 @@
                    FontWeight="Bold"
                />
             <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent">
-                <MenuItem x:Name="FilterFeatures" ToolTip="Filter activated features for this location"
+                <MenuItem x:Name="FilterFeatures" ToolTip="Filter feature definitions for active features in this location"
                           Background="Transparent" FontSize="18"
                  cal:Message.Attach="FilterFeature" >
                     <MenuItem.Header>
