@@ -27,7 +27,7 @@ namespace FeatureAdmin.Core.Models
             Properties = properties;
             TimeActivated = timeActivated;
             Version = version;
-            CanUpgrade = definition.Version < version;
+            CanUpgrade = definition.Version > version;
             FeatureDefinitionScope = featureDefinitionScope;
         }
 

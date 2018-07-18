@@ -10,7 +10,8 @@ namespace FeatureAdmin.SampleData
     {
         public static class TestFarm
         {
-            public static Guid Guid = new Guid("2e977989-405f-4437-a589-1d915956b62f");
+            public const string GuidAsString = "2e977989-405f-4437-a589-1d915956b62f";
+            public static Guid Guid = new Guid(GuidAsString);
             
             public static Location Location
             {

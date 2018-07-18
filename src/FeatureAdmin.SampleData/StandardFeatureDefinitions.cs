@@ -29,8 +29,15 @@ namespace FeatureAdmin.SampleData
             List<FeatureDefinition> definitions = new List<FeatureDefinition>();
 
             // upgrade
-
-
+            var upgradeFeature1 = Features.UpgradeWeb.FeatureDefinitionUpgradeWeb15;
+            definitions.Add(upgradeFeature1);
+            var upgradeFeature2 = Features.UpgradeSite.FeatureDefinitionUpgradeSite15;
+            definitions.Add(upgradeFeature2);
+            var upgradeFeature3 = Features.UpgradeWebApp.FeatureDefinitionUpgradeWebApp15;
+            definitions.Add(upgradeFeature3);
+            var upgradeFeature4 = Features.UpgradeFarm.FeatureDefinitionUpgradeFarm15;
+            definitions.Add(upgradeFeature4);
+            
             // faulty
             var webFeatureDef = Features.FaultyWeb.FeatureDefinitionFaultyWeb15;
             definitions.Add(webFeatureDef);

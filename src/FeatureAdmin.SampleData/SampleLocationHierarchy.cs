@@ -12,6 +12,12 @@ namespace FeatureAdmin.SampleData
 {
     public static class SampleLocationHierarchy
     {
+        const string demoUpgradeWebId = "fb21ec62-9179-40ef-bd3d-0e0ac36a1bf2"; // "Demo Update Web"
+        const string demoUpgradeSiteId = "9ec2c73d-760d-438f-9b30-c1d966441c5b"; // "Demo Update Site"
+        const string demoFaultyWebId = "331ce544-75e1-4c9f-8329-29a749b31cd9"; // "Demo Faulty Web"
+        const string demoFaultySiteId = "9a63d6d3-47a9-4948-896d-b196c546bf01"; // "Demo Faulty Site"
+        const string demoSpecialWebApp = "9ea9542b-3660-46fa-884d-e783290c244a"; // "Demo special Web Application to have an upgrade and faulty feature"
+
         private static IEnumerable<ActivatedFeature> loadActivatedFeatures(Scope scope, Guid locationId)
         {
             var featureList = new List<ActivatedFeature>();
@@ -54,28 +60,50 @@ namespace FeatureAdmin.SampleData
                 fd.Version
                 )).ToList();
 
+            #region add special activated features
 
-            // upgrade
-            var demoUpgradeWebId = new Guid("fb21ec62-9179-40ef-bd3d-0e0ac36a1bf2"); // "Demo Update Web"
-            var demoUpgradeSiteId = new Guid("9ec2c73d-760d-438f-9b30-c1d966441c5b"); // "Demo Update Site"
+            ActivatedFeature featureToAdd;
 
-
-
-            // faulty
-            var demoFaultyWebId = new Guid("331ce544-75e1-4c9f-8329-29a749b31cd9"); // "Demo Faulty Web"
-            var demoFaultySiteId = new Guid("9a63d6d3-47a9-4948-896d-b196c546bf01"); // "Demo Faulty Site"
-
-            if (locationId == demoFaultyWebId)
+            switch (locationId.ToString())
             {
-                var featureToAdd = Features.FaultyWeb.GetFaultyWebFeature(locationId);
-                featureList.Add(featureToAdd);
-            }
-            else if (locationId == demoFaultySiteId)
-            {
-                var featureToAdd = Features.FaultySite.GetFaultySiteFeature(locationId);
-                featureList.Add(featureToAdd);
+                case demoFaultyWebId: // faulty web
+                    featureToAdd = Features.FaultyWeb.GetFaultyWebFeature(locationId);
+                    featureList.Add(featureToAdd);
+                    break;
+                case demoFaultySiteId: // faulty site
+                    featureToAdd = Features.FaultySite.GetFaultySiteFeature(locationId);
+                    featureList.Add(featureToAdd);
+                    break;
+                case demoUpgradeWebId: // upgrade web
+                    featureToAdd = Features.UpgradeWeb.GetUpgradeWebFeature(locationId);
+                    featureList.Add(featureToAdd);
+                    break;
+                case demoUpgradeSiteId: // upgrade site
+                    featureToAdd = Features.UpgradeSite.GetUpgradeSiteFeature(locationId);
+                    featureList.Add(featureToAdd);
+                    break;
+
+                case demoSpecialWebApp: // faulty & upgrade web application
+                    //featureToAdd = Features.FaultyWebApp.GetFaultyWebAppFeature(locationId);
+                    //featureList.Add(featureToAdd);
+
+                    featureToAdd = Features.UpgradeWebApp.GetUpgradeWebAppFeature(locationId);
+                    featureList.Add(featureToAdd);
+                    break;
+
+                case TestFarm.GuidAsString: // faulty & upgrade farm
+                    //featureToAdd = Features.FaultyFarm.GetFaultyFarmFeature(locationId);
+                    //featureList.Add(featureToAdd);
+
+                    featureToAdd = Features.UpgradeFarm.GetUpgradeFarmFeature(locationId);
+                    featureList.Add(featureToAdd);
+                    break;
+
+                default:
+                    break;
             }
 
+            #endregion add special activated features
 
             return featureList;
         }
@@ -101,11 +129,11 @@ namespace FeatureAdmin.SampleData
             locations.Add(LocationFactory.GetFarm(TestFarm.Guid, 4));
 
             // Demo Web App - Web App
-            locations.Add(LocationFactory.GetLocation(new Guid("9ea9542b-3660-46fa-884d-e783290c244a"), "Demo Web App", TestFarm.Guid, Core.Models.Enums.Scope.WebApplication, "https://demo.featureadmin.com", 4));
-            locations.Add(LocationFactory.GetLocation(new Guid("95577881-38b5-40de-866a-14d64abff09e"), "Feature Admin Demo", new Guid("e6ca743e-304f-49bc-8a6e-5ba99ce45d61"), Core.Models.Enums.Scope.Web, "https://demo.featureadmin.com/", 0)); locations.Add(LocationFactory.GetLocation(new Guid("e6ca743e-304f-49bc-8a6e-5ba99ce45d61"), "Feature Admin Demo", new Guid("9ea9542b-3660-46fa-884d-e783290c244a"), Core.Models.Enums.Scope.Site, "https://demo.featureadmin.com/", 1));
-            locations.Add(LocationFactory.GetLocation(new Guid("fb21ec62-9179-40ef-bd3d-0e0ac36a1bf2"), "Demo Update", new Guid("9ec2c73d-760d-438f-9b30-c1d966441c5b"), Core.Models.Enums.Scope.Web, "https://demo.featureadmin.com/sites/demoupdate", 0)); locations.Add(LocationFactory.GetLocation(new Guid("9ec2c73d-760d-438f-9b30-c1d966441c5b"), "Demo Update", new Guid("9ea9542b-3660-46fa-884d-e783290c244a"), Core.Models.Enums.Scope.Site, "https://demo.featureadmin.com/sites/demoupdate", 1));
-            locations.Add(LocationFactory.GetLocation(new Guid("331ce544-75e1-4c9f-8329-29a749b31cd9"), "Demo Faulty", new Guid("9a63d6d3-47a9-4948-896d-b196c546bf01"), Core.Models.Enums.Scope.Web, "https://demo.featureadmin.com/sites/demofaulty", 0)); locations.Add(LocationFactory.GetLocation(new Guid("9a63d6d3-47a9-4948-896d-b196c546bf01"), "Demo Faulty", new Guid("9ea9542b-3660-46fa-884d-e783290c244a"), Core.Models.Enums.Scope.Site, "https://demo.featureadmin.com/sites/demofaulty", 1));
-            locations.Add(LocationFactory.GetLocation(new Guid("03252b95-2eb1-4ec4-9e9a-4b7ff47baa90"), "Demo", new Guid("f839e257-b205-453f-8b1a-47dd21f18e41"), Core.Models.Enums.Scope.Web, "https://demo.featureadmin.com/sites/demo", 0)); locations.Add(LocationFactory.GetLocation(new Guid("f839e257-b205-453f-8b1a-47dd21f18e41"), "Demo", new Guid("9ea9542b-3660-46fa-884d-e783290c244a"), Core.Models.Enums.Scope.Site, "https://demo.featureadmin.com/sites/demo", 2));
+            locations.Add(LocationFactory.GetLocation(new Guid(demoSpecialWebApp), "Demo Web App", TestFarm.Guid, Core.Models.Enums.Scope.WebApplication, "https://demo.featureadmin.com", 4));
+            locations.Add(LocationFactory.GetLocation(new Guid("95577881-38b5-40de-866a-14d64abff09e"), "Feature Admin Demo", new Guid("e6ca743e-304f-49bc-8a6e-5ba99ce45d61"), Core.Models.Enums.Scope.Web, "https://demo.featureadmin.com/", 0)); locations.Add(LocationFactory.GetLocation(new Guid("e6ca743e-304f-49bc-8a6e-5ba99ce45d61"), "Feature Admin Demo", new Guid(demoSpecialWebApp), Core.Models.Enums.Scope.Site, "https://demo.featureadmin.com/", 1));
+            locations.Add(LocationFactory.GetLocation(new Guid(demoUpgradeWebId), "Demo Update", new Guid(demoUpgradeSiteId), Core.Models.Enums.Scope.Web, "https://demo.featureadmin.com/sites/demoupdate", 0)); locations.Add(LocationFactory.GetLocation(new Guid(demoUpgradeSiteId), "Demo Update", new Guid(demoSpecialWebApp), Core.Models.Enums.Scope.Site, "https://demo.featureadmin.com/sites/demoupdate", 1));
+            locations.Add(LocationFactory.GetLocation(new Guid(demoFaultyWebId), "Demo Faulty", new Guid(demoFaultySiteId), Core.Models.Enums.Scope.Web, "https://demo.featureadmin.com/sites/demofaulty", 0)); locations.Add(LocationFactory.GetLocation(new Guid(demoFaultySiteId), "Demo Faulty", new Guid(demoSpecialWebApp), Core.Models.Enums.Scope.Site, "https://demo.featureadmin.com/sites/demofaulty", 1));
+            locations.Add(LocationFactory.GetLocation(new Guid("03252b95-2eb1-4ec4-9e9a-4b7ff47baa90"), "Demo", new Guid("f839e257-b205-453f-8b1a-47dd21f18e41"), Core.Models.Enums.Scope.Web, "https://demo.featureadmin.com/sites/demo", 0)); locations.Add(LocationFactory.GetLocation(new Guid("f839e257-b205-453f-8b1a-47dd21f18e41"), "Demo", new Guid(demoSpecialWebApp), Core.Models.Enums.Scope.Site, "https://demo.featureadmin.com/sites/demo", 2));
             locations.Add(LocationFactory.GetLocation(new Guid("d372a40d-ba50-41fb-a615-2239bc8fa4af"), "Demo Sub Web", new Guid("f839e257-b205-453f-8b1a-47dd21f18e41"), Core.Models.Enums.Scope.Web, "https://demo.featureadmin.com/sites/demo/subweb", 0));
 
             // Public web site - Web App
