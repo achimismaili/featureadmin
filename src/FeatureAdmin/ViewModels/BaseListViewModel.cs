@@ -28,6 +28,10 @@ namespace FeatureAdmin.ViewModels
         }
 
         public bool CanFilterThis { get; protected set; }
+        public bool CanSpecialAction { get; protected set; }
+        public bool CanSpecialActionFiltered { get; protected set; }
+        public bool CanSpecialActionFarm { get; protected set; }
+
 
         public ObservableCollection<Scope> ScopeFilters { get; private set; }
 
@@ -113,6 +117,8 @@ namespace FeatureAdmin.ViewModels
                     SelectionChanged();
                 }
             }
+
+            CanSpecialActionFiltered = Items.Count > 0;
         }
 
         public abstract void SelectionChanged();
@@ -126,6 +132,7 @@ namespace FeatureAdmin.ViewModels
 
             CanShowDetails = ActiveItem != null;
             CanFilterThis = ActiveItem != null;
+            CanSpecialAction = ActiveItem != null;
         }
     }
 }

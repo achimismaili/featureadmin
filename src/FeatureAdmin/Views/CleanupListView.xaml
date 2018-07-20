@@ -108,13 +108,13 @@
                             <fa:FontAwesome Icon="Filter" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem x:Name="Deactivate" ToolTip="Clean up (deactivate) this feature."
+                <MenuItem x:Name="SpecialAction" ToolTip="Clean up (deactivate) this feature."
                           Background="Transparent" >
                     <MenuItem.Header>
                         <fa:FontAwesome Icon="MinusCircle" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem x:Name="DeactivateFiltered" ToolTip="Clean up (deactivate) filtered features"
+                <MenuItem x:Name="SpecialActionFiltered" ToolTip="Clean up (deactivate) features shown in filter-list"
                           Background="Transparent" >
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
@@ -123,7 +123,7 @@
                         </StackPanel>
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem x:Name="DeactivateFarm" ToolTip="Clean up (deactivate) all faulty features in farm"
+                <MenuItem x:Name="SpecialActionFarm" ToolTip="Clean up (deactivate) all faulty features in farm"
                           Background="Transparent" >
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">

@@ -191,6 +191,7 @@
     <Compile Include="ViewModels\FeatureDefinitionListViewModel.cs" />
     <Compile Include="ViewModels\DetailViewModel.cs" />
     <Compile Include="ViewModels\CleanupListViewModel.cs" />
+    <Compile Include="ViewModels\BaseSpecialFeaturesListViewModel.cs" />
     <Compile Include="ViewModels\UpgradeListViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
     <Compile Include="ViewModels\StatusBarViewModel.cs" />

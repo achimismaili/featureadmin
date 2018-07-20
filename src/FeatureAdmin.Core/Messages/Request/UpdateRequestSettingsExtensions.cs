@@ -12,6 +12,23 @@ namespace FeatureAdmin.Core.Messages.Request
         /// <param name="requestToBeUpdated">the request to be updated</param>
         /// <param name="force">new force setting</param>
         /// <param name="elevatedPrivileges">new ep setting</param>
+        public static DeactivateFeaturesRequest GetWithUpdatedSettings(this DeactivateFeaturesRequest requestToBeUpdated, bool force, bool elevatedPrivileges)
+        {
+            var updatedRequest = new DeactivateFeaturesRequest(
+                requestToBeUpdated.Features,
+                force,
+                elevatedPrivileges
+                );
+
+            return updatedRequest;
+        }
+
+        /// <summary>
+        /// extension method to get request with changed force and elevated settings
+        /// </summary>
+        /// <param name="requestToBeUpdated">the request to be updated</param>
+        /// <param name="force">new force setting</param>
+        /// <param name="elevatedPrivileges">new ep setting</param>
         public static FeatureToggleRequest GetWithUpdatedSettings(this FeatureToggleRequest requestToBeUpdated, bool force, bool elevatedPrivileges)
         {
             var updatedRequest = new FeatureToggleRequest(
@@ -37,6 +54,23 @@ namespace FeatureAdmin.Core.Messages.Request
                 requestToBeUpdated.Title,
                 requestToBeUpdated.StartLocation,
                 elevatedPrivileges);
+
+            return updatedRequest;
+        }
+
+        /// <summary>
+        /// extension method to get request with changed force and elevated settings
+        /// </summary>
+        /// <param name="requestToBeUpdated">the request to be updated</param>
+        /// <param name="force">new force setting</param>
+        /// <param name="elevatedPrivileges">new ep setting</param>
+        public static UpgradeFeaturesRequest GetWithUpdatedSettings(this UpgradeFeaturesRequest requestToBeUpdated, bool force, bool elevatedPrivileges)
+        {
+            var updatedRequest = new UpgradeFeaturesRequest(
+                requestToBeUpdated.Features,
+                force,
+                elevatedPrivileges
+                );
 
             return updatedRequest;
         }

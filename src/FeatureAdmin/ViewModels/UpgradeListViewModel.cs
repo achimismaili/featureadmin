@@ -1,14 +1,13 @@
 ﻿using Caliburn.Micro;
-using FeatureAdmin.Core;
 using FeatureAdmin.Core.Models;
-using FeatureAdmin.Messages;
 using FeatureAdmin.Core.Repository;
-using System;
 using System.Linq;
+using FeatureAdmin.Core.Models.Enums;
+using System.Collections.Generic;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class UpgradeListViewModel : BaseListViewModel<ActivatedFeatureSpecial>, IHandle<ItemSelected<FeatureDefinition>>, IHandle<SetSearchFilter<Location>>
+    public sealed class UpgradeListViewModel : BaseSpecialFeaturesListViewModel
     {
         public UpgradeListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
             : base(eventAggregator, repository)
@@ -16,78 +15,47 @@ namespace FeatureAdmin.ViewModels
             DisplayName = "Upgrade";
         }
 
-        protected override void OnActivate()
+        protected override string noSpecialFeaturesFoundMessageBody
         {
-            SelectionChanged();
-
-            // check if any special features exist
-            if (Items.Count == 0)
+            get
             {
-                bool openNoSpecialFeaturesFoundDialog = false;
-
-                // if filters are active initiate a search with no filters
-                if (string.IsNullOrEmpty(searchInput) && SelectedScopeFilter == null)
-                {
-                    openNoSpecialFeaturesFoundDialog = true;
-                }
-                else
-                {
-                    var anySpecialFeatures = repository.SearchFeaturesToCleanup(string.Empty, null);
-
-                    openNoSpecialFeaturesFoundDialog = anySpecialFeatures.Count() == 0;
-                }
-
-                // if no features exist in farm, notify user on activation, that no special features exist
-                if (openNoSpecialFeaturesFoundDialog)
-                {
-                    var noSpecialFeaturesFound = new ConfirmationRequest(
-                        "No features found for upgrade",
-                        "No activated features were found during farm load that require an upgrade.\n" +
-                        "All activated features in the farm seem to be up to date."
-                        );
-
-                    eventAggregator.BeginPublishOnUIThread(noSpecialFeaturesFound);
-                }
+                return "No activated features were found during farm load that require an upgrade.\n" +
+                        "All activated features in the farm seem to be up to date.";
             }
         }
 
-        public bool CanFilterFeature { get; protected set; }
-
-        public void FilterFeature()
+        protected override string noSpecialFeaturesFoundMessageTitle
         {
-            var searchFilter = new SetSearchFilter<FeatureDefinition>(
-
-                ActiveItem == null ? string.Empty : ActiveItem.ActivatedFeature.FeatureId.ToString(), null);
-            eventAggregator.BeginPublishOnUIThread(searchFilter);
+            get
+            {
+                return "No features found for upgrade";
+            }
+        }
+        public override IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(string searchInput, Scope? selectedScopeFilter)
+        {
+            return repository.SearchFeaturesToUpgrade(searchInput, selectedScopeFilter);
         }
 
-        // as SetSearchFilter is handled in generic base class, search filter has to be converted to AcitvatedFeatureSpecial
-        public void Handle(SetSearchFilter<Location> message)
+        public override void SpecialAction()
         {
-            var genericSearchFilter = new SetSearchFilter<ActivatedFeatureSpecial>(
-                message.SearchQuery,
-                message.SearchScope
-                );
+            if (ActiveItem != null && ActiveItem.ActivatedFeature != null)
+            {
+                var feature = ActiveItem.ActivatedFeature;
+                var features = new ActivatedFeature[] { feature };
+                eventAggregator.PublishOnUIThread(new Core.Messages.Request.UpgradeFeaturesRequest(features));
+            }
 
-            Handle(genericSearchFilter);
         }
 
-        public void Handle([NotNull] ItemSelected<FeatureDefinition> message)
+        public override void SpecialActionFarm()
         {
-            SelectedFeatureDefinition = message.Item;
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.UpgradeFeaturesRequest(specialActionableFeaturesInFarm));
         }
 
-        public override void SelectionChanged()
+        public override void SpecialActionFiltered()
         {
-            SelectionChangedBase();
-            CanFilterFeature = ActiveItem != null;
-        }
-
-        protected override void FilterResults()
-        {
-            var searchResult = repository.SearchFeaturesToUpgrade(searchInput, SelectedScopeFilter);
-
-            ShowResults(searchResult);
+            var features = Items.Select(sf => sf.ActivatedFeature);
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.UpgradeFeaturesRequest(features));
         }
     }
 }

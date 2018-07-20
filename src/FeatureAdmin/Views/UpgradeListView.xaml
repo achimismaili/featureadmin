@@ -109,13 +109,13 @@
                             <fa:FontAwesome Icon="Filter" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem x:Name="Upgrade" ToolTip="Upgrade this feature"
+                <MenuItem x:Name="SpecialAction" ToolTip="Upgrade this feature"
                           Background="Transparent" >
                     <MenuItem.Header>
                         <fa:FontAwesome Icon="ChevronCircleUp" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem x:Name="UpgradeFiltered" ToolTip="Upgrade filtered features"
+                <MenuItem x:Name="SpecialActionFiltered" ToolTip="Upgrade features shown in filter-list"
                           Background="Transparent" >
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
@@ -124,7 +124,7 @@
                         </StackPanel>
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem x:Name="UpgradeFarm" ToolTip="Upgrade all features in farm"
+                <MenuItem x:Name="SpecialActionFarm" ToolTip="Upgrade all features in farm"
                           Background="Transparent" >
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
