@@ -8,13 +8,20 @@ using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>, IHandle<ItemSelected<Location>>, IHandle<SetSearchFilter<FeatureDefinition>>
+    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>,
+        IHandle<ItemSelected<ActivatedFeatureSpecial>>,
+        IHandle<ItemSelected<Location>>, 
+        IHandle<SetSearchFilter<FeatureDefinition>>
     {
         public FeatureDefinitionListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
          : base(eventAggregator, repository)
         {
             SelectionChanged();
         }
+
+        public bool CanFilterLocation { get; protected set; }
+
+        public bool CanUninstallFeatureDefinition { get; private set; }
 
         public void ActivateFeatures()
         {
@@ -25,11 +32,6 @@ namespace FeatureAdmin.ViewModels
         {
             eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem, SelectedLocation, false));
         }
-
-        public bool CanFilterLocation { get; protected set; }
-
-        public bool CanUninstallFeatureDefinition { get; private set; }
-
         public void FilterLocation()
         {
             var searchFilter = new SetSearchFilter<Location>(
@@ -37,17 +39,34 @@ namespace FeatureAdmin.ViewModels
             eventAggregator.BeginPublishOnUIThread(searchFilter);
         }
 
-        protected override void FilterResults()
-        {
-            var searchResult = repository.SearchFeatureDefinitions(searchInput, SelectedScopeFilter, null);
-
-            ShowResults(searchResult);
-        }
-
         public void Handle([NotNull] ItemSelected<Location> message)
         {
             SelectedLocation = message.Item;
             CheckIfCanToggleFeatures();
+        }
+
+        public void Handle([NotNull] ItemSelected<ActivatedFeatureSpecial> message)
+        {
+            
+            if (message.Item == null || message.Item.Location == null)
+            {
+                if (SelectedLocation != null)
+                {
+                    SelectedLocation = null;
+                    CheckIfCanToggleFeatures();
+                }
+            }
+            else
+            {
+                var newLocation = SelectedLocation = message.Item.Location;
+
+                if (SelectedLocation != newLocation)
+                {
+                    SelectedLocation = newLocation;
+                    CheckIfCanToggleFeatures();
+                }
+            }
+            
         }
 
         public override void SelectionChanged()
@@ -57,6 +76,7 @@ namespace FeatureAdmin.ViewModels
             CanUninstallFeatureDefinition = ActiveItem != null;
             CanFilterLocation = ActiveItem != null;
         }
+
         public void UninstallFeatureDefinition()
         {
             throw new NotImplementedException();
@@ -91,6 +111,13 @@ namespace FeatureAdmin.ViewModels
             eventAggregator.PublishOnUIThread(
                  new Messages.ActionOptionsUpdate(canActivate, canDeactivate, canUpgrade)
                  );
+        }
+
+        protected override void FilterResults()
+        {
+            var searchResult = repository.SearchFeatureDefinitions(searchInput, SelectedScopeFilter, null);
+
+            ShowResults(searchResult);
         }
     }
 }
