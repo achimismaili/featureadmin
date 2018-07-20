@@ -67,8 +67,6 @@ namespace FeatureAdmin.Common
             items.Add(new KeyValuePair<string, string>(nameof(vm.Id), vm.Id.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Scope), vm.Scope.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Title), vm.Title));
-            items.Add(new KeyValuePair<string, string>("Times Activated in Farm", activatedFeatures.Count().ToString()));
-            items.Add(ConvertActivatedFeatures(activatedFeatures, true));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Name), vm.Name));
             items.Add(new KeyValuePair<string, string>(nameof(vm.CompatibilityLevel), vm.CompatibilityLevel.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Description), vm.Description));
@@ -78,7 +76,8 @@ namespace FeatureAdmin.Common
             items.Add(new KeyValuePair<string, string>(nameof(vm.Version), vm.Version == null ? string.Empty : vm.Version.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.SandBoxedSolutionLocation), vm.SandBoxedSolutionLocation.HasValue ? vm.SandBoxedSolutionLocation.Value.ToString() : string.Empty));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Properties), PropertiesToString(vm.Properties)));
-
+            items.Add(new KeyValuePair<string, string>("Times Activated in Farm", activatedFeatures.Count().ToString()));
+            items.Add(ConvertActivatedFeatures(activatedFeatures, true));
 
             var dvm = new DetailViewModel(displayName, items);
 
@@ -98,11 +97,15 @@ namespace FeatureAdmin.Common
             items.Add(new KeyValuePair<string, string>(nameof(vm.DisplayName), vm.DisplayName));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Id), vm.Id.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Scope), vm.Scope.ToString()));
-            items.Add(new KeyValuePair<string, string>("# of active features", activatedFeatures.Count().ToString()));
-            items.Add(ConvertActivatedFeatures(activatedFeatures, false));
-            items.Add(new KeyValuePair<string, string>(nameof(vm.Parent), string.Format("Location Id: {0}", vm.Parent.ToString())));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Url), vm.Url));
             items.Add(new KeyValuePair<string, string>(nameof(vm.ChildCount), vm.ChildCount.ToString()));
+            items.Add(new KeyValuePair<string, string>("# of active features", activatedFeatures.Count().ToString()));
+            items.Add(ConvertActivatedFeatures(activatedFeatures, false));
+
+            if (vm.Parent != Guid.Empty)
+            {
+            items.Add(new KeyValuePair<string, string>(nameof(vm.Parent), string.Format("Location Id: {0}", vm.Parent.ToString())));
+            }
 
             var dvm = new DetailViewModel(displayName, items);
 
