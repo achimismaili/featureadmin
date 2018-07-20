@@ -102,22 +102,22 @@ namespace FeatureAdmin.Backends.Demo.Services
 
         public string UpgradeFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
         {
-            throw new NotImplementedException();
+            return UpgradeFeature(feature, location, false, force, out activatedFeature);
         }
 
         public string UpgradeSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
         {
-            throw new NotImplementedException();
+            return UpgradeFeature(feature, location, false, force, out activatedFeature);
         }
 
         public string UpgradeWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
         {
-            throw new NotImplementedException();
+            return UpgradeFeature(feature, location, false, force, out activatedFeature);
         }
 
         public string UpgradeWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
         {
-            throw new NotImplementedException();
+            return UpgradeFeature(feature, location, false, force, out activatedFeature);
         }
 
         private string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force
@@ -201,6 +201,7 @@ namespace FeatureAdmin.Backends.Demo.Services
 
             return defs;
         }
+
         private LoadedDto loadChildLocations(Location location)
         {
 
@@ -256,6 +257,15 @@ namespace FeatureAdmin.Backends.Demo.Services
             }
 
             return loadedElements;
+        }
+
+        private string UpgradeFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force
+                                            , out ActivatedFeature upgradedFeature)
+        {
+
+            DeactivateFeature(feature, location, elevatedPrivileges, force);
+            return ActivateFeature(feature, location, elevatedPrivileges, force, out upgradedFeature);
+
         }
     }
 }
