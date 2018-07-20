@@ -23,15 +23,32 @@
 				   Foreground="#FFB17807"
 				   FontWeight="Bold"
 			   />
-			<Menu Grid.Row="1" IsMainMenu="False" Background="Transparent">
-				<MenuItem Header="_Deactivate" x:Name="DeactivateFeatures" ToolTip="Deactivate/Remove features"  Background="Transparent"/>
-                <MenuItem Header="_Upgrade" x:Name="UpgradeFeatures"  Background="Transparent"/>
-                <MenuItem x:Name="ShowDetails" ToolTip="Show details for this activated feature in new window"
-						  Background="Transparent" FontSize="18">
-					<MenuItem.Header>
-						<fa:FontAwesome Icon="Eye" />
-					</MenuItem.Header>
-				</MenuItem>
+            <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent" FontSize="18">
+                <MenuItem x:Name="DeactivateFeatures" 
+                          ToolTip="Deactivate/Remove features"  
+                          Background="Transparent"
+                          >
+                    <MenuItem.Header>
+                        <fa:FontAwesome Icon="MinusCircle" />
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem x:Name="UpgradeFeatures"  
+                          Background="Transparent" 
+                          ToolTip="Upgrade all activated feature instances with lower version to this version"
+                          
+                          >
+                    <MenuItem.Header>
+                        <fa:FontAwesome Icon="ChevronCircleUp" />
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem x:Name="ShowDetails" 
+                          ToolTip="Show details for this feature definition in new window"
+                          Background="Transparent" 
+                          >
+                    <MenuItem.Header>
+                        <fa:FontAwesome Icon="Search" />
+                    </MenuItem.Header>
+                </MenuItem>
 			</Menu>
 			<ScrollViewer Grid.Row="2" >
 				<Grid >
