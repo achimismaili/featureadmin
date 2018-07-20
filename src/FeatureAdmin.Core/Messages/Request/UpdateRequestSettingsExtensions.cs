@@ -34,7 +34,7 @@ namespace FeatureAdmin.Core.Messages.Request
             var updatedRequest = new FeatureToggleRequest(
                 requestToBeUpdated.FeatureDefinition,
                  requestToBeUpdated.Location,
-                 requestToBeUpdated.Activate,
+                 requestToBeUpdated.Action,
                  force,
                  elevatedPrivileges
                 );

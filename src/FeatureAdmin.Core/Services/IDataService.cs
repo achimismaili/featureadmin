@@ -22,23 +22,19 @@ namespace FeatureAdmin.Core.Services
 
         string DeactivateFarmFeature(FeatureDefinition feature, Location location, bool force);
         string ActivateFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature);
-
+        string UpgradeFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature);
         string DeactivateWebAppFeature(FeatureDefinition feature, Location location, bool force);
         string ActivateWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature);
-
+        string UpgradeWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature);
         string DeactivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force);
         string ActivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
-
+        string UpgradeSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
         string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force);
         string ActivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
+        string UpgradeWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
 
 
-
-
-
-        //int FeatureUninstall(Guid featureId, bool force);
-
-        //int FeatureUpdate(Models.SPObject location, bool add, Guid featureId, bool force);
+        //string UninstallFarmFeature(FeatureDefinition feature, bool force);
 
     }
 }

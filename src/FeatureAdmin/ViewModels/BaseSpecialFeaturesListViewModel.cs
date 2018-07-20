@@ -12,7 +12,7 @@ namespace FeatureAdmin.ViewModels
         IHandle<ItemSelected<FeatureDefinition>>, 
         IHandle<SetSearchFilter<Location>>
     {
-        protected System.Collections.Generic.IEnumerable<ActivatedFeature> specialActionableFeaturesInFarm;
+        protected System.Collections.Generic.IEnumerable<ActivatedFeatureSpecial> specialActionableFeaturesInFarm;
 
         public BaseSpecialFeaturesListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
             : base(eventAggregator, repository)
@@ -66,7 +66,7 @@ namespace FeatureAdmin.ViewModels
             SelectionChanged();
 
             bool specialFeaturesAnyInFarm = false;
-            specialActionableFeaturesInFarm = new ActivatedFeature[0];
+            specialActionableFeaturesInFarm = new ActivatedFeatureSpecial[0];
 
             // check if any special features exist
             if (Items.Count == 0)
@@ -78,11 +78,10 @@ namespace FeatureAdmin.ViewModels
                 }
                 else
                 {
-                    var allSpecialFeaturesInFarmBySearch = SearchSpecialFeatures(string.Empty, null);
+                    var specialActionableFeaturesInFarm = SearchSpecialFeatures(string.Empty, null);
 
-                    if (allSpecialFeaturesInFarmBySearch.Count() > 0)
+                    if (specialActionableFeaturesInFarm.Count() > 0)
                     {
-                        specialActionableFeaturesInFarm = allSpecialFeaturesInFarmBySearch.Select(sf => sf.ActivatedFeature);
                         specialFeaturesAnyInFarm = true;
                     }
                 }
@@ -101,7 +100,7 @@ namespace FeatureAdmin.ViewModels
             else
             {
                 specialFeaturesAnyInFarm = true;
-                specialActionableFeaturesInFarm = Items.Select(sf => sf.ActivatedFeature); ;
+                specialActionableFeaturesInFarm = Items; ;
             }
 
             CanSpecialActionFarm = specialFeaturesAnyInFarm;
@@ -109,10 +108,26 @@ namespace FeatureAdmin.ViewModels
 
         public abstract IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter);
 
-        public abstract void SpecialAction();
-        
-        public abstract void SpecialActionFarm();
+        protected abstract void PublishSpecialActionRequest(IEnumerable<ActivatedFeatureSpecial> features);
 
-        public abstract void SpecialActionFiltered();
+        public void SpecialAction()
+        {
+            if (ActiveItem != null && ActiveItem.ActivatedFeature != null)
+            {
+                var features = new ActivatedFeatureSpecial[] { ActiveItem };
+                PublishSpecialActionRequest(features);
+            }
+
+        }
+
+        public void SpecialActionFarm()
+        {
+            PublishSpecialActionRequest(specialActionableFeaturesInFarm);
+        }
+
+        public void SpecialActionFiltered()
+        {
+            PublishSpecialActionRequest(Items);
+        }
     }
 }

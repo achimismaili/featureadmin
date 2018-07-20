@@ -24,7 +24,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         private readonly IDataService dataService;
         private readonly Dictionary<Guid, IActorRef> executingActors;
         private readonly IFeatureRepository repository;
-        private List<FeatureToggleRequest> featureToggleRequestsToBeConfirmed;
+        private List<FeatureToggleRequest> requestsToBeConfirmed;
         public FeatureTaskActor(
             IEventAggregator eventAggregator,
             IFeatureRepository repository,
@@ -52,21 +52,84 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             _log.Debug("Entered HandleFeatureUpgradeCompleted with Id " + Id.ToString());
 
-            throw new NotImplementedException();
+            bool success = true;
+
+            repository.RemoveActivatedFeature(message.UpgradedFeature.FeatureId, message.LocationReference);
+            repository.AddActivatedFeature(message.UpgradedFeature);
+
+            jobsCompleted.Add(message.LocationReference, success);
+
+            SendProgress();
         }
 
         private void HandleUpgradeFeaturesRequest(UpgradeFeaturesRequest message)
         {
             _log.Debug("Entered HandleUpgradeFeaturesRequest with Id " + Id.ToString());
 
-            throw new NotImplementedException();
+            if (!TaskCanceled)
+            {
+
+                Title = message.Title;
+
+                requestsToBeConfirmed = new List<FeatureToggleRequest>();
+
+                foreach (ActivatedFeatureSpecial af in message.Features)
+                {
+
+                    var toggleRequest = new FeatureToggleRequest(
+                        af.ActivatedFeature.Definition,
+                        af.Location,
+                        Enums.FeatureAction.Upgrade,
+                        message.Force,
+                        message.ElevatedPrivileges
+                        );
+                    requestsToBeConfirmed.Add(toggleRequest);
+                }
+
+                var confirmRequest = new ConfirmationRequest(
+                        "Please confirm Feature upgrade",
+                        Title
+                        );
+
+
+                eventAggregator.PublishOnUIThread(confirmRequest);
+            }
         }
 
         private void HandleDeactivateFeaturesRequest(DeactivateFeaturesRequest message)
         {
             _log.Debug("Entered HandleDeactivateFeaturesRequest with Id " + Id.ToString());
 
-            throw new NotImplementedException();
+            if (!TaskCanceled)
+            {
+
+                Title = message.Title;
+
+                requestsToBeConfirmed = new List<FeatureToggleRequest>();
+
+                foreach (ActivatedFeatureSpecial af in message.Features)
+                {
+
+                    var toggleRequest = new FeatureToggleRequest(
+                        af.ActivatedFeature.Definition,
+                        af.Location,
+                        Enums.FeatureAction.Deactivate,
+                        message.Force,
+                        message.ElevatedPrivileges
+                        );
+                    requestsToBeConfirmed.Add(toggleRequest);
+                }
+
+                var action = Enums.FeatureAction.Deactivate.ToString().ToLower();
+
+                var confirmRequest = new ConfirmationRequest(
+                        "Please confirm Feature deactivation",
+                        Title
+                        );
+
+
+                eventAggregator.PublishOnUIThread(confirmRequest);
+            }
         }
 
         public override double PercentCompleted
@@ -135,14 +198,14 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             if (!TaskCanceled)
             {
-                jobsTotal = featureToggleRequestsToBeConfirmed.Count;
+                jobsTotal = requestsToBeConfirmed.Count;
 
                 Start = DateTime.Now;
 
                 // start status progress bar
                 SendProgress();
 
-                foreach (FeatureToggleRequest ftr in featureToggleRequestsToBeConfirmed)
+                foreach (FeatureToggleRequest ftr in requestsToBeConfirmed)
                 {
 
                     var locationId = ftr.Location.Id;
@@ -202,18 +265,22 @@ namespace FeatureAdmin.Core.Models.Tasks
 
                 IEnumerable<Location> targetLocations;
 
-                if (message.Activate)
+                if (message.Action == Enums.FeatureAction.Activate)
                 {
                     // retrieve locations where to activate 
                     targetLocations = repository.GetLocationsCanActivate(message.FeatureDefinition, message.Location);
                 }
-                else
+                else if (message.Action == Enums.FeatureAction.Deactivate)
                 {
                     // retrieve locations where to deactivate 
                     targetLocations = repository.GetLocationsCanDeactivate(message.FeatureDefinition, message.Location);
                 }
+                else
+                {
+                   throw new NotImplementedException("Received feature toggle requests in feature task actor only support activation and deactivation!");
+                }
 
-                featureToggleRequestsToBeConfirmed = new List<FeatureToggleRequest>();
+                requestsToBeConfirmed = new List<FeatureToggleRequest>();
 
                 foreach (Location l in targetLocations)
                 {
@@ -221,22 +288,25 @@ namespace FeatureAdmin.Core.Models.Tasks
                     var toggleRequestForThisLocation = new FeatureToggleRequest(
                         message.FeatureDefinition
                         , l
-                        , message.Activate
+                        , message.Action
                         , message.Force
                         , message.ElevatedPrivileges
                         );
-                    featureToggleRequestsToBeConfirmed.Add(toggleRequestForThisLocation);
+                    requestsToBeConfirmed.Add(toggleRequestForThisLocation);
                 }
 
-                var action = message.Activate ? "activate" : "deactivate";
+                var action = message.Action.ToString().ToLower();
+
+                var locationPrefix = message.FeatureDefinition.Scope < message.Location.Scope ? "across" : "at";
 
                 var confirmRequest = new ConfirmationRequest(
                         Title,
-                        string.Format("Please confirm to {0} feature \n\n{1} \n\nacross location \n\n{2}\n\n\nFeatureAdmin found '{3}' location(s) where to {0}.",
-                            action,
-                            message.FeatureDefinition.ToString(),
-                            message.Location.ToString(),
-                            targetLocations.Count()),
+                        string.Format("Please confirm to {0} feature \n\n{1} \n\n{4} location \n\n{2}\n\n\nFeatureAdmin found '{3}' location(s) where to {0}.",
+                        action,
+                        message.FeatureDefinition.ToString(),
+                        message.Location.ToString(),
+                        targetLocations.Count(),
+                        locationPrefix),
                         Id
                         );
 

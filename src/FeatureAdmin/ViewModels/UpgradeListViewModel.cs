@@ -4,6 +4,7 @@ using FeatureAdmin.Core.Repository;
 using System.Linq;
 using FeatureAdmin.Core.Models.Enums;
 using System.Collections.Generic;
+using System;
 
 namespace FeatureAdmin.ViewModels
 {
@@ -36,25 +37,8 @@ namespace FeatureAdmin.ViewModels
             return repository.SearchFeaturesToUpgrade(searchInput, selectedScopeFilter);
         }
 
-        public override void SpecialAction()
+        protected override void PublishSpecialActionRequest(IEnumerable<ActivatedFeatureSpecial> features)
         {
-            if (ActiveItem != null && ActiveItem.ActivatedFeature != null)
-            {
-                var feature = ActiveItem.ActivatedFeature;
-                var features = new ActivatedFeature[] { feature };
-                eventAggregator.PublishOnUIThread(new Core.Messages.Request.UpgradeFeaturesRequest(features));
-            }
-
-        }
-
-        public override void SpecialActionFarm()
-        {
-            eventAggregator.PublishOnUIThread(new Core.Messages.Request.UpgradeFeaturesRequest(specialActionableFeaturesInFarm));
-        }
-
-        public override void SpecialActionFiltered()
-        {
-            var features = Items.Select(sf => sf.ActivatedFeature);
             eventAggregator.PublishOnUIThread(new Core.Messages.Request.UpgradeFeaturesRequest(features));
         }
     }

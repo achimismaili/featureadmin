@@ -25,12 +25,12 @@ namespace FeatureAdmin.ViewModels
 
         public void ActivateFeatures()
         {
-            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem, SelectedLocation, true));
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem, SelectedLocation, Core.Models.Enums.FeatureAction.Activate));
         }
 
         public void DeactivateFeatures()
         {
-            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem, SelectedLocation, false));
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem, SelectedLocation, Core.Models.Enums.FeatureAction.Deactivate));
         }
         public void FilterLocation()
         {

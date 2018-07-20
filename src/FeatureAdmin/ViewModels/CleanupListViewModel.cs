@@ -46,33 +46,16 @@ namespace FeatureAdmin.ViewModels
             CanFilterFeature = ActiveItem != null;
         }
 
-        public override void SpecialAction()
-        {
-            if (ActiveItem != null && ActiveItem.ActivatedFeature != null)
-            {
-                var feature = ActiveItem.ActivatedFeature;
-                var features = new ActivatedFeature[] { feature };
-                eventAggregator.PublishOnUIThread(new Core.Messages.Request.DeactivateFeaturesRequest(features));
-            }
-
-        }
-
-        public override void SpecialActionFarm()
-        {
-            eventAggregator.PublishOnUIThread(new Core.Messages.Request.DeactivateFeaturesRequest(specialActionableFeaturesInFarm));
-        }
-
-        public override void SpecialActionFiltered()
-        {
-            var features = Items.Select(sf => sf.ActivatedFeature);
-            eventAggregator.PublishOnUIThread(new Core.Messages.Request.DeactivateFeaturesRequest(features));
-        }
-
         protected override void FilterResults()
         {
             var searchResult = repository.SearchFeaturesToCleanup(searchInput, SelectedScopeFilter);
 
             ShowResults(searchResult);
+        }
+
+        protected override void PublishSpecialActionRequest(IEnumerable<ActivatedFeatureSpecial> features)
+        {
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.DeactivateFeaturesRequest(features));
         }
     }
 }

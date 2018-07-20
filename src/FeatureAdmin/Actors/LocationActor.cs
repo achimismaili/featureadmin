@@ -50,154 +50,179 @@ namespace FeatureAdmin.Actors
         {
             _log.Debug("Entered LocationActor-HandleFeatureToggleRequest");
 
-            string errorMsg = null;
-
             if (!TaskCanceled)
             {
                 try
                 {
-                    if (message.Activate)
+                    switch (message.Action)
                     {
-                        ActivatedFeature af;
-
-                        switch (message.Location.Scope)
-                        {
-                            case Core.Models.Enums.Scope.Web:
-                                errorMsg += dataService.ActivateWebFeature(
-                                    message.FeatureDefinition,
-                                    message.Location,
-                                    message.ElevatedPrivileges.Value,
-                                    message.Force.Value,
-                                    out af);
-                                break;
-                            case Core.Models.Enums.Scope.Site:
-                                errorMsg += dataService.ActivateSiteFeature(
-                                    message.FeatureDefinition,
-                                    message.Location,
-                                    message.ElevatedPrivileges.Value,
-                                    message.Force.Value,
-                                    out af);
-                                break;
-                            case Core.Models.Enums.Scope.WebApplication:
-                                errorMsg += dataService.ActivateWebAppFeature(
-                                    message.FeatureDefinition,
-                                    message.Location,
-                                    message.Force.Value,
-                                    out af);
-                                break;
-                            case Core.Models.Enums.Scope.Farm:
-                                errorMsg += dataService.ActivateFarmFeature(
-                                    message.FeatureDefinition,
-                                    message.Location,
-                                    message.Force.Value,
-                                    out af);
-                                break;
-                            case Core.Models.Enums.Scope.ScopeInvalid:
-                                errorMsg += string.Format("Location '{0}' has invalid scope - not supported for feature activation.", message.Location.Id);
-                                af = null;
-                                break;
-                            default:
-                                errorMsg += string.Format("Location '{0}' has unidentified scope - not supported for feature activation.", message.Location.Id);
-                                af = null;
-                                break;
-                        }
-
-
-                        if (string.IsNullOrEmpty(errorMsg))
-                        {
-                            var completed = new Core.Messages.Completed.FeatureActivationCompleted(
-                       message.TaskId,
-                       message.Location.Id,
-                       af
-                       );
-
-                            Sender.Tell(completed);
-                        }
-                        else
-                        {
-                            var cancelationMsg = new CancelMessage(
-                                message.TaskId,
-                                errorMsg,
-                                true
-                                );
-
-                            Sender.Tell(cancelationMsg);
-                        }
-                    }
-                    else
-                    {
-                        switch (message.Location.Scope)
-                        {
-                            case Core.Models.Enums.Scope.Web:
-                                errorMsg += dataService.DeactivateWebFeature(
-                                    message.FeatureDefinition,
-                                    message.Location,
-                                    message.ElevatedPrivileges.Value,
-                                    message.Force.Value);
-                                break;
-                            case Core.Models.Enums.Scope.Site:
-                                errorMsg += dataService.DeactivateSiteFeature(
-                                    message.FeatureDefinition,
-                                    message.Location,
-                                    message.ElevatedPrivileges.Value,
-                                    message.Force.Value
-                                    );
-                                break;
-                            case Core.Models.Enums.Scope.WebApplication:
-                                errorMsg += dataService.DeactivateWebAppFeature(
-                                    message.FeatureDefinition,
-                                    message.Location,
-                                    message.Force.Value
-                                    );
-                                break;
-                            case Core.Models.Enums.Scope.Farm:
-                                errorMsg += dataService.DeactivateFarmFeature(
-                                    message.FeatureDefinition,
-                                    message.Location,
-                                    message.Force.Value
-                                    );
-                                break;
-                            case Core.Models.Enums.Scope.ScopeInvalid:
-                                errorMsg += string.Format("Location '{0}' has invalid scope - not supported for feature deactivation.", message.Location.Id);
-                                break;
-                            default:
-                                errorMsg += string.Format("Location '{0}' has unidentified scope - not supported for feature deactivation.", message.Location.Id);
-                                break;
-                        }
-
-                        if (string.IsNullOrEmpty(errorMsg))
-                        {
-                            var completed = new Core.Messages.Completed.FeatureDeactivationCompleted(
-                                message.TaskId,
-                                message.Location.Id,
-                                message.FeatureDefinition.Id
-                       );
-
-                            Sender.Tell(completed);
-                        }
-                        else
-                        {
-                            var cancelationMsg = new CancelMessage(
-                                message.TaskId,
-                                errorMsg,
-                                true
-                                );
-
-                            Sender.Tell(cancelationMsg);
-                        }
+                        case Core.Models.Enums.FeatureAction.Activate:
+                            HandleActivation(message);
+                            break;
+                        case Core.Models.Enums.FeatureAction.Deactivate:
+                            HandleDeactivation(message);
+                            break;
+                        case Core.Models.Enums.FeatureAction.Upgrade:
+                            HandleUpgrade(message);
+                            break;
+                        default:
+                            throw new NotImplementedException("this action verb is not known to location actor for task id " + message.TaskId);
                     }
                 }
                 catch (Exception ex)
                 {
                     var cancelationMsg = new CancelMessage(
                                 message.TaskId,
-                                errorMsg,
+                                ex.Message,
                                 true,
                                 ex
                                 );
 
                     Sender.Tell(cancelationMsg);
                 }
+            }
+        }
+
+        private void HandleUpgrade(FeatureToggleRequest message)
+        {
+            string errorMsg = null;
+        }
+
+        private void HandleDeactivation(FeatureToggleRequest message)
+        {
+            string errorMsg = null;
+
+            switch (message.Location.Scope)
+            {
+                case Core.Models.Enums.Scope.Web:
+                    errorMsg += dataService.DeactivateWebFeature(
+                        message.FeatureDefinition,
+                        message.Location,
+                        message.ElevatedPrivileges.Value,
+                        message.Force.Value);
+                    break;
+                case Core.Models.Enums.Scope.Site:
+                    errorMsg += dataService.DeactivateSiteFeature(
+                        message.FeatureDefinition,
+                        message.Location,
+                        message.ElevatedPrivileges.Value,
+                        message.Force.Value
+                        );
+                    break;
+                case Core.Models.Enums.Scope.WebApplication:
+                    errorMsg += dataService.DeactivateWebAppFeature(
+                        message.FeatureDefinition,
+                        message.Location,
+                        message.Force.Value
+                        );
+                    break;
+                case Core.Models.Enums.Scope.Farm:
+                    errorMsg += dataService.DeactivateFarmFeature(
+                        message.FeatureDefinition,
+                        message.Location,
+                        message.Force.Value
+                        );
+                    break;
+                case Core.Models.Enums.Scope.ScopeInvalid:
+                    errorMsg += string.Format("Location '{0}' has invalid scope - not supported for feature deactivation.", message.Location.Id);
+                    break;
+                default:
+                    errorMsg += string.Format("Location '{0}' has unidentified scope - not supported for feature deactivation.", message.Location.Id);
+                    break;
+            }
+
+            if (string.IsNullOrEmpty(errorMsg))
+            {
+                var completed = new Core.Messages.Completed.FeatureDeactivationCompleted(
+                    message.TaskId,
+                    message.Location.Id,
+                    message.FeatureDefinition.Id
+           );
+
+                Sender.Tell(completed);
+            }
+            else
+            {
+                var cancelationMsg = new CancelMessage(
+                    message.TaskId,
+                    errorMsg,
+                    true
+                    );
+
+                Sender.Tell(cancelationMsg);
+            }
+        }
+
+
+        private void HandleActivation(FeatureToggleRequest message)
+        {
+            string errorMsg = null;
+
+
+            ActivatedFeature af;
+
+            switch (message.Location.Scope)
+            {
+                case Core.Models.Enums.Scope.Web:
+                    errorMsg += dataService.ActivateWebFeature(
+                        message.FeatureDefinition,
+                        message.Location,
+                        message.ElevatedPrivileges.Value,
+                        message.Force.Value,
+                        out af);
+                    break;
+                case Core.Models.Enums.Scope.Site:
+                    errorMsg += dataService.ActivateSiteFeature(
+                        message.FeatureDefinition,
+                        message.Location,
+                        message.ElevatedPrivileges.Value,
+                        message.Force.Value,
+                        out af);
+                    break;
+                case Core.Models.Enums.Scope.WebApplication:
+                    errorMsg += dataService.ActivateWebAppFeature(
+                        message.FeatureDefinition,
+                        message.Location,
+                        message.Force.Value,
+                        out af);
+                    break;
+                case Core.Models.Enums.Scope.Farm:
+                    errorMsg += dataService.ActivateFarmFeature(
+                        message.FeatureDefinition,
+                        message.Location,
+                        message.Force.Value,
+                        out af);
+                    break;
+                case Core.Models.Enums.Scope.ScopeInvalid:
+                    errorMsg += string.Format("Location '{0}' has invalid scope - not supported for feature activation.", message.Location.Id);
+                    af = null;
+                    break;
+                default:
+                    errorMsg += string.Format("Location '{0}' has unidentified scope - not supported for feature activation.", message.Location.Id);
+                    af = null;
+                    break;
+            }
+
+
+            if (string.IsNullOrEmpty(errorMsg))
+            {
+                var completed = new Core.Messages.Completed.FeatureActivationCompleted(
+           message.TaskId,
+           message.Location.Id,
+           af
+           );
+
+                Sender.Tell(completed);
+            }
+            else
+            {
+                var cancelationMsg = new CancelMessage(
+                    message.TaskId,
+                    errorMsg,
+                    true
+                    );
+
+                Sender.Tell(cancelationMsg);
             }
         }
 

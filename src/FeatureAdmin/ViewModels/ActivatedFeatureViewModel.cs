@@ -14,7 +14,7 @@ namespace FeatureAdmin.ViewModels
 
         public void DeactivateFeatures()
         {
-            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(SelectedFeatureDefinition, SelectedLocation, false));
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(SelectedFeatureDefinition, SelectedLocation, Core.Models.Enums.FeatureAction.Deactivate));
         }
 
         public void Handle(ItemSelected<FeatureDefinition> message)

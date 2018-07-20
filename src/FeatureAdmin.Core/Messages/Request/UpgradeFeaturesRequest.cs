@@ -14,7 +14,7 @@ namespace FeatureAdmin.Core.Messages.Request
         /// <param name="features">the activated features to deactivate</param>
         /// <param name="force">if to deactivate with force</param>
         /// <param name="elevatedPrivileges">if to deactivate with elevated privileges</param>
-        public UpgradeFeaturesRequest([NotNull] IEnumerable <ActivatedFeature> features, bool? force = null, bool? elevatedPrivileges = null)
+        public UpgradeFeaturesRequest([NotNull] IEnumerable <ActivatedFeatureSpecial> features, bool? force = null, bool? elevatedPrivileges = null)
         {
             Features = features;
             Force = force;
@@ -26,16 +26,16 @@ namespace FeatureAdmin.Core.Messages.Request
             if (featureCount > 0)
             {
                 var firstFeature = features.First();
-                var firstFeatureName = firstFeature.DisplayName;
-                var locationId = firstFeature.LocationId;
+                var firstFeatureName = firstFeature.ActivatedFeature.DisplayName;
+                var locationId = firstFeature.ActivatedFeature.LocationId;
                 string version;
                 
-                if (firstFeature.Definition != null)
+                if (firstFeature.ActivatedFeature.Definition != null)
                 {
                     version = string.Format(
                         " from version {0} to {1}",
-                        firstFeature.Version,
-                        firstFeature.Definition.Version
+                        firstFeature.ActivatedFeature.Version,
+                        firstFeature.ActivatedFeature.Definition.Version
                         );
                 }
                 else
@@ -43,12 +43,23 @@ namespace FeatureAdmin.Core.Messages.Request
                     version = string.Empty;
                 }
 
+                string locationUrl;
+
+                if (firstFeature.Location != null)
+                {
+                    locationUrl = firstFeature.Location.Url;
+                }
+                else
+                {
+                    locationUrl = "locationId " + firstFeature.ActivatedFeature.LocationId.ToString();
+                }
+
 
                 Title = string.Format(
-                "Feature upgrade of {0} feature(s), first one is '{1}' at location id '{2}' {3}",
+                "Feature upgrade of {0} feature(s), first one is '{1}' at '{2}' {3}",
                 featureCount,
                 firstFeatureName,
-                locationId,
+                firstFeature.Location.Url,
                 version
                 );
             }
@@ -58,7 +69,7 @@ namespace FeatureAdmin.Core.Messages.Request
             }
         }
         
-        public IEnumerable<ActivatedFeature> Features { get; }
+        public IEnumerable<ActivatedFeatureSpecial> Features { get; }
        
         // From UI, force and elevated privileges are not required, therefore set to null if not set
         public bool? Force { get; }

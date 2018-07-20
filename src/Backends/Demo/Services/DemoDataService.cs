@@ -99,6 +99,27 @@ namespace FeatureAdmin.Backends.Demo.Services
         {
             return loadChildLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
         }
+
+        public string UpgradeFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string UpgradeSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string UpgradeWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string UpgradeWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
+        {
+            throw new NotImplementedException();
+        }
+
         private string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force
             , out ActivatedFeature activatedFeature)
         {
