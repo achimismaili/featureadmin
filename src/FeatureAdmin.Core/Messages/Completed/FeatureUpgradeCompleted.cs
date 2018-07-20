@@ -3,27 +3,27 @@ using System;
 
 namespace FeatureAdmin.Core.Messages.Completed
 {
-    public class FeatureActivationCompleted : BaseFeatureToggleCompleted
+    public class FeatureUpgradeCompleted : BaseFeatureToggleCompleted
     {
         /// <summary>
-        /// provides the information for the activated feature
+        /// provides the information for the upgraded feature
         /// </summary>
         /// <param name="taskId">reference to task id</param>
         /// <param name="locationReference">where did action take place</param>
-        /// <param name="activatedFeature">the activated feature</param>
+        /// <param name="upgradedFeature">the upgraded feature</param>
         /// <param name="error">was activation successful?</param>
-        public FeatureActivationCompleted(
+        public FeatureUpgradeCompleted(
             Guid taskId
             , Guid locationReference
-            , ActivatedFeature activatedFeature
+            , ActivatedFeature upgradedFeature
             )
 
             : base(taskId, locationReference)
         {
-            ActivatedFeature = activatedFeature;
+            UpgradedFeature = upgradedFeature;
 
         }
 
-        public ActivatedFeature ActivatedFeature { get; }
+        public ActivatedFeature UpgradedFeature { get; }
     }
 }

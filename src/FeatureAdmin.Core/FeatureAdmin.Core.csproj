@@ -56,6 +56,7 @@
     <Compile Include="Factories\ActivatedFeatureFactory.cs" />
     <Compile Include="Factories\FeatureDefinitionFactory.cs" />
     <Compile Include="Factories\LocationFactory.cs" />
+    <Compile Include="Messages\Completed\FeatureUpgradeCompleted.cs" />
     <Compile Include="Messages\Completed\FeatureActivationCompleted.cs" />
     <Compile Include="Messages\Completed\FeatureDeactivationCompleted.cs" />
     <Compile Include="Messages\Completed\BaseFeatureToggleCompleted.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Messages\Request\UpdateRequestSettingsExtensions.cs" />
     <Compile Include="Messages\Request\FeatureToggleRequest.cs" />
     <Compile Include="Models\ActivatedFeatureSpecial.cs" />
+    <Compile Include="Models\Enums\FeatureAction.cs" />
     <Compile Include="Models\Enums\LogLevel.cs" />
     <Compile Include="Models\Enums\FeatureDefinitionScope.cs" />
     <Compile Include="Models\LoadedDto.cs" />

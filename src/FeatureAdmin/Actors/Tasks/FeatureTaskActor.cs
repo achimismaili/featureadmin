@@ -40,11 +40,34 @@ namespace FeatureAdmin.Core.Models.Tasks
             jobsCompleted = new Dictionary<Guid, bool>();
 
             Receive<Confirmation>(message => HandleConfirmation(message));
+            Receive<DeactivateFeaturesRequest>(message => HandleDeactivateFeaturesRequest(message));
             Receive<FeatureToggleRequest>(message => HandleFeatureToggleRequest(message));
+            Receive<UpgradeFeaturesRequest>(message => HandleUpgradeFeaturesRequest(message));
             Receive<FeatureDeactivationCompleted>(message => HandleFeatureDeactivationCompleted(message));
             Receive<FeatureActivationCompleted>(message => HandleFeatureActivationCompleted(message));
+            Receive<FeatureUpgradeCompleted>(message => HandleFeatureUpgradeCompleted(message));
         }
 
+        private void HandleFeatureUpgradeCompleted(FeatureUpgradeCompleted message)
+        {
+            _log.Debug("Entered HandleFeatureUpgradeCompleted with Id " + Id.ToString());
+
+            throw new NotImplementedException();
+        }
+
+        private void HandleUpgradeFeaturesRequest(UpgradeFeaturesRequest message)
+        {
+            _log.Debug("Entered HandleUpgradeFeaturesRequest with Id " + Id.ToString());
+
+            throw new NotImplementedException();
+        }
+
+        private void HandleDeactivateFeaturesRequest(DeactivateFeaturesRequest message)
+        {
+            _log.Debug("Entered HandleDeactivateFeaturesRequest with Id " + Id.ToString());
+
+            throw new NotImplementedException();
+        }
 
         public override double PercentCompleted
         {
@@ -98,6 +121,8 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         protected override void HandleCancelation(CancelMessage cancelMessage)
         {
+            _log.Debug("Entered HandleCancelation with Id " + Id.ToString());
+
             foreach (var featureActor in executingActors.Values)
             {
                 featureActor.Tell(cancelMessage);
@@ -106,6 +131,8 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         private void HandleConfirmation(Confirmation message)
         {
+            _log.Debug("Entered HandleConfirmation with Id " + Id.ToString());
+
             if (!TaskCanceled)
             {
                 jobsTotal = featureToggleRequestsToBeConfirmed.Count;
@@ -143,6 +170,8 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         private void HandleFeatureActivationCompleted([NotNull] FeatureActivationCompleted message)
         {
+            _log.Debug("Entered HandleFeatureActivationCompleted with Id " + Id.ToString());
+
             bool success = true;
             repository.AddActivatedFeature(message.ActivatedFeature);
 
@@ -153,6 +182,8 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         private void HandleFeatureDeactivationCompleted([NotNull] FeatureDeactivationCompleted message)
         {
+            _log.Debug("Entered HandleFeatureDeactivationCompleted with Id " + Id.ToString());
+
             bool success = true;
             repository.RemoveActivatedFeature(message.FeatureId, message.LocationReference);
 

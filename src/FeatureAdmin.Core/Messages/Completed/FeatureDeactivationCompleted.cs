@@ -5,7 +5,7 @@ namespace FeatureAdmin.Core.Messages.Completed
     public class FeatureDeactivationCompleted : BaseFeatureToggleCompleted
     {
         /// <summary>
-        /// provides the loaded location including child locations
+        /// provides the information for the deactivated feature
         /// </summary>
         /// <param name="taskId">reference to task id</param>
         /// <param name="locationReference">where did action take place</param>
