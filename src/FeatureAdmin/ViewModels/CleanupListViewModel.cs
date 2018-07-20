@@ -50,7 +50,7 @@ namespace FeatureAdmin.ViewModels
             DisplayName = "Cleanup";
         }
 
-        public bool CanFilterFeature { get; protected set; }
+        public bool CanFilterFeature { get; private set; }
 
         public void FilterFeature()
         {
