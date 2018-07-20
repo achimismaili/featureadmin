@@ -91,9 +91,9 @@
             HorizontalAlignment="Center"
                    FontWeight="Bold"
                />
-            <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent">
-                <MenuItem x:Name="FilterFeatures" ToolTip="Filter definitions for this activated feature"
-                          Background="Transparent" FontSize="18"
+            <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent" FontSize="18">
+                <MenuItem x:Name="FilterFeatures" ToolTip="Filter the definition for this feature"
+                          Background="Transparent" 
                  cal:Message.Attach="FilterFeature" >
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
@@ -104,15 +104,39 @@
                 </MenuItem>
                 <MenuItem x:Name="FilterLocation" ToolTip="Show all features with this feature ID"
                           Background="Transparent" 
-                FontSize="18"  cal:Message.Attach="FilterThis(ActiveItem_Id)" >
+                  cal:Message.Attach="FilterThis(ActiveItem_Id)" >
                     <MenuItem.Header>
                             <fa:FontAwesome Icon="Filter" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem x:Name="ShowDetails" ToolTip="Show details for this feature in new window"
-                          Background="Transparent" FontSize="18">
+                <MenuItem x:Name="Upgrade" ToolTip="Upgrade this feature"
+                          Background="Transparent" >
                     <MenuItem.Header>
-                        <fa:FontAwesome Icon="Eye" />
+                        <fa:FontAwesome Icon="ChevronCircleUp" />
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem x:Name="UpgradeFiltered" ToolTip="Upgrade filtered features"
+                          Background="Transparent" >
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Icon="ChevronCircleUp" />
+                            <fa:FontAwesome Icon="Filter" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem x:Name="UpgradeFarm" ToolTip="Upgrade all features in farm"
+                          Background="Transparent" >
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Icon="ChevronCircleUp" />
+                            <fa:FontAwesome Icon="Home" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem x:Name="ShowDetails" ToolTip="Show details for this feature in new window"
+                          Background="Transparent" >
+                    <MenuItem.Header>
+                        <fa:FontAwesome Icon="Search" />
                     </MenuItem.Header>
                 </MenuItem>
             </Menu>
