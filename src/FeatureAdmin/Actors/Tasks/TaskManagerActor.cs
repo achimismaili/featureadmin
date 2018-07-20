@@ -13,11 +13,13 @@ using FeatureAdmin.Core.Services;
 
 namespace FeatureAdmin.Actors.Tasks
 {
-    public class TaskManagerActor : ReceiveActor
-               // ,Caliburn.Micro.IHandle<LoadTask>
-               , Caliburn.Micro.IHandle<FeatureToggleRequest>
-         , Caliburn.Micro.IHandle<SettingsChanged>
-        , Caliburn.Micro.IHandle<Confirmation>
+    public class TaskManagerActor : ReceiveActor,
+        // Caliburn.Micro.IHandle<LoadTask>,
+        Caliburn.Micro.IHandle<DeactivateFeaturesRequest>,
+        Caliburn.Micro.IHandle<FeatureToggleRequest>,
+        Caliburn.Micro.IHandle<UpgradeFeaturesRequest>,
+        Caliburn.Micro.IHandle<SettingsChanged>,
+        Caliburn.Micro.IHandle<Confirmation>
     {
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IDataService dataService;
@@ -57,7 +59,7 @@ namespace FeatureAdmin.Actors.Tasks
         {
             IActorRef newTaskActor =
             Context.ActorOf(LoadTaskActor.Props(
-                eventAggregator, 
+                eventAggregator,
                 repository,
                 dataService,
                 message.Id), message.Id.ToString());
@@ -72,6 +74,13 @@ namespace FeatureAdmin.Actors.Tasks
 
         public void Handle(FeatureToggleRequest message)
         {
+            var requestWithCorrectSettings = message.GetWithUpdatedSettings(force, elevatedPrivileges);
+
+            SetupNewTaskManager(requestWithCorrectSettings);
+        }
+
+        private void SetupNewTaskManager<T>(T message) where T : Core.Messages.BaseTaskMessage
+        {
             // as this comes from WPF, no akka context available here yet.
             IActorRef newTaskActor =
             ActorSystemReference.ActorSystem.ActorOf(
@@ -84,10 +93,8 @@ namespace FeatureAdmin.Actors.Tasks
 
             taskActors.Add(message.TaskId, newTaskActor);
 
-            var requestWithCorrectSettings = message.GetWithUpdatedSettings(force, elevatedPrivileges);
-
-            // trigger feature toggle request
-            newTaskActor.Tell(requestWithCorrectSettings);
+            // trigger task handling
+            newTaskActor.Tell(message);
         }
 
         public void Handle(SettingsChanged message)
@@ -110,9 +117,23 @@ namespace FeatureAdmin.Actors.Tasks
             {
                 eventAggregator.PublishOnUIThread(
                     new Messages.LogMessage(Core.Models.Enums.LogLevel.Error,
-                    string.Format("Internal error. Confirmed task with task id {0} was not found anymore!",message.TaskId)
+                    string.Format("Internal error. Confirmed task with task id {0} was not found anymore!", message.TaskId)
                     ));
             }
+        }
+
+        public void Handle(UpgradeFeaturesRequest message)
+        {
+            var requestWithCorrectSettings = message.GetWithUpdatedSettings(force, elevatedPrivileges);
+
+            SetupNewTaskManager(requestWithCorrectSettings);
+        }
+
+        public void Handle(DeactivateFeaturesRequest message)
+        {
+            var requestWithCorrectSettings = message.GetWithUpdatedSettings(force, elevatedPrivileges);
+
+            SetupNewTaskManager(requestWithCorrectSettings);
         }
     }
 }
