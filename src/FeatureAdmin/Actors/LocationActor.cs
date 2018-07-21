@@ -92,32 +92,36 @@ namespace FeatureAdmin.Actors
             switch (message.Location.Scope)
             {
                 case Core.Models.Enums.Scope.Web:
-                    errorMsg += dataService.UpgradeWebFeature(
+                    errorMsg += dataService.WebFeatureAction(
                         message.FeatureDefinition,
                         message.Location,
+                        Core.Models.Enums.FeatureAction.Upgrade,
                         message.ElevatedPrivileges.Value,
                         message.Force.Value,
                         out af);
                     break;
                 case Core.Models.Enums.Scope.Site:
-                    errorMsg += dataService.UpgradeSiteFeature(
+                    errorMsg += dataService.SiteFeatureAction(
                         message.FeatureDefinition,
                         message.Location,
+                        Core.Models.Enums.FeatureAction.Upgrade,
                         message.ElevatedPrivileges.Value,
                         message.Force.Value,
                         out af);
                     break;
                 case Core.Models.Enums.Scope.WebApplication:
-                    errorMsg += dataService.UpgradeWebAppFeature(
+                    errorMsg += dataService.WebAppFeatureAction(
                         message.FeatureDefinition,
                         message.Location,
+                        Core.Models.Enums.FeatureAction.Upgrade,
                         message.Force.Value,
                         out af);
                     break;
                 case Core.Models.Enums.Scope.Farm:
-                    errorMsg += dataService.UpgradeFarmFeature(
+                    errorMsg += dataService.FarmFeatureAction(
                         message.FeatureDefinition,
                         message.Location,
+                        Core.Models.Enums.FeatureAction.Upgrade,
                         message.Force.Value,
                         out af);
                     break;
@@ -230,32 +234,36 @@ namespace FeatureAdmin.Actors
             switch (message.Location.Scope)
             {
                 case Core.Models.Enums.Scope.Web:
-                    errorMsg += dataService.ActivateWebFeature(
+                    errorMsg += dataService.WebFeatureAction(
                         message.FeatureDefinition,
                         message.Location,
+                        Core.Models.Enums.FeatureAction.Activate,
                         message.ElevatedPrivileges.Value,
                         message.Force.Value,
                         out af);
                     break;
                 case Core.Models.Enums.Scope.Site:
-                    errorMsg += dataService.ActivateSiteFeature(
+                    errorMsg += dataService.SiteFeatureAction(
                         message.FeatureDefinition,
                         message.Location,
+                        Core.Models.Enums.FeatureAction.Activate,
                         message.ElevatedPrivileges.Value,
                         message.Force.Value,
                         out af);
                     break;
                 case Core.Models.Enums.Scope.WebApplication:
-                    errorMsg += dataService.ActivateWebAppFeature(
+                    errorMsg += dataService.WebAppFeatureAction(
                         message.FeatureDefinition,
                         message.Location,
+                        Core.Models.Enums.FeatureAction.Activate,
                         message.Force.Value,
                         out af);
                     break;
                 case Core.Models.Enums.Scope.Farm:
-                    errorMsg += dataService.ActivateFarmFeature(
+                    errorMsg += dataService.FarmFeatureAction(
                         message.FeatureDefinition,
                         message.Location,
+                        Core.Models.Enums.FeatureAction.Activate,
                         message.Force.Value,
                         out af);
                     break;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FeatureAdmin.Core.Models;
 using FeatureAdmin.Core.Services;
+using FeatureAdmin.Core.Models.Enums;
 
 namespace FeatureAdmin.Backends.Demo.Services
 {
@@ -14,24 +15,65 @@ namespace FeatureAdmin.Backends.Demo.Services
             demoRepository = new Repository.DemoRepository();
         }
 
-        public string ActivateFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
+        public string FarmFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool force, out ActivatedFeature activatedFeature)
         {
-            return ActivateFeature(feature, location, false, force, out activatedFeature);
+            switch (action)
+            {
+                case FeatureAction.Activate:
+                    return ActivateFeature(feature, location, false, force, out activatedFeature);
+                case FeatureAction.Deactivate:
+                    throw new NotImplementedException("This kind of action is not supported!");
+                case FeatureAction.Upgrade:
+                    return UpgradeFeature(feature, location, false, force, out activatedFeature);
+                default:
+                    throw new NotImplementedException("This kind of action is not supported!");
+            }
         }
 
-        public string ActivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
+        public string SiteFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
         {
-            return ActivateFeature(feature, location, elevatedPrivileges, force, out activatedFeature);
+            switch (action)
+            {
+                case FeatureAction.Activate:
+                    return ActivateFeature(feature, location, elevatedPrivileges, force, out activatedFeature);
+                case FeatureAction.Deactivate:
+                    throw new NotImplementedException("This kind of action is not supported!");
+                case FeatureAction.Upgrade:
+                    return UpgradeFeature(feature, location, elevatedPrivileges, force, out activatedFeature);
+                default:
+                    throw new NotImplementedException("This kind of action is not supported!");
+            }
+
         }
 
-        public string ActivateWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
+        public string WebAppFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool force, out ActivatedFeature activatedFeature)
         {
-            return ActivateFeature(feature, location, false, force, out activatedFeature);
+            switch (action)
+            {
+                case FeatureAction.Activate:
+                    return ActivateFeature(feature, location, false, force, out activatedFeature);
+                case FeatureAction.Deactivate:
+                    throw new NotImplementedException("This kind of action is not supported!");
+                case FeatureAction.Upgrade:
+                    return UpgradeFeature(feature, location, false, force, out activatedFeature);
+                default:
+                    throw new NotImplementedException("This kind of action is not supported!");
+            }
         }
 
-        public string ActivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
+        public string WebFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
         {
-            return ActivateFeature(feature, location, elevatedPrivileges, force, out activatedFeature);
+            switch (action)
+            {
+                case FeatureAction.Activate:
+                    return ActivateFeature(feature, location, elevatedPrivileges, force, out activatedFeature);
+                case FeatureAction.Deactivate:
+                    throw new NotImplementedException("This kind of action is not supported!");
+                case FeatureAction.Upgrade:
+                    return UpgradeFeature(feature, location, elevatedPrivileges, force, out activatedFeature);
+                default:
+                    throw new NotImplementedException("This kind of action is not supported!");
+            }
         }
 
         public string DeactivateFarmFeature(FeatureDefinition feature, Location location, bool force)
@@ -98,26 +140,6 @@ namespace FeatureAdmin.Backends.Demo.Services
         public LoadedDto LoadWebApps()
         {
             return loadChildLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
-        }
-
-        public string UpgradeFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
-        {
-            return UpgradeFeature(feature, location, false, force, out activatedFeature);
-        }
-
-        public string UpgradeSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
-        {
-            return UpgradeFeature(feature, location, false, force, out activatedFeature);
-        }
-
-        public string UpgradeWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
-        {
-            return UpgradeFeature(feature, location, false, force, out activatedFeature);
-        }
-
-        public string UpgradeWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
-        {
-            return UpgradeFeature(feature, location, false, force, out activatedFeature);
         }
 
         private string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force

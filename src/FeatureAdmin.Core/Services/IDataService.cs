@@ -1,5 +1,6 @@
 ﻿using FeatureAdmin.Core.Messages.Completed;
 using FeatureAdmin.Core.Models;
+using FeatureAdmin.Core.Models.Enums;
 using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Services
@@ -21,18 +22,14 @@ namespace FeatureAdmin.Core.Services
         LoadedDto LoadWebAppChildren(Location location, bool elevatedPrivileges);
 
         string DeactivateFarmFeature(FeatureDefinition feature, Location location, bool force);
-        string ActivateFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature);
-        string UpgradeFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature);
+        string FarmFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool force, out ActivatedFeature activatedFeature);
         string DeactivateWebAppFeature(FeatureDefinition feature, Location location, bool force);
-        string ActivateWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature);
-        string UpgradeWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature);
+        string WebAppFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool force, out ActivatedFeature activatedFeature);
         string DeactivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force);
-        string ActivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
-        string UpgradeSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
+        string SiteFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
         string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force);
-        string ActivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
-        string UpgradeWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
-
+        string WebFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
+ 
 
         //string UninstallFarmFeature(FeatureDefinition feature, bool force);
 

@@ -5,6 +5,7 @@ using Microsoft.SharePoint.Administration;
 using Microsoft.SharePoint;
 using FeatureAdmin.Backends.Sp2013.Common;
 using System;
+using FeatureAdmin.Core.Models.Enums;
 
 namespace FeatureAdmin.Backends.Sp2013.Services
 {
@@ -154,310 +155,156 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
         public string DeactivateFarmFeature(FeatureDefinition feature, Location location, bool force)
         {
-            try
-            {
-                var farm = SpLocationHelper.GetFarm();
-
-                SpFeatureHelper.DeactivateFeatureInFeatureCollection(farm.Features, feature.Id, force);
-
-            }
-            catch (Exception ex)
-            {
-
-                return ex.Message;
-            }
-
-            return string.Empty;
+            // this will always be null
+            ActivatedFeature deactivationDummy;
+            return FarmFeatureAction(feature, location, FeatureAction.Deactivate, force, out deactivationDummy);
         }
 
-        public string ActivateFarmFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
+        public string FarmFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool force, out ActivatedFeature resultingFeature)
         {
-            activatedFeature = null;
-
-            try
+            switch (action)
             {
-                var farm = SpLocationHelper.GetFarm();
-
-                var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(farm.Features, feature.Id, force);
-
-                if (spActivatedFeature != null)
-                {
-                    FeatureDefinition nffd; // feature definition is not relevant in case of activation
-                    activatedFeature = spActivatedFeature.ToActivatedFeature(location, out nffd);
-                }
+                case FeatureAction.Activate:
+                    return SpFeatureAction.FarmFeatureAction(
+                        feature,
+                        location,
+                        SpFeatureHelper.ActivateFeatureInFeatureCollection,
+                        force,
+                        out resultingFeature);
+                case FeatureAction.Deactivate:
+                    return SpFeatureAction.FarmFeatureAction(
+                        feature,
+                        location,
+                        SpFeatureHelper.DeactivateFeatureInFeatureCollectionReturnsNull,
+                        force,
+                        out resultingFeature);
+                case FeatureAction.Upgrade:
+                    return SpFeatureAction.FarmFeatureAction(
+                       feature,
+                       location,
+                       SpFeatureHelper.UpgradeFeatureInFeatureCollection,
+                       force,
+                       out resultingFeature);
+                default:
+                    throw new NotImplementedException("This kind of action is not supported!");
             }
-            catch (Exception ex)
-            {
-
-                return ex.Message;
-            }
-
-            return string.Empty;
         }
 
         public string DeactivateWebAppFeature(FeatureDefinition feature, Location location, bool force)
         {
-            try
-            {
-                var wa = SpLocationHelper.GetWebApplication(location.Id);
-
-                SpFeatureHelper.DeactivateFeatureInFeatureCollection(wa.Features, feature.Id, force);
-
-            }
-            catch (Exception ex)
-            {
-
-                return ex.Message;
-            }
-
-            return string.Empty;
+            // this will always be null
+            ActivatedFeature deactivationDummy;
+            return WebAppFeatureAction(feature, location, FeatureAction.Deactivate, force, out deactivationDummy);
         }
 
-        public string ActivateWebAppFeature(FeatureDefinition feature, Location location, bool force, out ActivatedFeature activatedFeature)
+        public string WebAppFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool force, out ActivatedFeature resultingFeature)
         {
-            activatedFeature = null;
-
-            try
+            switch (action)
             {
-                var wa = SpLocationHelper.GetWebApplication(location.Id);
-
-                var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(wa.Features, feature.Id, force);
-
-                if (spActivatedFeature != null)
-                {
-                    FeatureDefinition nffd; // feature definition is not relevant in case of activation
-                    activatedFeature = spActivatedFeature.ToActivatedFeature(location, out nffd);
-                }
+                case FeatureAction.Activate:
+                    return SpFeatureAction.WebAppFeatureAction(
+                        feature,
+                        location,
+                        SpFeatureHelper.ActivateFeatureInFeatureCollection,
+                        force,
+                        out resultingFeature);
+                case FeatureAction.Deactivate:
+                    return SpFeatureAction.WebAppFeatureAction(
+                        feature,
+                        location,
+                        SpFeatureHelper.DeactivateFeatureInFeatureCollectionReturnsNull,
+                        force,
+                        out resultingFeature);
+                case FeatureAction.Upgrade:
+                    return SpFeatureAction.WebAppFeatureAction(
+                       feature,
+                       location,
+                       SpFeatureHelper.UpgradeFeatureInFeatureCollection,
+                       force,
+                       out resultingFeature);
+                default:
+                    throw new NotImplementedException("This kind of action is not supported!");
             }
-            catch (Exception ex)
-            {
-
-                return ex.Message;
-            }
-
-            return string.Empty;
         }
 
         public string DeactivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
         {
-            SPSite spSite = null;
-
-            try
-            {
-                spSite = SpLocationHelper.GetSite(location);
-
-                SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spSite, elevatedPrivileges);
-
-                SpFeatureHelper.DeactivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
-
-            }
-            catch (Exception ex)
-            {
-
-                return ex.Message;
-            }
-            finally
-            {
-                if (spSite != null)
-                {
-                    spSite.Dispose();
-                }
-            }
-
-            return string.Empty;
+            // this will always be null
+            ActivatedFeature deactivationDummy;
+            return SiteFeatureAction(feature, location, FeatureAction.Deactivate, elevatedPrivileges, force, out deactivationDummy);
         }
 
-        public string ActivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
+        public string SiteFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool elevatedPrivileges, bool force, out ActivatedFeature resultingFeature)
         {
-            activatedFeature = null;
-
-            SPSite spSite = null;
-
-            try
-            {
-                spSite = SpLocationHelper.GetSite(location);
-
-                SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spSite, elevatedPrivileges);
-
-                var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
-
-                if (spActivatedFeature != null)
+                switch (action)
                 {
-                    FeatureDefinition nffd; // feature definition is not relevant in case of activation
-                    activatedFeature = spActivatedFeature.ToActivatedFeature(location, out nffd);
+                    case FeatureAction.Activate:
+                        return SpFeatureAction.SiteFeatureAction(
+                            feature,
+                            location,
+                            SpFeatureHelper.ActivateFeatureInFeatureCollection,
+                            elevatedPrivileges,
+                            force,
+                            out resultingFeature);
+                    case FeatureAction.Deactivate:
+                        return SpFeatureAction.SiteFeatureAction(
+                            feature,
+                            location,
+                            SpFeatureHelper.DeactivateFeatureInFeatureCollectionReturnsNull,
+                            elevatedPrivileges,
+                            force,
+                            out resultingFeature);
+                    case FeatureAction.Upgrade:
+                        return SpFeatureAction.SiteFeatureAction(
+                           feature,
+                           location,
+                           SpFeatureHelper.UpgradeFeatureInFeatureCollection,
+                           elevatedPrivileges,
+                           force,
+                           out resultingFeature);
+                    default:
+                        throw new NotImplementedException("This kind of action is not supported!");
                 }
             }
-            catch (Exception ex)
-            {
-
-                return ex.Message;
-            }
-            finally
-            {
-                if (spSite != null)
-                {
-                    spSite.Dispose();
-                }
-            }
-
-            return string.Empty;
-        }
 
         public string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
         {
-            SPWeb spWeb = null;
-
-            try
-            {
-                spWeb = SpLocationHelper.GetWeb(location, elevatedPrivileges);
-
-                SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spWeb, elevatedPrivileges);
-
-                SpFeatureHelper.DeactivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
-
-            }
-            catch (Exception ex)
-            {
-
-                return ex.Message;
-            }
-            finally
-            {
-                if (spWeb != null)
-                {
-                    spWeb.Dispose();
-                }
-            }
-            return string.Empty;
+            // this will always be null
+            ActivatedFeature deactivationDummy;
+            return WebFeatureAction(feature, location,FeatureAction.Deactivate, elevatedPrivileges, force, out deactivationDummy );
         }
 
-        public string ActivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
+        public string WebFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool elevatedPrivileges, bool force, out ActivatedFeature resultingFeature)
         {
-            activatedFeature = null;
-
-            SPWeb spWeb = null;
-
-            try
+            switch (action)
             {
-                spWeb = SpLocationHelper.GetWeb(location, elevatedPrivileges);
-                SPFeatureCollection featureCollection = SpFeatureHelper.GetFeatureCollection(spWeb, elevatedPrivileges);
-
-                var spActivatedFeature = SpFeatureHelper.ActivateFeatureInFeatureCollection(featureCollection, feature.Id, force);
-
-                if (spActivatedFeature != null)
-                {
-                    FeatureDefinition nffd; // feature definition is not relevant in case of activation
-                    activatedFeature = spActivatedFeature.ToActivatedFeature(location, out nffd);
-                }
+                case FeatureAction.Activate:
+                    return SpFeatureAction.WebFeatureAction(
+                        feature,
+                        location,
+                        SpFeatureHelper.ActivateFeatureInFeatureCollection,
+                        elevatedPrivileges,
+                        force,
+                        out resultingFeature);
+                case FeatureAction.Deactivate:
+                    return SpFeatureAction.WebFeatureAction(
+                        feature,
+                        location,
+                        SpFeatureHelper.DeactivateFeatureInFeatureCollectionReturnsNull,
+                        elevatedPrivileges,
+                        force,
+                        out resultingFeature);
+                case FeatureAction.Upgrade:
+                    return SpFeatureAction.WebFeatureAction(
+                       feature,
+                       location,
+                       SpFeatureHelper.UpgradeFeatureInFeatureCollection,
+                       elevatedPrivileges,
+                       force,
+                       out resultingFeature);
+                default:
+                    throw new NotImplementedException("This kind of action is not supported!");
             }
-            catch (Exception ex)
-            {
-
-                return ex.Message;
-            }
-            finally
-            {
-                if (spWeb != null)
-                {
-                    spWeb.Dispose();
-                }
-            }
-
-            return string.Empty;
         }
-
-        //private LoadedDto loadLocations(Location location)
-        //{
-        //    List<ActivatedFeature> activatedFeatures = new List<ActivatedFeature>();
-        //    List<FeatureDefinition> definitions = new List<FeatureDefinition>();
-        //    List<Location> children = new List<Location>();
-
-        //    if (location == null)
-        //    {
-        //        return null;
-        //    }
-
-
-
-        //    //if farm is loaded, set loaded farm as parent and add farm as children, too
-        //    if (location.Scope == Core.Models.Enums.Scope.Farm)
-        //    {
-        //       children.Add(location);
-        //    }
-
-        //    Core.Models.Enums.Scope? childScope;
-
-        //    switch (location.Scope)
-        //    {
-        //        case Core.Models.Enums.Scope.Web:
-        //            childScope = null;
-        //            break;
-        //        case Core.Models.Enums.Scope.Site:
-        //            childScope = Core.Models.Enums.Scope.Web;
-        //            break;
-        //        case Core.Models.Enums.Scope.WebApplication:
-        //            childScope = Core.Models.Enums.Scope.Site;
-        //            break;
-        //        case Core.Models.Enums.Scope.Farm:
-        //            var webApps = GetAllWebApplications(location.Id);
-
-        //            children.AddRange(webApps);
-
-
-        //            break;
-        //        case Core.Models.Enums.Scope.ScopeInvalid:
-        //            childScope = null;
-        //            break;
-        //        default:
-        //            childScope = null;
-        //            break;
-        //    }
-
-
-        //    if (childScope != null)
-        //    {
-        //        children.AddRange(repository.SearchLocations(location.Id.ToString(), childScope.Value));
-        //    }
-
-        //    foreach (Location l in children)
-        //    {
-        //        var features = repository.GetActivatedFeatures(l);
-        //        activatedFeatures.AddRange(features);
-        //        var defs = repository.SearchFeatureDefinitions(l.Id.ToString(), l.Scope, false); ;
-        //        definitions.AddRange(defs);
-        //    }
-
-        //    var loadedElements = new LoadedDto(
-        //        location,
-        //        children,
-        //        activatedFeatures,
-        //        definitions
-        //        );
-
-        //    var loadedMessage = new LocationsLoaded(loadedElements);
-
-        //    return loadedMessage;
-        //}
-
-
-
-        ///// <summary>
-        ///// Loads farm and web apps
-        ///// </summary>
-        ///// <returns>farm and web apps as children</returns>
-        ///// <remarks>
-        ///// adds farm as children, too
-        ///// </remarks>
-        //public LoadedDto LoadFarmAndWebApps()
-        //{
-        //    var spFarm = GetFarm();
-
-        //    var farm = spFarm.ToLocation();
-
-        //    return loadLocations(farm);
-        //}
-
-
-
     }
 }
