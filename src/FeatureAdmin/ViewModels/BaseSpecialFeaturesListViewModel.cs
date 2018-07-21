@@ -8,8 +8,8 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseSpecialFeaturesListViewModel : BaseListViewModel<ActivatedFeatureSpecial>, 
-        IHandle<ItemSelected<FeatureDefinition>>, 
+    public abstract class BaseSpecialFeaturesListViewModel : BaseListViewModel<ActivatedFeatureSpecial>,
+        IHandle<ItemSelected<FeatureDefinition>>,
         IHandle<SetSearchFilter<Location>>
     {
         protected System.Collections.Generic.IEnumerable<ActivatedFeatureSpecial> specialActionableFeaturesInFarm;
@@ -68,39 +68,42 @@ namespace FeatureAdmin.ViewModels
             bool specialFeaturesAnyInFarm = false;
             specialActionableFeaturesInFarm = new ActivatedFeatureSpecial[0];
 
-            // check if any special features exist
-            if (Items.Count == 0)
+            // if no filters are set
+            if (string.IsNullOrEmpty(searchInput) && SelectedScopeFilter == null)
             {
-                // if filters are active initiate a search with no filters
-                if (string.IsNullOrEmpty(searchInput) && SelectedScopeFilter == null)
+
+                // in case of no items, bring up a warning
+                if (Items.Count == 0)
                 {
                     // no special features in farm
                 }
                 else
                 {
-                    var specialActionableFeaturesInFarm = SearchSpecialFeatures(string.Empty, null);
-
-                    if (specialActionableFeaturesInFarm.Count() > 0)
-                    {
-                        specialFeaturesAnyInFarm = true;
-                    }
-                }
-
-                // if no features exist in farm, notify user on activation, that no special features exist
-                if (specialFeaturesAnyInFarm == false)
-                {
-                    var noSpecialFeaturesFound = new ConfirmationRequest(
-                        noSpecialFeaturesFoundMessageTitle,
-                        noSpecialFeaturesFoundMessageBody
-                        );
-
-                    eventAggregator.BeginPublishOnUIThread(noSpecialFeaturesFound);
+                    // no filters and items available, so this is a search in the full farm, no need to do it again
+                    specialFeaturesAnyInFarm = true;
+                    specialActionableFeaturesInFarm = Items; ;
                 }
             }
             else
             {
-                specialFeaturesAnyInFarm = true;
-                specialActionableFeaturesInFarm = Items; ;
+                // in case of set filters, always perform a search with no filters to get all available features
+                specialActionableFeaturesInFarm = SearchSpecialFeatures(string.Empty, null);
+
+                if (specialActionableFeaturesInFarm.Count() > 0)
+                {
+                    specialFeaturesAnyInFarm = true;
+                }
+            }
+
+            // if no features exist in farm, notify user on activation, that no special features exist
+            if (specialFeaturesAnyInFarm == false)
+            {
+                var noSpecialFeaturesFound = new ConfirmationRequest(
+                    noSpecialFeaturesFoundMessageTitle,
+                    noSpecialFeaturesFoundMessageBody
+                    );
+
+                eventAggregator.BeginPublishOnUIThread(noSpecialFeaturesFound);
             }
 
             CanSpecialActionFarm = specialFeaturesAnyInFarm;

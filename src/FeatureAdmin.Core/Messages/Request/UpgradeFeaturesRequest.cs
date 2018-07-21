@@ -14,7 +14,7 @@ namespace FeatureAdmin.Core.Messages.Request
         /// <param name="features">the activated features to deactivate</param>
         /// <param name="force">if to deactivate with force</param>
         /// <param name="elevatedPrivileges">if to deactivate with elevated privileges</param>
-        public UpgradeFeaturesRequest([NotNull] IEnumerable <ActivatedFeatureSpecial> features, bool? force = null, bool? elevatedPrivileges = null)
+        public UpgradeFeaturesRequest([NotNull] IEnumerable<ActivatedFeatureSpecial> features, bool? force = null, bool? elevatedPrivileges = null)
         {
             Features = features;
             Force = force;
@@ -29,8 +29,10 @@ namespace FeatureAdmin.Core.Messages.Request
                 var firstFeatureName = firstFeature.ActivatedFeature.DisplayName;
                 var locationId = firstFeature.ActivatedFeature.LocationId;
                 string version;
-                
-                if (firstFeature.ActivatedFeature.Definition != null)
+
+                var definition = firstFeature.ActivatedFeature.Definition;
+
+                if (definition != null && definition.Version != firstFeature.ActivatedFeature.Version)
                 {
                     version = string.Format(
                         " from version {0} to {1}",
@@ -68,9 +70,9 @@ namespace FeatureAdmin.Core.Messages.Request
                 Title = "Feature upgrade with no features selected";
             }
         }
-        
+
         public IEnumerable<ActivatedFeatureSpecial> Features { get; }
-       
+
         // From UI, force and elevated privileges are not required, therefore set to null if not set
         public bool? Force { get; }
         // From UI, force and elevated privileges are not required, therefore set to null if not set

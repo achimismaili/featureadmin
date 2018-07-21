@@ -86,6 +86,72 @@ namespace FeatureAdmin.Actors
         private void HandleUpgrade(FeatureToggleRequest message)
         {
             string errorMsg = null;
+
+            ActivatedFeature af;
+
+            switch (message.Location.Scope)
+            {
+                case Core.Models.Enums.Scope.Web:
+                    errorMsg += dataService.UpgradeWebFeature(
+                        message.FeatureDefinition,
+                        message.Location,
+                        message.ElevatedPrivileges.Value,
+                        message.Force.Value,
+                        out af);
+                    break;
+                case Core.Models.Enums.Scope.Site:
+                    errorMsg += dataService.UpgradeSiteFeature(
+                        message.FeatureDefinition,
+                        message.Location,
+                        message.ElevatedPrivileges.Value,
+                        message.Force.Value,
+                        out af);
+                    break;
+                case Core.Models.Enums.Scope.WebApplication:
+                    errorMsg += dataService.UpgradeWebAppFeature(
+                        message.FeatureDefinition,
+                        message.Location,
+                        message.Force.Value,
+                        out af);
+                    break;
+                case Core.Models.Enums.Scope.Farm:
+                    errorMsg += dataService.UpgradeFarmFeature(
+                        message.FeatureDefinition,
+                        message.Location,
+                        message.Force.Value,
+                        out af);
+                    break;
+                case Core.Models.Enums.Scope.ScopeInvalid:
+                    errorMsg += string.Format("Location '{0}' has invalid scope - not supported for feature upgrade.", message.Location.Id);
+                    af = null;
+                    break;
+                default:
+                    errorMsg += string.Format("Location '{0}' has unidentified scope - not supported for feature upgrade.", message.Location.Id);
+                    af = null;
+                    break;
+            }
+
+
+            if (string.IsNullOrEmpty(errorMsg))
+            {
+                var completed = new Core.Messages.Completed.FeatureUpgradeCompleted(
+           message.TaskId,
+           message.Location.Id,
+           af
+           );
+
+                Sender.Tell(completed);
+            }
+            else
+            {
+                var cancelationMsg = new CancelMessage(
+                    message.TaskId,
+                    errorMsg,
+                    true
+                    );
+
+                Sender.Tell(cancelationMsg);
+            }
         }
 
         private void HandleDeactivation(FeatureToggleRequest message)

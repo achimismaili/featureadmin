@@ -88,7 +88,9 @@ namespace FeatureAdmin.Core.Models.Tasks
 
                 var confirmRequest = new ConfirmationRequest(
                         "Please confirm Feature upgrade",
-                        Title
+                        Title,
+                        message.TaskId,
+                        true
                         );
 
 
@@ -124,7 +126,9 @@ namespace FeatureAdmin.Core.Models.Tasks
 
                 var confirmRequest = new ConfirmationRequest(
                         "Please confirm Feature deactivation",
-                        Title
+                        Title,
+                        message.TaskId,
+                        true
                         );
 
 
