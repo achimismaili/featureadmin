@@ -29,19 +29,22 @@
                 <fa:FontAwesome Icon="Times" />
             </Button>
         </StackPanel>
-        <ScrollViewer x:Name="logScrollViewer" ScrollViewer.HorizontalScrollBarVisibility="Auto" Grid.Row="1">
+        <ScrollViewer x:Name="logScrollViewer" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
             <ItemsControl x:Name="Logs" >
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="0,0,0,5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding ShortTime}" Grid.Column="0" />
-                            <TextBlock Margin="5,0" Text="{Binding ShortLevel}" Grid.Column="1" />
-                            <TextBlock Text="{Binding Text}" Grid.Column="2" />
+                        <Grid Margin="0,0,0,5" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="0" >
+                                <TextBlock x:Name="ShortTime" Text="{Binding ShortTime}" Grid.Column="0" FontWeight="Bold"/>
+                                <TextBlock x:Name="ShortLevel" Margin="5,0" Text="{Binding ShortLevel}" Grid.Column="1" FontWeight="Bold"/>
+                            </StackPanel>
+                            <TextBlock x:Name="Text"  Grid.Row="1"
+                                       Text="{Binding Text}" Grid.Column="2" TextWrapping="Wrap" 
+                                       />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
