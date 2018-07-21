@@ -8,7 +8,7 @@ using FeatureAdmin.Core.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : BaseItemViewModel<T>, IHandle<ProgressMessage> where T : class 
+    public abstract class BaseListViewModel<T> : BaseItemViewModel<T>, IHandle<ProgressMessage> where T : class
         // , IHandle<SetSearchFilter<T>>  where T : class // search filter is handled in derivate classes
     {
 
@@ -20,7 +20,7 @@ namespace FeatureAdmin.ViewModels
             base(eventAggregator, repository)
         {
             ScopeFilters = new ObservableCollection<Scope>(Common.Constants.Search.ScopeFilterList);
-            
+
             lastUpdateInitiatedSearch = DateTime.Now;
 
             // https://github.com/Fody/PropertyChanged/issues/269
@@ -71,21 +71,24 @@ namespace FeatureAdmin.ViewModels
 
         public void Handle(SetSearchFilter<T> message)
         {
-            if (message == null)
+            // only set search filter, if active
+            if (IsActive)
             {
-                return;
-            };
+                if (message == null)
+                {
+                    return;
+                };
 
-            if (message.SetQuery)
-            {
-                SearchInput = message.SearchQuery;
+                if (message.SetQuery)
+                {
+                    SearchInput = message.SearchQuery;
+                }
+
+                if (message.SetScope)
+                {
+                    SelectedScopeFilter = message.SearchScope;
+                }
             }
-
-            if (message.SetScope)
-            {
-                SelectedScopeFilter = message.SearchScope;
-            }
-
         }
 
         /// <summary>
