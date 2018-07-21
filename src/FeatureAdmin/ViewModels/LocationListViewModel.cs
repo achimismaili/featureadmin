@@ -16,6 +16,9 @@ namespace FeatureAdmin.ViewModels
 
         protected override void OnActivate()
         {
+            var showActivatedFeatureWindow = new ShowActivatedFeatureWindowMessage(true);
+            eventAggregator.PublishOnUIThread(showActivatedFeatureWindow);
+
             SelectionChanged();
         }
 

@@ -10,15 +10,15 @@ using FeatureAdmin.Core.Services;
 namespace FeatureAdmin.ViewModels
 {
 
-    public class AppViewModel : Conductor<Screen>.Collection.OneActive
-        , Caliburn.Micro.IHandle<ConfirmationRequest>
-        , Caliburn.Micro.IHandle<OpenWindow<ActivatedFeature>>
-        , Caliburn.Micro.IHandle<OpenWindow<ActivatedFeatureSpecial>>
-        , Caliburn.Micro.IHandle<OpenWindow<FeatureDefinition>>
-        , Caliburn.Micro.IHandle<OpenWindow<Location>>
-        , Caliburn.Micro.IHandle<ProgressMessage>
+    public class AppViewModel : Conductor<Screen>.Collection.OneActive,
+        Caliburn.Micro.IHandle<ConfirmationRequest>,
+        Caliburn.Micro.IHandle<OpenWindow<ActivatedFeature>>,
+        Caliburn.Micro.IHandle<OpenWindow<ActivatedFeatureSpecial>>,
+        Caliburn.Micro.IHandle<OpenWindow<FeatureDefinition>>,
+        Caliburn.Micro.IHandle<OpenWindow<Location>>,
+        Caliburn.Micro.IHandle<ProgressMessage>,
+        Caliburn.Micro.IHandle<ShowActivatedFeatureWindowMessage>
     {
-
         private readonly IEventAggregator eventAggregator;
         private readonly IWindowManager windowManager;
         IDataService dataService;
@@ -115,6 +115,21 @@ namespace FeatureAdmin.ViewModels
             if (message.Progress >= 1d && message.TaskId == recentLoadTask)
             {
                 CanReLoad = true;
+            }
+        }
+
+        public void Handle(ShowActivatedFeatureWindowMessage message)
+        {
+            if (message.ShowWindow && ActivatedFeatureVm == null)
+            {
+                ActivatedFeatureVm = new ActivatedFeatureViewModel(eventAggregator, repository);
+                var resendSelectedDefinition = new ResendItemSelectedRequest<FeatureDefinition>();
+                eventAggregator.BeginPublishOnUIThread(resendSelectedDefinition);
+            }
+            
+            if(!message.ShowWindow && ActivatedFeatureVm!= null)
+            {
+                ActivatedFeatureVm = null;
             }
         }
 

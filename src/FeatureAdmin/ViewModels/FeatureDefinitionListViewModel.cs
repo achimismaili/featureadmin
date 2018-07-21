@@ -11,7 +11,8 @@ namespace FeatureAdmin.ViewModels
     public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>,
         IHandle<ItemSelected<ActivatedFeatureSpecial>>,
         IHandle<ItemSelected<Location>>, 
-        IHandle<SetSearchFilter<FeatureDefinition>>
+        IHandle<SetSearchFilter<FeatureDefinition>>,
+        IHandle<ResendItemSelectedRequest<FeatureDefinition>>
     {
         public FeatureDefinitionListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
          : base(eventAggregator, repository)
@@ -37,6 +38,11 @@ namespace FeatureAdmin.ViewModels
             var searchFilter = new SetSearchFilter<Location>(
                 ActiveItem == null ? string.Empty : ActiveItem.Id.ToString(), null);
             eventAggregator.BeginPublishOnUIThread(searchFilter);
+        }
+
+        public void Handle(ResendItemSelectedRequest<FeatureDefinition> message)
+        {
+            SelectionChangedBase();
         }
 
         public void Handle([NotNull] ItemSelected<Location> message)

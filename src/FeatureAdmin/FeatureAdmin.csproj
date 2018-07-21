@@ -176,12 +176,14 @@
     <Compile Include="Messages\CancelMessage.cs" />
     <Compile Include="Messages\Confirmation.cs" />
     <Compile Include="Messages\ConfirmationRequest.cs" />
+    <Compile Include="Messages\ResendItemSelectedRequest.cs" />
     <Compile Include="Messages\ItemSelected.cs" />
     <Compile Include="Messages\ProgressMessage.cs" />
     <Compile Include="Messages\LogMessage.cs" />
     <Compile Include="Messages\OpenWindow.cs" />
     <Compile Include="Messages\SetSearchFilter.cs" />
     <Compile Include="Messages\ActionOptionsUpdate.cs" />
+    <Compile Include="Messages\ShowActivatedFeatureWindowMessage.cs" />
     <Compile Include="Repository\FeatureRepository.cs" />
     <Compile Include="ViewModels\BaseItemViewModel.cs" />
     <Compile Include="ViewModels\BaseListViewModel.cs" />

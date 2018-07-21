@@ -65,6 +65,9 @@ namespace FeatureAdmin.ViewModels
         {
             SelectionChanged();
 
+            var closeActivatedFeatureWindow = new ShowActivatedFeatureWindowMessage(false);
+            eventAggregator.PublishOnUIThread(closeActivatedFeatureWindow);
+
             bool specialFeaturesAnyInFarm = false;
             specialActionableFeaturesInFarm = new ActivatedFeatureSpecial[0];
 
