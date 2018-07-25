@@ -92,7 +92,7 @@
                    FontWeight="Bold"
                />
             <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent" FontSize="18">
-                <MenuItem x:Name="FilterFeatures" ToolTip="Filter the definition for this feature"
+                <MenuItem x:Name="FilterFeatures" ToolTip="Filter the definitions on the left for this feature ID"
                           Background="Transparent" 
                  cal:Message.Attach="FilterFeature" >
                     <MenuItem.Header>
@@ -104,7 +104,7 @@
                 </MenuItem>
                 <MenuItem x:Name="FilterLocation" ToolTip="Show all features with this feature ID"
                           Background="Transparent" 
-                  cal:Message.Attach="FilterThis(ActiveItem_Id)" >
+                  cal:Message.Attach="FilterThis(ActiveItem_ActivatedFeature_FeatureId)" >
                     <MenuItem.Header>
                             <fa:FontAwesome Icon="Filter" />
                     </MenuItem.Header>

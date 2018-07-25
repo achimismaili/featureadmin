@@ -89,12 +89,12 @@ namespace FeatureAdmin.Backends.Demo.Repository
             return store.SearchFeatureDefinitions(searchInput, selectedScopeFilter, onlyFarmFeatures);
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToCleanup(string searchInput, Scope? selectedScopeFilter)
+        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToCleanup(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> allSpecialFeaturesInFarm)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToUpgrade(string searchInput, Scope? selectedScopeFilter)
+        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToUpgrade(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> allSpecialFeaturesInFarm)
         {
             throw new NotImplementedException();
         }

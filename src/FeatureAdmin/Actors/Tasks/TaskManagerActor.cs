@@ -131,7 +131,14 @@ namespace FeatureAdmin.Actors.Tasks
 
         public void Handle(DeactivateFeaturesRequest message)
         {
-            var requestWithCorrectSettings = message.GetWithUpdatedSettings(force, elevatedPrivileges);
+            // always set force for cleanup request
+            bool foceSettingForRequest =
+                (message.Action == Core.Models.Enums.FeatureAction.CleanUp &&
+                message.Force != null &&
+                message.Force.Value) ? true : force;
+
+
+            var requestWithCorrectSettings = message.GetWithUpdatedSettings(foceSettingForRequest, elevatedPrivileges);
 
             SetupNewTaskManager(requestWithCorrectSettings);
         }

@@ -115,17 +115,20 @@ namespace FeatureAdmin.Core.Models.Tasks
                     var toggleRequest = new FeatureToggleRequest(
                         af.ActivatedFeature.Definition,
                         af.Location,
+                        // force is already set to true, so now it is same as deactivation ... 
+                        // message.Action,
                         Enums.FeatureAction.Deactivate,
                         message.Force,
                         message.ElevatedPrivileges
                         );
                     requestsToBeConfirmed.Add(toggleRequest);
                 }
-
-                var action = Enums.FeatureAction.Deactivate.ToString().ToLower();
-
+                
                 var confirmRequest = new ConfirmationRequest(
-                        "Please confirm Feature deactivation",
+                        string.Format(
+                            "Please confirm Feature {0}",
+                            message.Action.ToString().ToLower()
+                        ),
                         Title,
                         message.TaskId,
                         true

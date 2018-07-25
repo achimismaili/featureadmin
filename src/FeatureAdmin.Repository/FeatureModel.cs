@@ -125,11 +125,11 @@ namespace FeatureAdmin.OrigoDb
 
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToCleanup(string searchInput, Scope? selectedScopeFilter)
+        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToCleanup(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> allSpecialFeaturesInFarm)
         {
-            var allFeaturesToCleanup = ActivatedFeatures.Where(f => f.Faulty);
+            var activatedFaultyFeaturesInFarm = ActivatedFeatures.Where(f => f.Faulty);
 
-            return SearchSpecialFeatures(allFeaturesToCleanup, searchInput, selectedScopeFilter);
+            return SearchSpecialFeatures(activatedFaultyFeaturesInFarm, searchInput, selectedScopeFilter, out allSpecialFeaturesInFarm);
         }
 
         public void Clear()
@@ -139,12 +139,12 @@ namespace FeatureAdmin.OrigoDb
             Locations.Clear();
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToUpgrade(string searchInput, Scope? selectedScopeFilter)
+        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToUpgrade(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> allSpecialFeaturesInFarm)
         {
-            // get all special activated features to upgrade
-            var allFeaturesToUpgrade = ActivatedFeatures.Where(f => f.CanUpgrade);
+            // get all activated features to upgrade
+            var activatedUpgradeableFeaturesInFarm = ActivatedFeatures.Where(f => f.CanUpgrade);
 
-            return SearchSpecialFeatures(allFeaturesToUpgrade, searchInput, selectedScopeFilter);
+            return SearchSpecialFeatures(activatedUpgradeableFeaturesInFarm, searchInput, selectedScopeFilter, out allSpecialFeaturesInFarm);
         }
 
         /// <summary>
@@ -154,20 +154,26 @@ namespace FeatureAdmin.OrigoDb
         /// <param name="searchInput">search input</param>
         /// <param name="selectedScopeFilter">scope filter</param>
         /// <returns></returns>
-        private IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(IEnumerable<ActivatedFeature> source, string searchInput, Scope? selectedScopeFilter)
+        private IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(
+            IEnumerable<ActivatedFeature> source,
+            string searchInput,
+            Scope? selectedScopeFilter,
+            out IEnumerable<ActivatedFeatureSpecial> sourceAsSpecialFeatures)
         {
-            
+
 
             if (source == null || source.Count() < 1)
             {
-                return new List<ActivatedFeatureSpecial>();
+                sourceAsSpecialFeatures = new List<ActivatedFeatureSpecial>();
+                return sourceAsSpecialFeatures;
             }
 
-            var searchResult = 
-                from af in source
-                 join l in Locations on af.LocationId equals l.Key
-                 select new ActivatedFeatureSpecial(af, l.Value);  
-                 
+            var searchResult = from af in source
+                               join l in Locations on af.LocationId equals l.Key
+                               select new ActivatedFeatureSpecial(af, l.Value);
+
+            sourceAsSpecialFeatures = searchResult.ToList();
+
 
             if (!string.IsNullOrEmpty(searchInput))
             {
@@ -249,7 +255,7 @@ namespace FeatureAdmin.OrigoDb
         public IEnumerable<Location> GetLocationsCanDeactivate(FeatureDefinition featureDefinition, Location location)
         {
             var allLocationsOfFeatureScope = GetChildLocationsOfScope(featureDefinition.Scope, location, featureDefinition.SandBoxedSolutionLocation);
-            
+
             var prefilteredActivatedFeatures = ActivatedFeatures.Where(f => f.FeatureId == featureDefinition.Id).ToList();
 
             // see https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
@@ -427,7 +433,7 @@ namespace FeatureAdmin.OrigoDb
                 case Scope.Web:
                     if (childrenScope == Scope.Web)
                     {
-                            childLocations.Add(parentLocation);
+                        childLocations.Add(parentLocation);
                     }
                     break;
                 case Scope.Site:
@@ -486,7 +492,7 @@ namespace FeatureAdmin.OrigoDb
             else
             {
                 return childLocations;
-            }    
+            }
         }
 
         private IEnumerable<Location> GetLocationsChildrensChildren(Location location)

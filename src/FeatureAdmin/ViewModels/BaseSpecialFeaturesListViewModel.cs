@@ -12,7 +12,7 @@ namespace FeatureAdmin.ViewModels
         IHandle<ItemSelected<FeatureDefinition>>,
         IHandle<SetSearchFilter<Location>>
     {
-        protected System.Collections.Generic.IEnumerable<ActivatedFeatureSpecial> specialActionableFeaturesInFarm;
+        protected IEnumerable<ActivatedFeatureSpecial> specialActionableFeaturesInFarm;
 
         public BaseSpecialFeaturesListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
             : base(eventAggregator, repository)
@@ -53,7 +53,7 @@ namespace FeatureAdmin.ViewModels
 
         protected override void FilterResults()
         {
-            var searchResult = SearchSpecialFeatures(searchInput, SelectedScopeFilter);
+            var searchResult = SearchSpecialFeatures(searchInput, SelectedScopeFilter, out specialActionableFeaturesInFarm);
 
             ShowResults(searchResult);
         }
@@ -90,7 +90,7 @@ namespace FeatureAdmin.ViewModels
             else
             {
                 // in case of set filters, always perform a search with no filters to get all available features
-                specialActionableFeaturesInFarm = SearchSpecialFeatures(string.Empty, null);
+                specialActionableFeaturesInFarm = SearchSpecialFeatures(string.Empty, null, out specialActionableFeaturesInFarm);
 
                 if (specialActionableFeaturesInFarm.Count() > 0)
                 {
@@ -112,7 +112,10 @@ namespace FeatureAdmin.ViewModels
             CanSpecialActionFarm = specialFeaturesAnyInFarm;
         }
 
-        public abstract IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter);
+        public abstract IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(
+            string searchInput, 
+            Core.Models.Enums.Scope? selectedScopeFilter,
+            out IEnumerable<ActivatedFeatureSpecial> specialActionableFeaturesInFarm);
 
         protected abstract void PublishSpecialActionRequest(IEnumerable<ActivatedFeatureSpecial> features);
 

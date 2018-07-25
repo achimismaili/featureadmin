@@ -35,9 +35,9 @@ namespace FeatureAdmin.ViewModels
 
 
 
-        public override IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(string searchInput, Scope? selectedScopeFilter)
+        public override IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> specialFeaturesInFarm)
         {
-            return repository.SearchFeaturesToCleanup(searchInput, selectedScopeFilter);
+            return repository.SearchFeaturesToCleanup(searchInput, selectedScopeFilter, out specialFeaturesInFarm);
         }
 
         public override void SelectionChanged()
@@ -46,16 +46,10 @@ namespace FeatureAdmin.ViewModels
             CanFilterFeature = ActiveItem != null;
         }
 
-        protected override void FilterResults()
-        {
-            var searchResult = repository.SearchFeaturesToCleanup(searchInput, SelectedScopeFilter);
-
-            ShowResults(searchResult);
-        }
-
         protected override void PublishSpecialActionRequest(IEnumerable<ActivatedFeatureSpecial> features)
         {
-            eventAggregator.PublishOnUIThread(new Core.Messages.Request.DeactivateFeaturesRequest(features));
+            // faulty feature cleanup always requires 'force'
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.DeactivateFeaturesRequest(features, true));
         }
     }
 }
