@@ -35,9 +35,11 @@ namespace FeatureAdmin.ViewModels
 
 
 
-        public override IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> specialFeaturesInFarm)
+        public override IEnumerable<ActivatedFeatureSpecial> GetAllSpecialFeatures()
         {
-            return repository.SearchFeaturesToCleanup(searchInput, selectedScopeFilter, out specialFeaturesInFarm);
+
+
+            return repository.GetAllFeaturesToCleanUp();
         }
 
         public override void SelectionChanged()

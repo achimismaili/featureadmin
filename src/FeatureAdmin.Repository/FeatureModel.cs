@@ -125,11 +125,12 @@ namespace FeatureAdmin.OrigoDb
 
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToCleanup(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> allSpecialFeaturesInFarm)
+        public IEnumerable<ActivatedFeatureSpecial> GetAllFeaturesToCleanUp()
         {
+            // get all faulty activated features 
             var activatedFaultyFeaturesInFarm = ActivatedFeatures.Where(f => f.Faulty);
 
-            return SearchSpecialFeatures(activatedFaultyFeaturesInFarm, searchInput, selectedScopeFilter, out allSpecialFeaturesInFarm);
+            return GetAsActivatedFeatureSpecial(activatedFaultyFeaturesInFarm);
         }
 
         public void Clear()
@@ -139,12 +140,26 @@ namespace FeatureAdmin.OrigoDb
             Locations.Clear();
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToUpgrade(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> allSpecialFeaturesInFarm)
+        public IEnumerable<ActivatedFeatureSpecial> GetAllFeaturesToUpgrade()
         {
             // get all activated features to upgrade
             var activatedUpgradeableFeaturesInFarm = ActivatedFeatures.Where(f => f.CanUpgrade);
 
-            return SearchSpecialFeatures(activatedUpgradeableFeaturesInFarm, searchInput, selectedScopeFilter, out allSpecialFeaturesInFarm);
+            return GetAsActivatedFeatureSpecial(activatedUpgradeableFeaturesInFarm);
+        }
+
+        private IEnumerable<ActivatedFeatureSpecial> GetAsActivatedFeatureSpecial (IEnumerable<ActivatedFeature> activatedFeatures)
+        {
+            if (activatedFeatures == null || activatedFeatures.Count() < 1)
+            {
+                return new List<ActivatedFeatureSpecial>();
+            }
+
+            var conversionResult = from af in activatedFeatures
+                                   join l in Locations on af.LocationId equals l.Key
+                               select new ActivatedFeatureSpecial(af, l.Value);
+
+            return conversionResult.ToList();
         }
 
         /// <summary>
@@ -154,27 +169,18 @@ namespace FeatureAdmin.OrigoDb
         /// <param name="searchInput">search input</param>
         /// <param name="selectedScopeFilter">scope filter</param>
         /// <returns></returns>
-        private IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(
-            IEnumerable<ActivatedFeature> source,
+        public IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(
+            IEnumerable<ActivatedFeatureSpecial> source,
             string searchInput,
-            Scope? selectedScopeFilter,
-            out IEnumerable<ActivatedFeatureSpecial> sourceAsSpecialFeatures)
+            Scope? selectedScopeFilter)
         {
-
-
             if (source == null || source.Count() < 1)
             {
-                sourceAsSpecialFeatures = new List<ActivatedFeatureSpecial>();
-                return sourceAsSpecialFeatures;
+                return new List<ActivatedFeatureSpecial>();
             }
 
-            var searchResult = from af in source
-                               join l in Locations on af.LocationId equals l.Key
-                               select new ActivatedFeatureSpecial(af, l.Value);
-
-            sourceAsSpecialFeatures = searchResult.ToList();
-
-
+            var searchResult = source;
+                               
             if (!string.IsNullOrEmpty(searchInput))
             {
                 Guid idGuid;

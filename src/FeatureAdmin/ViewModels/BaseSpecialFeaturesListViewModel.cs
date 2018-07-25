@@ -112,11 +112,20 @@ namespace FeatureAdmin.ViewModels
             CanSpecialActionFarm = specialFeaturesAnyInFarm;
         }
 
-        public abstract IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(
+        public IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(
             string searchInput, 
             Core.Models.Enums.Scope? selectedScopeFilter,
-            out IEnumerable<ActivatedFeatureSpecial> specialActionableFeaturesInFarm);
+            out IEnumerable<ActivatedFeatureSpecial> specialActionableFeaturesInFarm)
+        {
+            specialActionableFeaturesInFarm = GetAllSpecialFeatures();
 
+            // deactivate option to trigger action on farm level if no special features are available
+            CanSpecialActionFarm = specialActionableFeaturesInFarm.Any();
+
+            return repository.SearchSpecialFeatures(specialActionableFeaturesInFarm, searchInput, selectedScopeFilter);
+        }
+
+        public abstract IEnumerable<ActivatedFeatureSpecial> GetAllSpecialFeatures();
         protected abstract void PublishSpecialActionRequest(IEnumerable<ActivatedFeatureSpecial> features);
 
         public void SpecialAction()

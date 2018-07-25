@@ -32,9 +32,9 @@ namespace FeatureAdmin.ViewModels
                 return "No features found for upgrade";
             }
         }
-        public override IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> allSpecialFeaturesInFarm)
+        public override IEnumerable<ActivatedFeatureSpecial> GetAllSpecialFeatures()
         {
-            return repository.SearchFeaturesToUpgrade(searchInput, selectedScopeFilter, out allSpecialFeaturesInFarm);
+            return repository.GetAllFeaturesToUpgrade();
         }
 
         protected override void PublishSpecialActionRequest(IEnumerable<ActivatedFeatureSpecial> features)

@@ -102,14 +102,22 @@ namespace FeatureAdmin.Repository
             return store.SearchFeatureDefinitions(searchInput, selectedScopeFilter, onlyFarmFeatures);
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToCleanup(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> allSpecialFeaturesInFarm)
+        public IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(
+            IEnumerable<ActivatedFeatureSpecial> source,
+            string searchInput, 
+            Scope? selectedScopeFilter)
         {
-            return store.SearchFeaturesToCleanup(searchInput, selectedScopeFilter, out allSpecialFeaturesInFarm);
+            return store.SearchSpecialFeatures(source, searchInput, selectedScopeFilter);
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToUpgrade(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> allSpecialFeaturesInFarm)
+        public IEnumerable<ActivatedFeatureSpecial> GetAllFeaturesToUpgrade()
         {
-            return store.SearchFeaturesToUpgrade(searchInput, selectedScopeFilter, out allSpecialFeaturesInFarm);
+            return store.GetAllFeaturesToUpgrade();
+        }
+
+        public IEnumerable<ActivatedFeatureSpecial> GetAllFeaturesToCleanUp()
+        {
+            return store.GetAllFeaturesToCleanUp();
         }
 
         public IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter)

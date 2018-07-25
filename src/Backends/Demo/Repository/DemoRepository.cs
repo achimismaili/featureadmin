@@ -43,7 +43,7 @@ namespace FeatureAdmin.Backends.Demo.Repository
 
         public void AddLoadedLocations(LoadedDto message)
         {
-             store.AddLoadedLocations(message);
+            store.AddLoadedLocations(message);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace FeatureAdmin.Backends.Demo.Repository
         {
             return store.GetLocationsCanDeactivate(featureDefinition, location);
         }
-        
+
         public string RemoveActivatedFeature([NotNull] Guid featureId, [NotNull] Guid locationId)
         {
             return store.RemoveActivatedFeature(featureId, locationId);
@@ -89,20 +89,25 @@ namespace FeatureAdmin.Backends.Demo.Repository
             return store.SearchFeatureDefinitions(searchInput, selectedScopeFilter, onlyFarmFeatures);
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToCleanup(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> allSpecialFeaturesInFarm)
+        public IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(IEnumerable<ActivatedFeatureSpecial> source, string searchInput, Scope? selectedScopeFilter)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> SearchFeaturesToUpgrade(string searchInput, Scope? selectedScopeFilter, out IEnumerable<ActivatedFeatureSpecial> allSpecialFeaturesInFarm)
+        public IEnumerable<ActivatedFeatureSpecial> GetAllFeaturesToUpgrade()
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<ActivatedFeatureSpecial> GetAllFeaturesToCleanUp()
+        {
+            throw new NotImplementedException();
+        }
+
 
         public IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter)
         {
             return store.SearchLocations(searchInput, selectedScopeFilter);
         }
-
     }
 }
