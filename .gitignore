@@ -261,3 +261,5 @@ __pycache__/
 *.pubxml
 /FeatureAdmin2013/FeatureAdmin.Test/App.config
 /TestEnvironment/DeployFeatures3.0.0.0/Logs
+/TestEnvironment/SPDeploy/DeployFeatures3.0.0.0/Logs
+/TestEnvironment/SPDeploy/DeployFeatures1.0.0.0/Logs
