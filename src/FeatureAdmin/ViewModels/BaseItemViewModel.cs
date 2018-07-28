@@ -60,10 +60,6 @@ namespace FeatureAdmin.ViewModels
 
         public Location SelectedLocation { get; protected set; }
 
-        public void UpgradeFeatures()
-        {
-            throw new NotImplementedException();
-        }
         #endregion only relevant for FeatureDefinitionListViewModel and ActivatedFeatureViewModel
 
     }
