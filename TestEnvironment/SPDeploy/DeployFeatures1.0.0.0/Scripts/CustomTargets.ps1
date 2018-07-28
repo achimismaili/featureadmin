@@ -129,33 +129,47 @@ function BeforeRetract($vars) {
 }
 #endregion
 
+function CreateTestSite{
+    
+Param ([string] $siteBaseUrl, [int] $compatibilityLevel)
+
+    $siteUrl = "{0}{1}" -f $siteBaseUrl, $compatibilityLevel
+
+    $subWebUrl = "{0}/sub" -f $siteUrl
+    $subSiblingWebUrl = "{0}/subsibling" -f $siteUrl
+    $subSubWebUrl = "{0}/sub/subsub" -f $siteUrl
+
+    Log "SiteUrl $siteUrl" -Type $SPSD.LogTypes.Information -Indent
+    Log "SubWebUrl $subWebUrl" -Type $SPSD.LogTypes.Information -Indent
+
+    # Defaults
+    $executionTime = Get-Date
+    $ownerAlias = "$env:USERDOMAIN\$env:USERNAME"
+    $language = 1033 # 1031 German, 1033 English
+    $template = "STS#0"
+    $name = "$($nameSuffix)Test site created '$executionTime'"
+
+    Log "Create SiteCollection '$($vars['SiteUrl'])'" -Type $SPSD.LogTypes.Information 
+    New-SPSite -Url $siteUrl -OwnerAlias $ownerAlias -Name $name -Template $template -CompatibilityLevel $compatibilityLevel -Language $language
+
+       
+    New-SPWeb $subWebUrl -Name "SubWeb $name" -Template $template
+
+    New-SPWeb $subSiblingWebUrl -Name "SubSibling $name" -Template $template
+
+    New-SPWeb $subSubWebUrl -Name "SubSub $name" -Template $template
+
+}
+
 #region AfterRetract
 # Desc: use this target to perform commands after a successful retraction
 #       runs on commands: Retract, Redeploy
 function AfterRetract($vars) {
     Log "AfterRetract (Custom Event)" -Type $SPSD.LogTypes.Information -Indent
 
-    Log "SiteUrl $($vars['SiteUrl'])" -Type $SPSD.LogTypes.Information -Indent
-    Log "SubWebUrl $($vars['SubWebUrl']) $vars['SubWebUrl']" -Type $SPSD.LogTypes.Information -Indent
-    # Defaults
-    $executionTime = Get-Date
-    $ownerAlias = "$env:USERDOMAIN\$env:USERNAME"
-    $compatibilityLevel = "14"
-    $language = 1031 # 1031 German, 1033 English
-    $template = "STS#0"
-    $name = "$($nameSuffix)Test site created '$executionTime'"
+    CreateTestSite $($vars['SiteBaseUrl']) 15
 
-    Log "AfterDeploy (Custom Event)" -Type $SPSD.LogTypes.Information -Indent
-        
-    Log "Create SiteCollection '$($vars['SiteUrl'])'" -Type $SPSD.LogTypes.Information 
-    New-SPSite -Url "$($vars['SiteUrl'])" -OwnerAlias $ownerAlias -Name $name -Template $template -CompatibilityLevel $compatibilityLevel -Language $language
-
-       
-    New-SPWeb "$($vars['SubWebUrl'])" -Name "SubWeb $name" -Template $template
-
-    New-SPWeb "$($vars['SubSiblingWebUrl'])" -Name "SubSibling $name" -Template $template
-
-    New-SPWeb "$($vars['SubSubWebUrl'])" -Name "SubSub $name" -Template $template
+    CreateTestSite $($vars['SiteBaseUrl']) 14
     
     LogOutdent
 }
@@ -185,10 +199,10 @@ function AfterUpdate($vars) {
 # Desc: use this target to perform commands at the very end before the deployment summary is shown.
 #       runs also in case of an exception
 function Finalize($vars) {
-    $dummySolutionWspName = "DummyFeaturesFaulty.wsp"
+    # $dummySolutionWspName15 = "DummyFeaturesFaulty15.wsp"
     $dummySolutionWspName14 = "DummyFeaturesFaulty14.wsp"
     Log "Finalizing (Custom Event)" -Type $SPSD.LogTypes.Information -Indent
-    Uninstall-SPSolution $dummySolutionWspName -Confirm:$false
+    # Uninstall-SPSolution $dummySolutionWspName15 -Confirm:$false
     Uninstall-SPSolution $dummySolutionWspName14 -Confirm:$false
     Restart-WebAppPool -Name "SharePoint Content"
 

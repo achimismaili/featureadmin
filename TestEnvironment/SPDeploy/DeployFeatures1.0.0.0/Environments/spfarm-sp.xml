@@ -23,10 +23,16 @@
 		<Variables ID="SPFARM-SP">
 			<Variable Name="UserID">$(env:USERDOMAIN)\$(env:USERNAME)</Variable>
 			<Variable Name="WebAppUrl">https://featuretest.dbi.local</Variable>
-			<Variable Name="SiteUrl">https://featuretest.dbi.local/sites/activated</Variable>
-			<Variable Name="SubWebUrl">https://featuretest.dbi.local/sites/activated/sub</Variable>
-			<Variable Name="SubSiblingWebUrl">https://featuretest.dbi.local/sites/activated/subsibling</Variable>
-			<Variable Name="SubSubWebUrl">https://featuretest.dbi.local/sites/activated/sub/subsub</Variable>
+
+			<Variable Name="SiteBaseUrl">https://featuretest.dbi.local/sites/activated</Variable>
+			<Variable Name="SiteUrl14">https://featuretest.dbi.local/sites/activated14</Variable>
+			<Variable Name="SubWebUrl14">https://featuretest.dbi.local/sites/activated14/sub</Variable>
+			<Variable Name="SubSiblingWebUrl14">https://featuretest.dbi.local/sites/activated14/subsibling</Variable>
+			<Variable Name="SubSubWebUrl14">https://featuretest.dbi.local/sites/activated14/sub/subsub</Variable>
+			<Variable Name="SiteUrl15">https://featuretest.dbi.local/sites/activated15</Variable>
+			<Variable Name="SubWebUrl15">https://featuretest.dbi.local/sites/activated15/sub</Variable>
+			<Variable Name="SubSiblingWebUrl15">https://featuretest.dbi.local/sites/activated15/subsibling</Variable>
+			<Variable Name="SubSubWebUrl15">https://featuretest.dbi.local/sites/activated15/sub/subsub</Variable>
 			<Variable Name="LCID">1033</Variable></Variables>
 		<PreRequisiteSolutions ID="Default" FilePath="Default.xml" />
 		<Solutions ID="Default" FilePath="Default.xml" /></Environment>

@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyFeaturesFaulty15", "DummyFeaturesFaulty15\DummyFeaturesFaulty15.csproj", "{A179AFB2-36CA-40E5-AA8E-143F7AF70F9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyFeaturesHealthy15version1.0.0.0", "DummyFeaturesHealthy15v.1.0\DummyFeaturesHealthy15version1.0.0.0.csproj", "{7171BCE4-0E1E-43E1-875C-5E8CE55DEC08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyFeaturesHealthy15", "DummyFeaturesHealthy15v.1.0\DummyFeaturesHealthy15.csproj", "{7171BCE4-0E1E-43E1-875C-5E8CE55DEC08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

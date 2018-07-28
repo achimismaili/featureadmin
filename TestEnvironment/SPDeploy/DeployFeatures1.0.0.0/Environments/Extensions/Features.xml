@@ -1,63 +1,137 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <SPSD Version="5.0.4.6440">
-  <Extensions>
-    <!-- This represents the extension configuration of the specific instance "FeatureInstance1" of the extension of type "FeaturesExtension" -->
-    <Extension ID="FeatureInstance1" Type="Features">
-		<Events>
-			<Event Name="AfterDeploy">Execute-FeaturesExtension</Event>
-		</Events>
-		<Data>
-			<Features>
-				<!-- configure multiple Features with different scopes -->
-				<Feature Name="DummyFeaturesFaulty14_FaultyFarm14">
-					<Urls>
-						<Url Action="Enable" Force="false">$(WebAppUrl)</Url>
-					</Urls>
-				</Feature>
-<Feature Name="DummyFeaturesFaulty14_FaultyWebApp14">
-					<Urls>
-						<Url Action="Enable" Force="false">$(WebAppUrl)</Url>
-					</Urls>
-				</Feature>
-<Feature Name="DummyFeaturesFaulty14_FaultySiCo14">
-					<Urls>
-						<Url Action="Enable" Force="false">$(SiteUrl)</Url>
-					</Urls>
-				</Feature>
-<Feature Name="DummyFeaturesFaulty14_FaultyWeb14">
-					<Urls>
-						<Url Action="Enable" Force="false">$(SiteUrl)</Url>
-						<Url Action="Enable" Force="false">$(SubWebUrl)</Url>
-						<Url Action="Enable" Force="false">$(SubSiblingWebUrl)</Url>
-						<Url Action="Enable" Force="false">$(SubSubWebUrl)</Url>
-					</Urls>
-				</Feature>
-				<Feature Name="DummyFeaturesHealthy14_HealthyFarm14">
-					<Urls>
-						<Url Action="Enable" Force="false">$(WebAppUrl)</Url>
-					</Urls>
-				</Feature>
-<Feature Name="DummyFeaturesHealthy14_HealthyWebApp14">
-					<Urls>
-						<Url Action="Enable" Force="false">$(WebAppUrl)</Url>
-					</Urls>
-				</Feature>
-<Feature Name="DummyFeaturesHealthy14_HealthySiCo14">
-					<Urls>
-						<Url Action="Enable" Force="false">$(SiteUrl)</Url>
-					</Urls>
-				</Feature>
-<Feature Name="DummyFeaturesHealthy14_HealthyWeb14">
-					<Urls>
-						<Url Action="Enable" Force="false">$(SiteUrl)</Url>
-						<Url Action="Enable" Force="false">$(SubWebUrl)</Url>
-						<Url Action="Enable" Force="false">$(SubSiblingWebUrl)</Url>
-						<Url Action="Enable" Force="false">$(SubSubWebUrl)</Url>
-					</Urls>
-				</Feature>
-				
-			</Features>
-		</Data>
-    </Extension>
-  </Extensions>
+	<Extensions>
+		<!-- This represents the extension configuration of the specific instance "FeatureInstance1" of the extension of type "FeaturesExtension" -->
+		<Extension ID="FeatureInstance1" 
+			Type="Features">
+			<Events>
+				<Event Name="AfterDeploy">Execute-FeaturesExtension</Event>
+			</Events>
+			<Data>
+				<Features>
+					<!-- configure multiple Features with different scopes -->
+					<Feature Name="DummyFeaturesFaulty14_FaultyFarm14">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(WebAppUrl)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesFaulty14_FaultyWebApp14">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(WebAppUrl)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesFaulty14_FaultySiCo14">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(SiteUrl14)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesFaulty14_FaultyWeb14">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(SiteUrl14)</Url>
+							<Url Action="Enable" 
+								Force="false">$(SubWebUrl14)</Url>
+							<Url Action="Enable" 
+								Force="false">$(SubSiblingWebUrl14)</Url>
+							<Url Action="Enable" 
+								Force="false">$(SubSubWebUrl14)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesHealthy14_HealthyFarm14">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(WebAppUrl)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesHealthy14_HealthyWebApp14">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(WebAppUrl)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesHealthy14_HealthySiCo14">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(SiteUrl14)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesHealthy14_HealthyWeb14">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(SiteUrl14)</Url>
+							<Url Action="Enable" 
+								Force="false">$(SubWebUrl14)</Url>
+							<Url Action="Enable" 
+								Force="false">$(SubSiblingWebUrl14)</Url>
+							<Url Action="Enable" 
+								Force="false">$(SubSubWebUrl14)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesFaulty15_FaultyFarm">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(WebAppUrl)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesFaulty15_FaultyWebApp">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(WebAppUrl)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesFaulty15_FaultySiCo">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(SiteUrl15)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesFaulty15_FaultyWeb">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(SiteUrl15)</Url>
+							<Url Action="Enable" 
+								Force="false">$(SubWebUrl15)</Url>
+							<Url Action="Enable" 
+								Force="false">$(SubSiblingWebUrl15)</Url>
+							<Url Action="Enable" 
+								Force="false">$(SubSubWebUrl15)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesHealthy15_HealthyFarm">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(WebAppUrl)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesHealthy15_HealthyWebApp">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(WebAppUrl)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesHealthy15_HealthySiCo">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(SiteUrl15)</Url>
+						</Urls>
+					</Feature>
+					<Feature Name="DummyFeaturesHealthy15_HealthyWeb">
+						<Urls>
+							<Url Action="Enable" 
+								Force="false">$(SiteUrl15)</Url>
+							<Url Action="Enable" 
+								Force="false">$(SubWebUrl15)</Url>
+							<Url Action="Enable" 
+								Force="false">$(SubSiblingWebUrl15)</Url>
+							<Url Action="Enable" 
+								Force="false">$(SubSubWebUrl15)</Url>
+						</Urls>
+					</Feature>
+				</Features>
+			</Data>
+		</Extension>
+	</Extensions>
 </SPSD>
