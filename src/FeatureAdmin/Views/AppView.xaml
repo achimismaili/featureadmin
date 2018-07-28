@@ -57,22 +57,7 @@
                           HorizontalAlignment="Stretch"/>
 
             <TabControl Name="Items" Grid.Column="2" Background="Transparent"/>
-            
-            <!--<TabControl Grid.Column="2">
-                --><!-- Location --><!--
-                <TabItem Header="Activation" Background="Transparent">
-                    <ContentControl cal:View.Model="{Binding LocationListVm}" />
-                </TabItem>
-                --><!-- Feature Upgrade --><!--
-                <TabItem Header="Upgrade" Background="Transparent" >
-                    <ContentControl cal:View.Model="{Binding UpgradeListVm}" />
-                </TabItem>
-                --><!-- Faulty Feature Cleanup --><!--
-                <TabItem Header="Cleanup" Background="Transparent">
-                    <ContentControl cal:View.Model="{Binding CleanupListVm}" />
-                </TabItem>
-            </TabControl>-->
-
+    
             <GridSplitter Grid.Column="3" 
                           Background="Transparent"
                           VerticalAlignment="Stretch"

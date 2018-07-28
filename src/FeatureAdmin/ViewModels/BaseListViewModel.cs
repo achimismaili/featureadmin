@@ -72,7 +72,7 @@ namespace FeatureAdmin.ViewModels
         public void Handle(SetSearchFilter<T> message)
         {
             // only set search filter, if active
-            if (IsActive)
+            if (IsActive || message is SetSearchFilter<Core.Models.FeatureDefinition>)
             {
                 if (message == null)
                 {

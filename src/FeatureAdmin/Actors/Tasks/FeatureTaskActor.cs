@@ -18,7 +18,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         /// <summary>
         /// null is not completed, true is completed successfully and false is failed to complete
         /// </summary>
-        public Dictionary<Guid, bool> jobsCompleted;
+        public Dictionary<KeyValuePair<Guid,Guid>, bool> jobsCompleted;
         public int jobsTotal = 0;
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IDataService dataService;
@@ -37,7 +37,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             executingActors = new Dictionary<Guid, IActorRef>();
             this.repository = repository;
             this.dataService = dataService;
-            jobsCompleted = new Dictionary<Guid, bool>();
+            jobsCompleted = new Dictionary<KeyValuePair<Guid, Guid>, bool>();
 
             Receive<Confirmation>(message => HandleConfirmation(message));
             Receive<DeactivateFeaturesRequest>(message => HandleDeactivateFeaturesRequest(message));
@@ -57,7 +57,9 @@ namespace FeatureAdmin.Core.Models.Tasks
             repository.RemoveActivatedFeature(message.UpgradedFeature.FeatureId, message.LocationReference);
             repository.AddActivatedFeature(message.UpgradedFeature);
 
-            jobsCompleted.Add(message.LocationReference, success);
+            jobsCompleted.Add(
+                new KeyValuePair<Guid, Guid>(message.UpgradedFeature.FeatureId, message.LocationReference), 
+                success);
 
             SendProgress();
         }
@@ -245,7 +247,9 @@ namespace FeatureAdmin.Core.Models.Tasks
             bool success = true;
             repository.AddActivatedFeature(message.ActivatedFeature);
 
-            jobsCompleted.Add(message.LocationReference, success);
+            jobsCompleted.Add(
+                new KeyValuePair<Guid, Guid>(message.ActivatedFeature.FeatureId, message.LocationReference),
+                success);
 
             SendProgress();
         }
@@ -257,8 +261,10 @@ namespace FeatureAdmin.Core.Models.Tasks
             bool success = true;
             repository.RemoveActivatedFeature(message.FeatureId, message.LocationReference);
 
-            jobsCompleted.Add(message.LocationReference, success);
-
+            jobsCompleted.Add(
+                new KeyValuePair<Guid, Guid>(message.FeatureId, message.LocationReference),
+                success);
+                
             SendProgress();
         }
         private void HandleFeatureToggleRequest([NotNull] FeatureToggleRequest message)

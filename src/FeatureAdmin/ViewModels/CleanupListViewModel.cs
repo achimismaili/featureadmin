@@ -15,13 +15,27 @@ namespace FeatureAdmin.ViewModels
             DisplayName = "Cleanup";
         }
 
+        protected override void OnActivate()
+        {
+            var featureDefinitionUndefinedFilter = 
+                new Messages.SetSearchFilter<FeatureDefinition>(string.Empty, Scope.ScopeInvalid);
+
+            eventAggregator.PublishOnUIThread(featureDefinitionUndefinedFilter);
+
+            base.OnActivate();
+        }
+
         protected override string noSpecialFeaturesFoundMessageBody
         {
             get
             {
                 return "Please make sure, farm load is already completed (see progress bar in the footer).\n" +
                             "Currently, no faulty/orphaned activated features that require a clean up were found during farm load.\n" +
-                            "So, currently, all activated features in the farm seem to be clean, meaning, they seem to have a valid definition.";
+                            "So, currently, all activated features in the farm seem to be clean, meaning, they seem to have a valid definition." + 
+                            "Nevertheless, if orphaned feature definitions exist by checking the scope-filter 'undefined' on the left window.\n" +
+                            "This filter is always set when swithing to the cleanup view.\n" +
+                            "If after a reload no faulty activated features were found, but 'undefined' feature definitions show up on the left, " +
+                            "it is usually recommended to uninstall them.";
             }
         }
 

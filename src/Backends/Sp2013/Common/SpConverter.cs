@@ -12,7 +12,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
     public static class SpConverter
     {
         public static ActivatedFeature ToActivatedFeature(
-            this SPFeature spFeature, 
+            this SPFeature spFeature,
             Location location,
             out FeatureDefinition nonFarmFeatureDefinition)
         {
@@ -111,7 +111,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
         /// definitions from faulty features
         /// </remarks>
         public static IEnumerable<ActivatedFeature> ToActivatedFeatures(
-            this SPFeatureCollection spFeatures, 
+            this SPFeatureCollection spFeatures,
             Location location,
             out IEnumerable<FeatureDefinition> nonFarmFeatureDefinitions)
         {
@@ -151,23 +151,165 @@ namespace FeatureAdmin.Backends.Sp2013.Common
                 return null;
             }
 
+            // If a feature definition is removed or orphaned, scope is set to undefined
+            // therefore, scope is checked first and set in all exceptions later
+            Scope defScope;
+            try
+            {
+                defScope = spFeatureDefinition.Scope.ToScope();
+            }
+            catch (Exception)
+            {
+                defScope = Scope.ScopeInvalid;
+            }
+
+            Guid defId;
+
+            try
+            {
+                defId = spFeatureDefinition.Id;
+            }
+            catch (Exception)
+            {
+                defId = Guid.Empty;
+                defScope = Scope.ScopeInvalid;
+            }
+
+            int defCompatibilityLevel;
+
+            try
+            {
+                defCompatibilityLevel = spFeatureDefinition.CompatibilityLevel;
+            }
+            catch (Exception)
+            {
+                defCompatibilityLevel = 0;
+                defScope = Scope.ScopeInvalid;
+            }
+
+
+
+            string defDescription;
+            try
+            {
+                defDescription = spFeatureDefinition.GetDescription(cultureInfo);
+            }
+            catch (Exception ex)
+            {
+                defDescription = ex.Message;
+                defScope = Scope.ScopeInvalid;
+            }
+
+            string defDisplayName;
+            try
+            {
+                defDisplayName = spFeatureDefinition.DisplayName;
+            }
+            catch (Exception ex)
+            {
+                defDisplayName = ex.Message;
+                defScope = Scope.ScopeInvalid;
+            }
+
+
+            bool defHidden;
+            try
+            {
+                defHidden = spFeatureDefinition.Hidden;
+            }
+            catch (Exception)
+            {
+                defHidden = false;
+                defScope = Scope.ScopeInvalid;
+            }
+
+            string defName;
+            try
+            {
+                defName = spFeatureDefinition.Name;
+            }
+            catch (Exception ex)
+            {
+                defName = ex.Message;
+                defScope = Scope.ScopeInvalid;
+            }
+
+            Dictionary<string, string> defProperties;
+            try
+            {
+                defProperties = spFeatureDefinition.Properties == null ? null :
+                    spFeatureDefinition.Properties.ToProperties();
+            }
+            catch (Exception)
+            {
+                defProperties = null;
+                defScope = Scope.ScopeInvalid;
+            }
+
+            string defTitle;
+
+            try
+            {
+                defTitle = spFeatureDefinition.GetTitle(cultureInfo);
+            }
+            catch (Exception ex)
+            {
+                defTitle = ex.Message;
+                defScope = Scope.ScopeInvalid;
+            }
+
+            Guid defSolutionId;
+
+            try
+            {
+                defSolutionId = spFeatureDefinition.SolutionId;
+            }
+            catch (Exception)
+            {
+                defSolutionId = Guid.Empty;
+                defScope = Scope.ScopeInvalid;
+            }
+
+            string defUIVersion;
+            try
+            {
+                defUIVersion = spFeatureDefinition.UIVersion;
+            }
+            catch (Exception)
+            {
+                defUIVersion = string.Empty;
+                defScope = Scope.ScopeInvalid;
+            }
+
+            Version defVersion;
+            try
+            {
+                defVersion = spFeatureDefinition.Version;
+            }
+            catch (Exception)
+            {
+                defVersion = new Version("0.0.0.0");
+                defScope = Scope.ScopeInvalid;
+            }
+
             var fd = FeatureDefinitionFactory.GetFeatureDefinition(
-                spFeatureDefinition.Id,
-                spFeatureDefinition.CompatibilityLevel,
-                spFeatureDefinition.GetDescription(cultureInfo),
-                spFeatureDefinition.DisplayName,
-                spFeatureDefinition.Hidden,
-                spFeatureDefinition.Name,
-                spFeatureDefinition.Properties == null ? null :
-                spFeatureDefinition.Properties.ToProperties(),
-                spFeatureDefinition.Scope.ToScope(),
-                spFeatureDefinition.GetTitle(cultureInfo),
-                spFeatureDefinition.SolutionId,
-                spFeatureDefinition.UIVersion,
-                spFeatureDefinition.Version,
-                sandboxedSolutionLocation);
+            defId,
+            defCompatibilityLevel,
+            defDescription,
+            defDisplayName,
+            defHidden,
+            defName,
+            defProperties,
+            defScope,
+            defTitle,
+            defSolutionId,
+            defUIVersion,
+            defVersion,
+            sandboxedSolutionLocation);
 
             return fd;
+
+
         }
 
         public static FeatureDefinitionScope ToFeatureDefinitionScope(this SPFeatureDefinitionScope scope)
@@ -215,13 +357,13 @@ namespace FeatureAdmin.Backends.Sp2013.Common
                 url = "No ResponseUri in default zone found.";
             }
 
-var location = LocationFactory.GetLocation(
-                id,
-                webApp.DisplayName,
-                parentId,
-                Scope.WebApplication,
-                url,
-                webApp.Sites.Count);
+            var location = LocationFactory.GetLocation(
+                            id,
+                            webApp.DisplayName,
+                            parentId,
+                            Scope.WebApplication,
+                            url,
+                            webApp.Sites.Count);
 
             return location;
         }
@@ -229,7 +371,7 @@ var location = LocationFactory.GetLocation(
         public static Location ToLocation(this SPSite site, Guid parentId)
         {
             var id = site.ID;
- 
+
             string displayName;
 
             if (site.RootWeb != null)
@@ -257,7 +399,7 @@ var location = LocationFactory.GetLocation(
         {
             var id = web.ID;
             var webUrl = web.Url;
-            
+
             var location = LocationFactory.GetLocation(
                 id,
                 web.Title,
