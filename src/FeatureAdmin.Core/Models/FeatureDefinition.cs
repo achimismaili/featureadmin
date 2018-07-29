@@ -87,7 +87,7 @@ namespace FeatureAdmin.Core.Models
         public override string ToString()
         {
             return string.Format(
-                "{0}:{1},Id:'{2}'\n{3}",
+                "{0} {1},Id:'{2}'\n{3}",
                 this.Scope,
                 this.DisplayName,
                 this.Id,

@@ -28,8 +28,10 @@ namespace FeatureAdmin.Core.Models.Tasks
             Start = null;
             End = null;
 
+            //// Possibility to forward log messages from sub actors
+            //Receive<LogMessage>(message => LogToUi(message));
         }
-
+        
         protected override void ReceiveCancelMessage(CancelMessage message)
         {
             if (!TaskCanceled) // prevent multiple log entries
@@ -43,10 +45,10 @@ namespace FeatureAdmin.Core.Models.Tasks
                 CancelationMessage = message.CancelationMessage;
                 End = DateTime.Now;
 
-                var logEndMsg = new LogMessage(message.LogLevel,
+                LogToUi(message.LogLevel,
                 string.Format("{0} {1}", Status.ToString(), message.CancelationMessage)
                 );
-                eventAggregator.PublishOnUIThread(logEndMsg);
+                
 
                 var progressMsg = new ProgressMessage(
                     Id,
@@ -55,6 +57,17 @@ namespace FeatureAdmin.Core.Models.Tasks
 
                 eventAggregator.PublishOnUIThread(progressMsg);
             }
+        }
+
+
+        protected void LogToUi(LogMessage logMessage)
+        {
+            LogToUi(logMessage.Level, logMessage.Text);
+        }
+        protected void LogToUi(LogLevel level, string message)
+        {
+            var logMsg = new LogMessage(level, message);
+            eventAggregator.PublishOnUIThread(logMsg);
         }
 
         protected abstract void HandleCancelation(CancelMessage cancelMessage);
@@ -95,19 +108,17 @@ namespace FeatureAdmin.Core.Models.Tasks
                 if (PercentCompleted != 1d && Start == null)
                 {
                     Start = DateTime.Now;
-                    var logMsg = new LogMessage(LogLevel.Information,
+                    LogToUi(LogLevel.Information,
                     string.Format("Started '{1}' (TaskID: '{0}')", Id, Title)
                     );
-                    eventAggregator.PublishOnUIThread(logMsg);
                 }
 
                 if (PercentCompleted >= 1d && End == null)
                 {
                     End = DateTime.Now;
-                    var logEndMsg = new LogMessage(Core.Models.Enums.LogLevel.Information,
+                    LogToUi(Core.Models.Enums.LogLevel.Information,
                     string.Format("{0} {1}", Status.ToString(), StatusReport)
                     );
-                    eventAggregator.PublishOnUIThread(logEndMsg);
 
                     // as task list ist deleted after restart, no need to delete tasks here
                 }
@@ -123,8 +134,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                     else
                     {
                         progressMsg = new ProgressMessage(Id, PercentCompleted, string.Format("Attention! '{0}' '{2}' ({1:F0}%), please wait ...", Title, PercentCompleted * 100, Status.ToString()));
-                        var logMsg = new LogMessage(LogLevel.Warning, progressMsg.Title);
-                        eventAggregator.PublishOnUIThread(logMsg);
+                        LogToUi(LogLevel.Warning, progressMsg.Title);
                     }
                 }
                 else

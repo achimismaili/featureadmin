@@ -155,7 +155,27 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             FarmFeatureDefinitions.Processed += loadedMessage.Definitions.Count();
 
-            ActivatedFeaturesLoaded += loadedMessage.ActivatedFeatures.Count();
+            var features = loadedMessage.ActivatedFeatures;
+
+            if (features != null)
+            {
+                ActivatedFeaturesLoaded += features.Count();
+
+                if (features.Any(f => f.Faulty))
+                {
+                    foreach (var f in features.Where(f => f.Faulty))
+                    {
+                        LogToUi(
+                            Enums.LogLevel.Warning,
+                            string.Format(
+                                "Unclean feature found: {0}",
+                                f.ToString()
+                                )
+                            );
+                    }
+                }
+            }
+
 
             return finished;
         }
@@ -179,12 +199,29 @@ namespace FeatureAdmin.Core.Models.Tasks
         private void FarmFeatureDefinitionsLoaded(FarmFeatureDefinitionsLoaded message)
         {
 
-            FarmFeatureDefinitions.Processed = message.FarmFeatureDefinitions.Count();
+            var definitions = message.FarmFeatureDefinitions;
 
+            FarmFeatureDefinitions.Processed = definitions.Count();
+
+            //TODO: check if this if can go away, why should it not be completed here?
             if (FarmFeatureDefinitions.Completed)
             {
                 repository.AddFeatureDefinitions(message.FarmFeatureDefinitions);
                 SendProgress();
+
+                if (definitions.Any(fd => fd.Scope == Enums.Scope.ScopeInvalid))
+                {
+                    foreach (var fd in definitions.Where(fd => fd.Scope == Enums.Scope.ScopeInvalid))
+                    {
+                        LogToUi(
+                            Enums.LogLevel.Warning,
+                            string.Format(
+                                "Invalid feature definition found: {0}",
+                                fd.ToString()
+                                )
+                            );
+                    }
+                }
             }
         }
 
@@ -207,18 +244,18 @@ namespace FeatureAdmin.Core.Models.Tasks
                     // it could take some time to clear the repository, and errors could happen, 
                     // so the task could be canceled meanwhile ...
                     if (!TaskCanceled)
-                    { 
+                    {
                         // initiate read of all feature definitions
                         var fdQuery = new Messages.Request.LoadFeatureDefinitionQuery(Id);
 
-                    
-                        featureDefinitionActor.Tell(fdQuery);
-                    
-                    
-                    // initiate read of farm location, start location is null
-                    var loadFarm = new LoadChildLocationQuery(Id, null, elevatedPrivileges);
 
-                    farmLoadActor.Tell(loadFarm);
+                        featureDefinitionActor.Tell(fdQuery);
+
+
+                        // initiate read of farm location, start location is null
+                        var loadFarm = new LoadChildLocationQuery(Id, null, elevatedPrivileges);
+
+                        farmLoadActor.Tell(loadFarm);
 
                     }
                 }
@@ -273,6 +310,8 @@ namespace FeatureAdmin.Core.Models.Tasks
             {
                 foreach (Location l in message.ChildLocations)
                 {
+                    //TODO: Here, it could be checked, if a site collection is e.g. locked or readonly
+
                     if (l.Scope == Enums.Scope.WebApplication)
                     {
                         // initiate read of locations

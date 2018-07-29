@@ -62,5 +62,15 @@ namespace FeatureAdmin.Core.Models
 
         [IgnoreDuringEquals]
         public FeatureDefinitionScope FeatureDefinitionScope { get; private set; }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "Feature '{0}', id:{1} in location:{2}",
+                this.DisplayName,
+                this.FeatureId,
+                this.LocationId
+                );
+        }
     }
 }

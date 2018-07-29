@@ -50,7 +50,6 @@ namespace FeatureAdmin.Core.Models.Tasks
             Receive<FeatureDeactivationCompleted>(message => HandleFeatureDeactivationCompleted(message));
             Receive<FeatureActivationCompleted>(message => HandleFeatureActivationCompleted(message));
             Receive<FeatureUpgradeCompleted>(message => HandleFeatureUpgradeCompleted(message));
-            
         }
         
         private void HandleFeatureUpgradeCompleted(FeatureUpgradeCompleted message)
