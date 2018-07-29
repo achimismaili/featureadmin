@@ -11,7 +11,7 @@ namespace FeatureAdmin.ViewModels
         private readonly IEventAggregator eventAggregator;
 
         private readonly Guid taskId;
-        private string Title;
+        private string Title { get; }
         public DialogViewModel(IEventAggregator eventAggregator, ConfirmationRequest confirmationRequest)
             : this(
                   eventAggregator,

@@ -89,7 +89,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                     var confirmRequest = new DecisionRequest(
                            Title,
                            string.Format(
-                               "You requested to uninstall the feature definition {0}. There are still features activated in this farm. Count: {1} \n\n" +
+                               "You requested to uninstall the feature definition\n\n{0}\n\nThere are still features activated in this farm. Count: {1} \n\n" +
                                "It is recommended to deactivate these features before uninstalling the definition. Should activated features first be deactivated?\n" +
                                "(Click 'No' to continue with deinstallation of feature definition without activating any active features based on this definition --> not recommended)",
                                message.FeatureDefinition.ToString(),
@@ -105,7 +105,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                     var confirmRequest = new ConfirmationRequest(
                            Title,
                            string.Format(
-                               "Please confirm to uninstall the feature definition {0}. There were no activated features found in this farm.\n\n",
+                               "Uninstall of feature definition\n\n{0}\n\nThere were no activated features found in this farm.\n\n",
                                message.FeatureDefinition.ToString()
                                ),
                            Id
@@ -131,7 +131,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             get
             {
                 return string.Format(
-                    "'{0}' (TaskID: '{1}') - {2} of {3} deinstallation(s) completed successfully, progress {4:F0}% \nelapsed time: {5}",
+                    "'{0}' (TaskID: '{1}') - deinstallation completed successfully\nelapsed time: {2}",
                     Title,
                     Id,
                     ElapsedTime

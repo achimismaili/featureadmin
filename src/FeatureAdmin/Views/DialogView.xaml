@@ -23,7 +23,9 @@
             <Button Width="100" x:Name="Ok" IsDefault="True" IsCancel="True">
                 <TextBlock x:Name="OkText"></TextBlock>
             </Button>
-            <Button Width="100" x:Name="No" Content="No" IsCancel="True" />
+            <Grid x:Name="NoIsVisible">
+                <Button Width="100" x:Name="No" Content="No" IsCancel="True" />
+            </Grid>
             <Button Width="100" x:Name="Cancel" Content="Cancel" IsCancel="True"/>
         </StackPanel>
     </Grid>
