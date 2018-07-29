@@ -66,6 +66,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             finishedSteps++;
             SendProgress();
+            UninstallDefinition();
         }
 
         private void HandleDeinstallationRequest(DeinstallationRequest message)

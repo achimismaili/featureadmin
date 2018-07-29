@@ -11,7 +11,9 @@ namespace FeatureAdmin.Core.Models.Tasks
         protected readonly IEventAggregator eventAggregator;
 
         // do e.g. not send confirmation and inform about completion if this task is a sub task
-        protected bool isSubTask;
+        protected bool isSubTaskActor;
+
+        protected IActorRef ParentTaskActor;
 
         public BaseTaskActor(IEventAggregator eventAggregator, Guid id)
             : this(eventAggregator, "Generic title to be overwritten", id)
@@ -28,8 +30,10 @@ namespace FeatureAdmin.Core.Models.Tasks
             Start = null;
             End = null;
 
-            //// Possibility to forward log messages from sub actors
-            //Receive<LogMessage>(message => LogToUi(message));
+            ParentTaskActor = null;
+
+            // // Possibility to forward log messages from sub actors - for now not active ...
+            // Receive<LogMessage>(message => LogToUi(message));
         }
         
         protected override void ReceiveCancelMessage(CancelMessage message)
@@ -140,9 +144,9 @@ namespace FeatureAdmin.Core.Models.Tasks
                 else
                 {
                     progressMsg = new ProgressMessage(Id, PercentCompleted, string.Format("'{0}' '{2}'! Elapsed time: {1}", Title, ElapsedTime, Status.ToString()));
-                    if (isSubTask)
+                    if (isSubTaskActor && ParentTaskActor != null)
                     {
-                        Sender.Tell(progressMsg);
+                        ParentTaskActor.Tell(progressMsg);
                     }
                 }
 

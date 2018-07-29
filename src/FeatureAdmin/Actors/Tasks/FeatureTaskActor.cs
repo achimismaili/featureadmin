@@ -31,7 +31,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             IFeatureRepository repository,
             IDataService dataService,
             Guid taskId,
-            bool isSubTask = false)
+            bool isSubTaskActor = false)
             : base(eventAggregator, taskId)
         {
             this.eventAggregator.Subscribe(this);
@@ -39,8 +39,8 @@ namespace FeatureAdmin.Core.Models.Tasks
             executingActors = new Dictionary<Guid, IActorRef>();
             this.repository = repository;
             this.dataService = dataService;
-            this.isSubTask = isSubTask;
-
+            this.isSubTaskActor = isSubTaskActor;
+            
             jobsCompleted = new Dictionary<KeyValuePair<Guid, Guid>, bool>();
 
             Receive<Confirmation>(message => HandleConfirmation(message));
@@ -74,8 +74,12 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             if (!TaskCanceled)
             {
-
                 Title = message.Title;
+
+                if (isSubTaskActor)
+                {
+                    ParentTaskActor = Sender;
+                }
 
                 requestsToBeConfirmed = new List<FeatureToggleRequest>();
 
@@ -110,6 +114,10 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             if (!TaskCanceled)
             {
+                if (isSubTaskActor)
+                {
+                    ParentTaskActor = Sender;
+                }
 
                 Title = message.Title;
 
@@ -130,7 +138,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                     requestsToBeConfirmed.Add(toggleRequest);
                 }
 
-                if (isSubTask)
+                if (isSubTaskActor)
                 {
                     var skipConfirmation = new Confirmation(
                         Id
@@ -291,6 +299,10 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             if (!TaskCanceled)
             {
+                if (isSubTaskActor)
+                {
+                    ParentTaskActor = Sender;
+                }
 
                 Title = message.Title;
 

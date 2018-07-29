@@ -94,7 +94,7 @@ namespace FeatureAdmin.ViewModels
         {
             get
             {
-                return Decision ? "Yes" : "OK";
+                return Decision ? "YES" : "OK";
             }
         }
 
