@@ -225,6 +225,14 @@ namespace FeatureAdmin.OrigoDb
         {
             if (featureDefinition != null)
             {
+                if (featureDefinition.Scope == Scope.ScopeInvalid && featureDefinition.SandBoxedSolutionLocation == null)
+                {
+                    return ActivatedFeatures.Where(af => af.FeatureId == featureDefinition.Id && 
+                    ( af.FeatureDefinitionScope == FeatureDefinitionScope.Farm ||
+                    af.FeatureDefinitionScope == FeatureDefinitionScope.None))
+                    .ToList();
+                }
+
                 return ActivatedFeatures.Where(af => af.FeatureDefinitionUniqueIdentifier == featureDefinition.UniqueIdentifier)
                     .ToList();
             }

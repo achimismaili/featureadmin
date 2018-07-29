@@ -19,10 +19,8 @@ namespace FeatureAdmin.Core.Models.Tasks
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IDataService dataService;
 
-        private readonly bool force;
-        private readonly bool elevatedPrivileges;
-
-        private bool FeatureDeactivationCovered = false;
+        private bool force;
+        private bool elevatedPrivileges;
 
         // actor to deactivate left over active features
         private readonly IActorRef subTaskActor;
@@ -67,6 +65,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         private void HandleActivatedFeatureDeactivationCompleted(ProgressMessage message)
         {
             finishedSteps++;
+            SendProgress();
         }
 
         private void HandleDeinstallationRequest(DeinstallationRequest message)
@@ -78,6 +77,21 @@ namespace FeatureAdmin.Core.Models.Tasks
                 FeatureDefinitionToUninstall = message.FeatureDefinition;
 
                 Title = message.Title;
+
+                string mentionForce = string.Empty;
+
+                // these settings are only required for feature deactivation, not needed for uninstall
+                // in case definition has scope invalid, feature deactivation is only possible with force
+                if (FeatureDefinitionToUninstall.Scope == Enums.Scope.ScopeInvalid)
+                {
+                    force = true;
+                    mentionForce = "\n\nfyi - As this definition has an invalid scope, feature deactivation will be done with 'force' flag enabled, no mater what is set in feature admin UI.";
+                }
+                else
+                {
+                    force = message.Force.Value;
+                }
+                elevatedPrivileges = message.ElevatedPrivileges.Value;
 
                 // retrieve activated features with this feature definition in this farm 
                 var featuresToDeactivate = repository.GetActivatedFeatures(message.FeatureDefinition);
@@ -91,9 +105,10 @@ namespace FeatureAdmin.Core.Models.Tasks
                            string.Format(
                                "You requested to uninstall the feature definition\n\n{0}\n\nThere are still features activated in this farm. Count: {1} \n\n" +
                                "It is recommended to deactivate these features before uninstalling the definition. Should activated features first be deactivated?\n" +
-                               "(Click 'No' to continue with deinstallation of feature definition without activating any active features based on this definition --> not recommended)",
+                               "(If you click 'No', the deinstallation of feature definition will start without activating any active features based on this definition before --> not recommended.{2}",
                                message.FeatureDefinition.ToString(),
-                               featuresToDeactivate.Count()
+                               featuresToDeactivate.Count(),
+                               mentionForce
                                ),
                            Id
                            );
@@ -192,7 +207,6 @@ namespace FeatureAdmin.Core.Models.Tasks
                 }
                 else
                 {
-                    FeatureDeactivationCovered = true;
                     UninstallDefinition();
                 }
 
@@ -201,11 +215,14 @@ namespace FeatureAdmin.Core.Models.Tasks
 
         private void UninstallDefinition()
         {
-            // force and elevatedprivileges are irrelevant for feature definition uninstall
-            // they are only available for qualifying feature deactivation of active features before the uninstallation
-            var fdQuery = new DeinstallationRequest(FeatureDefinitionToUninstall);
+            if (!TaskCanceled)
+            {
+                // force and elevatedprivileges are irrelevant for feature definition uninstall
+                // they are only available for qualifying feature deactivation of active features before the uninstallation
+                var fdQuery = new DeinstallationRequest(FeatureDefinitionToUninstall);
 
-            featureDefinitionActor.Tell(fdQuery);
+                featureDefinitionActor.Tell(fdQuery);
+            }
         }
 
         private void DeactivateFeatures()
