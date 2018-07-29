@@ -56,6 +56,7 @@
     <Compile Include="Factories\ActivatedFeatureFactory.cs" />
     <Compile Include="Factories\FeatureDefinitionFactory.cs" />
     <Compile Include="Factories\LocationFactory.cs" />
+    <Compile Include="Messages\Completed\DeinstallationCompleted.cs" />
     <Compile Include="Messages\Completed\FeatureUpgradeCompleted.cs" />
     <Compile Include="Messages\Completed\FeatureActivationCompleted.cs" />
     <Compile Include="Messages\Completed\FeatureDeactivationCompleted.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Messages\Completed\SettingsChanged.cs" />
     <Compile Include="Messages\BaseTaskMessage.cs" />
     <Compile Include="Messages\Completed\FarmFeatureDefinitionsLoaded.cs" />
+    <Compile Include="Messages\Request\DeinstallationRequest.cs" />
     <Compile Include="Messages\Request\UpgradeFeaturesRequest.cs" />
     <Compile Include="Messages\Request\DeactivateFeaturesRequest.cs" />
     <Compile Include="Messages\Request\UpdateRequestSettingsExtensions.cs" />

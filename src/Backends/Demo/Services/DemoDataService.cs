@@ -289,5 +289,10 @@ namespace FeatureAdmin.Backends.Demo.Services
             return ActivateFeature(feature, location, elevatedPrivileges, force, out upgradedFeature);
 
         }
+
+        public string Uninstall(FeatureDefinition definition)
+        {
+           return demoRepository.RemoveFeatureDefinition(definition.UniqueIdentifier);
+        }
     }
 }

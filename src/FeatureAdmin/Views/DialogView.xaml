@@ -20,7 +20,10 @@
         </Grid.ColumnDefinitions>
         <TextBlock x:Name="DialogText" Margin="10"/>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Width="100" x:Name="Ok" Content="OK" IsDefault="True" IsCancel="True" />
+            <Button Width="100" x:Name="Ok" IsDefault="True" IsCancel="True">
+                <TextBlock x:Name="OkText"></TextBlock>
+            </Button>
+            <Button Width="100" x:Name="No" Content="No" IsCancel="True" />
             <Button Width="100" x:Name="Cancel" Content="Cancel" IsCancel="True"/>
         </StackPanel>
     </Grid>

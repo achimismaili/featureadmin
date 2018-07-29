@@ -6,6 +6,7 @@ using Microsoft.SharePoint;
 using FeatureAdmin.Backends.Sp2013.Common;
 using System;
 using FeatureAdmin.Core.Models.Enums;
+using System.Linq;
 
 namespace FeatureAdmin.Backends.Sp2013.Services
 {
@@ -55,6 +56,47 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             }
 
             return loadedElements;
+        }
+
+        public string Uninstall(FeatureDefinition definition)
+        {
+            string errMsg = string.Empty;
+
+            try
+            {
+                if (definition.SandBoxedSolutionLocation == null)
+                {
+                    // farm feature definition
+
+                    var defToDelete = SPFarm.Local.FeatureDefinitions.FirstOrDefault(fd => fd.Id == definition.Id);
+
+                    if (defToDelete == null)
+                    {
+                        throw new Exception("Feature Definition was not found anymore in the farm! Please try to reload or restart feature admin.");
+                    }
+
+                    defToDelete.Delete();
+
+                    var defDeleted = SPFarm.Local.FeatureDefinitions.FirstOrDefault(fd => fd.Id == definition.Id);
+
+                    // defDeleted should now be null, as the feature definition should be deleted
+                    if (defDeleted != null)
+                    {
+                        throw new Exception("Feature Definition could not be removed from the FeatureDefinitions collection.");
+                    }
+                }
+                else
+                {
+                    throw new NotImplementedException("Uninstallation of sandboxed featre definitions is not implemented yet.");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                errMsg += ex.Message;
+            }
+
+            return errMsg;
         }
 
         public LoadedDto LoadWebAppChildren(Location location, bool elevatedPrivileges)
@@ -236,42 +278,42 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
         public string SiteFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool elevatedPrivileges, bool force, out ActivatedFeature resultingFeature)
         {
-                switch (action)
-                {
-                    case FeatureAction.Activate:
-                        return SpFeatureAction.SiteFeatureAction(
-                            feature,
-                            location,
-                            SpFeatureHelper.ActivateFeatureInFeatureCollection,
-                            elevatedPrivileges,
-                            force,
-                            out resultingFeature);
-                    case FeatureAction.Deactivate:
-                        return SpFeatureAction.SiteFeatureAction(
-                            feature,
-                            location,
-                            SpFeatureHelper.DeactivateFeatureInFeatureCollectionReturnsNull,
-                            elevatedPrivileges,
-                            force,
-                            out resultingFeature);
-                    case FeatureAction.Upgrade:
-                        return SpFeatureAction.SiteFeatureAction(
-                           feature,
-                           location,
-                           SpFeatureHelper.UpgradeFeatureInFeatureCollection,
-                           elevatedPrivileges,
-                           force,
-                           out resultingFeature);
-                    default:
-                        throw new NotImplementedException("This kind of action is not supported!");
-                }
+            switch (action)
+            {
+                case FeatureAction.Activate:
+                    return SpFeatureAction.SiteFeatureAction(
+                        feature,
+                        location,
+                        SpFeatureHelper.ActivateFeatureInFeatureCollection,
+                        elevatedPrivileges,
+                        force,
+                        out resultingFeature);
+                case FeatureAction.Deactivate:
+                    return SpFeatureAction.SiteFeatureAction(
+                        feature,
+                        location,
+                        SpFeatureHelper.DeactivateFeatureInFeatureCollectionReturnsNull,
+                        elevatedPrivileges,
+                        force,
+                        out resultingFeature);
+                case FeatureAction.Upgrade:
+                    return SpFeatureAction.SiteFeatureAction(
+                       feature,
+                       location,
+                       SpFeatureHelper.UpgradeFeatureInFeatureCollection,
+                       elevatedPrivileges,
+                       force,
+                       out resultingFeature);
+                default:
+                    throw new NotImplementedException("This kind of action is not supported!");
             }
+        }
 
         public string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
         {
             // this will always be null
             ActivatedFeature deactivationDummy;
-            return WebFeatureAction(feature, location,FeatureAction.Deactivate, elevatedPrivileges, force, out deactivationDummy );
+            return WebFeatureAction(feature, location, FeatureAction.Deactivate, elevatedPrivileges, force, out deactivationDummy);
         }
 
         public string WebFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool elevatedPrivileges, bool force, out ActivatedFeature resultingFeature)

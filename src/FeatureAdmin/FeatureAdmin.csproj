@@ -163,6 +163,7 @@
     <Compile Include="Actors\BaseActor.cs" />
     <Compile Include="Actors\FeatureDefinitionActor.cs" />
     <Compile Include="Actors\LocationActor.cs" />
+    <Compile Include="Actors\Tasks\FeatureDefinitionTaskActor.cs" />
     <Compile Include="Actors\Tasks\TaskManagerActor.cs" />
     <Compile Include="Actors\Tasks\BaseTaskActor.cs" />
     <Compile Include="Actors\Tasks\FeatureTaskActor.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Common\NegatableBooleanToVisibilityConverter.cs" />
     <Compile Include="Messages\CancelMessage.cs" />
     <Compile Include="Messages\Confirmation.cs" />
+    <Compile Include="Messages\DecisionRequest.cs" />
     <Compile Include="Messages\ConfirmationRequest.cs" />
     <Compile Include="Messages\ResendItemSelectedRequest.cs" />
     <Compile Include="Messages\ItemSelected.cs" />

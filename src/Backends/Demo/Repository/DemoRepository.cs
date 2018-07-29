@@ -109,5 +109,15 @@ namespace FeatureAdmin.Backends.Demo.Repository
         {
             return store.SearchLocations(searchInput, selectedScopeFilter);
         }
+
+        public IEnumerable<ActivatedFeatureSpecial> GetAsActivatedFeatureSpecial(IEnumerable<ActivatedFeature> activatedFeatures)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string RemoveFeatureDefinition(string uniqueIdentifier)
+        {
+            return store.RemoveFeatureDefinition(uniqueIdentifier);
+        }
     }
 }

@@ -85,7 +85,7 @@ namespace FeatureAdmin.ViewModels
 
         public void UninstallFeatureDefinition()
         {
-            throw new NotImplementedException();
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.DeinstallationRequest(ActiveItem));
         }
 
         protected void CheckIfCanToggleFeatures()

@@ -29,9 +29,6 @@ namespace FeatureAdmin.Core.Services
         string SiteFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
         string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force);
         string WebFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
- 
-
-        //string UninstallFarmFeature(FeatureDefinition feature, bool force);
-
+        string Uninstall(FeatureDefinition definition);
     }
 }

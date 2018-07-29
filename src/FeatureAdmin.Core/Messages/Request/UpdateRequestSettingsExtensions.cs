@@ -28,6 +28,24 @@ namespace FeatureAdmin.Core.Messages.Request
         /// </summary>
         /// <param name="requestToBeUpdated">the request to be updated</param>
         /// <param name="force">new force setting</param>
+        /// /// <param name="elevatedPrivileges">new ep setting</param>
+        public static DeinstallationRequest GetWithUpdatedSettings(this DeinstallationRequest requestToBeUpdated, bool force, bool elevatedPrivileges)
+        {
+            var updatedRequest = new DeinstallationRequest(
+                requestToBeUpdated.FeatureDefinition,
+                force,
+                elevatedPrivileges
+                );
+
+            return updatedRequest;
+        }
+
+
+        /// <summary>
+        /// extension method to get request with changed force and elevated settings
+        /// </summary>
+        /// <param name="requestToBeUpdated">the request to be updated</param>
+        /// <param name="force">new force setting</param>
         /// <param name="elevatedPrivileges">new ep setting</param>
         public static FeatureToggleRequest GetWithUpdatedSettings(this FeatureToggleRequest requestToBeUpdated, bool force, bool elevatedPrivileges)
         {

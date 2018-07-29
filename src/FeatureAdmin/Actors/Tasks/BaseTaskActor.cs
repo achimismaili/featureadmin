@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using Akka.Actor;
+using Caliburn.Micro;
 using FeatureAdmin.Core.Models.Enums;
 using FeatureAdmin.Messages;
 using System;
@@ -8,6 +9,9 @@ namespace FeatureAdmin.Core.Models.Tasks
     public abstract class BaseTaskActor : Actors.BaseActor
     {
         protected readonly IEventAggregator eventAggregator;
+
+        // do e.g. not send confirmation and inform about completion if this task is a sub task
+        protected bool isSubTask;
 
         public BaseTaskActor(IEventAggregator eventAggregator, Guid id)
             : this(eventAggregator, "Generic title to be overwritten", id)
@@ -92,7 +96,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                 {
                     Start = DateTime.Now;
                     var logMsg = new LogMessage(LogLevel.Information,
-                    string.Format("Started '{1}' (ID: '{0}')", Id, Title)
+                    string.Format("Started '{1}' (TaskID: '{0}')", Id, Title)
                     );
                     eventAggregator.PublishOnUIThread(logMsg);
                 }
@@ -126,6 +130,10 @@ namespace FeatureAdmin.Core.Models.Tasks
                 else
                 {
                     progressMsg = new ProgressMessage(Id, PercentCompleted, string.Format("'{0}' '{2}'! Elapsed time: {1}", Title, ElapsedTime, Status.ToString()));
+                    if (isSubTask)
+                    {
+                        Sender.Tell(progressMsg);
+                    }
                 }
 
                 eventAggregator.PublishOnUIThread(progressMsg);

@@ -24,12 +24,14 @@ namespace FeatureAdmin.Core.Models.Tasks
         private readonly IDataService dataService;
         private readonly Dictionary<Guid, IActorRef> executingActors;
         private readonly IFeatureRepository repository;
+
         private List<FeatureToggleRequest> requestsToBeConfirmed;
         public FeatureTaskActor(
             IEventAggregator eventAggregator,
             IFeatureRepository repository,
             IDataService dataService,
-            Guid taskId)
+            Guid taskId,
+            bool isSubTask = false)
             : base(eventAggregator, taskId)
         {
             this.eventAggregator.Subscribe(this);
@@ -37,6 +39,8 @@ namespace FeatureAdmin.Core.Models.Tasks
             executingActors = new Dictionary<Guid, IActorRef>();
             this.repository = repository;
             this.dataService = dataService;
+            this.isSubTask = isSubTask;
+
             jobsCompleted = new Dictionary<KeyValuePair<Guid, Guid>, bool>();
 
             Receive<Confirmation>(message => HandleConfirmation(message));
@@ -46,8 +50,9 @@ namespace FeatureAdmin.Core.Models.Tasks
             Receive<FeatureDeactivationCompleted>(message => HandleFeatureDeactivationCompleted(message));
             Receive<FeatureActivationCompleted>(message => HandleFeatureActivationCompleted(message));
             Receive<FeatureUpgradeCompleted>(message => HandleFeatureUpgradeCompleted(message));
+            
         }
-
+        
         private void HandleFeatureUpgradeCompleted(FeatureUpgradeCompleted message)
         {
             _log.Debug("Entered HandleFeatureUpgradeCompleted with Id " + Id.ToString());
@@ -125,8 +130,18 @@ namespace FeatureAdmin.Core.Models.Tasks
                         );
                     requestsToBeConfirmed.Add(toggleRequest);
                 }
-                
-                var confirmRequest = new ConfirmationRequest(
+
+                if (isSubTask)
+                {
+                    var skipConfirmation = new Confirmation(
+                        Id
+                        );
+
+                    HandleConfirmation(skipConfirmation);
+                }
+                else
+                {
+                    var confirmRequest = new ConfirmationRequest(
                         string.Format(
                             "Please confirm Feature {0}",
                             message.Action.ToString().ToLower()
@@ -137,7 +152,8 @@ namespace FeatureAdmin.Core.Models.Tasks
                         );
 
 
-                eventAggregator.PublishOnUIThread(confirmRequest);
+                    eventAggregator.PublishOnUIThread(confirmRequest);
+                }
             }
         }
 
@@ -156,7 +172,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             get
             {
                 return string.Format(
-                    "'{0}' (ID: '{1}') - {2} of {3} (de)activation(s) completed successfully, progress {4:F0}% \nelapsed time: {5}",
+                    "'{0}' (TaskID: '{1}') - {2} of {3} (de)activation(s) completed successfully, progress {4:F0}% \nelapsed time: {5}",
                     Title,
                     Id,
                     jobsCompleted.Where(j => j.Value == true).Count(),
@@ -181,14 +197,17 @@ namespace FeatureAdmin.Core.Models.Tasks
             IEventAggregator eventAggregator,
             IFeatureRepository repository,
             IDataService dataService,
-            Guid taskId)
+            Guid taskId,
+            bool subTaskNoConfirmation = false)
         {
             return Akka.Actor.Props.Create(() =>
             new FeatureTaskActor(
                 eventAggregator,
                 repository,
                 dataService,
-                taskId));
+                taskId,
+                subTaskNoConfirmation
+                ));
         }
 
         protected override void HandleCancelation(CancelMessage cancelMessage)

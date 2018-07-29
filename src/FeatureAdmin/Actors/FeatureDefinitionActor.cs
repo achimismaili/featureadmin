@@ -20,6 +20,34 @@ namespace FeatureAdmin.Actors
             this.dataService = dataService;
 
             Receive<LoadFeatureDefinitionQuery>(message => LoadFarmFeatures(message));
+            Receive<DeinstallationRequest>(message => DeinstallFeatureDefinition(message));
+        }
+
+        private void DeinstallFeatureDefinition(DeinstallationRequest message)
+        {
+            _log.Debug("Entered LoadFarmFeatures");
+
+            if (!TaskCanceled)
+            {
+                    var errorMsg = dataService.Uninstall(message.FeatureDefinition);
+
+                    if (string.IsNullOrEmpty(errorMsg))
+                    {
+                        Sender.Tell(new Core.Messages.Completed.DeinstallationCompleted(
+                        message.TaskId,
+                        message.FeatureDefinition.UniqueIdentifier));
+                    }
+                    else
+                    {
+                        var cancelationMsg = new CancelMessage(
+                                                    message.TaskId,
+                                                    errorMsg,
+                                                    true
+                                                    );
+
+                        Sender.Tell(cancelationMsg);
+                    }
+            }
         }
 
         private void LoadFarmFeatures(LoadFeatureDefinitionQuery message)

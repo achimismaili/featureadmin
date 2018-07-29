@@ -20,18 +20,18 @@ namespace FeatureAdmin.Core.Repository
 
         IEnumerable<ActivatedFeature> GetActivatedFeatures(Location location);
 
+        IEnumerable<ActivatedFeatureSpecial> GetAllFeaturesToCleanUp();
+
+        IEnumerable<ActivatedFeatureSpecial> GetAllFeaturesToUpgrade();
+
+        IEnumerable<ActivatedFeatureSpecial> GetAsActivatedFeatureSpecial(IEnumerable<ActivatedFeature> activatedFeatures);
         IEnumerable<Location> GetLocationsCanActivate(FeatureDefinition featureDefinition, Location location);
 
         IEnumerable<Location> GetLocationsCanDeactivate(FeatureDefinition featureDefinition, Location location);
         string RemoveActivatedFeature(Guid featureId, Guid locationId);
-
+        string RemoveFeatureDefinition(string uniqueIdentifier);
         IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, bool? onlyFarmFeatures);
         IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter);
-
-        IEnumerable<ActivatedFeatureSpecial> GetAllFeaturesToCleanUp();
-
         IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(IEnumerable<ActivatedFeatureSpecial> source , string searchInput, Core.Models.Enums.Scope? selectedScopeFilter);
-
-        IEnumerable<ActivatedFeatureSpecial> GetAllFeaturesToUpgrade();
     }
 }

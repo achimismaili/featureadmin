@@ -148,7 +148,7 @@ namespace FeatureAdmin.OrigoDb
             return GetAsActivatedFeatureSpecial(activatedUpgradeableFeaturesInFarm);
         }
 
-        private IEnumerable<ActivatedFeatureSpecial> GetAsActivatedFeatureSpecial (IEnumerable<ActivatedFeature> activatedFeatures)
+        public IEnumerable<ActivatedFeatureSpecial> GetAsActivatedFeatureSpecial (IEnumerable<ActivatedFeature> activatedFeatures)
         {
             if (activatedFeatures == null || activatedFeatures.Count() < 1)
             {
@@ -306,6 +306,29 @@ namespace FeatureAdmin.OrigoDb
                 return string.Format("Activated Feature not found with id '{0}' in location '{1}' - Please 'Reload'", featureId, locationId);
             }
         }
+
+        [Command]
+        public string RemoveFeatureDefinition(string uniqueIdentifier)
+        {
+            var definitionToRemove = FeatureDefinitions[uniqueIdentifier];
+
+            if (definitionToRemove != null)
+            {
+                if(FeatureDefinitions.Remove(uniqueIdentifier))
+                { 
+                    return null;
+                }
+                else
+                {
+                    return string.Format("Repository problem when removing feature definition with unique id '{0}' - Please 'Reload'", uniqueIdentifier);
+                }
+            }
+            else
+            {
+                return string.Format("Feature definition not found with unique id '{0}' - Please 'Reload'", uniqueIdentifier);
+            }
+        }
+
         public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Scope? selectedScopeFilter, bool? onlyFarmFeatures)
         {
             IEnumerable<FeatureDefinition> searchResult;

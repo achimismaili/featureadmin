@@ -12,6 +12,7 @@ namespace FeatureAdmin.ViewModels
 
     public class AppViewModel : Conductor<Screen>.Collection.OneActive,
         Caliburn.Micro.IHandle<ConfirmationRequest>,
+        Caliburn.Micro.IHandle<DecisionRequest>,
         Caliburn.Micro.IHandle<OpenWindow<ActivatedFeature>>,
         Caliburn.Micro.IHandle<OpenWindow<ActivatedFeatureSpecial>>,
         Caliburn.Micro.IHandle<OpenWindow<FeatureDefinition>>,
@@ -137,14 +138,14 @@ namespace FeatureAdmin.ViewModels
         {
             DialogViewModel dialogVm = new DialogViewModel(eventAggregator, message);
 
-            dynamic settings = new System.Dynamic.ExpandoObject();
-            settings.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
-            settings.ResizeMode = System.Windows.ResizeMode.CanResizeWithGrip;
-            settings.SizeToContent = System.Windows.SizeToContent.WidthAndHeight;
-            // settings.Title = "window title";
-            // settings.Icon = new BitmapImage(new Uri("pack://application:,,,/MyApplication;component/Assets/myicon.ico"));
+            this.windowManager.ShowDialog(dialogVm, null, GetDialogSettings());
+        }
 
-            this.windowManager.ShowDialog(dialogVm, null, settings);
+        public void Handle(DecisionRequest message)
+        {
+            DialogViewModel dialogVm = new DialogViewModel(eventAggregator, message);
+
+            this.windowManager.ShowDialog(dialogVm, null, GetDialogSettings());
         }
 
         public void Handle(OpenWindow<ActivatedFeature> message)
@@ -184,6 +185,17 @@ namespace FeatureAdmin.ViewModels
             TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleReload);
         }
 
+        private dynamic GetDialogSettings()
+        {
+            dynamic settings = new System.Dynamic.ExpandoObject();
+            settings.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            settings.ResizeMode = System.Windows.ResizeMode.CanResizeWithGrip;
+            settings.SizeToContent = System.Windows.SizeToContent.WidthAndHeight;
+            // settings.Title = "window title";
+            // settings.Icon = new BitmapImage(new Uri("pack://application:,,,/MyApplication;component/Assets/myicon.ico"));
+
+            return settings;
+        }
         private void InitializeActors()
         {
             taskManagerActorRef = ActorSystemReference.ActorSystem.ActorOf(

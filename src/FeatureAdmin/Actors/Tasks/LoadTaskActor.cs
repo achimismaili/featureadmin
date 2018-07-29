@@ -80,7 +80,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             get
             {
-                return string.Format("'{0}' (ID: '{1}') - Loaded: {2} web apps, {3} sites and webs, {4} feature definitions, {7} activated features, progress {5:F0}% \nelapsed time: {6}",
+                return string.Format("'{0}' (TaskID: '{1}') - Loaded: {2} web apps, {3} sites and webs, {4} feature definitions, {7} activated features, progress {5:F0}% \nelapsed time: {6}",
                     Title,
                     Id,
                     WebApps.Processed,

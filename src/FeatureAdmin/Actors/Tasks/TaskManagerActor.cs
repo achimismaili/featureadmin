@@ -16,6 +16,7 @@ namespace FeatureAdmin.Actors.Tasks
     public class TaskManagerActor : ReceiveActor,
         // Caliburn.Micro.IHandle<LoadTask>,
         Caliburn.Micro.IHandle<DeactivateFeaturesRequest>,
+        Caliburn.Micro.IHandle<DeinstallationRequest>,
         Caliburn.Micro.IHandle<FeatureToggleRequest>,
         Caliburn.Micro.IHandle<UpgradeFeaturesRequest>,
         Caliburn.Micro.IHandle<SettingsChanged>,
@@ -48,53 +49,11 @@ namespace FeatureAdmin.Actors.Tasks
 
         private bool elevatedPrivileges { get; set; }
         private bool force { get; set; }
-        /// <summary>
-        /// send load task to load task actor
-        /// </summary>
-        /// <param name="message"></param>
-        /// <remarks>in the future, this may be enhanced with a start
-        /// location, so that it might not only have to be a full farm reload
-        /// </remarks>
-        public void Receive(LoadTask message)
-        {
-            IActorRef newTaskActor =
-            Context.ActorOf(LoadTaskActor.Props(
-                eventAggregator,
-                repository,
-                dataService,
-                message.Id), message.Id.ToString());
-
-            taskActors.Add(message.Id, newTaskActor);
-
-            var requestWithCurrentSettings = message.GetWithUpdatedSettings(elevatedPrivileges);
-
-            // trigger feature toggle request
-            newTaskActor.Tell(requestWithCurrentSettings);
-        }
-
         public void Handle(FeatureToggleRequest message)
         {
             var requestWithCorrectSettings = message.GetWithUpdatedSettings(force, elevatedPrivileges);
 
-            SetupNewTaskManager(requestWithCorrectSettings);
-        }
-
-        private void SetupNewTaskManager<T>(T message) where T : Core.Messages.BaseTaskMessage
-        {
-            // as this comes from WPF, no akka context available here yet.
-            IActorRef newTaskActor =
-            ActorSystemReference.ActorSystem.ActorOf(
-                FeatureTaskActor.Props(
-                    eventAggregator,
-                    repository,
-                    dataService,
-                    message.TaskId
-                    ));
-
-            taskActors.Add(message.TaskId, newTaskActor);
-
-            // trigger task handling
-            newTaskActor.Tell(message);
+            SetupNewFeatureTaskActor(requestWithCorrectSettings);
         }
 
         public void Handle(SettingsChanged message)
@@ -126,7 +85,7 @@ namespace FeatureAdmin.Actors.Tasks
         {
             var requestWithCorrectSettings = message.GetWithUpdatedSettings(force, elevatedPrivileges);
 
-            SetupNewTaskManager(requestWithCorrectSettings);
+            SetupNewFeatureTaskActor(requestWithCorrectSettings);
         }
 
         public void Handle(DeactivateFeaturesRequest message)
@@ -140,7 +99,73 @@ namespace FeatureAdmin.Actors.Tasks
 
             var requestWithCorrectSettings = message.GetWithUpdatedSettings(foceSettingForRequest, elevatedPrivileges);
 
-            SetupNewTaskManager(requestWithCorrectSettings);
+            SetupNewFeatureTaskActor(requestWithCorrectSettings);
+        }
+
+        public void Handle(DeinstallationRequest message)
+        {
+            var requestWithCorrectSettings = message.GetWithUpdatedSettings(force, elevatedPrivileges);
+
+            SetupNewFeatureDefinitionTaskActor(requestWithCorrectSettings);
+        }
+
+        /// <summary>
+        /// send load task to load task actor
+        /// </summary>
+        /// <param name="message"></param>
+        /// <remarks>in the future, this may be enhanced with a start
+        /// location, so that it might not only have to be a full farm reload
+        /// </remarks>
+        public void Receive(LoadTask message)
+        {
+            IActorRef newTaskActor =
+            Context.ActorOf(LoadTaskActor.Props(
+                eventAggregator,
+                repository,
+                dataService,
+                message.Id), message.Id.ToString());
+
+            taskActors.Add(message.Id, newTaskActor);
+
+            var requestWithCurrentSettings = message.GetWithUpdatedSettings(elevatedPrivileges);
+
+            // trigger feature toggle request
+            newTaskActor.Tell(requestWithCurrentSettings);
+        }
+        private void SetupNewFeatureDefinitionTaskActor<T>(T message) where T : Core.Messages.BaseTaskMessage
+        {
+            // as this comes from WPF, no akka context available here yet.
+            IActorRef newTaskActor =
+            ActorSystemReference.ActorSystem.ActorOf(
+                FeatureDefinitionTaskActor.Props(
+                    eventAggregator,
+                    repository,
+                    dataService,
+                    message.TaskId
+                    ));
+
+            taskActors.Add(message.TaskId, newTaskActor);
+
+            // trigger task handling
+            newTaskActor.Tell(message);
+        }
+
+        private void SetupNewFeatureTaskActor<T>(T message) where T : Core.Messages.BaseTaskMessage
+        {
+            // as this comes from WPF, no akka context available here yet.
+            IActorRef newTaskActor =
+            ActorSystemReference.ActorSystem.ActorOf(
+                FeatureTaskActor.Props(
+                    eventAggregator,
+                    repository,
+                    dataService,
+                    message.TaskId
+                    ));
+
+            taskActors.Add(message.TaskId, newTaskActor);
+
+            // trigger task handling
+            newTaskActor.Tell(message);
         }
     }
 }
