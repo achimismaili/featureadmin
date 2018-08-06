@@ -25,9 +25,9 @@ namespace FeatureAdmin.Core.Factories
             return location;
         }
 
-        public static Location GetLocation(Guid id, string displayName, Guid parent, Scope scope, string url, int childCount)
+        public static Location GetLocation(Guid id, string displayName, Guid parent, Scope scope, string url, int childCount, LockState lockState = LockState.NotLocked)
         {
-            var location = new Location(id, displayName, parent, scope, url, childCount);
+            var location = new Location(id, displayName, parent, scope, url, childCount, lockState);
             return location;
         }
 

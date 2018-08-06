@@ -23,10 +23,28 @@ namespace FeatureAdmin.Backends.Sp2013.Common
         {
             SPUserToken token = null;
             bool tempCADE = site.CatchAccessDeniedException;
+
+            bool siteIsUnlocked = true;
+
             try
             {
-                site.CatchAccessDeniedException = false;
+                //site.CatchAccessDeniedException = false;
                 token = site.SystemAccount.UserToken;
+            }
+            catch (SPException spEx)
+            {
+                if (site.IsReadLocked)
+                {
+                    // in this case SiteCollection is locked
+                    // not possible to get system account token, continue with a "normal" token
+                    siteIsUnlocked = false;
+
+                    token = site.UserToken;
+                }
+                else
+                {
+                    throw spEx;
+                }
             }
             catch (UnauthorizedAccessException)
             {
@@ -38,7 +56,10 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             }
             finally
             {
-                site.CatchAccessDeniedException = tempCADE;
+                if (siteIsUnlocked)
+                {
+                    site.CatchAccessDeniedException = tempCADE;
+                }
             }
             return token;
 

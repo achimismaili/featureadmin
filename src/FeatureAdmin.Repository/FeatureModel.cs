@@ -115,9 +115,11 @@ namespace FeatureAdmin.OrigoDb
                 }
                 else
                 {
-                    return string.Format(
-                        "Error when trying to add a location. The location with id '{0}' and Url '{1}' was already loaded. This should never happen! Try to reload or restart. Error: '{2}'",
-                        doublette.Id, doublette.Url, errInfo);
+                    // TODO switch ID to scope-Url, as restored locations can have same id (e.g. SPWeb of a restored SPSite)
+
+                    //return string.Format(
+                    //    "Error when trying to add a location. The location with id '{0}' and Url '{1}' was already loaded. This should never happen! Try to reload or restart. Error: '{2}'",
+                    //    doublette.Id, doublette.Url, errInfo);
                 }
             }
 

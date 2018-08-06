@@ -9,7 +9,7 @@ namespace FeatureAdmin.Core.Models
     [Serializable]
     public class Location 
     {
-        public Location(Guid id, string displayName, Guid parent, Scope scope, string url, int childCount = 0)
+        public Location(Guid id, string displayName, Guid parent, Scope scope, string url, int childCount = 0, LockState lockState = LockState.NotLocked)
         {
             Id = id;
             DisplayName = displayName == null ? string.Empty : displayName;
@@ -17,11 +17,15 @@ namespace FeatureAdmin.Core.Models
             Scope = scope;
             Url = url == null ? string.Empty : url;
             ChildCount = childCount;
+            LockState = lockState;
         }
 
         [IgnoreDuringEquals]
         public string DisplayName { get; protected set; }
         public Guid Id { get; protected set; }
+
+        public LockState LockState { get; protected set; }
+
         public Scope Scope { get; protected set; }
 
         [IgnoreDuringEquals]

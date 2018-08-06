@@ -370,26 +370,47 @@ namespace FeatureAdmin.Backends.Sp2013.Common
 
         public static Location ToLocation(this SPSite site, Guid parentId)
         {
+            LockState lockState = LockState.NotLocked;
+
             var id = site.ID;
 
             string displayName;
+            int childCount;
 
-            if (site.RootWeb != null)
+            if (site.IsReadLocked)
             {
-                displayName = site.RootWeb.Title;
+                lockState = LockState.NoAccess;
+
+                displayName = string.Format(
+                    "Site is Locked! {0}",
+                    site.Url
+                    );
+                childCount = 0;
             }
             else
             {
-                displayName = "Site has no root web!";
-            }
+                if (site.RootWeb != null)
+                {
+                    // TODO: check lock status https://technet.microsoft.com/en-us/library/ff631148(v=office.14).aspx
+                    // site.IsReadLocked --> No access
+                    displayName = site.RootWeb.Title;
+                }
+                else
+                {
+                    displayName = "Site has no root web!"; // well, that's normally impossible, but you never know ...
+                }
 
+                childCount = site.AllWebs.Count;
+            }
+            
             var location = LocationFactory.GetLocation(
                 id,
                 displayName,
                 parentId,
                 Scope.Site,
                 site.Url,
-                site.AllWebs.Count
+                childCount,
+                lockState
                 );
 
             return location;

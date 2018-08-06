@@ -117,61 +117,70 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
             foreach (SPSite spSite in siCos)
             {
+
+
                 Location siteLocation;
-
-                if (elevatedPrivileges)
-                {
-                    siteLocation = SpSiteElevation.SelectAsSystem(spSite, SpConverter.ToLocation, location.Id);
-                }
-                else
-                {
-                    siteLocation = SpConverter.ToLocation(spSite, location.Id);
-                }
-
-
-                // meaning that they are not installed in the farm, rather on site or web level
-                IEnumerable<FeatureDefinition> nonFarmFeatureDefinitions;
-
-                SPFeatureCollection siteFeatureCollection = SpFeatureHelper.GetFeatureCollection(spSite, elevatedPrivileges);
-
-                var activatedSiteFeatures = siteFeatureCollection.ToActivatedFeatures(siteLocation, out nonFarmFeatureDefinitions);
-
-                loadedElements.AddChild(siteLocation, activatedSiteFeatures, nonFarmFeatureDefinitions);
-
-                if (spSite != null && spSite.AllWebs != null)
-                {
-                    SPWebCollection allWebs;
+                //try
+                //{
 
                     if (elevatedPrivileges)
                     {
-                        allWebs = SpSiteElevation.SelectAsSystem(spSite, SpLocationHelper.GetAllWebs);
+                        siteLocation = SpSiteElevation.SelectAsSystem(spSite, SpConverter.ToLocation, location.Id);
                     }
                     else
                     {
-                        allWebs = spSite.AllWebs;
+                        siteLocation = SpConverter.ToLocation(spSite, location.Id);
                     }
 
-                    foreach (SPWeb spWeb in allWebs)
+                    // meaning that they are not installed in the farm, rather on site or web level
+                    IEnumerable<FeatureDefinition> nonFarmFeatureDefinitions;
+
+                    SPFeatureCollection siteFeatureCollection = SpFeatureHelper.GetFeatureCollection(spSite, elevatedPrivileges);
+
+                    var activatedSiteFeatures = siteFeatureCollection.ToActivatedFeatures(siteLocation, out nonFarmFeatureDefinitions);
+
+                    loadedElements.AddChild(siteLocation, activatedSiteFeatures, nonFarmFeatureDefinitions);
+
+                    if (siteLocation.LockState != LockState.NoAccess && spSite != null && spSite.AllWebs != null)
                     {
-                        var webLocation = SpConverter.ToLocation(spWeb, siteLocation.Id);
+                        SPWebCollection allWebs;
 
-                        nonFarmFeatureDefinitions = null;
+                        if (elevatedPrivileges)
+                        {
+                            allWebs = SpSiteElevation.SelectAsSystem(spSite, SpLocationHelper.GetAllWebs);
+                        }
+                        else
+                        {
+                            allWebs = spSite.AllWebs;
+                        }
 
-                        SPFeatureCollection webFeatureCollection = SpFeatureHelper.GetFeatureCollection(spWeb, elevatedPrivileges);
+                        foreach (SPWeb spWeb in allWebs)
+                        {
+                            var webLocation = SpConverter.ToLocation(spWeb, siteLocation.Id);
 
-                        var activatedWebFeatures = webFeatureCollection.ToActivatedFeatures(webLocation, out nonFarmFeatureDefinitions);
+                            nonFarmFeatureDefinitions = null;
 
-                        loadedElements.AddChild(webLocation, activatedWebFeatures, nonFarmFeatureDefinitions);
+                            SPFeatureCollection webFeatureCollection = SpFeatureHelper.GetFeatureCollection(spWeb, elevatedPrivileges);
 
-                        // https://blogs.technet.microsoft.com/stefan_gossner/2008/12/05/disposing-spweb-and-spsite-objects/
-                        spWeb.Dispose();
+                            var activatedWebFeatures = webFeatureCollection.ToActivatedFeatures(webLocation, out nonFarmFeatureDefinitions);
+
+                            loadedElements.AddChild(webLocation, activatedWebFeatures, nonFarmFeatureDefinitions);
+
+                            // https://blogs.technet.microsoft.com/stefan_gossner/2008/12/05/disposing-spweb-and-spsite-objects/
+                            spWeb.Dispose();
+                        }
                     }
-                }
 
-                spSite.Dispose();
+                    spSite.Dispose();
+
+                // This is the right place for debugging exception handling of lock state of site collections
+                //}
+                //catch (Exception Ex)
+                //{
+
+                //    throw Ex;
+                //}
             }
-
-
 
             return loadedElements;
         }
