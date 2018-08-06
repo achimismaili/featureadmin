@@ -35,13 +35,9 @@ namespace FeatureAdmin.Common
             items.Add(new KeyValuePair<string, string>(nameof(vm.DisplayName), vm.DisplayName));
             items.Add(new KeyValuePair<string, string>(nameof(vm.FeatureId), vm.FeatureId.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.LocationId), vm.LocationId.ToString()));
-            if (vm.Definition != null)
-            {
-                items.Add(new KeyValuePair<string, string>("DefinitionTitle", vm.Definition.Title));
-                items.Add(new KeyValuePair<string, string>(nameof(vm.Definition.Scope), vm.Definition.Scope.ToString()));
-                items.Add(new KeyValuePair<string, string>("DefinitionVersion", vm.Definition.Version == null ? string.Empty : vm.Definition.Version.ToString()));
-            }
-            items.Add(new KeyValuePair<string, string>(nameof(vm.Version), vm.Version.ToString()));
+            items.Add(new KeyValuePair<string, string>(nameof(vm.FeatureDefinitionScope), vm.FeatureDefinitionScope.ToString()));
+                items.Add(new KeyValuePair<string, string>("DefinitionVersion", vm.DefinitionVersion == null ? string.Empty : vm.DefinitionVersion.ToString()));
+               items.Add(new KeyValuePair<string, string>(nameof(vm.Version), vm.Version.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.CanUpgrade), vm.CanUpgrade.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.TimeActivated), vm.TimeActivated.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(Properties), PropertiesToString(vm.Properties)));
@@ -64,6 +60,7 @@ namespace FeatureAdmin.Common
             var items = new List<KeyValuePair<string, string>>();
 
             items.Add(new KeyValuePair<string, string>(nameof(vm.DisplayName), vm.DisplayName));
+            items.Add(new KeyValuePair<string, string>(nameof(vm.UniqueIdentifier), vm.UniqueIdentifier));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Id), vm.Id.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Scope), vm.Scope.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Title), vm.Title));
@@ -74,7 +71,8 @@ namespace FeatureAdmin.Common
             items.Add(new KeyValuePair<string, string>(nameof(vm.SolutionId), vm.SolutionId.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.UIVersion), vm.UIVersion.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Version), vm.Version == null ? string.Empty : vm.Version.ToString()));
-            items.Add(new KeyValuePair<string, string>(nameof(vm.SandBoxedSolutionLocation), vm.SandBoxedSolutionLocation.HasValue ? vm.SandBoxedSolutionLocation.Value.ToString() : string.Empty));
+            items.Add(new KeyValuePair<string, string>(nameof(vm.SandBoxedSolutionLocation), vm.SandBoxedSolutionLocation));
+
             items.Add(new KeyValuePair<string, string>(nameof(vm.Properties), PropertiesToString(vm.Properties)));
             items.Add(new KeyValuePair<string, string>("Times Activated in Farm", activatedFeatures.Count().ToString()));
             items.Add(ConvertActivatedFeatures(activatedFeatures, true));
@@ -95,16 +93,17 @@ namespace FeatureAdmin.Common
 
             var items = new List<KeyValuePair<string, string>>();
             items.Add(new KeyValuePair<string, string>(nameof(vm.DisplayName), vm.DisplayName));
-            items.Add(new KeyValuePair<string, string>(nameof(vm.Id), vm.Id.ToString()));
+            items.Add(new KeyValuePair<string, string>(nameof(Core.Common.Constants.Labels.UniqueLocationId), vm.Id.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Scope), vm.Scope.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.Url), vm.Url));
+            items.Add(new KeyValuePair<string, string>(nameof(vm.DataBaseId), vm.DataBaseId == null? string.Empty : vm.DataBaseId.ToString()));
             items.Add(new KeyValuePair<string, string>(nameof(vm.ChildCount), vm.ChildCount.ToString()));
-            items.Add(new KeyValuePair<string, string>("# of active features", activatedFeatures.Count().ToString()));
+            items.Add(new KeyValuePair<string, string>(Core.Common.Constants.Labels.NumberOfActivatedFeatures, activatedFeatures.Count().ToString()));
             items.Add(ConvertActivatedFeatures(activatedFeatures, false));
 
-            if (vm.Parent != Guid.Empty)
+            if (!string.IsNullOrEmpty(vm.ParentId))
             {
-            items.Add(new KeyValuePair<string, string>(nameof(vm.Parent), string.Format("Location Id: {0}", vm.Parent.ToString())));
+            items.Add(new KeyValuePair<string, string>(nameof(vm.ParentId), string.Format("Location Id: {0}", vm.ParentId.ToString())));
             }
 
             var dvm = new DetailViewModel(displayName, items);

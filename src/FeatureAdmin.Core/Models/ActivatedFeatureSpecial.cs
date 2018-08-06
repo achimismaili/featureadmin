@@ -16,14 +16,17 @@ namespace FeatureAdmin.Core.Models
     {
         public ActivatedFeatureSpecial(
                 ActivatedFeature activatedFeature,
+                FeatureDefinition definition,
                 Location location
             )
         {
             ActivatedFeature = activatedFeature;
+            Definition = definition;
             Location = location;
         }
 
         public ActivatedFeature ActivatedFeature { get; }
+        public FeatureDefinition Definition { get; }
         public Location Location { get; }
     }
 }

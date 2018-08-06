@@ -33,7 +33,7 @@ namespace FeatureAdmin.SampleData
                 get
                 {
                     return LocationFactory.GetLocation(
-                        Guid, DisplayName, TestFarm.Guid, Scope, Url,1);
+                        Guid, DisplayName, TestFarm.Guid.ToString(), Scope, Url,1);
                 }
             }
 
@@ -52,7 +52,7 @@ namespace FeatureAdmin.SampleData
                     var af = new List<Guid>();
                     af.Add(Features.HealthySite.Id);
                     return LocationFactory.GetLocation(
-                        Guid, DisplayName, WebApp.Guid, Scope, Url,1);
+                        Guid, DisplayName, WebApp.Guid.ToString(), Scope, Url,1);
                 }
             }
 
@@ -71,7 +71,7 @@ namespace FeatureAdmin.SampleData
                     var af = new List<Guid>();
                     af.Add(Features.HealthyWeb.Id);
                     return LocationFactory.GetLocation(
-                        Guid, DisplayName, ActivatedSite.Guid, Scope, Url,0);
+                        Guid, DisplayName, ActivatedSite.Guid.ToString(), Scope, Url,0);
                 }
             }
         }

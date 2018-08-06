@@ -45,7 +45,7 @@ namespace FeatureAdmin.ViewModels
 
             if (SelectedLocation != null && SelectedFeatureDefinition != null)
             {
-                var activeItem = repository.GetActivatedFeature(SelectedFeatureDefinition.Id, SelectedLocation.Id);
+                var activeItem = repository.GetActivatedFeature(SelectedFeatureDefinition.UniqueIdentifier, SelectedLocation.UniqueId);
 
                 if (activeItem != null)
                 {

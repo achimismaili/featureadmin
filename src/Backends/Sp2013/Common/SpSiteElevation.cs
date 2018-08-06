@@ -77,11 +77,18 @@ namespace FeatureAdmin.Backends.Sp2013.Common
                 return selector(elevSite);
         }
 
+        public static T SelectAsSystem<T>(this SPSite site, Func<SPSite, string, T> selector, string id)
+        {
+            using (SPSite elevSite = new SPSite(site.ID, site.GetSystemToken()))
+                return selector(elevSite, id);
+        }
+
         public static T SelectAsSystem<T>(this SPSite site, Func<SPSite, Guid, T> selector, Guid id)
         {
             using (SPSite elevSite = new SPSite(site.ID, site.GetSystemToken()))
                 return selector(elevSite, id);
         }
+
 
         public static void RunAsSystem(this SPSite site, Guid webId, Action<SPWeb> action)
         {
@@ -103,7 +110,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             return site.SelectAsSystem(s => selector(s.OpenWeb(webId)));
         }
 
-        public static T SelectAsSystem<T>(this SPSite site, Guid webId, Func<SPWeb, Guid, T> selector, Guid id)
+        public static T SelectAsSystem<T>(this SPSite site, Guid webId, Func<SPWeb, string, T> selector, string id)
         {
             return site.SelectAsSystem(s => selector(s.OpenWeb(webId), id));
         }
@@ -118,7 +125,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             return web.Site.SelectAsSystem(web.ID, selector);
         }
 
-        public static T SelectAsSystem<T>(this SPWeb web, Func<SPWeb, Guid, T> selector, Guid id)
+        public static T SelectAsSystem<T>(this SPWeb web, Func<SPWeb, string, T> selector, string id)
         {
             return web.Site.SelectAsSystem(web.ID, selector, id);
         }

@@ -68,7 +68,7 @@ namespace FeatureAdmin.Repository
             store.Clear();
         }
 
-        public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
+        public ActivatedFeature GetActivatedFeature(string featureDefinitionId, string locationId)
         {
             return store.GetActivatedFeature(featureDefinitionId, locationId);
         }
@@ -92,7 +92,7 @@ namespace FeatureAdmin.Repository
         {
             return store.GetLocationsCanDeactivate(featureDefinition, location);
         }
-        public string RemoveActivatedFeature([NotNull] Guid featureId, [NotNull] Guid locationId)
+        public string RemoveActivatedFeature([NotNull] string featureId, [NotNull] string locationId)
         {
             return store.RemoveActivatedFeature(featureId, locationId);
         }

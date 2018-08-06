@@ -24,8 +24,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
 
                 if (spResultingFeature != null)
                 {
-                    FeatureDefinition nffd; // feature definition is not relevant in case of feature action, just in case of load
-                    resultingFeature = spResultingFeature.ToActivatedFeature(location, out nffd);
+                    resultingFeature = spResultingFeature.ToActivatedFeature(location);
                 }
             }
             catch (Exception ex)
@@ -65,8 +64,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
 
                 if (spResultingFeature != null)
                 {
-                    FeatureDefinition nffd; // feature definition is not relevant in case of feature action, just in case of load
-                    resultingFeature = spResultingFeature.ToActivatedFeature(location, out nffd);
+                    resultingFeature = spResultingFeature.ToActivatedFeature(location);
                 }
             }
             catch (Exception ex)
@@ -102,8 +100,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
 
                 if (spResultingFeature != null)
                 {
-                    FeatureDefinition nffd; // feature definition is not relevant in case of feature action, just in case of load
-                    resultingFeature = spResultingFeature.ToActivatedFeature(location, out nffd);
+                    resultingFeature = spResultingFeature.ToActivatedFeature(location);
                 }
             }
             catch (Exception ex)
@@ -131,8 +128,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
 
                 if (spResultingFeature != null)
                 {
-                    FeatureDefinition nffd; // feature definition is not relevant in case of feature action, just in case of load
-                    resultingFeature = spResultingFeature.ToActivatedFeature(location, out nffd);
+                    resultingFeature = spResultingFeature.ToActivatedFeature(location);
                 }
             }
             catch (Exception ex)

@@ -18,11 +18,11 @@ namespace FeatureAdmin.Core.Models.Tasks
         /// <summary>
         /// null is not completed, true is completed successfully and false is failed to complete
         /// </summary>
-        public Dictionary<KeyValuePair<Guid,Guid>, bool> jobsCompleted;
+        public Dictionary<KeyValuePair<string,string>, bool> jobsCompleted;
         public int jobsTotal = 0;
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
         private readonly IDataService dataService;
-        private readonly Dictionary<Guid, IActorRef> executingActors;
+        private readonly Dictionary<string, IActorRef> executingActors;
         private readonly IFeatureRepository repository;
 
         private List<FeatureToggleRequest> requestsToBeConfirmed;
@@ -36,12 +36,12 @@ namespace FeatureAdmin.Core.Models.Tasks
         {
             this.eventAggregator.Subscribe(this);
 
-            executingActors = new Dictionary<Guid, IActorRef>();
+            executingActors = new Dictionary<string, IActorRef>();
             this.repository = repository;
             this.dataService = dataService;
             this.isSubTaskActor = isSubTaskActor;
             
-            jobsCompleted = new Dictionary<KeyValuePair<Guid, Guid>, bool>();
+            jobsCompleted = new Dictionary<KeyValuePair<string, string>, bool>();
 
             Receive<Confirmation>(message => HandleConfirmation(message));
             Receive<DeactivateFeaturesRequest>(message => HandleDeactivateFeaturesRequest(message));
@@ -58,11 +58,11 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             bool success = true;
 
-            repository.RemoveActivatedFeature(message.UpgradedFeature.FeatureId, message.LocationReference);
+            repository.RemoveActivatedFeature(message.UpgradedFeature.FeatureId, message.LocationReferenceId);
             repository.AddActivatedFeature(message.UpgradedFeature);
 
             jobsCompleted.Add(
-                new KeyValuePair<Guid, Guid>(message.UpgradedFeature.FeatureId, message.LocationReference), 
+                new KeyValuePair<string, string>(message.UpgradedFeature.FeatureId, message.LocationReferenceId), 
                 success);
 
             SendProgress();
@@ -87,7 +87,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                 {
 
                     var toggleRequest = new FeatureToggleRequest(
-                        af.ActivatedFeature.Definition,
+                        af.Definition,
                         af.Location,
                         Enums.FeatureAction.Upgrade,
                         message.Force,
@@ -127,7 +127,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                 {
 
                     var toggleRequest = new FeatureToggleRequest(
-                        af.ActivatedFeature.Definition,
+                        af.Definition,
                         af.Location,
                         // force is already set to true, so now it is same as deactivation ... 
                         // message.Action,
@@ -243,7 +243,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                 foreach (FeatureToggleRequest ftr in requestsToBeConfirmed)
                 {
 
-                    var locationId = ftr.Location.Id;
+                    var locationId = ftr.Location.UniqueId;
 
                     // create Location actors and trigger feature actions
 
@@ -260,7 +260,7 @@ namespace FeatureAdmin.Core.Models.Tasks
                     }
                     else
                     {
-                        executingActors[ftr.Location.Id].Tell(ftr);
+                        executingActors[locationId].Tell(ftr);
                     }
                 }
             }
@@ -274,7 +274,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             repository.AddActivatedFeature(message.ActivatedFeature);
 
             jobsCompleted.Add(
-                new KeyValuePair<Guid, Guid>(message.ActivatedFeature.FeatureId, message.LocationReference),
+                new KeyValuePair<string, string>(message.ActivatedFeature.FeatureId, message.LocationReferenceId),
                 success);
 
             SendProgress();
@@ -285,10 +285,10 @@ namespace FeatureAdmin.Core.Models.Tasks
             _log.Debug("Entered HandleFeatureDeactivationCompleted with Id " + Id.ToString());
 
             bool success = true;
-            repository.RemoveActivatedFeature(message.FeatureId, message.LocationReference);
+            repository.RemoveActivatedFeature(message.FeatureId, message.LocationReferenceId);
 
             jobsCompleted.Add(
-                new KeyValuePair<Guid, Guid>(message.FeatureId, message.LocationReference),
+                new KeyValuePair<string, string>(message.FeatureId, message.LocationReferenceId),
                 success);
                 
             SendProgress();

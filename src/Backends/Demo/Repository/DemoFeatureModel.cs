@@ -13,7 +13,7 @@ namespace FeatureAdmin.Backends.Demo.Repository
         {
             var demoLocations = SampleData.SampleLocationHierarchy.GetAllLocations();
 
-            Locations = demoLocations.ToDictionary(l => l.Id);
+            Locations = demoLocations.ToDictionary(l => l.UniqueId);
             ActivatedFeatures = SampleData.SampleLocationHierarchy.GetAllActivatedFeatures(demoLocations).ToList();
             FeatureDefinitions = SampleData.StandardFeatureDefinitions.GetAllFeatureDefinitions().ToDictionary(fd => fd.UniqueIdentifier);
         }

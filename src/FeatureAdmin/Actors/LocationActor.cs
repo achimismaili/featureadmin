@@ -140,7 +140,7 @@ namespace FeatureAdmin.Actors
             {
                 var completed = new Core.Messages.Completed.FeatureUpgradeCompleted(
            message.TaskId,
-           message.Location.Id,
+           message.Location.UniqueId,
            af
            );
 
@@ -205,8 +205,8 @@ namespace FeatureAdmin.Actors
             {
                 var completed = new Core.Messages.Completed.FeatureDeactivationCompleted(
                     message.TaskId,
-                    message.Location.Id,
-                    message.FeatureDefinition.Id
+                    message.Location.UniqueId,
+                    message.FeatureDefinition.UniqueIdentifier
            );
 
                 Sender.Tell(completed);
@@ -282,7 +282,7 @@ namespace FeatureAdmin.Actors
             {
                 var completed = new Core.Messages.Completed.FeatureActivationCompleted(
            message.TaskId,
-           message.Location.Id,
+           message.Location.UniqueId,
            af
            );
 

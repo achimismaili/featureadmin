@@ -63,11 +63,11 @@ namespace FeatureAdmin.Core.Tests.Models
                            );
 
             ActivatedFeature referenceFeature = ActivatedFeatureFactory.GetActivatedFeature(
-                  Id,
-                  Locations.ActivatedRootWeb.Guid,
-                  referenceFeatureDefinition,
+                  referenceFeatureDefinition.UniqueIdentifier,
+                  Locations.ActivatedRootWeb.Guid.ToString(),
+                  referenceFeatureDefinition.DisplayName,
                   Faulty, Properties, TimeActivated,
-                  Version
+                  Version, referenceFeatureDefinition.Version
                   );
 
 
@@ -87,19 +87,23 @@ namespace FeatureAdmin.Core.Tests.Models
                   );
 
             var equalFeature = ActivatedFeatureFactory.GetActivatedFeature(
-                 Id,
-                 Locations.ActivatedRootWeb.Guid,
-                 definitionDifferent,
-                 FaultyDifferent, PropertiesDifferent, TimeActivatedDifferent,
-                 VersionDifferent, DefinitioninstallationScopeDifferent
+                 definitionDifferent.UniqueIdentifier,
+                 Locations.ActivatedRootWeb.Guid.ToString(),
+                 definitionDifferent.DisplayName,
+                 FaultyDifferent, 
+                 PropertiesDifferent, 
+                 TimeActivatedDifferent,
+                 VersionDifferent, 
+                 definitionDifferent.Version, 
+                 DefinitioninstallationScopeDifferent
                  );
 
             var equalFeatureEmpty = ActivatedFeatureFactory.GetActivatedFeature(
-                 Id,
-                 Locations.ActivatedRootWeb.Guid,
+                 Id.ToString(),
+                 Locations.ActivatedRootWeb.Guid.ToString(),
                  null,
                  FaultyDifferent, null, DateTime.MinValue,
-                 null
+                 null, null
                  );
 
             // Assert
@@ -132,29 +136,29 @@ namespace FeatureAdmin.Core.Tests.Models
                          );
 
             ActivatedFeature referenceFeature = ActivatedFeatureFactory.GetActivatedFeature(
-                  Id,
-                  SolutionId,
-                  referenceFeatureDefinition,
+                  referenceFeatureDefinition.UniqueIdentifier,
+                  SolutionId.ToString(),
+                  referenceFeatureDefinition.DisplayName,
                   Faulty, Properties, TimeActivated,
-                  Version
+                  Version, referenceFeatureDefinition.Version
                   );
 
 
             // Act
             var notEqualFeatureId = ActivatedFeatureFactory.GetActivatedFeature(
-                  IdDifferent,
-                  SolutionId,
-                  referenceFeatureDefinition,
+                  IdDifferent.ToString(),
+                  SolutionId.ToString(),
+                  referenceFeatureDefinition.DisplayName,
                   Faulty, Properties, TimeActivated,
-                  Version
+                  Version, referenceFeatureDefinition.Version
                   );
 
             var notEqualLocationId = ActivatedFeatureFactory.GetActivatedFeature(
-                  Id,
-                  SolutionIdDifferent,
-                  referenceFeatureDefinition,
+                  referenceFeatureDefinition.UniqueIdentifier,
+                  SolutionIdDifferent.ToString(),
+                  referenceFeatureDefinition.DisplayName,
                   Faulty, Properties, TimeActivated,
-                  Version
+                  Version, referenceFeatureDefinition.Version
                   );
 
             // Assert

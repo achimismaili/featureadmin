@@ -6,51 +6,71 @@ namespace FeatureAdmin.Core.Models
 {
     [Equals]
     [Serializable]
-    public class ActivatedFeature 
+    public class ActivatedFeature
     {
         public ActivatedFeature(
-                Guid featureId,
-                Guid locationId,
-                FeatureDefinition definition,
+                string featureId,
+                string locationId,
+                string displayName,
                 bool faulty,
                 Dictionary<string, string> properties,
                 DateTime timeActivated,
                 Version version,
+                Version definitionVersion,
                 FeatureDefinitionScope featureDefinitionScope = FeatureDefinitionScope.Farm
-            ) 
+            )
         {
             FeatureId = featureId;
-            FeatureDefinitionUniqueIdentifier = definition.UniqueIdentifier;
             LocationId = locationId;
-            Definition = definition;
+            DisplayName = displayName;
             Faulty = faulty;
             Properties = properties;
             TimeActivated = timeActivated;
             Version = version;
-            CanUpgrade = definition.Version > version;
+            CanUpgrade = definitionVersion > version;
             FeatureDefinitionScope = featureDefinitionScope;
         }
 
         [IgnoreDuringEquals]
         public bool CanUpgrade { get; private set; }
 
-        public FeatureDefinition Definition { get; private set; }
+        public Version DefinitionVersion { get; private set; }
 
         [IgnoreDuringEquals]
-        public string DisplayName { get {
-                return Definition.DisplayName;
-            } }
+        public string DisplayName { get; private set; }
 
         [IgnoreDuringEquals]
         public bool Faulty { get; private set; }
 
-        public string FeatureDefinitionUniqueIdentifier { get; private set; }
 
-        // only feature id and location are relevant for equal
-        public Guid FeatureId { get; private set; }
+        /// <summary>
+        /// This is the UniqueIdentifier of the FeatureDefinition
+        /// </summary>
+        /// <remarks>
+        /// The feature id is not sufficient, because not unique, 
+        /// e.g. sandboxed solutions (and add ins?) can have multiple definition instances with each same feature id
+        /// also same feature definition can be deployed to multiple compatibility levels
+        /// This ID is relevant for 'equal'
+        /// </remarks>
+        public string FeatureId { get; private set; }
 
-        // only feature id and location are relevant for equal
-        public Guid LocationId { get; private set; }
+        public Guid FeatureGuid
+        {
+            get
+            {
+                return Common.StringHelper.UniqueIdToGuid(FeatureId);
+            }
+        }
+
+        /// <summary>
+        /// This is the UniqueId of the location
+        /// </summary>
+        /// <remarks>
+        /// The location id is not sufficient, because not unique, 
+        /// e.g. multiple site colleciton restores can have same web id
+        /// This ID is relevant for 'equal'
+        /// </remarks>
+        public string LocationId { get; private set; }
         [IgnoreDuringEquals]
         public Dictionary<string, string> Properties { get; private set; } = new Dictionary<string, string>();
 

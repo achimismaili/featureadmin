@@ -11,15 +11,18 @@ namespace FeatureAdmin.Core.Tests.Common
     {
         public static class TestActivatedFeatures
         {
-            public static ActivatedFeature GetNormalActivatedFeature(FeatureDefinition definition, Guid locationId)
+            public static ActivatedFeature GetNormalActivatedFeature(FeatureDefinition definition, string locationId)
             {
-                return new ActivatedFeature(definition.Id,
+                return new ActivatedFeature(
+                    definition.UniqueIdentifier,
                     locationId,
-                    definition,
+                    definition.DisplayName,
                             Constants.GenericValues.Faulty,
                             Constants.GenericValues.Properties,
                             Constants.GenericValues.TimeActivated,
-                            Constants.GenericValues.Version);
+                            Constants.GenericValues.Version,
+                            definition.Version
+                            );
             }
         }
 

@@ -16,13 +16,13 @@ namespace FeatureAdmin.OrigoDb
         /// </summary>
         protected List<ActivatedFeature> ActivatedFeatures;
         protected Dictionary<string, FeatureDefinition> FeatureDefinitions;
-        protected Dictionary<Guid, Location> Locations;
+        protected Dictionary<string, Location> Locations;
 
         public FeatureModel()
         {
             ActivatedFeatures = new List<ActivatedFeature>();
             FeatureDefinitions = new Dictionary<string, FeatureDefinition>();
-            Locations = new Dictionary<Guid, Location>();
+            Locations = new Dictionary<string, Location>();
         }
 
         [Command]
@@ -85,7 +85,7 @@ namespace FeatureAdmin.OrigoDb
             {
                 if (locations != null)
                 {
-                    Locations = Locations.Concat(locations.ToDictionary(l => l.Id)).ToDictionary(l => l.Key, l => l.Value); ;
+                    Locations = Locations.Concat(locations.ToDictionary(l => l.UniqueId)).ToDictionary(l => l.Key, l => l.Value); ;
                 }
             }
             catch (Exception ex)
@@ -99,8 +99,8 @@ namespace FeatureAdmin.OrigoDb
                 {
                     doublette =
                             (from newLocs in locations
-                             join l in Locations on newLocs.Id equals l.Key
-                             where newLocs.Id == l.Key
+                             join l in Locations on newLocs.UniqueId equals l.Key
+                             where newLocs.UniqueId == l.Key
                              select newLocs).FirstOrDefault();
                 }
                 catch (Exception ex2)
@@ -158,8 +158,11 @@ namespace FeatureAdmin.OrigoDb
             }
 
             var conversionResult = from af in activatedFeatures
+                                   join d in FeatureDefinitions on af.FeatureId equals d.Key
+                                   into featuresAndDefinitions
+                                   from someDefinitionsEmpty in featuresAndDefinitions.DefaultIfEmpty()
                                    join l in Locations on af.LocationId equals l.Key
-                               select new ActivatedFeatureSpecial(af, l.Value);
+                                   select new ActivatedFeatureSpecial(af, someDefinitionsEmpty.Value, l.Value);
 
             return conversionResult.ToList();
         }
@@ -185,28 +188,14 @@ namespace FeatureAdmin.OrigoDb
                                
             if (!string.IsNullOrEmpty(searchInput))
             {
-                Guid idGuid;
-                Guid.TryParse(searchInput, out idGuid);
-
-                // if searchInput is not a guid, seachstring will always be a guid.empty
-                // to also catch, if user intentionally wants to search for guid empty, this is checked here, too
-                if (searchInput.Equals(Guid.Empty.ToString()) || idGuid != Guid.Empty)
-                {
-                    searchResult = searchResult.Where(
-                        f => f.ActivatedFeature.FeatureId == idGuid
-                       || f.ActivatedFeature.LocationId == idGuid
-                        ).Select(f => f);
-                }
-                else
-                {
                     var lowerCaseSearchInput = searchInput.ToLower();
                     searchResult = searchResult.Where(
                        f => f.ActivatedFeature.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
                        f.Location.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
-                       f.Location.Url.ToLower().Contains(lowerCaseSearchInput)
+                       f.Location.Url.ToLower().Contains(lowerCaseSearchInput) ||
+                        f.ActivatedFeature.FeatureId.Contains(lowerCaseSearchInput) ||
+                        f.ActivatedFeature.LocationId.Contains(lowerCaseSearchInput)
                         );
-                }
-
             }
 
             if (selectedScopeFilter != null)
@@ -218,25 +207,28 @@ namespace FeatureAdmin.OrigoDb
             return searchResult.ToArray();
         }
 
-        public ActivatedFeature GetActivatedFeature(Guid featureDefinitionId, Guid locationId)
+        public ActivatedFeature GetActivatedFeature(string featureId, string locationId)
         {
-            return ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureDefinitionId && f.LocationId == locationId);
+            return ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureId && f.LocationId == locationId);
         }
 
         public IEnumerable<ActivatedFeature> GetActivatedFeatures(FeatureDefinition featureDefinition)
         {
             if (featureDefinition != null)
             {
-                if (featureDefinition.Scope == Scope.ScopeInvalid && featureDefinition.SandBoxedSolutionLocation == null)
+                var result = ActivatedFeatures.Where(af => af.FeatureId == featureDefinition.UniqueIdentifier)
+                    .ToList();
+
+                // try to find some activated features, if scope is invalid (e.g. definition not available in local hive)
+                if (!result.Any() && featureDefinition.Scope == Scope.ScopeInvalid && featureDefinition.SandBoxedSolutionLocation == null)
                 {
-                    return ActivatedFeatures.Where(af => af.FeatureId == featureDefinition.Id && 
+                    return ActivatedFeatures.Where(af => af.FeatureId.Contains(featureDefinition.Id.ToString()) && 
                     ( af.FeatureDefinitionScope == FeatureDefinitionScope.Farm ||
                     af.FeatureDefinitionScope == FeatureDefinitionScope.None))
                     .ToList();
                 }
 
-                return ActivatedFeatures.Where(af => af.FeatureDefinitionUniqueIdentifier == featureDefinition.UniqueIdentifier)
-                    .ToList();
+                return result;
             }
 
             return null;
@@ -244,7 +236,7 @@ namespace FeatureAdmin.OrigoDb
 
         public IEnumerable<ActivatedFeature> GetActivatedFeatures(Location location)
         {
-            return ActivatedFeatures.Where(af => af.LocationId == location.Id)
+            return ActivatedFeatures.Where(af => af.LocationId == location.UniqueId)
                 .ToList();
         }
 
@@ -252,12 +244,12 @@ namespace FeatureAdmin.OrigoDb
         {
             var allLocationsOfFeatureScope = GetChildLocationsOfScope(featureDefinition.Scope, location, featureDefinition.SandBoxedSolutionLocation);
 
-            var prefilteredActivatedFeatures = ActivatedFeatures.Where(f => f.FeatureId == featureDefinition.Id).ToList();
+            var prefilteredActivatedFeatures = ActivatedFeatures.Where(f => f.FeatureId == featureDefinition.UniqueIdentifier).ToList();
 
             // see https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
             var locationsCanActivate =
                             (from loc in allLocationsOfFeatureScope
-                             join af in prefilteredActivatedFeatures on loc.Id equals af.LocationId into gj
+                             join af in prefilteredActivatedFeatures on loc.UniqueId equals af.LocationId into gj
                              from subAf in gj.DefaultIfEmpty()
                                  // following is the only different line compared to ..can deactivate
                              where subAf == null
@@ -272,16 +264,16 @@ namespace FeatureAdmin.OrigoDb
         {
             var allLocationsOfFeatureScope = GetChildLocationsOfScope(featureDefinition.Scope, location, featureDefinition.SandBoxedSolutionLocation);
 
-            var prefilteredActivatedFeatures = ActivatedFeatures.Where(f => f.FeatureId == featureDefinition.Id).ToList();
+            var prefilteredActivatedFeatures = ActivatedFeatures.Where(f => f.FeatureId == featureDefinition.UniqueIdentifier).ToList();
 
             // see https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
             var locationsCanDeactivate =
                             (from loc in allLocationsOfFeatureScope
-                             join af in prefilteredActivatedFeatures on loc.Id equals af.LocationId into gj
+                             join af in prefilteredActivatedFeatures on loc.UniqueId equals af.LocationId into gj
 
                              from subAf in gj.DefaultIfEmpty()
                                  // following is the only different line compared to ..can activate
-                             where subAf != null && subAf.FeatureId == featureDefinition.Id
+                             where subAf != null && subAf.FeatureId == featureDefinition.UniqueIdentifier
                              select loc).ToList();
 
 
@@ -290,13 +282,13 @@ namespace FeatureAdmin.OrigoDb
 
         public IEnumerable<Location> GetLocationsDirectChildren(Location location)
         {
-            return Locations.Where(l => l.Value.Parent == location.Id)
+            return Locations.Where(l => l.Value.ParentId == location.UniqueId)
                 .Select(l => l.Value)
                 .ToList();
         }
 
         [Command]
-        public string RemoveActivatedFeature(Guid featureId, Guid locationId)
+        public string RemoveActivatedFeature(string featureId, string locationId)
         {
             var featureToRemove = ActivatedFeatures.FirstOrDefault(f => f.FeatureId == featureId && f.LocationId == locationId);
 
@@ -349,41 +341,30 @@ namespace FeatureAdmin.OrigoDb
             }
             else
             {
-                Guid idGuid;
-                Guid.TryParse(searchInput, out idGuid);
+                    var lowerCaseSearchInput = searchInput.ToLower();
+                    searchResult =
+                       FeatureDefinitions.Where(fd => fd.Value.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
+                            fd.Value.Title.ToLower().Contains(lowerCaseSearchInput) ||
+                            fd.Key.Contains(searchInput))
+                            .Select(fd => fd.Value);
 
-                // if searchInput is not a guid, seachstring will always be a guid.empty
-                // to also catch, if user intentionally wants to search for guid empty, this is checked here, too
-                if (searchInput.Equals(Guid.Empty.ToString()) || idGuid != Guid.Empty)
-                {
-                    searchResult = FeatureDefinitions.Where(
-                        fd => fd.Value.Id == idGuid
-                        ).Select(fd => fd.Value);
 
-                    // search for feature Ids in activated features, if no location was found with that id
+                    // search for features in activated features, if no definition was found with that id
                     if (!searchResult.Any())
                     {
                         // see also https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-inner-joins
                         searchResult =
                             ActivatedFeatures
-                            .Where(f => f.LocationId == idGuid)
+                            .Where(f => f.LocationId.Contains(searchInput))
                             .Join(
                             FeatureDefinitions,
-                            f => f.FeatureDefinitionUniqueIdentifier,
-                            fd => fd.Value.UniqueIdentifier,
+                            f => f.FeatureId,
+                            fd => fd.Key,
                             (f, fd) => fd.Value);
                     }
-                }
-                else
-                {
-                    var lowerCaseSearchInput = searchInput.ToLower();
-                    searchResult =
-                       FeatureDefinitions.Where(fd => fd.Value.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
-                            fd.Value.Title.ToLower().Contains(lowerCaseSearchInput))
-                            .Select(fd => fd.Value);
-                }
 
-            }
+
+                }
 
             if (selectedScopeFilter != null)
             {
@@ -403,48 +384,27 @@ namespace FeatureAdmin.OrigoDb
             }
             else
             {
-                Guid idGuid;
-                Guid.TryParse(searchInput, out idGuid);
-
-                // if searchInput is not a guid, seachstring will always be a guid.empty
-                // to also catch, if user intentionally wants to search for guid empty, this is checked here, too
-                if (searchInput.Equals(Guid.Empty.ToString()) || idGuid != Guid.Empty)
-                {
-                    searchResult = Locations.Where(
-                        l => l.Key == idGuid
-                       || l.Value.Parent == idGuid
+                var lowerCaseSearchInput = searchInput.ToLower();
+                searchResult = Locations.Where(
+                   l => l.Value.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
+                        l.Value.Url.ToLower().Contains(lowerCaseSearchInput) ||
+                        l.Key.Contains(searchInput) ||
+                        l.Value.ParentId.Contains(searchInput)
                         ).Select(l => l.Value);
 
-                    // search for feature Ids in activated features, if no location was found with that id
-                    if (!searchResult.Any())
-                    {
-                        // see also https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-inner-joins
-                        searchResult =
-                            ActivatedFeatures
-                            .Where(f => f.FeatureId == idGuid)
-                            .Join(
-                            Locations,
-                            f => f.LocationId,
-                            l => l.Key,
-                            (f, l) => l.Value);
-
-                        //from af in ActivatedFeatures
-                        //join l in Locations 
-                        //on af.LocationId equals l.Key
-                        //where af != null && af.FeatureId == idGuid
-                        //select l.Value;
-                    }
-
-                }
-                else
+                // search for feature Ids in activated features, if no location was found with that id
+                if (!searchResult.Any())
                 {
-                    var lowerCaseSearchInput = searchInput.ToLower();
-                    searchResult = Locations.Values.Where(
-                       l => l.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
-                            l.Url.ToLower().Contains(lowerCaseSearchInput)
-                        );
+                    // see also https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-inner-joins
+                    searchResult =
+                        ActivatedFeatures
+                        .Where(f => f.FeatureId.Contains(searchInput))
+                        .Join(
+                        Locations,
+                        f => f.LocationId,
+                        l => l.Key,
+                        (f, l) => l.Value);
                 }
-
             }
 
             if (selectedScopeFilter != null)
@@ -461,9 +421,9 @@ namespace FeatureAdmin.OrigoDb
         /// </summary>
         /// <param name="childrenScope">scope of locations (webs, sicos, web apps, farm)</param>
         /// <param name="parentLocation">parent location, all must be below</param>
-        /// <param name="featureDefinitionLocation">if feature definition is sandbox or add in, definition is not farm wide, but in site or web</param>
+        /// <param name="featureDefinitionLocationId">if feature definition is sandbox or add in, definition is not farm wide, but in site or web</param>
         /// <returns></returns>
-        private IEnumerable<Location> GetChildLocationsOfScope(Scope childrenScope, Location parentLocation, Guid? featureDefinitionLocation)
+        private IEnumerable<Location> GetChildLocationsOfScope(Scope childrenScope, Location parentLocation, string featureDefinitionLocationId)
         {
             var childLocations = new List<Location>();
 
@@ -518,13 +478,13 @@ namespace FeatureAdmin.OrigoDb
             }
 
             // now filter for featureDefinitionLocation ids in the location id or parent id of all childlocations
-            if (featureDefinitionLocation.HasValue)
+            if (!string.IsNullOrEmpty(featureDefinitionLocationId))
             {
                 var DefinitionScopedChildLocations =
                     childLocations
-                    .Where(l => l.Id == featureDefinitionLocation.Value ||
-                                l.Parent == featureDefinitionLocation.Value)
-                    .ToList();
+                    .Where(l => l.UniqueId.Equals(featureDefinitionLocationId) ||
+                                l.ParentId.Equals(featureDefinitionLocationId)
+                    ).ToList();
 
                 return DefinitionScopedChildLocations;
             }
@@ -536,10 +496,10 @@ namespace FeatureAdmin.OrigoDb
 
         private IEnumerable<Location> GetLocationsChildrensChildren(Location location)
         {
-            return Locations.Where(l => l.Value.Parent == location.Id)
+            return Locations.Where(l => l.Value.ParentId == location.UniqueId)
                 .Join(Locations,
                             parent => parent.Key,
-                            child => child.Value.Parent,
+                            child => child.Value.ParentId,
                             (parent, child) => child.Value)
                 .ToList();
         }

@@ -106,7 +106,7 @@ namespace FeatureAdmin.Core.Factories
              Guid solutionId,
              string uIVersion,
              Version version,
-             Guid? sandBoxedSolutionLocation = null
+             string sandBoxedSolutionLocation = null
             )
         {
             var featureDefinition = new FeatureDefinition(

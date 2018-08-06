@@ -35,7 +35,7 @@ namespace FeatureAdmin.SampleData
                 {
                     return FeatureDefinitionFactory.GetFeatureDefinition(
                         Id, CompatibilityLevel,
-                         Title,
+                        Title,
                         Name, false,
                         Name, null,
                         Scope,
@@ -49,11 +49,11 @@ namespace FeatureAdmin.SampleData
             public static ActivatedFeature HealthyWeb15ActivatedInActivatedRootWeb()
             {
                 return ActivatedFeatureFactory.GetActivatedFeature(
-                       Id,
-                       Locations.ActivatedRootWeb.Guid,
-                       FeatureDefinitionHealthyWeb15,
+                       FeatureDefinitionHealthyWeb15.UniqueIdentifier,
+                       Locations.ActivatedRootWeb.Guid.ToString(),
+                       FeatureDefinitionHealthyWeb15.DisplayName,
                        Faulty, null, DateTime.Now,
-                       Version
+                       Version, FeatureDefinitionHealthyWeb15.Version
                        );
             }
         }
@@ -89,11 +89,11 @@ namespace FeatureAdmin.SampleData
             public static ActivatedFeature HealthySiCo15ActivatedInActivatedSiCo()
             {
                 return ActivatedFeatureFactory.GetActivatedFeature(
-                       Id,
-                       Locations.ActivatedRootWeb.Guid,
-                       FeatureDefinitionHealthySiCo15,
+                       FeatureDefinitionHealthySiCo15.UniqueIdentifier,
+                       Locations.ActivatedRootWeb.Guid.ToString(),
+                       FeatureDefinitionHealthySiCo15.DisplayName,
                        Faulty, null, DateTime.Now,
-                       Version
+                       Version, FeatureDefinitionHealthySiCo15.Version
                        );
             }
         }
@@ -129,11 +129,11 @@ namespace FeatureAdmin.SampleData
             public static ActivatedFeature HealthyWebApp15ActivatedInWebApp()
             {
                 return ActivatedFeatureFactory.GetActivatedFeature(
-                       Id,
-                       Locations.ActivatedRootWeb.Guid,
-                       FeatureDefinitionHealthyWebApp15,
+                       FeatureDefinitionHealthyWebApp15.UniqueIdentifier,
+                       Locations.ActivatedRootWeb.Guid.ToString(),
+                       FeatureDefinitionHealthyWebApp15.DisplayName,
                        Faulty, null, DateTime.Now,
-                       Version
+                       Version, FeatureDefinitionHealthyWebApp15.Version
                        );
             }
         }
@@ -169,11 +169,11 @@ namespace FeatureAdmin.SampleData
             public static ActivatedFeature HealthyFarm15ActivatedInFarm()
             {
                 return ActivatedFeatureFactory.GetActivatedFeature(
-                       Id,
-                       Locations.ActivatedRootWeb.Guid,
-                       FeatureDefinitionHealthyFarm15,
+                       FeatureDefinitionHealthyFarm15.UniqueIdentifier,
+                       Locations.ActivatedRootWeb.Guid.ToString(),
+                       FeatureDefinitionHealthyFarm15.DisplayName,
                        Faulty, null, DateTime.Now,
-                       Version
+                       Version, FeatureDefinitionHealthyFarm15.Version
                        );
             }
         }
@@ -206,14 +206,14 @@ namespace FeatureAdmin.SampleData
                 }
             }
 
-            public static ActivatedFeature GetFaultyWebFeature(Guid locationId)
+            public static ActivatedFeature GetFaultyWebFeature(string locationId)
             {
                 return ActivatedFeatureFactory.GetActivatedFeature(
-                        Id,
+                        FeatureDefinitionFaultyWeb15.UniqueIdentifier,
                         locationId,
-                        FeatureDefinitionFaultyWeb15,
+                        FeatureDefinitionFaultyWeb15.DisplayName,
                         Faulty, null, DateTime.Now,
-                        Version
+                        Version, FeatureDefinitionFaultyWeb15.Version
                         );
             }
         }
@@ -246,14 +246,14 @@ namespace FeatureAdmin.SampleData
                 }
             }
 
-            public static ActivatedFeature GetFaultySiteFeature(Guid locationId)
+            public static ActivatedFeature GetFaultySiteFeature(string locationId)
             {
                 return ActivatedFeatureFactory.GetActivatedFeature(
-                        Id,
+                        FeatureDefinitionFaultySite15.UniqueIdentifier,
                         locationId, // Locations.ActivatedRootWeb.Guid,
-                        FeatureDefinitionFaultySite15,
+                        FeatureDefinitionFaultySite15.DisplayName,
                         Faulty, null, DateTime.Now,
-                        Version
+                        Version, FeatureDefinitionFaultySite15.Version
                         );
             }
         }
@@ -311,14 +311,14 @@ namespace FeatureAdmin.SampleData
                 }
             }
 
-            public static ActivatedFeature GetUpgradeWebFeature(Guid locationId)
+            public static ActivatedFeature GetUpgradeWebFeature(string locationId)
             {
                 return ActivatedFeatureFactory.GetActivatedFeature(
-                        Id,
+                        FeatureDefinitionUpgradeWeb15.UniqueIdentifier,
                         locationId,
-                        FeatureDefinitionUpgradeWeb15,
+                        FeatureDefinitionUpgradeWeb15.DisplayName,
                         Faulty, null, DateTime.Now,
-                        ActivatedFeatureVersion
+                        ActivatedFeatureVersion, FeatureDefinitionUpgradeWeb15.Version
                         );
             }
         }
@@ -354,14 +354,14 @@ namespace FeatureAdmin.SampleData
                 }
             }
 
-            public static ActivatedFeature GetUpgradeSiteFeature(Guid locationId)
+            public static ActivatedFeature GetUpgradeSiteFeature(string locationId)
             {
                 return ActivatedFeatureFactory.GetActivatedFeature(
-                        Id,
+                        FeatureDefinitionUpgradeSite15.UniqueIdentifier,
                         locationId, // Locations.ActivatedRootWeb.Guid,
-                        FeatureDefinitionUpgradeSite15,
+                        FeatureDefinitionUpgradeSite15.DisplayName,
                         Faulty, null, DateTime.Now,
-                        ActivatedFeatureVersion
+                        ActivatedFeatureVersion, FeatureDefinitionUpgradeSite15.Version
                         );
             }
         }
@@ -398,14 +398,14 @@ namespace FeatureAdmin.SampleData
                 }
             }
 
-            public static ActivatedFeature GetUpgradeWebAppFeature(Guid locationId)
+            public static ActivatedFeature GetUpgradeWebAppFeature(string locationId)
             {
                 return ActivatedFeatureFactory.GetActivatedFeature(
-                        Id,
+                        FeatureDefinitionUpgradeWebApp15.UniqueIdentifier,
                         locationId,
-                        FeatureDefinitionUpgradeWebApp15,
+                        FeatureDefinitionUpgradeWebApp15.DisplayName,
                         Faulty, null, DateTime.Now,
-                        ActivatedFeatureVersion
+                        ActivatedFeatureVersion, FeatureDefinitionUpgradeWebApp15.Version
                         );
             }
         }
@@ -440,14 +440,14 @@ namespace FeatureAdmin.SampleData
                 }
             }
 
-            public static ActivatedFeature GetUpgradeFarmFeature(Guid locationId)
+            public static ActivatedFeature GetUpgradeFarmFeature(string locationId)
             {
                 return ActivatedFeatureFactory.GetActivatedFeature(
-                        Id,
+                        FeatureDefinitionUpgradeFarm15.UniqueIdentifier,
                         locationId,
-                        FeatureDefinitionUpgradeFarm15,
+                        FeatureDefinitionUpgradeFarm15.DisplayName,
                         Faulty, null, DateTime.Now,
-                        ActivatedFeatureVersion
+                        ActivatedFeatureVersion, FeatureDefinitionUpgradeFarm15.Version
                         );
             }
         }

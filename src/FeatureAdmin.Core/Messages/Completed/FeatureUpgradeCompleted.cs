@@ -9,16 +9,16 @@ namespace FeatureAdmin.Core.Messages.Completed
         /// provides the information for the upgraded feature
         /// </summary>
         /// <param name="taskId">reference to task id</param>
-        /// <param name="locationReference">where did action take place</param>
+        /// <param name="locationReferenceId">where did action take place</param>
         /// <param name="upgradedFeature">the upgraded feature</param>
         /// <param name="error">was activation successful?</param>
         public FeatureUpgradeCompleted(
             Guid taskId
-            , Guid locationReference
+            , string locationReferenceId
             , ActivatedFeature upgradedFeature
             )
 
-            : base(taskId, locationReference)
+            : base(taskId, locationReferenceId)
         {
             UpgradedFeature = upgradedFeature;
 

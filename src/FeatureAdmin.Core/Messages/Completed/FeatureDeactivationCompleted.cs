@@ -13,13 +13,13 @@ namespace FeatureAdmin.Core.Messages.Completed
         /// <param name="error">was activation successful?</param>
         public FeatureDeactivationCompleted(
             Guid taskId
-            , Guid locationReference
-            , Guid featureId
+            , string locationReference
+            , string featureId
             ) : base (taskId, locationReference)
         {
             FeatureId = featureId;
          }
 
-        public Guid FeatureId { get; set; }
+        public string FeatureId { get; set; }
     }
 }

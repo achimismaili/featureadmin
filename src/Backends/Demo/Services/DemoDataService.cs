@@ -152,13 +152,14 @@ namespace FeatureAdmin.Backends.Demo.Services
             };
 
             activatedFeature = Core.Factories.ActivatedFeatureFactory.GetActivatedFeature(
-                feature.Id
-                , location.Id
-                , feature
+                feature.UniqueIdentifier
+                , location.UniqueId
+                , feature.DisplayName
                 , false
                 , props
                 , DateTime.Now
-                , feature.Version
+                , feature.Version,
+                feature.Version
                 );
 
 
@@ -178,7 +179,7 @@ namespace FeatureAdmin.Backends.Demo.Services
                 throw new ArgumentNullException("Location or feature must not be null!");
             }
 
-            var returnMsg = demoRepository.RemoveActivatedFeature(feature.Id, location.Id);
+            var returnMsg = demoRepository.RemoveActivatedFeature(feature.UniqueIdentifier, location.UniqueId);
 
             // wait 1 second in the demo
             System.Threading.Thread.Sleep(1000);

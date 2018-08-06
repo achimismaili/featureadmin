@@ -21,7 +21,7 @@ namespace FeatureAdmin.Core.Models
              Guid solutionId,
              string uIVersion,
              Version version,
-            Guid? sandBoxedSolutionLocation = null
+            string sandBoxedSolutionLocationId = null
             ) 
         {
             Id = id;
@@ -36,13 +36,12 @@ namespace FeatureAdmin.Core.Models
             SolutionId = solutionId;
             UIVersion = uIVersion == null ? string.Empty : uIVersion;
             Version = version;
-            SandBoxedSolutionLocation = sandBoxedSolutionLocation;
-            UniqueIdentifier = string.Format(
-                "{0}-{1}{2}",
-                id.ToString(),
-                compatibilityLevel,
-                sandBoxedSolutionLocation.HasValue ? "-" + sandBoxedSolutionLocation.Value : string.Empty
-                );
+            SandBoxedSolutionLocation = sandBoxedSolutionLocationId;
+            UniqueIdentifier = id + Common.Constants.MagicStrings.GuidSeparator.ToString() + compatibilityLevel;
+            if (!string.IsNullOrEmpty(sandBoxedSolutionLocationId))
+            {
+                UniqueIdentifier += Common.Constants.MagicStrings.GuidSeparator.ToString() + sandBoxedSolutionLocationId;
+            }
         }
 
         public int CanUpgrade { get; private set; }
@@ -68,7 +67,7 @@ namespace FeatureAdmin.Core.Models
         /// All Farm Solutions have value null
         /// Sandboxed Solutions have the locationId of the site collection
         /// </remarks>
-        public Guid? SandBoxedSolutionLocation { get; private set; }
+        public string SandBoxedSolutionLocation { get; private set; }
 
         public Scope Scope { get; protected set; }
 

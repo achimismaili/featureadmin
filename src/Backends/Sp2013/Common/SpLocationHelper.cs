@@ -1,4 +1,5 @@
 ﻿using FeatureAdmin.Core.Models;
+using FeatureAdmin.Core.Common;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using System;
@@ -54,7 +55,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
                 return null;
             }
 
-            SPSite spSite = new SPSite(location.Parent);
+            SPSite spSite = new SPSite(StringHelper.UniqueIdToGuid(location.ParentId));
 
             if (elevatedPrivileges)
             {

@@ -15,9 +15,10 @@ namespace FeatureAdmin.Core.Factories
         }
         public static Location GetFarm(Guid farmId, int childCount)
         {
-            var location = new Location(farmId,
+            var location = new Location(
+                farmId,
                "Farm",
-               Guid.Empty,
+               "none",
                Scope.Farm,
                "Farm",
                childCount);
@@ -25,15 +26,15 @@ namespace FeatureAdmin.Core.Factories
             return location;
         }
 
-        public static Location GetLocation(Guid id, string displayName, Guid parent, Scope scope, string url, int childCount, LockState lockState = LockState.NotLocked)
+        public static Location GetLocation(Guid id, string displayName, string parentId, Scope scope, string url, int childCount, Guid? databaseId = null, LockState lockState = LockState.NotLocked)
         {
-            var location = new Location(id, displayName, parent, scope, url, childCount, lockState);
+            var location = new Location(id, displayName, parentId, scope, url, childCount, databaseId, lockState);
             return location;
         }
 
-        public static Location GetLocationUndefined(Guid id, Guid parent, string displayName = "undefined", Scope? scope = Scope.ScopeInvalid, string url = "undefined")
+        public static Location GetLocationUndefined(Guid id, string parentId, string displayName = "undefined", Scope? scope = Scope.ScopeInvalid, string url = "undefined")
         {
-            var location = new Location(id, displayName, parent, scope == null ? Scope.ScopeInvalid : scope.Value, url, 0);
+            var location = new Location(id, displayName, parentId, scope == null ? Scope.ScopeInvalid : scope.Value, url, 0);
             return location;
         }
 

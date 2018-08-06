@@ -8,16 +8,16 @@ namespace FeatureAdmin.Core.Messages.Completed
         /// provides the loaded location including child locations
         /// </summary>
         /// <param name="taskId">reference to task id</param>
-        /// <param name="locationReference">where did action take place</param>
+        /// <param name="locationReferenceId">where did action take place</param>
         /// <param name="error">was activation successful?</param>
         public BaseFeatureToggleCompleted(
             Guid taskId
-            , Guid locationReference
+            , string locationReferenceId
             ) : base (taskId)
         {
-            LocationReference = locationReference;
+            LocationReferenceId = locationReferenceId;
          }
         
-        public Guid LocationReference { get; }
+        public string LocationReferenceId { get; }
     }
 }

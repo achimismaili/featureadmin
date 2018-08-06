@@ -13,50 +13,46 @@ namespace FeatureAdmin.Backends.Sp2013.Common
     {
         public static ActivatedFeature ToActivatedFeature(
             this SPFeature spFeature,
-            Location location,
-            out FeatureDefinition nonFarmFeatureDefinition)
+            Location location)
         {
-            nonFarmFeatureDefinition = null;
             FeatureDefinition definition = null;
             bool faulty = false;
 
             try
             {
-                if (spFeature.Definition != null)
+                var fDef = spFeature.Definition;
+
+                if (fDef != null)
                 {
-                    var fDef = spFeature.Definition;
+
 
                     if (spFeature.FeatureDefinitionScope == SPFeatureDefinitionScope.Web)
                     {
-                        definition = fDef.ToFeatureDefinition(location.Id);
-                        nonFarmFeatureDefinition = definition;
+                        definition = fDef.ToFeatureDefinition(location.UniqueId);
                     }
                     else if (spFeature.FeatureDefinitionScope == SPFeatureDefinitionScope.Site)
                     {
                         if (location.Scope == Scope.Web)
                         {
-                            definition = fDef.ToFeatureDefinition(location.Parent);
+                            definition = fDef.ToFeatureDefinition(location.ParentId);
                         }
                         else
                         {
                             // only other location with featuredefinitionscope site can be site collection
                             // therefore, location id for sandboxed solution is current location (site)
-                            definition = fDef.ToFeatureDefinition(location.Id);
+                            definition = fDef.ToFeatureDefinition(location.UniqueId);
                         }
-                        nonFarmFeatureDefinition = definition;
                     }
                     else
                     {
                         // Featuredefinitionscope must be farm or none now, in both cases, no location will be assigned to feature definition ...
                         definition = fDef.ToFeatureDefinition(null);
                     }
-
                 }
                 else
                 {
                     definition = FeatureDefinitionFactory.GetFaultyDefinition(spFeature.DefinitionId, location.Scope, spFeature.Version);
                     faulty = true;
-                    nonFarmFeatureDefinition = definition;
                 }
             }
             catch (Exception)
@@ -66,14 +62,15 @@ namespace FeatureAdmin.Backends.Sp2013.Common
 
 
             var feature = ActivatedFeatureFactory.GetActivatedFeature(
-                spFeature.DefinitionId,
-                location.Id,
-                definition,
+                definition.UniqueIdentifier,
+                location.UniqueId,
+                definition.DisplayName,
                 faulty,
                 spFeature.Properties == null ? null :
                 spFeature.Properties.ToProperties(),
                 spFeature.TimeActivated,
                 spFeature.Version,
+                definition.Version,
                 spFeature.FeatureDefinitionScope.ToFeatureDefinitionScope()
                 );
 
@@ -123,18 +120,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             {
                 foreach (var f in spFeatures)
                 {
-                    FeatureDefinition nffd;
-                    features.Add(f.ToActivatedFeature(location, out nffd));
-
-                    if (nffd != null)
-                    {
-                        if (nonFarmFeatureDefinitionsTracker == null)
-                        {
-                            nonFarmFeatureDefinitionsTracker = new List<FeatureDefinition>();
-                        }
-
-                        nonFarmFeatureDefinitionsTracker.Add(nffd);
-                    }
+                    features.Add(f.ToActivatedFeature(location));
                 }
             }
 
@@ -142,7 +128,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             return features;
         }
 
-        public static FeatureDefinition ToFeatureDefinition(this SPFeatureDefinition spFeatureDefinition, Guid? sandboxedSolutionLocation)
+        public static FeatureDefinition ToFeatureDefinition(this SPFeatureDefinition spFeatureDefinition, string sandboxedSolutionLocationId)
         {
             var cultureInfo = new System.Globalization.CultureInfo(1033);
 
@@ -305,7 +291,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             defSolutionId,
             defUIVersion,
             defVersion,
-            sandboxedSolutionLocation);
+            sandboxedSolutionLocationId);
 
             return fd;
 
@@ -340,7 +326,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             return location;
         }
 
-        public static Location ToLocation(this SPWebApplication webApp, Guid parentId)
+        public static Location ToLocation(this SPWebApplication webApp, string parentId)
         {
             var id = webApp.Id;
 
@@ -368,7 +354,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             return location;
         }
 
-        public static Location ToLocation(this SPSite site, Guid parentId)
+        public static Location ToLocation(this SPSite site, string parentId)
         {
             LockState lockState = LockState.NotLocked;
 
@@ -376,6 +362,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
 
             string displayName;
             int childCount;
+            Guid? databaseId;
 
             if (site.IsReadLocked)
             {
@@ -386,6 +373,9 @@ namespace FeatureAdmin.Backends.Sp2013.Common
                     site.Url
                     );
                 childCount = 0;
+
+                databaseId = null; //TODO: find out, if dbid can be read when site collection locked
+
             }
             else
             {
@@ -401,6 +391,8 @@ namespace FeatureAdmin.Backends.Sp2013.Common
                 }
 
                 childCount = site.AllWebs.Count;
+
+                databaseId = site.ContentDatabase.Id;
             }
             
             var location = LocationFactory.GetLocation(
@@ -410,13 +402,14 @@ namespace FeatureAdmin.Backends.Sp2013.Common
                 Scope.Site,
                 site.Url,
                 childCount,
+                databaseId,
                 lockState
                 );
 
             return location;
         }
 
-        public static Location ToLocation(this SPWeb web, Guid parentId)
+        public static Location ToLocation(this SPWeb web, string parentId)
         {
             var id = web.ID;
             var webUrl = web.Url;
@@ -427,12 +420,13 @@ namespace FeatureAdmin.Backends.Sp2013.Common
                 parentId,
                 Scope.Web,
                 webUrl,
-                0
+                0,
+                web.Site.ContentDatabase.Id
                 );
 
             return location;
         }
-        public static IEnumerable<Location> ToLocations(this SPWebCollection spLocations, Guid parentId)
+        public static IEnumerable<Location> ToLocations(this SPWebCollection spLocations, string parentId)
         {
 
 
@@ -456,7 +450,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             return locations;
         }
 
-        public static IEnumerable<Location> ToLocations(this SPSiteCollection spLocations, Guid parentId)
+        public static IEnumerable<Location> ToLocations(this SPSiteCollection spLocations, string parentId)
         {
 
 
@@ -473,7 +467,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
                 var l = spl.ToLocation(parentId);
                 locations.Add(l);
 
-                locations.AddRange(spl.AllWebs.ToLocations(l.Id));
+                locations.AddRange(spl.AllWebs.ToLocations(l.UniqueId));
 
                 // https://blogs.technet.microsoft.com/stefan_gossner/2008/12/05/disposing-spweb-and-spsite-objects/
                 spl.Dispose();
@@ -482,7 +476,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             return locations;
         }
 
-        public static IEnumerable<Location> ToLocations(this SPWebApplicationCollection spLocations, Guid parentId)
+        public static IEnumerable<Location> ToLocations(this SPWebApplicationCollection spLocations, string parentId)
         {
             if (spLocations == null)
             {

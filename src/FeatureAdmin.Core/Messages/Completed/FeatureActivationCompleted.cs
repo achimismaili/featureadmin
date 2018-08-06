@@ -9,16 +9,16 @@ namespace FeatureAdmin.Core.Messages.Completed
         /// provides the information for the activated feature
         /// </summary>
         /// <param name="taskId">reference to task id</param>
-        /// <param name="locationReference">where did action take place</param>
+        /// <param name="locationReferenceId">where did action take place</param>
         /// <param name="activatedFeature">the activated feature</param>
         /// <param name="error">was activation successful?</param>
         public FeatureActivationCompleted(
             Guid taskId
-            , Guid locationReference
+            , string locationReferenceId
             , ActivatedFeature activatedFeature
             )
 
-            : base(taskId, locationReference)
+            : base(taskId, locationReferenceId)
         {
             ActivatedFeature = activatedFeature;
 

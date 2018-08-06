@@ -44,7 +44,7 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
             foreach (var wa in spWebApps)
             {
-                var waLocation = wa.ToLocation(farmLocation.Id);
+                var waLocation = wa.ToLocation(farmLocation.UniqueId);
 
                 var activatedFeatures = wa.Features.ToActivatedFeatures(waLocation);
                 loadedElements.AddActivatedFeatures(activatedFeatures);
@@ -125,11 +125,11 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
                     if (elevatedPrivileges)
                     {
-                        siteLocation = SpSiteElevation.SelectAsSystem(spSite, SpConverter.ToLocation, location.Id);
+                        siteLocation = SpSiteElevation.SelectAsSystem(spSite, SpConverter.ToLocation, location.UniqueId);
                     }
                     else
                     {
-                        siteLocation = SpConverter.ToLocation(spSite, location.Id);
+                        siteLocation = SpConverter.ToLocation(spSite, location.UniqueId);
                     }
 
                     // meaning that they are not installed in the farm, rather on site or web level
@@ -156,7 +156,7 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 
                         foreach (SPWeb spWeb in allWebs)
                         {
-                            var webLocation = SpConverter.ToLocation(spWeb, siteLocation.Id);
+                            var webLocation = SpConverter.ToLocation(spWeb, siteLocation.UniqueId);
 
                             nonFarmFeatureDefinitions = null;
 

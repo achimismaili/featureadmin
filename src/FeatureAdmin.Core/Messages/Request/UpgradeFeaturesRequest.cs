@@ -30,14 +30,12 @@ namespace FeatureAdmin.Core.Messages.Request
                 var locationId = firstFeature.ActivatedFeature.LocationId;
                 string version;
 
-                var definition = firstFeature.ActivatedFeature.Definition;
-
-                if (definition != null && definition.Version != firstFeature.ActivatedFeature.Version)
+                if (firstFeature.ActivatedFeature.CanUpgrade)
                 {
                     version = string.Format(
                         " from version {0} to {1}",
                         firstFeature.ActivatedFeature.Version,
-                        firstFeature.ActivatedFeature.Definition.Version
+                        firstFeature.ActivatedFeature.DefinitionVersion
                         );
                 }
                 else
