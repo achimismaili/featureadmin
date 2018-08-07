@@ -20,32 +20,38 @@
                    Foreground="#FFB17807"
                    FontWeight="Bold"
                />
-            <Button x:Name="CopyLog" Style="{DynamicResource MetroCircleButtonStyle}"
-					    Height="30" Width="30">
-                <fa:FontAwesome Icon="Clone" />
-            </Button>
-            <Button x:Name="ClearLog" Style="{DynamicResource MetroCircleButtonStyle}"
-						 Height="30" Width="30">
-                <fa:FontAwesome Icon="Times" />
-            </Button>
+            <Menu IsMainMenu="False" Background="Transparent">
+                <MenuItem x:Name="CopyLog" Background="Transparent" ToolTip="Copy log to clipboard">
+                    <MenuItem.Header>
+                        <fa:FontAwesome Icon="Clone" />
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem x:Name="ClearLog" Background="Transparent" ToolTip="Clear the log">
+                    <MenuItem.Header>
+                        <fa:FontAwesome Icon="Times" />
+                    </MenuItem.Header>
+                </MenuItem>
+            </Menu>
         </StackPanel>
         <ScrollViewer x:Name="logScrollViewer" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
             <ItemsControl x:Name="Logs" >
+                <!--AlternationCount="2">-->
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="0,0,0,5" >
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="0" >
-                                <TextBlock x:Name="ShortTime" Text="{Binding ShortTime}"  FontWeight="Bold"/>
-                                <TextBlock x:Name="ShortLevel" Margin="5,0" Text="{Binding ShortLevel}" FontWeight="Bold"/>
-                            </StackPanel>
-                            <TextBlock x:Name="Text" Grid.Row="1"
-                                       Text="{Binding Text}" TextWrapping="Wrap" 
+                        <Grid Margin="0,0,0,5" x:Name="LogGrid" Background="#33F0A30A" >
+                            <TextBlock x:Name="LogLine"
+                                       Text="{Binding LogLine}" TextWrapping="Wrap" 
+                                       Padding="2" FontWeight="{Binding FontWeight}"
                                        />
                         </Grid>
+                        <!--<DataTemplate.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                <Setter Property="Background" Value="Blue" TargetName="LogGrid"/>
+                            </Trigger>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter Property="Background" Value="Red" TargetName="LogGrid"/>
+                            </Trigger>
+                        </DataTemplate.Triggers>-->
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
