@@ -119,11 +119,21 @@
                         <fa:FontAwesome Icon="TimesCircle" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem x:Name="FilterLocation" 
-                          ToolTip="Filter right window with activated features based on this definition"
+                <MenuItem x:Name="FilterThisFeatureDefinitions" 
+                          ToolTip="Filter all feature definitions that have the same feature id"
                           Background="Transparent" 
                           
-                          cal:Message.Attach="FilterFeature" >
+                          cal:Message.Attach="FilterThis(ActiveItem_Id)" >
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Icon="Filter" />                           
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem x:Name="FilterToTheRight" 
+                          ToolTip="Filter right window and show locations that have the selected feature definition activated"
+                          Background="Transparent" 
+                          cal:Message.Attach="FilterRight(ActiveItem_UniqueIdentifier)" >
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <fa:FontAwesome Icon="Filter" />
@@ -143,6 +153,7 @@
             <ScrollViewer Grid.Row="2" >
                 <Grid >
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -194,7 +205,7 @@
                     <Label Content="Id:" 
                Grid.Row="5" Grid.Column="0" />
                     <TextBlock x:Name="ActiveItem_Id" 
-                Padding="5"
+                Padding="2"
                Grid.Row="5" Grid.Column="1" />
                     <Button Name="CopyId" Style="{DynamicResource MetroCircleButtonStyle}"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_Id)"
@@ -203,11 +214,23 @@
                         Grid.Row="5" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
                     </Button>
-                    <Label Content="Compatibility:"
+                    <Label Content="UniqueIdentifier:" 
                Grid.Row="6" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_CompatibilityLevel"
-               Padding="5"
+                    <TextBlock x:Name="ActiveItem_UniqueIdentifier" 
+                Padding="2" ToolTip="This is a FeatureAdmin specific ID"
                Grid.Row="6" Grid.Column="1" />
+                    <Button Name="CopyUniqueIdentifier"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_UniqueIdentifier)"
+                        Background="Transparent" Height="20" Width="30"
+                        controls:ControlsHelper.ContentCharacterCasing="Normal"
+                        Grid.Row="6" Grid.Column="2">
+                        <fa:FontAwesome Icon="Clone" />
+                    </Button>
+                    <Label Content="Compatibility:"
+               Grid.Row="7" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_CompatibilityLevel"
+               Padding="2"
+               Grid.Row="7" Grid.Column="1" />
                 </Grid>
             </ScrollViewer>
         </Grid>

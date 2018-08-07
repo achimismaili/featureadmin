@@ -33,10 +33,11 @@ namespace FeatureAdmin.ViewModels
         {
             eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem, SelectedLocation, Core.Models.Enums.FeatureAction.Deactivate));
         }
-        public void FilterLocation()
+
+        public void FilterRight(string searchQuery)
         {
-            var searchFilter = new SetSearchFilter<Location>(
-                ActiveItem == null ? string.Empty : ActiveItem.Id.ToString(), null);
+            var searchFilter = new SetSearchFilter<Core.Models.Location>(
+               searchQuery, null);
             eventAggregator.BeginPublishOnUIThread(searchFilter);
         }
 

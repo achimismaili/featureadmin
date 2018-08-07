@@ -89,9 +89,9 @@
                    FontWeight="Bold"
                />
             <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent" FontSize="18">
-                <MenuItem x:Name="FilterFeatures" ToolTip="Filter feature definitions for active features in this location"
+                <MenuItem x:Name="SendFilterToFeatureDefinitions" ToolTip="Filter feature definitions for active features in this location"
                           Background="Transparent" 
-                 cal:Message.Attach="FilterFeature" >
+                 cal:Message.Attach="FilterFeatureDefinitions(ActiveItem_UniqueId)" >
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <fa:FontAwesome Icon="MailReply" />
@@ -101,7 +101,7 @@
                 </MenuItem>
                 <MenuItem x:Name="FilterLocation" ToolTip="Filter this location &amp; children"
                           Background="Transparent" 
-                  cal:Message.Attach="FilterThis(ActiveItem_Id)" >
+                  cal:Message.Attach="FilterThis(ActiveItem_UniqueId)" >
                     <MenuItem.Header>
                         <fa:FontAwesome Icon="Filter" />
                     </MenuItem.Header>
@@ -133,7 +133,7 @@
                     <Label Content="Title:" 
                Grid.Row="1" Grid.Column="0" />
                     <TextBlock x:Name="ActiveItem_DisplayName" 
-           Padding="5"
+           Padding="2"
                Grid.Row="1" Grid.Column="1" />
                     <Button Name="CopyTitle" Style="{DynamicResource MetroCircleButtonStyle}"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_DisplayName)"
@@ -146,13 +146,13 @@
                     <Label Content="Scope:" 
                Grid.Row="2" Grid.Column="0" />
                     <TextBlock x:Name="ActiveItem_Scope" 
-                                Padding="5"
+                                Padding="2"
                Grid.Row="2" Grid.Column="1" />
 
                     <Label Content="Url:" 
                Grid.Row="3" Grid.Column="0" />
                     <TextBlock x:Name="ActiveItem_Url" 
-                                Padding="5"
+                                Padding="2"
                Grid.Row="3" Grid.Column="1" />
                     <Button Name="CopyUrl" Style="{DynamicResource MetroCircleButtonStyle}"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_Url)"
@@ -165,7 +165,7 @@
                     <Label Content="Id:" 
                    Grid.Row="4" Grid.Column="0" />
                     <TextBlock x:Name="ActiveItem_Id" 
-                    Padding="5"
+                    Padding="2"
                Grid.Row="4" Grid.Column="1" />
                     <Button Name="CopyId" Style="{DynamicResource MetroCircleButtonStyle}"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_Id)"
@@ -174,11 +174,23 @@
                         Grid.Row="4" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
                     </Button>
+                    <Label Content="UniqueId:" 
+                   Grid.Row="4" Grid.Column="0" />
+                    <TextBlock x:Name="ActiveItem_UniqueId"  ToolTip="This is a FeatureAdmin specific ID"
+                    Padding="2"
+               Grid.Row="5" Grid.Column="1" />
+                    <Button Name="CopyUniqueId" Style="{DynamicResource MetroCircleButtonStyle}"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_UniqueId)"
+                        Background="Transparent" Height="30" Width="30"
+                        controls:ControlsHelper.ContentCharacterCasing="Normal"
+                        Grid.Row="5" Grid.Column="2">
+                        <fa:FontAwesome Icon="Clone" />
+                    </Button>
                     <Label 
                     Content="Child Locations:" 
                Grid.Row="6" Grid.Column="0" />
                     <TextBlock x:Name="ActiveItem_ChildCount" 
-                    Padding="5"
+                    Padding="2"
                     Grid.Row="6" Grid.Column="1" />
                 </Grid>
             </ScrollViewer>

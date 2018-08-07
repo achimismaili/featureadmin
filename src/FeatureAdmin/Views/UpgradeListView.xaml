@@ -94,7 +94,7 @@
             <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent" FontSize="18">
                 <MenuItem x:Name="FilterFeatures" ToolTip="Filter the definitions on the left for this feature ID"
                           Background="Transparent" 
-                 cal:Message.Attach="FilterFeature" >
+                 cal:Message.Attach="FilterFeatureDefinitions(ActiveItem_ActivatedFeature_FeatureId)" >
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <fa:FontAwesome Icon="MailReply" />

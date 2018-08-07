@@ -48,7 +48,7 @@
                 </StackPanel>-->
 
                 <!-- Feature -->
-                <ContentControl cal:View.Model="{Binding FeatureDefinitionListVm}"
+                <ContentControl x:Name="FeatureDefinitionListVm"
                                 Grid.Row="1" />
             </Grid>
             <GridSplitter Grid.Column="1" 
@@ -72,17 +72,17 @@
                 </Grid.RowDefinitions>
 
                 <!-- Log -->
-                <ContentControl cal:View.Model="{Binding LogVm}" Grid.Row="1" />
+                <ContentControl x:Name="LogVm" Grid.Row="1" />
 
                 <GridSplitter Grid.Row="2" 
                           Background="Transparent"
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
-                <ContentControl cal:View.Model="{Binding ActivatedFeatureVm}" Grid.Row="3" />
+                <ContentControl x:Name="ActivatedFeatureVm" Grid.Row="3" />
 
             </Grid>
         </Grid>
-        <ContentControl cal:View.Model="{Binding StatusBarVm}"
+        <ContentControl x:Name="StatusBarVm"
            Grid.Row="2"
             ></ContentControl>
     </Grid>

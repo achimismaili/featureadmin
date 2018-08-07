@@ -55,15 +55,15 @@ namespace FeatureAdmin.ViewModels
             }
         }
 
-        public void FilterThis(Guid id)
+        public void FilterFeatureDefinitions(string searchQuery)
         {
-            var searchQuery = string.Empty;
+            var searchFilter = new SetSearchFilter<Core.Models.FeatureDefinition>(
+                                            searchQuery, null);
+            eventAggregator.BeginPublishOnUIThread(searchFilter);
+        }
 
-            if (ActiveItem != null && id != null)
-            {
-                searchQuery = id.ToString();
-            }
-
+        public void FilterThis(string searchQuery)
+        {
             var searchFilter = new SetSearchFilter<T>(
                 searchQuery, null);
             Handle(searchFilter);

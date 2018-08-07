@@ -24,14 +24,6 @@ namespace FeatureAdmin.ViewModels
 
         public bool CanFilterFeature { get; protected set; }
 
-        public void FilterFeature()
-        {
-            var searchFilter = new SetSearchFilter<FeatureDefinition>(
-
-                ActiveItem == null ? string.Empty : ActiveItem.Id.ToString(), null);
-            eventAggregator.BeginPublishOnUIThread(searchFilter);
-        }
-
         public void Handle([NotNull] ItemSelected<FeatureDefinition> message)
         {
             SelectedFeatureDefinition = message.Item;

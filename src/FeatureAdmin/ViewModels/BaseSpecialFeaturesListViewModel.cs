@@ -21,14 +21,6 @@ namespace FeatureAdmin.ViewModels
 
         public bool CanFilterFeature { get; protected set; }
 
-        public void FilterFeature()
-        {
-            var searchFilter = new SetSearchFilter<FeatureDefinition>(
-
-                ActiveItem == null ? string.Empty : ActiveItem.ActivatedFeature.FeatureId.ToString(), null);
-            eventAggregator.BeginPublishOnUIThread(searchFilter);
-        }
-
         // as SetSearchFilter is handled in generic base class, search filter has to be converted to AcitvatedFeatureSpecial
         public void Handle(SetSearchFilter<Location> message)
         {
