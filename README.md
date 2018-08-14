@@ -1,10 +1,10 @@
 # FeatureAdmin
 
-SharePoint Feature Administration and Clean Up Tool 
+SharePoint Feature Administration and Clean Up Tool
 
 ## Functionality
 
-This is a tool to manage SharePoint features. It allows you to 
+This is a tool to manage SharePoint features. It allows you to
 
 * See and search available feature definitions
 * Quickly get to and search within all locations, where features can be activated in SharePoint (Farm, Web Apps, Sites, Webs)
@@ -21,30 +21,30 @@ These are links to release downloads for the different SharePoint versions:
 
 ### SP 2013
 
-* [Download release zip (v. 2.4.8) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/Sp2013/stable/FeatureAdmin2013.zip)
-* [Download executable only (v. 2.4.8)](https://github.com/achimismaili/featureadmin/Releases/Sp2013/stable/FeatureAdmin2013.exe)
-* [Download release zip (v. 2.4.6) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/Sp2013/2.4.6/FeatureAdmin2013.zip) (recommended for removing orphaned/faulty features)
-* [Download executable only (v. 2.4.6)](https://github.com/achimismaili/featureadmin/Releases/Sp2013/2.4.6/FeatureAdmin2013.exe) (recommended for removing orphaned/faulty features)
+* [Download release zip (v. 2.4.8) including license and release notes](Releases/Sp2013/2.4.8/FeatureAdmin2013.zip)
+* [Download executable only (v. 2.4.8)](Releases/Sp2013/2.4.8/FeatureAdmin2013.exe)
+* [Download release zip (v. 2.4.6) including license and release notes](Releases/Sp2013/2.4.6/FeatureAdmin2013.zip) (recommended for removing orphaned/faulty features)
+* [Download executable only (v. 2.4.6)](Releases/Sp2013/2.4.6/FeatureAdmin2013.exe) (recommended for removing orphaned/faulty features)
 
 ### SP 2010
 
-* [Download release zip (v. 2.4.8) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/Sp2010/stable/FeatureAdmin2010.zip)
-* [Download executable only (v. 2.4.8)](https://github.com/achimismaili/featureadmin/Releases/Sp2010/stable/FeatureAdmin2010.exe)
-* [Download release zip (v. 2.4.6) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/Sp2010/2.4.6/FeatureAdmin2010.zip) (recommended for removing orphaned/faulty features)
-* [Download executable only (v. 2.4.6)](https://github.com/achimismaili/featureadmin/Releases/Sp2010/2.4.6/FeatureAdmin2010.exe) (recommended for removing orphaned/faulty features)
+* [Download release zip (v. 2.4.8) including license and release notes](Releases/Sp2010/2.4.8/FeatureAdmin2010.zip)
+* [Download executable only (v. 2.4.8)](Releases/Sp2010/2.4.8/FeatureAdmin2010.exe)
+* [Download release zip (v. 2.4.6) including license and release notes](Releases/Sp2010/2.4.6/FeatureAdmin2010.zip) (recommended for removing orphaned/faulty features)
+* [Download executable only (v. 2.4.6)](Releases/Sp2010/2.4.6/FeatureAdmin2010.exe) (recommended for removing orphaned/faulty features)
 
 ### SP 2007
 
-* [Download release zip (v. 2.4.8)](https://github.com/achimismaili/featureadmin/Releases/Sp2007/stable/FeatureAdmin2007.zip)
-* [Download executable only (v. 2.4.8)](https://github.com/achimismaili/featureadmin/Releases/Sp2007/stable/FeatureAdmin2007.exe)
-* [Download release zip (v. 2.4.6)](https://github.com/achimismaili/featureadmin/Releases/Sp2007/2.4.6/FeatureAdmin2007.zip) (recommended for removing orphaned/faulty features)
-* [Download executable only (v. 2.4.6)](https://github.com/achimismaili/featureadmin/Releases/Sp2007/2.4.6/FeatureAdmin2007.exe) (recommended for removing orphaned/faulty features)
+* [Download release zip (v. 2.4.8)](Releases/Sp2007/2.4.8/FeatureAdmin2007.zip)
+* [Download executable only (v. 2.4.8)](Releases/Sp2007/2.4.8/FeatureAdmin2007.exe)
+* [Download release zip (v. 2.4.6)](Releases/Sp2007/2.4.6/FeatureAdmin2007.zip) (recommended for removing orphaned/faulty features)
+* [Download executable only (v. 2.4.6)](Releases/Sp2007/2.4.6/FeatureAdmin2007.exe) (recommended for removing orphaned/faulty features)
 
 ### Demo
-* [Download release zip (v. 3.0.0) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/demo/stable/FeatureAdminDemo.zip)
-* [Download executable only (v. 3.0.0)](https://github.com/achimismaili/featureadmin/Releases/demo/stable/FeatureAdminDemo.exe)
+* [Download release zip (v. 3.0.0) including license and release notes](Releases/demo/FeatureAdminDemo.zip)
+* [Download executable only (v. 3.0.0)](Releases/demo/FeatureAdminDemo.exe)
 
-## Development 
+## Development
 
 Here you find download links for releases that might still be in beta, not as stable or that are still under development. These releases are not recommended for production use.
 
@@ -52,13 +52,13 @@ See also the [Release Notes](Releases/ReleaseNotes.md)
 
 ### SP 2013
 
-* [Download release zip (current) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/Sp2013/current/FeatureAdmin2013.zip)
-* [Download executable only (current)](https://github.com/achimismaili/featureadmin/Releases/Sp2013/current/FeatureAdmin2013.exe)
+* [Download release zip (current developer version) including license and release notes](https://github.com/achimismaili/featureadmin/tree/development/Releases/Sp2013/FeatureAdmin2013.zip)
+* [Download executable only (current developer version)](https://github.com/achimismaili/featureadmin/tree/development/Releases/Sp2013/FeatureAdmin2013.exe)
 
 ### Demo
 
-* [Download release zip (current) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/demo/current/FeatureAdminDemo.zip)
-* [Download executable only (current)](https://github.com/achimismaili/featureadmin/Releases/demo/current/FeatureAdminDemo.exe)
+* [Download release zip (current developer version) including license and release notes](https://github.com/achimismaili/featureadmin/tree/development/Releases/demo/FeatureAdminDemo.zip)
+* [Download executable only (current developer version)](https://github.com/achimismaili/featureadmin/tree/development/Releases/demo/FeatureAdminDemo.exe)
 
 ## Installation
 
@@ -82,8 +82,8 @@ Ideal, for activating or deactivating features in large farms with many sites an
 
 * [Homepage](https://www.featureadmin.com)
 * [Source Code](https://github.com/achimismaili/featureadmin)
-* [Release Notes](https://github.com/achimismaili/featureadmin/Releases/ReleaseNotes.md)
-* [License](https://github.com/achimismaili/featureadmin/LICENSE.md)
+* [Release Notes](Releases/ReleaseNotes.md)
+* [License](LICENSE.md)
 * Some additional [technical Documentation](docs/Documentation.md)
 
 ## What others are saying about this tool

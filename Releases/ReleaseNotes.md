@@ -3,10 +3,12 @@
 ## Relevant Links
 
 * [Homepage FeatureAdmin](https://www.featureadmin.com)
-* [Readme](https://github.com/achimismaili/featureadmin/README.md)
+* [Readme](https://github.com/achimismaili/featureadmin/blob/master/README.md)
 * [Source Code](https://github.com/achimismaili/featureadmin)
-* [Release Notes](https://github.com/achimismaili/featureadmin/Releases/ReleaseNotes.md)
-* [License](https://github.com/achimismaili/featureadmin/LICENSE.md)
+* [Release Notes stable releases](https://github.com/achimismaili/featureadmin/blob/master/Releases/ReleaseNotes.md)
+* [Release Notes development releases](https://github.com/achimismaili/featureadmin/blob/development/Releases/ReleaseNotes.md)
+
+* [License](https://github.com/achimismaili/featureadmin/blob/master/license.md)
 
 ## Version 3.0.0
 
