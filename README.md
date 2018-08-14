@@ -1,13 +1,73 @@
-## FeatureAdmin
-SharePoint Feature Administration and Clean Up Tool to find and delete broken features in a SharePoint farm
+# FeatureAdmin
 
-[Further Documentation](docs/Documentation.md)
+SharePoint Feature Administration and Clean Up Tool 
 
-[Release Downloads](Releases) (**Attention!** For feature administration, v. 2.4.8 is currently the best release, but if you are experiencing issues in removing faulty features, please use release 2.4.6 instead - we are working on a fixed version ...)
+## Functionality
 
-[License: Microsoft Public License](License.md)
+This is a tool to manage SharePoint features. It allows you to 
 
-## Tool Description
+* See and search available feature definitions
+* Quickly get to and search within all locations, where features can be activated in SharePoint (Farm, Web Apps, Sites, Webs)
+* Identify, where which features are activated
+* Identify and cleanup orphaned/faulty/broken features and feature definitions that often cause issues (e.g. when installing CUs or when exporting and importing sites)
+* Activate, Deactivate and Upgrade features (, even in multiple locations (bulk), when selecting a parent location)
+* Uninstall feature definitions
+
+## Downloads
+
+These are links to release downloads for the different SharePoint versions:
+
+**Attention!** For feature administration, v. 2.4.8 is currently the best release, but if you are experiencing issues in removing faulty features, please use release 2.4.6 instead - we are working on a fixed version ...
+
+### SP 2013
+
+* [Download release zip (v. 2.4.8) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/Sp2013/stable/FeatureAdmin2013.zip)
+* [Download executable only (v. 2.4.8)](https://github.com/achimismaili/featureadmin/Releases/Sp2013/stable/FeatureAdmin2013.exe)
+* [Download release zip (v. 2.4.6) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/Sp2013/2.4.6/FeatureAdmin2013.zip) (recommended for removing orphaned/faulty features)
+* [Download executable only (v. 2.4.6)](https://github.com/achimismaili/featureadmin/Releases/Sp2013/2.4.6/FeatureAdmin2013.exe) (recommended for removing orphaned/faulty features)
+
+### SP 2010
+
+* [Download release zip (v. 2.4.8) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/Sp2010/stable/FeatureAdmin2010.zip)
+* [Download executable only (v. 2.4.8)](https://github.com/achimismaili/featureadmin/Releases/Sp2010/stable/FeatureAdmin2010.exe)
+* [Download release zip (v. 2.4.6) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/Sp2010/2.4.6/FeatureAdmin2010.zip) (recommended for removing orphaned/faulty features)
+* [Download executable only (v. 2.4.6)](https://github.com/achimismaili/featureadmin/Releases/Sp2010/2.4.6/FeatureAdmin2010.exe) (recommended for removing orphaned/faulty features)
+
+### SP 2007
+
+* [Download release zip (v. 2.4.8)](https://github.com/achimismaili/featureadmin/Releases/Sp2007/stable/FeatureAdmin2007.zip)
+* [Download executable only (v. 2.4.8)](https://github.com/achimismaili/featureadmin/Releases/Sp2007/stable/FeatureAdmin2007.exe)
+* [Download release zip (v. 2.4.6)](https://github.com/achimismaili/featureadmin/Releases/Sp2007/2.4.6/FeatureAdmin2007.zip) (recommended for removing orphaned/faulty features)
+* [Download executable only (v. 2.4.6)](https://github.com/achimismaili/featureadmin/Releases/Sp2007/2.4.6/FeatureAdmin2007.exe) (recommended for removing orphaned/faulty features)
+
+### Demo
+* [Download release zip (v. 3.0.0) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/demo/stable/FeatureAdminDemo.zip)
+* [Download executable only (v. 3.0.0)](https://github.com/achimismaili/featureadmin/Releases/demo/stable/FeatureAdminDemo.exe)
+
+## Development 
+
+Here you find download links for releases that might still be in beta, not as stable or that are still under development. These releases are not recommended for production use.
+
+See also the [Release Notes](Releases/ReleaseNotes.md)
+
+### SP 2013
+
+* [Download release zip (current) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/Sp2013/current/FeatureAdmin2013.zip)
+* [Download executable only (current)](https://github.com/achimismaili/featureadmin/Releases/Sp2013/current/FeatureAdmin2013.exe)
+
+### Demo
+
+* [Download release zip (current) including license and release notes](https://github.com/achimismaili/featureadmin/Releases/demo/current/FeatureAdminDemo.zip)
+* [Download executable only (current)](https://github.com/achimismaili/featureadmin/Releases/demo/current/FeatureAdminDemo.exe)
+
+## Installation
+
+* Requires no installation
+* Just (a download/copy of) the EXE file is required
+* Please start the EXE file on a SharePoint Web Front End (WFE) with as much as possible rights
+* Regarding rights, please also check _[recommended permissions for running FeatureAdmin](docs/Rights.md)_
+
+<!-- ## Tool Description
 FeatureAdmin is a tool for SharePoint administrators and developers to manage SP features. It finds and cleans faulty FeatureDefinitions and orphaned reminders.
 
 The Feature Admin Tool finds faulty FeatureDefinitions and cleanly uninstalls them.
@@ -16,15 +76,15 @@ The Feature Admin Tool is able to identify them and remove them.
 Very useful for major version upgrades e.g. to 2010 or 2013, or for downgrades from Enterprise to Standard.
 
 Also, uninstall, (bulk) deactivate or (bulk) activate features with any scope farm wide.
-Ideal, for activating or deactivating features in large farms with many sites and/or SiteCollections.
+Ideal, for activating or deactivating features in large farms with many sites and/or SiteCollections. -->
 
-## FeatureAdmin 2.4.4
+## Links
 
-2015-09 Perry implemented some bug fixes and stability improvements, so that some issues raised by the community can be closed.
-
-Thanks to Project Team member _PerrySharePoint_, functionality from the SP2010 Version was migrated to the MOSS Version and for all 3 versions, Long expected exception handling was introduced. Thanks Perry!
-
-The feature admin is available for SP 2013 (& SP 2013 Foundation), SP 2010 (& SP 2010 Foundation Services) and for MOSS 2007 (& WSS 3.x).
+* [Homepage](https://www.featureadmin.com)
+* [Source Code](https://github.com/achimismaili/featureadmin)
+* [Release Notes](https://github.com/achimismaili/featureadmin/Releases/ReleaseNotes.md)
+* [License](https://github.com/achimismaili/featureadmin/LICENSE.md)
+* Some additional [technical Documentation](docs/Documentation.md)
 
 ## What others are saying about this tool
 - _**"It's been a very useful yet very powerful tool."**_, by **[(SharePoint-)Joel Oleson](http://www.sharepointjoel.com/Lists/Posts/Post.aspx?ID=469)**
@@ -41,45 +101,23 @@ The feature admin is available for SP 2013 (& SP 2013 Foundation), SP 2010 (& SP
 - _"Champion! Love it! Thank you SOOOOO much!"_, by drewberrylicious
 - _"Excellent tool."_, by rarandas
 
+<!-- ... if the _Feature Admin Tool_ was able to help you, too, please rate it. -->
 
-... if the _Feature Admin Tool_ was able to help you, too, please rate it.
-
-## Most useful are two buttons:
-Button **'Find Faulty Feature in Farm'**
-With this one click, you can check, if there are any errors in any Feature Collections (Farm, WebApplication, Site or Web) in your farm. If this runs through the farm and tells you "No errors found", all your farm's feature collections are clean. (If it finds a faulty feature of scope Web or Site, you can browse in the left window to it and see the errors in the Register of the Site and Web Features (yellow).
-Once, it finds a faulty feature, you can let it be deactivated in / removed from the whole farm.
-
-Button **'Uninstall'**
-Functionality regarding Feature Definitions. Feature definitions can also cause errors in a farm.
-Before you Uninstall feature definitions, you are asked, if you want to first deactivate the feature everywhere in the farm. If the Feature Definition is corrupt, and not even the Feature scope can be retrieved, logic was added that checks all FeatureCollections in the farm for this Feature, before it gets uninstalled.
-
-## 'Features' of the FeatureAdmin Tool
-* List features and feature definitions
-* Search for faulty features in the farm and remove them cleanly if wanted
-* Uninstall feature Definitions from the farm, even if faulty
-* _When uninstalling a feature, FeatureAdmin provides an option to deactivate this feature in the entire farm before uninstalling it!_
-* can also simply activate or deactivate _features with any scope_ in the whole farm, in only a Web Application, only within a SiteCollection or in a Site (SPWeb)
+<!-- ## 'Features' of the FeatureAdmin Tool
 * Web Apps are parsed automatically, after selecting one, all Site Collections in the Web App are shown
 * When selecting a SiteCollection, all sites (webs) are listed automatically.
 * logging information is shown (e.g. change of selections, features added or removed)
 * Features and Feature Definitions are sorted (first after scope and then) after name
-* The FeatureAdmin window and all internal windows are resizeable (starting with version 2.1)
+* The FeatureAdmin window and all internal windows are resizeable (starting with version 2.1) -->
 
-## Preconditions
-**You need to have rights!**
- +dbOwner rights to the SharePoint Configuration database and to every content database, you would like to cleanup, activate or deactivate features on.+
-+You should add your login account to the _Web Application User Policy_ with Full Control for each of the content web apps in the farm and it should be a member of the farm administrators group+.
-Additionally, this tool needs to run locally on a SharePoint Instance.
-If you use the "find faulty feature" functionality, it will parse through the whole farm.
-
-## Screenshots
+<!-- ## Screenshots
 Feature View - remove Features
 ![](docs/FeatureAdmin-Remove-Features.png)
 
 Feature Definition View - activate or uninstall Features
-![](docs/FeatureAdmin-Installed-Features.png)
+![](docs/FeatureAdmin-Installed-Features.png) -->
 
-## The Problem, that triggered development of this tool:
+<!-- ## The Problem, that triggered development of this tool:
 After doing Solution Package based deployment for a while, I found out, that 'stsadm -o upgradesolution' is not supported, when features are added / removed. (see article about this [http://sharepointtipoftheday.blogspot.com/2009/06/solution-feature-upgrading-and.html](http://sharepointtipoftheday.blogspot.com/2009/06/solution-feature-upgrading-and.html))
 Also, I had some cases, where Features had forcefully been uninstalled from a farm without deactivating them first in all Sites / SiteCollections / WebApps or in the Farm.
 
@@ -87,10 +125,4 @@ All this has caused errors and left overs in the Farm, e.g. it was not possible 
 ## Roots of the Feature Admin Tool
 I found the Faulty Feature Tool from "Steven Van de Craen", at
 [http://www.moss2007.be/blogs/vandest/archive/2008/04/28/stsadm-o-export-fatalerror-failed-to-compare-two-elements-in-the-array.aspx](http://www.moss2007.be/blogs/vandest/archive/2008/04/28/stsadm-o-export-fatalerror-failed-to-compare-two-elements-in-the-array.aspx)
-which solved some of my problems. It was very basic and I needed it for a lot more.
-
-## Source Code
-See https://github.com/achimismaili/featureadmin
-fork https://github.com/SharePointPog/FeatureAdmin
-
-formerly on github at: https://featureadmin.codeplex.com/
+which solved some of my problems. It was very basic and I needed it for a lot more. -->

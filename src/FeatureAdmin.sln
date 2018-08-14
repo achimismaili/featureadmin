@@ -5,12 +5,6 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureAdmin.Test", "FeatureAdmin.Test\FeatureAdmin.Test.csproj", "{25992041-DC84-4EAB-96FD-C5BBBC5DF9F9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D2DCF0F8-F620-4A96-9678-8A6AD494256A}"
-	ProjectSection(SolutionItems) = preProject
-		ChangeLog.txt = ChangeLog.txt
-		ReleaseNotes.txt = ReleaseNotes.txt
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureAdmin.Tests", "FeatureAdmin.Tests\FeatureAdmin.Tests.csproj", "{D1E28224-E06C-4AAD-BCBA-D2FE46D3A9AF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureAdmin.SampleData", "FeatureAdmin.SampleData\FeatureAdmin.SampleData.csproj", "{DE7FAC0C-782B-4BA1-B1B8-3101955FC888}"

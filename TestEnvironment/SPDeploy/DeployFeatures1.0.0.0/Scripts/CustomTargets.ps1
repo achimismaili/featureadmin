@@ -58,8 +58,15 @@ function CheckCustomPreconditions($vars) {
 function Initialize($vars) {
 
     Log "Initializing (Custom Event)" -Type $SPSD.LogTypes.Information -Indent
-    Log "Remove SiteCollection '$($vars['SiteUrl'])'" -Type $SPSD.LogTypes.Information 
-    Remove-SPSite -Identity "$($vars['SiteUrl'])" -GradualDelete -Confirm:$False -ErrorAction SilentlyContinue
+
+    $siteUrl15 = "{0}{1}" -f $($vars['SiteBaseUrl']), "15"
+    Log "Remove SiteCollection '$siteUrl15'" -Type $SPSD.LogTypes.Information 
+    Remove-SPSite -Identity "$siteUrl15" -GradualDelete -Confirm:$False -ErrorAction SilentlyContinue
+    
+    $siteUrl14 = "{0}{1}" -f $($vars['SiteBaseUrl']), "14"
+    Log "Remove SiteCollection '$siteUrl14'" -Type $SPSD.LogTypes.Information 
+    Remove-SPSite -Identity "$siteUrl14" -GradualDelete -Confirm:$False -ErrorAction SilentlyContinue
+
     LogOutdent
 }
 #endregion
