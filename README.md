@@ -57,8 +57,8 @@ See also the [Release Notes](Releases/ReleaseNotes.md)
 
 ### Demo
 
-* [Download release zip (current developer version) including license and release notes](https://github.com/achimismaili/featureadmin/tree/development/Releases/demo/FeatureAdminDemo.zip)
-* [Download executable only (current developer version)](https://github.com/achimismaili/featureadmin/tree/development/Releases/demo/FeatureAdminDemo.exe)
+* [Download release zip (current developer version) including license and release notes](https://github.com/achimismaili/featureadmin/raw/development/Releases/demo/FeatureAdminDemo.zip)
+* [Download executable only (current developer version)](https://github.com/achimismaili/featureadmin/raw/development/Releases/demo/FeatureAdminDemo.exe)
 
 ## Installation
 
