@@ -27,12 +27,18 @@ namespace FeatureAdmin.Core.Models
             Properties = properties;
             TimeActivated = timeActivated;
             Version = version;
-            CanUpgrade = definitionVersion > version;
+            DefinitionVersion = definitionVersion;
             FeatureDefinitionScope = featureDefinitionScope;
         }
 
         [IgnoreDuringEquals]
-        public bool CanUpgrade { get; private set; }
+        public bool CanUpgrade
+        {
+            get
+            {
+                return DefinitionVersion > Version;
+            }
+        }
 
         public Version DefinitionVersion { get; private set; }
 
