@@ -21,28 +21,28 @@ These are links to release downloads for the different SharePoint versions:
 
 ### SP 2013
 
-* [Download release zip (v. 2.4.8) including license and release notes](Releases/Sp2013/2.4.8/FeatureAdmin2013.zip)
-* [Download executable only (v. 2.4.8)](Releases/Sp2013/2.4.8/FeatureAdmin2013.exe)
-* [Download release zip (v. 2.4.6) including license and release notes](Releases/Sp2013/2.4.6/FeatureAdmin2013.zip) (recommended for removing orphaned/faulty features)
-* [Download executable only (v. 2.4.6)](Releases/Sp2013/2.4.6/FeatureAdmin2013.exe) (recommended for removing orphaned/faulty features)
+* [Download release zip (v. 2.4.8) including license and release notes](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2013/2.4.8/FeatureAdmin2013.zip)
+* [Download executable only (v. 2.4.8)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2013/2.4.8/FeatureAdmin2013.exe)
+* [Download release zip (v. 2.4.6) including license and release notes](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2013/2.4.6/FeatureAdmin2013.zip) (recommended for removing orphaned/faulty features)
+* [Download executable only (v. 2.4.6)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2013/2.4.6/FeatureAdmin2013.exe) (recommended for removing orphaned/faulty features)
 
 ### SP 2010
 
-* [Download release zip (v. 2.4.8) including license and release notes](Releases/Sp2010/2.4.8/FeatureAdmin2010.zip)
-* [Download executable only (v. 2.4.8)](Releases/Sp2010/2.4.8/FeatureAdmin2010.exe)
-* [Download release zip (v. 2.4.6) including license and release notes](Releases/Sp2010/2.4.6/FeatureAdmin2010.zip) (recommended for removing orphaned/faulty features)
-* [Download executable only (v. 2.4.6)](Releases/Sp2010/2.4.6/FeatureAdmin2010.exe) (recommended for removing orphaned/faulty features)
+* [Download release zip (v. 2.4.8) including license and release notes](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2010/2.4.8/FeatureAdmin2010.zip)
+* [Download executable only (v. 2.4.8)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2010/2.4.8/FeatureAdmin2010.exe)
+* [Download release zip (v. 2.4.6) including license and release notes](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2010/2.4.6/FeatureAdmin2010.zip) (recommended for removing orphaned/faulty features)
+* [Download executable only (v. 2.4.6)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2010/2.4.6/FeatureAdmin2010.exe) (recommended for removing orphaned/faulty features)
 
 ### SP 2007
 
-* [Download release zip (v. 2.4.8)](Releases/Sp2007/2.4.8/FeatureAdmin2007.zip)
-* [Download executable only (v. 2.4.8)](Releases/Sp2007/2.4.8/FeatureAdmin2007.exe)
-* [Download release zip (v. 2.4.6)](Releases/Sp2007/2.4.6/FeatureAdmin2007.zip) (recommended for removing orphaned/faulty features)
-* [Download executable only (v. 2.4.6)](Releases/Sp2007/2.4.6/FeatureAdmin2007.exe) (recommended for removing orphaned/faulty features)
+* [Download release zip (v. 2.4.8)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2007/2.4.8/FeatureAdmin2007.zip)
+* [Download executable only (v. 2.4.8)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2007/2.4.8/FeatureAdmin2007.exe)
+* [Download release zip (v. 2.4.6)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2007/2.4.6/FeatureAdmin2007.zip) (recommended for removing orphaned/faulty features)
+* [Download executable only (v. 2.4.6)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2007/2.4.6/FeatureAdmin2007.exe) (recommended for removing orphaned/faulty features)
 
 ### Demo
-* [Download release zip (v. 3.0.0) including license and release notes](Releases/demo/FeatureAdminDemo.zip)
-* [Download executable only (v. 3.0.0)](Releases/demo/FeatureAdminDemo.exe)
+* [Download release zip (v. 3.0.0) including license and release notes](https://github.com/achimismaili/featureadmin/raw/master/Releases/demo/FeatureAdminDemo.zip)
+* [Download executable only (v. 3.0.0)](https://github.com/achimismaili/featureadmin/raw/master/Releases/demo/FeatureAdminDemo.exe)
 
 ## Development
 
@@ -52,8 +52,8 @@ See also the [Release Notes](Releases/ReleaseNotes.md)
 
 ### SP 2013
 
-* [Download release zip (current developer version) including license and release notes](https://github.com/achimismaili/featureadmin/tree/development/Releases/Sp2013/FeatureAdmin2013.zip)
-* [Download executable only (current developer version)](https://github.com/achimismaili/featureadmin/tree/development/Releases/Sp2013/FeatureAdmin2013.exe)
+* [Download release zip (current developer version) including license and release notes](https://github.com/achimismaili/featureadmin/raw/development/Releases/Sp2013/FeatureAdmin2013.zip)
+* [Download executable only (current developer version)](https://github.com/achimismaili/featureadmin/raw/development/Releases/Sp2013/FeatureAdmin2013.exe)
 
 ### Demo
 
