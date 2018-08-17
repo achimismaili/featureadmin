@@ -119,7 +119,7 @@ namespace FeatureAdmin.Backends.Demo.Services
         {
             var farmFeatureDefinitions =
 
-                demoRepository.SearchFeatureDefinitions(string.Empty, null, true, null).Select(i => i.Item);
+                demoRepository.SearchFeatureDefinitions(string.Empty, null, true, null).Select(i => i.Item).ToList();
 
             return farmFeatureDefinitions;
         }
@@ -224,7 +224,7 @@ namespace FeatureAdmin.Backends.Demo.Services
 
         private IEnumerable<FeatureDefinition> GetDemoFeatureDefinitions(Location location)
         {
-            var defs = demoRepository.SearchFeatureDefinitions(location.Id.ToString(), location.Scope, false, null).Select(i => i.Item);
+            var defs = demoRepository.SearchFeatureDefinitions(location.Id.ToString(), location.Scope, false, null).Select(i => i.Item).ToList();
 
             return defs;
         }

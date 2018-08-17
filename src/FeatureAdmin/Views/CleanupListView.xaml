@@ -64,12 +64,12 @@
             CanUserAddRows="False">
                 <DataGrid.Columns>
                     <!-- set mode to one way, because two way was causing issues, when selected item was 'clicked on' again ... -->
-                    <DataGridTextColumn Binding="{Binding ActivatedFeature.DisplayName,Mode=OneWay}" Header="Feature-Title" />
-                    <DataGridTextColumn Binding="{Binding Location.Scope,Mode=OneWay}" Header="Scope" />
-                    <DataGridTextColumn Binding="{Binding Location.Url,Mode=OneWay}" Header="Url" />
-                    <DataGridTextColumn Binding="{Binding ActivatedFeature.FeatureId,Mode=OneWay}" Header="Feature-Id" />
-                    <DataGridTextColumn Binding="{Binding ActivatedFeature.LocationId,Mode=OneWay}" Header="Location-Id" />
-                    <DataGridTextColumn Binding="{Binding Location.DisplayName,Mode=OneWay}" Header="Location-Title" />
+                    <DataGridTextColumn Binding="{Binding Item.ActivatedFeature.DisplayName,Mode=OneWay}" Header="Feature-Title" />
+                    <DataGridTextColumn Binding="{Binding Item.Location.Scope,Mode=OneWay}" Header="Scope" />
+                    <DataGridTextColumn Binding="{Binding Item.Location.Url,Mode=OneWay}" Header="Url" />
+                    <DataGridTextColumn Binding="{Binding Item.ActivatedFeature.FeatureId,Mode=OneWay}" Header="Feature-Id" />
+                    <DataGridTextColumn Binding="{Binding Item.ActivatedFeature.LocationId,Mode=OneWay}" Header="Location-Id" />
+                    <DataGridTextColumn Binding="{Binding Item.Location.DisplayName,Mode=OneWay}" Header="Location-Title" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
@@ -93,7 +93,7 @@
             <Menu Grid.Row="1" IsMainMenu="False" Background="Transparent" FontSize="18">
                 <MenuItem x:Name="FilterFeatures" ToolTip="Filter the definitions on the left for this feature ID"
                           Background="Transparent" 
-                 cal:Message.Attach="FilterFeatureDefinitions(ActiveItem_ActivatedFeature_FeatureId)" >
+                 cal:Message.Attach="FilterFeatureDefinitions(ActiveItem_Item_ActivatedFeature_FeatureId)" >
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <fa:FontAwesome Icon="MailReply" />
@@ -103,7 +103,7 @@
                 </MenuItem>
                 <MenuItem x:Name="FilterLocation" ToolTip="Show all features with this feature ID"
                           Background="Transparent" 
-                  cal:Message.Attach="FilterThis(ActiveItem_ActivatedFeature_FeatureId)" >
+                  cal:Message.Attach="FilterThis(ActiveItem_Item_ActivatedFeature_FeatureId)" >
                     <MenuItem.Header>
                             <fa:FontAwesome Icon="Filter" />
                     </MenuItem.Header>
@@ -163,7 +163,7 @@
            Padding="5"
                Grid.Row="1" Grid.Column="1" />
                     <Button Name="CopyFeatureName" Style="{DynamicResource MetroCircleButtonStyle}"
-                        cal:Message.Attach="CopyToClipBoard(ActiveItem_ActivatedFeature_DisplayName)"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Item_ActivatedFeature_DisplayName)"
                         Background="Transparent" Height="30" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="1" Grid.Column="2">
@@ -182,7 +182,7 @@
                                 Padding="5"
                Grid.Row="3" Grid.Column="1" />
                     <Button Name="CopyUrl" Style="{DynamicResource MetroCircleButtonStyle}"
-                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Location_Url)"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Item_Location_Url)"
                         Background="Transparent" Height="30" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="3" Grid.Column="2">
@@ -195,7 +195,7 @@
                     Padding="5"
                Grid.Row="4" Grid.Column="1" />
                     <Button Name="CopyFeatureId" Style="{DynamicResource MetroCircleButtonStyle}"
-                        cal:Message.Attach="CopyToClipBoard(ActiveItem_ActivatedFeature_FeatureId)"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Item_ActivatedFeature_FeatureId)"
                         Background="Transparent" Height="30" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="4" Grid.Column="2">
@@ -207,7 +207,7 @@
                                 Padding="5"
                Grid.Row="5" Grid.Column="1" />
                     <Button Name="CopyLocationId" Style="{DynamicResource MetroCircleButtonStyle}"
-                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Location_Id)"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Item_Location_Id)"
                         Background="Transparent" Height="30" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="5" Grid.Column="2">
@@ -219,7 +219,7 @@
                                 Padding="5"
                Grid.Row="6" Grid.Column="1" />
                     <Button Name="CopyLocationTitle" Style="{DynamicResource MetroCircleButtonStyle}"
-                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Location_DisplayName)"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Item_Location_DisplayName)"
                         Background="Transparent" Height="30" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="6" Grid.Column="2">
@@ -231,7 +231,7 @@
                                 Padding="5"
                Grid.Row="7" Grid.Column="1" />
                     <Button Name="CopyFeatureTitle" Style="{DynamicResource MetroCircleButtonStyle}"
-                        cal:Message.Attach="CopyToClipBoard(ActiveItem_ActivatedFeature_Definition_Title)"
+                        cal:Message.Attach="CopyToClipBoard(ActiveItem_Item_ActivatedFeature_Definition_Title)"
                         Background="Transparent" Height="30" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="7" Grid.Column="2">

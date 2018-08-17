@@ -203,10 +203,10 @@ namespace FeatureAdmin.Core.Models.Tasks
 
             FarmFeatureDefinitions.Processed = definitions.Count();
 
-            //TODO: check if this if can go away, why should it not be completed here?
+            //TODO: check if this can go away, why should it not be completed here?
             if (FarmFeatureDefinitions.Completed)
             {
-                repository.AddFeatureDefinitions(message.FarmFeatureDefinitions);
+                repository.AddFeatureDefinitions(definitions);
                 SendProgress();
 
                 if (definitions.Any(fd => fd.Scope == Enums.Scope.ScopeInvalid))
