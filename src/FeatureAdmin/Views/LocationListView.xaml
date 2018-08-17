@@ -175,7 +175,7 @@
                         <fa:FontAwesome Icon="Clone" />
                     </Button>
                     <Label Content="UniqueId:" 
-                   Grid.Row="4" Grid.Column="0" />
+                   Grid.Row="5" Grid.Column="0" />
                     <TextBlock x:Name="ActiveItem_UniqueId"  ToolTip="This is a FeatureAdmin specific ID"
                     Padding="2"
                Grid.Row="5" Grid.Column="1" />
