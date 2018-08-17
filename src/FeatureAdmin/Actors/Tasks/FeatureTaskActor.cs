@@ -125,9 +125,24 @@ namespace FeatureAdmin.Core.Models.Tasks
 
                 foreach (ActivatedFeatureSpecial af in message.Features)
                 {
+                    FeatureDefinition definition;
+
+                    if (af.Definition == null)
+                    {
+                        definition = Factories.FeatureDefinitionFactory.GetFaultyDefinition(
+                            af.ActivatedFeature.FeatureId,
+                            af.Location.Scope,
+                            af.ActivatedFeature.Version);
+                    }
+                    else
+                    {
+                        definition = af.Definition;
+                    }
+
+
 
                     var toggleRequest = new FeatureToggleRequest(
-                        af.Definition,
+                        definition,
                         af.Location,
                         // force is already set to true, so now it is same as deactivation ... 
                         // message.Action,

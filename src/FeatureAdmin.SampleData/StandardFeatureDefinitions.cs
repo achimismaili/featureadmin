@@ -38,12 +38,13 @@ namespace FeatureAdmin.SampleData
             var upgradeFeature4 = Features.UpgradeFarm.FeatureDefinitionUpgradeFarm15;
             definitions.Add(upgradeFeature4);
             
-            // faulty
-            var webFeatureDef = Features.FaultyWeb.FeatureDefinitionFaultyWeb15;
-            definitions.Add(webFeatureDef);
+            // faulty - faulty features do not have a feature definition
 
-            var siteFeatureDef = Features.FaultySite.FeatureDefinitionFaultySite15;
-            definitions.Add(siteFeatureDef);
+            //var webFeatureDef = Features.FaultyWeb.FeatureDefinitionFaultyWeb15;
+            //definitions.Add(webFeatureDef);
+
+            //var siteFeatureDef = Features.FaultySite.FeatureDefinitionFaultySite15;
+            //definitions.Add(siteFeatureDef);
 
             return definitions;
         }

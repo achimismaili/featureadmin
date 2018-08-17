@@ -39,13 +39,67 @@ namespace FeatureAdmin.Core.Factories
 
 
         public static FeatureDefinition GetFaultyDefinition(
-             Guid id,
+             string uniqueIdentifier,
              Scope scope,
              Version version
             )
         {
-            var featureDefinition = new FeatureDefinition(id,
-                0,
+            if (string.IsNullOrEmpty(uniqueIdentifier))
+            {
+                return null;
+            }
+
+
+            Guid featureId;
+            int compatibilityLevel;
+            string sandBoxedSolutionLocation;
+
+
+            var splittedId = uniqueIdentifier.Split(Common.Constants.MagicStrings.GuidSeparator);
+
+            if (splittedId.Length >= 1)
+            {
+                var featureIdAsString = splittedId[0];
+
+                if (!Guid.TryParse(featureIdAsString, out featureId))
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+
+            if (splittedId.Length >= 2)
+            {
+                var compatibilityLevelAsString = splittedId[1];
+
+                if (!Int32.TryParse(compatibilityLevelAsString, out compatibilityLevel))
+                {
+                    compatibilityLevel = 0;
+                }
+            }
+            else
+            {
+                compatibilityLevel = 0;
+            }
+
+            if (splittedId.Length >= 3)
+            {
+                sandBoxedSolutionLocation = splittedId[2];
+            }
+            else
+            {
+                sandBoxedSolutionLocation = null;
+            }
+
+
+
+
+            var featureDefinition = new FeatureDefinition(
+                featureId,
+                compatibilityLevel,
                 "Faulty, orphaned feature - no feature definition available",
                 "Faulty, orphaned feature",
                 false,
@@ -55,7 +109,8 @@ namespace FeatureAdmin.Core.Factories
                 "Faulty, orphaned feature",
                 Guid.Empty,
                 "n/a",
-                version
+                version,
+                sandBoxedSolutionLocation
                 );
 
             return featureDefinition;
