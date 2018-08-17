@@ -71,7 +71,7 @@
                     <Label Content="Time activated:" 
                
                Grid.Row="2" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_TimeActivated" 
+                    <TextBlock x:Name="ActiveItem_Item_TimeActivated" 
            Padding="5"
                Grid.Row="2" Grid.Column="1" />
                     <Button Name="CopyName" Style="{DynamicResource MetroCircleButtonStyle}"
@@ -83,7 +83,7 @@
                     </Button>
                     <Label Content="Version:" 
                Grid.Row="3" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_Version" 
+                    <TextBlock x:Name="ActiveItem_Item_Version" 
             Padding="5"
                Grid.Row="3" Grid.Column="1" />
                     <Button Name="CopyVersion" Style="{DynamicResource MetroCircleButtonStyle}"
@@ -95,7 +95,7 @@
                     </Button>
                     <Label Content="Name:" 
                Grid.Row="4" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_Definition_DisplayName" 
+                    <TextBlock x:Name="ActiveItem_Item_Definition_DisplayName" 
                 Padding="4"
                Grid.Row="4" Grid.Column="1" />
                 </Grid>

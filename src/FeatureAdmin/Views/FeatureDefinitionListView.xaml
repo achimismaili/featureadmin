@@ -172,7 +172,7 @@
                     <Label Content="Name:" 
                
                Grid.Row="2" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_DisplayName" 
+                    <TextBlock x:Name="ActiveItem_Item_DisplayName" 
            Padding="5"
                Grid.Row="2" Grid.Column="1" />
                     <Button Name="CopyName" Style="{DynamicResource MetroCircleButtonStyle}"
@@ -185,13 +185,13 @@
 
                     <Label Content="Scope:" 
                Grid.Row="3" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_Scope" 
+                    <TextBlock x:Name="ActiveItem_Item_Scope" 
                Padding="5"
                Grid.Row="3" Grid.Column="1" />
 
                     <Label Content="Title:" 
                Grid.Row="4" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_Title" 
+                    <TextBlock x:Name="ActiveItem_Item_Title" 
             Padding="5"
                Grid.Row="4" Grid.Column="1" />
                     <Button Name="CopyTitle" Style="{DynamicResource MetroCircleButtonStyle}"
@@ -204,7 +204,7 @@
 
                     <Label Content="Id:" 
                Grid.Row="5" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_Id" 
+                    <TextBlock x:Name="ActiveItem_Item_Id" 
                 Padding="2"
                Grid.Row="5" Grid.Column="1" />
                     <Button Name="CopyId" Style="{DynamicResource MetroCircleButtonStyle}"
@@ -216,7 +216,7 @@
                     </Button>
                     <Label Content="UniqueIdentifier:" 
                Grid.Row="6" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_UniqueIdentifier" 
+                    <TextBlock x:Name="ActiveItem_Item_UniqueIdentifier" 
                 Padding="2" ToolTip="This is a FeatureAdmin specific ID"
                Grid.Row="6" Grid.Column="1" />
                     <Button Name="CopyUniqueIdentifier"
@@ -228,7 +228,7 @@
                     </Button>
                     <Label Content="Compatibility:"
                Grid.Row="7" Grid.Column="0" />
-                    <TextBlock x:Name="ActiveItem_CompatibilityLevel"
+                    <TextBlock x:Name="ActiveItem_Item_CompatibilityLevel"
                Padding="2"
                Grid.Row="7" Grid.Column="1" />
                 </Grid>
