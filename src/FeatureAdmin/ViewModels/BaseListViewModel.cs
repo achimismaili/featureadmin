@@ -130,13 +130,24 @@ namespace FeatureAdmin.ViewModels
 
         protected virtual void SelectionChangedBase()
         {
+            T item;
+
+            if (ActiveItem == null)
+            {
+                item = null;
+            }
+            else
+            {
+                item = ActiveItem.Item;
+            }
+
             eventAggregator.PublishOnUIThread(
-                 new Messages.ItemSelected<T>(ActiveItem.Item)
+                 new Messages.ItemSelected<T>(item)
                  );
 
-            CanShowDetails = ActiveItem != null;
-            CanFilterThis = ActiveItem != null;
-            CanSpecialAction = ActiveItem != null;
+            CanShowDetails = item != null;
+            CanFilterThis = item != null;
+            CanSpecialAction = item != null;
         }
     }
 }
