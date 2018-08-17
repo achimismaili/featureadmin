@@ -150,7 +150,7 @@ namespace FeatureAdmin.OrigoDb
             return GetAsActivatedFeatureSpecial(activatedUpgradeableFeaturesInFarm);
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> GetAsActivatedFeatureSpecial (IEnumerable<ActivatedFeature> activatedFeatures)
+        public IEnumerable<ActivatedFeatureSpecial> GetAsActivatedFeatureSpecial(IEnumerable<ActivatedFeature> activatedFeatures)
         {
             if (activatedFeatures == null || activatedFeatures.Count() < 1)
             {
@@ -174,28 +174,29 @@ namespace FeatureAdmin.OrigoDb
         /// <param name="searchInput">search input</param>
         /// <param name="selectedScopeFilter">scope filter</param>
         /// <returns></returns>
-        public IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(
+        public IEnumerable<ActiveIndicator<ActivatedFeatureSpecial>> SearchSpecialFeatures(
             IEnumerable<ActivatedFeatureSpecial> source,
             string searchInput,
-            Scope? selectedScopeFilter)
+            Scope? selectedScopeFilter,
+            FeatureDefinition selectedFeatureDefinition)
         {
             if (source == null || source.Count() < 1)
             {
-                return new List<ActivatedFeatureSpecial>();
+                return new ActiveIndicator<ActivatedFeatureSpecial>[0];
             }
 
             var searchResult = source;
-                               
+
             if (!string.IsNullOrEmpty(searchInput))
             {
-                    var lowerCaseSearchInput = searchInput.ToLower();
-                    searchResult = searchResult.Where(
-                       f => f.ActivatedFeature.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
-                       f.Location.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
-                       f.Location.Url.ToLower().Contains(lowerCaseSearchInput) ||
-                        f.ActivatedFeature.FeatureId.Contains(lowerCaseSearchInput) ||
-                        f.ActivatedFeature.LocationId.Contains(lowerCaseSearchInput)
-                        );
+                var lowerCaseSearchInput = searchInput.ToLower();
+                searchResult = searchResult.Where(
+                   f => f.ActivatedFeature.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
+                   f.Location.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
+                   f.Location.Url.ToLower().Contains(lowerCaseSearchInput) ||
+                    f.ActivatedFeature.FeatureId.Contains(lowerCaseSearchInput) ||
+                    f.ActivatedFeature.LocationId.Contains(lowerCaseSearchInput)
+                    );
             }
 
             if (selectedScopeFilter != null)
@@ -204,7 +205,20 @@ namespace FeatureAdmin.OrigoDb
                     searchResult.Where(f => f.Location.Scope == selectedScopeFilter.Value);
             }
 
-            return searchResult.ToArray();
+            if (selectedFeatureDefinition == null || !searchResult.Any())
+            {
+                return searchResult.Select(afs => new ActiveIndicator<ActivatedFeatureSpecial>(afs, false)).ToArray();
+            }
+            else
+            {
+                return searchResult.Select(afs =>
+                new ActiveIndicator<ActivatedFeatureSpecial>(
+                    afs,
+                    afs.ActivatedFeature.FeatureId == selectedFeatureDefinition.UniqueIdentifier)
+                    )
+                .ToArray();
+            }
+
         }
 
         public ActivatedFeature GetActivatedFeature(string featureId, string locationId)
@@ -222,8 +236,8 @@ namespace FeatureAdmin.OrigoDb
                 // try to find some activated features, if scope is invalid (e.g. definition not available in local hive)
                 if (!result.Any() && featureDefinition.Scope == Scope.ScopeInvalid && featureDefinition.SandBoxedSolutionLocation == null)
                 {
-                    return ActivatedFeatures.Where(af => af.FeatureId.Contains(featureDefinition.Id.ToString()) && 
-                    ( af.FeatureDefinitionScope == FeatureDefinitionScope.Farm ||
+                    return ActivatedFeatures.Where(af => af.FeatureId.Contains(featureDefinition.Id.ToString()) &&
+                    (af.FeatureDefinitionScope == FeatureDefinitionScope.Farm ||
                     af.FeatureDefinitionScope == FeatureDefinitionScope.None))
                     .ToList();
                 }
@@ -316,8 +330,8 @@ namespace FeatureAdmin.OrigoDb
 
             if (definitionToRemove != null)
             {
-                if(FeatureDefinitions.Remove(uniqueIdentifier))
-                { 
+                if (FeatureDefinitions.Remove(uniqueIdentifier))
+                {
                     return null;
                 }
                 else
@@ -331,7 +345,11 @@ namespace FeatureAdmin.OrigoDb
             }
         }
 
-        public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Scope? selectedScopeFilter, bool? onlyFarmFeatures)
+        public IEnumerable<ActiveIndicator<FeatureDefinition>> SearchFeatureDefinitions(
+            string searchInput,
+            Scope? selectedScopeFilter,
+            bool? onlyFarmFeatures,
+            Location selectedLocation)
         {
             IEnumerable<FeatureDefinition> searchResult;
 
@@ -341,30 +359,30 @@ namespace FeatureAdmin.OrigoDb
             }
             else
             {
-                    var lowerCaseSearchInput = searchInput.ToLower();
+                var lowerCaseSearchInput = searchInput.ToLower();
+                searchResult =
+                   FeatureDefinitions.Where(fd => fd.Value.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
+                        fd.Value.Title.ToLower().Contains(lowerCaseSearchInput) ||
+                        fd.Key.Contains(searchInput))
+                        .Select(fd => fd.Value);
+
+
+                // search for features in activated features, if no definition was found with that id
+                if (!searchResult.Any())
+                {
+                    // see also https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-inner-joins
                     searchResult =
-                       FeatureDefinitions.Where(fd => fd.Value.DisplayName.ToLower().Contains(lowerCaseSearchInput) ||
-                            fd.Value.Title.ToLower().Contains(lowerCaseSearchInput) ||
-                            fd.Key.Contains(searchInput))
-                            .Select(fd => fd.Value);
-
-
-                    // search for features in activated features, if no definition was found with that id
-                    if (!searchResult.Any())
-                    {
-                        // see also https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-inner-joins
-                        searchResult =
-                            ActivatedFeatures
-                            .Where(f => f.LocationId.Contains(searchInput))
-                            .Join(
-                            FeatureDefinitions,
-                            f => f.FeatureId,
-                            fd => fd.Key,
-                            (f, fd) => fd.Value);
-                    }
-
-
+                        ActivatedFeatures
+                        .Where(f => f.LocationId.Contains(searchInput))
+                        .Join(
+                        FeatureDefinitions,
+                        f => f.FeatureId,
+                        fd => fd.Key,
+                        (f, fd) => fd.Value);
                 }
+
+
+            }
 
             if (selectedScopeFilter != null)
             {
@@ -372,9 +390,28 @@ namespace FeatureAdmin.OrigoDb
                     searchResult.Where(l => l.Scope == selectedScopeFilter.Value);
             }
 
-            return searchResult.ToArray();
+            if (selectedLocation == null || !searchResult.Any())
+            {
+                return searchResult.Select(f => new ActiveIndicator<FeatureDefinition>(f, false)).ToArray();
+            }
+            else
+            {
+                // see https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
+                var resultWithActiveIndicator =
+                                (from fd in searchResult
+                                 join af in ActivatedFeatures on fd.UniqueIdentifier equals af.FeatureId into gj
+                                 from subAf in gj.DefaultIfEmpty()
+                                 select new ActiveIndicator<FeatureDefinition>(fd, subAf != null && subAf.LocationId == selectedLocation.UniqueId)).ToArray();
+
+                return resultWithActiveIndicator;
+            }
+
+
         }
-        public IEnumerable<Location> SearchLocations(string searchInput, Scope? selectedScopeFilter)
+        public IEnumerable<ActiveIndicator<Location>> SearchLocations(
+            string searchInput,
+            Scope? selectedScopeFilter,
+            FeatureDefinition selectedFeatureDefinition)
         {
             IEnumerable<Location> searchResult;
 
@@ -413,7 +450,21 @@ namespace FeatureAdmin.OrigoDb
                     searchResult.Where(l => l.Scope == selectedScopeFilter.Value);
             }
 
-            return searchResult.ToArray();
+            if (selectedFeatureDefinition == null || !searchResult.Any())
+            {
+                return searchResult.Select(l => new ActiveIndicator<Location>(l, false)).ToArray();
+            }
+            else
+            {
+                // see https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
+                var resultWithActiveIndicator =
+                                (from l in searchResult
+                                 join af in ActivatedFeatures on l.UniqueId equals af.LocationId into gj
+                                 from subAf in gj.DefaultIfEmpty()
+                                 select new ActiveIndicator<Location>(l, subAf != null && subAf.FeatureId == selectedFeatureDefinition.UniqueIdentifier)).ToArray();
+
+                return resultWithActiveIndicator;
+            }
         }
 
         /// <summary>

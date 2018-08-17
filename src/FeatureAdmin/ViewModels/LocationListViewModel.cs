@@ -6,7 +6,7 @@ using FeatureAdmin.Core.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class LocationListViewModel : BaseListViewModel<Location>, IHandle<ItemSelected<FeatureDefinition>>, IHandle<SetSearchFilter<Location>>
+    public class LocationListViewModel : BaseListViewModel<ActiveIndicator<Location>, Location>, IHandle<ItemSelected<FeatureDefinition>>, IHandle<SetSearchFilter<Location>>
     {
         public LocationListViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
             : base(eventAggregator, repository)
@@ -37,7 +37,10 @@ namespace FeatureAdmin.ViewModels
 
         protected override void FilterResults()
         {
-            var searchResult = repository.SearchLocations(searchInput, SelectedScopeFilter);
+            var searchResult = repository.SearchLocations(
+                searchInput, 
+                SelectedScopeFilter, 
+                SelectedFeatureDefinition);
 
             ShowResults(searchResult);
         }

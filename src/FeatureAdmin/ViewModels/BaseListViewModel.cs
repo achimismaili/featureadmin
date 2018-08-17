@@ -5,10 +5,11 @@ using System.Collections.ObjectModel;
 using System;
 using FeatureAdmin.Core.Models.Enums;
 using FeatureAdmin.Core.Repository;
+using FeatureAdmin.Core.Models;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseListViewModel<T> : BaseItemViewModel<T>, IHandle<ProgressMessage> where T : class
+    public abstract class BaseListViewModel<A, T> : BaseItemViewModel<A, T>, IHandle<ProgressMessage> where A : ActiveIndicator<T> where T : class
         // , IHandle<SetSearchFilter<T>>  where T : class // search filter is handled in derivate classes
     {
 
@@ -102,7 +103,7 @@ namespace FeatureAdmin.ViewModels
 
         protected abstract void FilterResults();
 
-        protected void ShowResults(IEnumerable<T> searchResult)
+        protected void ShowResults(IEnumerable<A> searchResult)
         {
             var activeItemCache = ActiveItem;
 
@@ -130,7 +131,7 @@ namespace FeatureAdmin.ViewModels
         protected virtual void SelectionChangedBase()
         {
             eventAggregator.PublishOnUIThread(
-                 new Messages.ItemSelected<T>(ActiveItem)
+                 new Messages.ItemSelected<T>(ActiveItem.Item)
                  );
 
             CanShowDetails = ActiveItem != null;

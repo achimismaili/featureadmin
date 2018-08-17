@@ -100,22 +100,26 @@ namespace FeatureAdmin.Backends.Demo.Services
         {
             var loadedFarm = new LoadedDto(null);
 
-            var location = demoRepository.SearchLocations(string.Empty, Core.Models.Enums.Scope.Farm).FirstOrDefault();
+            var location = demoRepository.SearchLocations(string.Empty, Scope.Farm, null).FirstOrDefault();
 
-            var activatedFeatures = GetDemoActivatedFeatures(location);
-            var definitions = GetDemoFeatureDefinitions(location);
+            if (location!= null)
+            {
+                var activatedFeatures = GetDemoActivatedFeatures(location.Item);
+            var definitions = GetDemoFeatureDefinitions(location.Item);
 
-            loadedFarm.AddChild(location, activatedFeatures, definitions);
+            loadedFarm.AddChild(location.Item, activatedFeatures, definitions);
 
             return loadedFarm;
+            }
 
+            return null;
         }
 
         public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
         {
             var farmFeatureDefinitions =
 
-                demoRepository.SearchFeatureDefinitions(string.Empty, null, true);
+                demoRepository.SearchFeatureDefinitions(string.Empty, null, true, null).Select(i => i.Item);
 
             return farmFeatureDefinitions;
         }
@@ -220,7 +224,7 @@ namespace FeatureAdmin.Backends.Demo.Services
 
         private IEnumerable<FeatureDefinition> GetDemoFeatureDefinitions(Location location)
         {
-            var defs = demoRepository.SearchFeatureDefinitions(location.Id.ToString(), location.Scope, false);
+            var defs = demoRepository.SearchFeatureDefinitions(location.Id.ToString(), location.Scope, false, null).Select(i => i.Item);
 
             return defs;
         }
@@ -259,11 +263,11 @@ namespace FeatureAdmin.Backends.Demo.Services
             {
                 if (childScope.Value == Core.Models.Enums.Scope.WebApplication)
                 {
-                    children = demoRepository.SearchLocations(null, childScope.Value).ToList();
+                    children = demoRepository.SearchLocations(null, childScope.Value, null).Select(i => i.Item).ToList();
                 }
                 else
                 {
-                    children = demoRepository.SearchLocations(location.Id.ToString(), childScope.Value).ToList();
+                    children = demoRepository.SearchLocations(location.Id.ToString(), childScope.Value, null).Select(i => i.Item).ToList();
                 }
 
                 // add all child locations at once

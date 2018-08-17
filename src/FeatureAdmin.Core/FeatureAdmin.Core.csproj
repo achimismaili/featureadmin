@@ -71,6 +71,7 @@
     <Compile Include="Messages\Request\UpdateRequestSettingsExtensions.cs" />
     <Compile Include="Messages\Request\FeatureToggleRequest.cs" />
     <Compile Include="Models\ActivatedFeatureSpecial.cs" />
+    <Compile Include="Models\ActiveIndicator.cs" />
     <Compile Include="Models\Enums\FeatureAction.cs" />
     <Compile Include="Models\Enums\LockState.cs" />
     <Compile Include="Models\Enums\LogLevel.cs" />

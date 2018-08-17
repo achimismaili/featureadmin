@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseItemViewModel<T> : Conductor<T>.Collection.OneActive where T : class
+    public abstract class BaseItemViewModel<A, T> : Conductor<A>.Collection.OneActive where A : ActiveIndicator<T> where T : class
     {
 
         protected IEventAggregator eventAggregator;
@@ -41,7 +41,7 @@ namespace FeatureAdmin.ViewModels
         {
             if (ActiveItem != null)
             {
-                var message = new OpenWindow<T>(ActiveItem);
+                var message = new OpenWindow<T>(ActiveItem.Item);
                 eventAggregator.BeginPublishOnUIThread(message);
             }
 

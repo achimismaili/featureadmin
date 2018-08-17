@@ -5,7 +5,7 @@ using FeatureAdmin.Core.Repository;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class ActivatedFeatureViewModel : BaseItemViewModel<ActivatedFeature>, IHandle<ItemSelected<FeatureDefinition>>, IHandle<ItemSelected<Location>>, IHandle<ActionOptionsUpdate>
+    public class ActivatedFeatureViewModel : BaseItemViewModel<ActiveIndicator<ActivatedFeature>, ActivatedFeature>, IHandle<ItemSelected<FeatureDefinition>>, IHandle<ItemSelected<Location>>, IHandle<ActionOptionsUpdate>
     {
         public ActivatedFeatureViewModel(IEventAggregator eventAggregator, IFeatureRepository repository)
             : base(eventAggregator, repository)
@@ -49,8 +49,9 @@ namespace FeatureAdmin.ViewModels
 
                 if (activeItem != null)
                 {
-                    Items.Add(activeItem);
-                    ActiveItem = activeItem;
+                    var activeIndicatorItem = new ActiveIndicator<ActivatedFeature>(activeItem, true);
+                    Items.Add(activeIndicatorItem);
+                    ActiveItem = activeIndicatorItem;
                 }
                 else
                 {

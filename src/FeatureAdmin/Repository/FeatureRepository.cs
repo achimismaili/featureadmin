@@ -97,17 +97,22 @@ namespace FeatureAdmin.Repository
             return store.RemoveActivatedFeature(featureId, locationId);
         }
 
-        public IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, bool? onlyFarmFeatures)
+        public IEnumerable<ActiveIndicator<FeatureDefinition>> SearchFeatureDefinitions(
+            string searchInput, 
+            Scope? selectedScopeFilter, 
+            bool? onlyFarmFeatures,
+            Location selectedLocation)
         {
-            return store.SearchFeatureDefinitions(searchInput, selectedScopeFilter, onlyFarmFeatures);
+            return store.SearchFeatureDefinitions(searchInput, selectedScopeFilter, onlyFarmFeatures, selectedLocation);
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(
+        public IEnumerable<ActiveIndicator<ActivatedFeatureSpecial>> SearchSpecialFeatures(
             IEnumerable<ActivatedFeatureSpecial> source,
             string searchInput, 
-            Scope? selectedScopeFilter)
+            Scope? selectedScopeFilter,
+            FeatureDefinition selectedFeatureDefinition)
         {
-            return store.SearchSpecialFeatures(source, searchInput, selectedScopeFilter);
+            return store.SearchSpecialFeatures(source, searchInput, selectedScopeFilter, selectedFeatureDefinition);
         }
 
         public IEnumerable<ActivatedFeatureSpecial> GetAllFeaturesToUpgrade()
@@ -120,9 +125,12 @@ namespace FeatureAdmin.Repository
             return store.GetAllFeaturesToCleanUp();
         }
 
-        public IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter)
+        public IEnumerable<ActiveIndicator<Location>> SearchLocations(
+            string searchInput, 
+            Scope? selectedScopeFilter, 
+            FeatureDefinition selectedFeatureDefinition)
         {
-            return store.SearchLocations(searchInput, selectedScopeFilter);
+            return store.SearchLocations(searchInput, selectedScopeFilter, selectedFeatureDefinition);
         }
 
         public IEnumerable<ActivatedFeatureSpecial> GetAsActivatedFeatureSpecial(IEnumerable<ActivatedFeature> activatedFeatures)

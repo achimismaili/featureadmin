@@ -29,8 +29,8 @@ namespace FeatureAdmin.Core.Repository
         IEnumerable<Location> GetLocationsCanDeactivate(FeatureDefinition featureDefinition, Location location);
         string RemoveActivatedFeature(string featureId, string locationId);
         string RemoveFeatureDefinition(string uniqueIdentifier);
-        IEnumerable<FeatureDefinition> SearchFeatureDefinitions(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, bool? onlyFarmFeatures);
-        IEnumerable<Location> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter);
-        IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(IEnumerable<ActivatedFeatureSpecial> source , string searchInput, Models.Enums.Scope? selectedScopeFilter);
+        IEnumerable<ActiveIndicator<FeatureDefinition>> SearchFeatureDefinitions(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, bool? onlyFarmFeatures, Location selectedLocation);
+        IEnumerable<ActiveIndicator<Location>> SearchLocations(string searchInput, Core.Models.Enums.Scope? selectedScopeFilter, FeatureDefinition selectedFeatureDefinition);
+        IEnumerable<ActiveIndicator<ActivatedFeatureSpecial>> SearchSpecialFeatures(IEnumerable<ActivatedFeatureSpecial> source , string searchInput, Models.Enums.Scope? selectedScopeFilter, FeatureDefinition selectedFeatureDefinition);
     }
 }

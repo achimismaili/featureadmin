@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.ViewModels
 {
-    public abstract class BaseSpecialFeaturesListViewModel : BaseListViewModel<ActivatedFeatureSpecial>,
+    public abstract class BaseSpecialFeaturesListViewModel : BaseListViewModel<ActiveIndicator<ActivatedFeatureSpecial>, ActivatedFeatureSpecial>,
         IHandle<ItemSelected<FeatureDefinition>>,
         IHandle<SetSearchFilter<Location>>
     {
@@ -45,7 +45,12 @@ namespace FeatureAdmin.ViewModels
 
         protected override void FilterResults()
         {
-            var searchResult = SearchSpecialFeatures(searchInput, SelectedScopeFilter, out specialActionableFeaturesInFarm);
+            var searchResult = SearchSpecialFeatures(
+                searchInput, 
+                SelectedScopeFilter,
+                SelectedFeatureDefinition,
+                out specialActionableFeaturesInFarm
+                );
 
             ShowResults(searchResult);
         }
@@ -76,13 +81,13 @@ namespace FeatureAdmin.ViewModels
                 {
                     // no filters and items available, so this is a search in the full farm, no need to do it again
                     specialFeaturesAnyInFarm = true;
-                    specialActionableFeaturesInFarm = Items; ;
+                    specialActionableFeaturesInFarm = Items.Select(afs => afs.Item); ;
                 }
             }
             else
             {
-                // in case of set filters, always perform a search with no filters to get all available features
-                specialActionableFeaturesInFarm = SearchSpecialFeatures(string.Empty, null, out specialActionableFeaturesInFarm);
+                // in case of set filters, get all available features
+                specialActionableFeaturesInFarm = GetAllSpecialFeatures(); 
 
                 if (specialActionableFeaturesInFarm.Count() > 0)
                 {
@@ -104,9 +109,10 @@ namespace FeatureAdmin.ViewModels
             CanSpecialActionFarm = specialFeaturesAnyInFarm;
         }
 
-        public IEnumerable<ActivatedFeatureSpecial> SearchSpecialFeatures(
+        public IEnumerable<ActiveIndicator<ActivatedFeatureSpecial>> SearchSpecialFeatures(
             string searchInput, 
             Core.Models.Enums.Scope? selectedScopeFilter,
+            FeatureDefinition selectedFeatureDefinition,
             out IEnumerable<ActivatedFeatureSpecial> specialActionableFeaturesInFarm)
         {
             specialActionableFeaturesInFarm = GetAllSpecialFeatures();
@@ -114,7 +120,7 @@ namespace FeatureAdmin.ViewModels
             // deactivate option to trigger action on farm level if no special features are available
             CanSpecialActionFarm = specialActionableFeaturesInFarm.Any();
 
-            return repository.SearchSpecialFeatures(specialActionableFeaturesInFarm, searchInput, selectedScopeFilter);
+            return repository.SearchSpecialFeatures(specialActionableFeaturesInFarm, searchInput, selectedScopeFilter, selectedFeatureDefinition);
         }
 
         public abstract IEnumerable<ActivatedFeatureSpecial> GetAllSpecialFeatures();
@@ -122,9 +128,9 @@ namespace FeatureAdmin.ViewModels
 
         public void SpecialAction()
         {
-            if (ActiveItem != null && ActiveItem.ActivatedFeature != null)
+            if (ActiveItem != null && ActiveItem.Item != null && ActiveItem.Item.ActivatedFeature != null)
             {
-                var features = new ActivatedFeatureSpecial[] { ActiveItem };
+                var features = new ActivatedFeatureSpecial[] { ActiveItem.Item };
                 PublishSpecialActionRequest(features);
             }
 
@@ -137,7 +143,7 @@ namespace FeatureAdmin.ViewModels
 
         public void SpecialActionFiltered()
         {
-            PublishSpecialActionRequest(Items);
+            PublishSpecialActionRequest(Items.Select(afs => afs.Item));
         }
     }
 }

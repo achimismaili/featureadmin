@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {
-    public class FeatureDefinitionListViewModel : BaseListViewModel<FeatureDefinition>,
+    public class FeatureDefinitionListViewModel : BaseListViewModel<ActiveIndicator<FeatureDefinition>, FeatureDefinition>,
         IHandle<ItemSelected<ActivatedFeatureSpecial>>,
         IHandle<ItemSelected<Location>>, 
         IHandle<SetSearchFilter<FeatureDefinition>>,
@@ -26,12 +26,12 @@ namespace FeatureAdmin.ViewModels
 
         public void ActivateFeatures()
         {
-            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem, SelectedLocation, Core.Models.Enums.FeatureAction.Activate));
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem.Item, SelectedLocation, Core.Models.Enums.FeatureAction.Activate));
         }
 
         public void DeactivateFeatures()
         {
-            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem, SelectedLocation, Core.Models.Enums.FeatureAction.Deactivate));
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem.Item, SelectedLocation, Core.Models.Enums.FeatureAction.Deactivate));
         }
 
         public void FilterRight(string searchQuery)
@@ -86,7 +86,7 @@ namespace FeatureAdmin.ViewModels
 
         public void UninstallFeatureDefinition()
         {
-            eventAggregator.PublishOnUIThread(new Core.Messages.Request.DeinstallationRequest(ActiveItem));
+            eventAggregator.PublishOnUIThread(new Core.Messages.Request.DeinstallationRequest(ActiveItem.Item));
         }
 
         protected void CheckIfCanToggleFeatures()
@@ -95,15 +95,15 @@ namespace FeatureAdmin.ViewModels
             bool canDeactivate = false;
             bool canUpgrade = false;
 
-            if (ActiveItem != null && SelectedLocation != null)
+            if (ActiveItem != null && ActiveItem.Item != null && SelectedLocation != null)
             {
                 int locationsThatCanActivate = repository.GetLocationsCanActivate
-                    (ActiveItem, SelectedLocation).Count();
+                    (ActiveItem.Item, SelectedLocation).Count();
 
                 canActivate = locationsThatCanActivate > 0;
 
                 int locationsThatCanDeactivate = repository.GetLocationsCanDeactivate
-                    (ActiveItem, SelectedLocation).Count();
+                    (ActiveItem.Item, SelectedLocation).Count();
                 canDeactivate = locationsThatCanDeactivate > 0;
             }
 
@@ -122,7 +122,11 @@ namespace FeatureAdmin.ViewModels
 
         protected override void FilterResults()
         {
-            var searchResult = repository.SearchFeatureDefinitions(searchInput, SelectedScopeFilter, null);
+            var searchResult = repository.SearchFeatureDefinitions(
+                searchInput, 
+                SelectedScopeFilter, 
+                null, 
+                SelectedLocation);
 
             ShowResults(searchResult);
         }
