@@ -13,13 +13,13 @@
     <UserControl.Resources>
     <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />-->
+                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />-->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/FeatureAdmin;component/Resources/Icons.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />-->
+                <!--<ResourceDictionary Source="pack://application:,,,/FeatureAdmin;component/Resources/Icons.xaml" />-->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Amber.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -74,19 +74,20 @@
                   SelectionMode="Single" 
                   SelectionUnit="FullRow"
             Grid.Row="2"
-            CanUserAddRows="False">
+            CanUserAddRows="False"
+                      Foreground="Black">
                 <DataGrid.RowStyle>
                     <Style TargetType="{x:Type DataGridRow}"  BasedOn="{StaticResource MetroDataGridRow}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Active,Mode=OneWay}" Value="true">
-                                <Setter Property="Background" Value="#33F0A30A"></Setter>
+                                <Setter Property="Background" Value="#33F0A30A" ></Setter>
                             </DataTrigger>
+                            <Trigger Property="IsSelected" Value="true">
+                                <Setter Property="Background" Value="Orange" ></Setter>
+                            </Trigger>
                         </Style.Triggers>
                     </Style>
                 </DataGrid.RowStyle>
-                <!--<DataGrid.RowBackground>
-                    <SolidColorBrush Color="#33F0A30A" />
-                </DataGrid.RowBackground>-->
                 <DataGrid.Columns>
                     <!-- set mode to one way, because two way was causing issues, when selected item was 'clicked on' again ... -->
                     <DataGridTextColumn Binding="{Binding Item.DisplayName,Mode=OneWay}" Header="Location-Title" />
