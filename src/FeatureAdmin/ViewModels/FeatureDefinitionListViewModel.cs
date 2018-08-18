@@ -67,7 +67,7 @@ namespace FeatureAdmin.ViewModels
             }
             else
             {
-                var newLocation = SelectedLocation = message.Item.Location;
+                var newLocation = message.Item.Location;
 
                 if (SelectedLocation != newLocation)
                 {
