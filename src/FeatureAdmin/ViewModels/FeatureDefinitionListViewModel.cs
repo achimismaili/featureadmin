@@ -50,6 +50,7 @@ namespace FeatureAdmin.ViewModels
         {
             SelectedLocation = message.Item;
             CheckIfCanToggleFeatures();
+            FilterResults(true);
         }
 
         public void Handle([NotNull] ItemSelected<ActivatedFeatureSpecial> message)
@@ -61,6 +62,7 @@ namespace FeatureAdmin.ViewModels
                 {
                     SelectedLocation = null;
                     CheckIfCanToggleFeatures();
+                    FilterResults(true);
                 }
             }
             else
@@ -71,6 +73,7 @@ namespace FeatureAdmin.ViewModels
                 {
                     SelectedLocation = newLocation;
                     CheckIfCanToggleFeatures();
+                    FilterResults(true);
                 }
             }
             
@@ -120,7 +123,7 @@ namespace FeatureAdmin.ViewModels
                  );
         }
 
-        protected override void FilterResults()
+        protected override void FilterResults(bool suppressActiveItemChangeEvent = false)
         {
             var searchResult = repository.SearchFeatureDefinitions(
                 searchInput, 
@@ -128,7 +131,7 @@ namespace FeatureAdmin.ViewModels
                 null, 
                 SelectedLocation);
 
-            ShowResults(searchResult);
+            ShowResults(searchResult, suppressActiveItemChangeEvent);
         }
     }
 }

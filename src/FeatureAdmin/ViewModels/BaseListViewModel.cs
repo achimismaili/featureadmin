@@ -6,12 +6,15 @@ using System;
 using FeatureAdmin.Core.Models.Enums;
 using FeatureAdmin.Core.Repository;
 using FeatureAdmin.Core.Models;
+using System.Linq;
 
 namespace FeatureAdmin.ViewModels
 {
     public abstract class BaseListViewModel<A, T> : BaseItemViewModel<A, T>, IHandle<ProgressMessage> where A : ActiveIndicator<T> where T : class
         // , IHandle<SetSearchFilter<T>>  where T : class // search filter is handled in derivate classes
     {
+
+        protected bool NotifyOnActiveItemChange = true;
 
         protected DateTime lastUpdateInitiatedSearch;
         protected string searchInput;
@@ -101,24 +104,41 @@ namespace FeatureAdmin.ViewModels
             FilterResults();
         }
 
-        protected abstract void FilterResults();
+        protected abstract void FilterResults(bool suppressActiveItemChangeEvent = false);
 
-        protected void ShowResults(IEnumerable<A> searchResult)
+        protected void ShowResults(IEnumerable<A> searchResult, bool suppressActiveItemChangeEvent = false)
         {
             var activeItemCache = ActiveItem;
-
-            Items.Clear();
-            Items.AddRange(searchResult);
-
-            if (activeItemCache != null)
+            try
             {
-                if (Items.Contains(activeItemCache))
+                if (activeItemCache != null && suppressActiveItemChangeEvent)
                 {
-                    ActivateItem(activeItemCache);
+                    NotifyOnActiveItemChange = false;
                 }
-                else
+
+                Items.Clear();
+                Items.AddRange(searchResult);
+
+                if (activeItemCache != null)
                 {
-                    SelectionChanged();
+                    var equalItemExists = Items.Where(i => i.Item.Equals(activeItemCache.Item)).FirstOrDefault();
+
+                    if (equalItemExists != null)
+                    {
+                        ActivateItem(equalItemExists);
+                    }
+                    else
+                    {
+                        SelectionChanged();
+                    }
+                }
+            }
+            finally
+            {
+                // turn on again
+                if (!NotifyOnActiveItemChange)
+                {
+                    NotifyOnActiveItemChange = true;
                 }
             }
 
@@ -130,6 +150,7 @@ namespace FeatureAdmin.ViewModels
 
         protected virtual void SelectionChangedBase()
         {
+
             T item;
 
             if (ActiveItem == null)
@@ -141,9 +162,14 @@ namespace FeatureAdmin.ViewModels
                 item = ActiveItem.Item;
             }
 
-            eventAggregator.PublishOnUIThread(
-                 new Messages.ItemSelected<T>(item)
-                 );
+            if (NotifyOnActiveItemChange)
+            {
+                eventAggregator.PublishOnUIThread(
+                                new Messages.ItemSelected<T>(item)
+                                );
+            }
+
+
 
             CanShowDetails = item != null;
             CanFilterThis = item != null;

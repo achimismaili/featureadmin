@@ -18,6 +18,5 @@ namespace FeatureAdmin.Core.Models
         public T Item { get; private set; }
 
         public bool Active { get; private set; }
-
     }
 }

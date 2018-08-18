@@ -27,6 +27,10 @@ namespace FeatureAdmin.ViewModels
         public void Handle([NotNull] ItemSelected<FeatureDefinition> message)
         {
             SelectedFeatureDefinition = message.Item;
+            if (IsActive)
+            {
+                FilterResults(true);
+            }
         }
 
         public override void SelectionChanged()
@@ -35,14 +39,14 @@ namespace FeatureAdmin.ViewModels
             CanFilterFeature = ActiveItem != null;
         }
 
-        protected override void FilterResults()
+        protected override void FilterResults(bool suppressActiveItemChangeEvent = false)
         {
             var searchResult = repository.SearchLocations(
                 searchInput, 
                 SelectedScopeFilter, 
                 SelectedFeatureDefinition);
 
-            ShowResults(searchResult);
+            ShowResults(searchResult, suppressActiveItemChangeEvent);
         }
     }
 }

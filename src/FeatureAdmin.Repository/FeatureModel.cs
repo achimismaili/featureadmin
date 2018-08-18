@@ -396,12 +396,14 @@ namespace FeatureAdmin.OrigoDb
             }
             else
             {
+                var activeFeaturesWithSelectedId = ActivatedFeatures.Where(af => af.LocationId == selectedLocation.UniqueId);
+
                 // see https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
                 var resultWithActiveIndicator =
                                 (from fd in searchResult
-                                 join af in ActivatedFeatures on fd.UniqueIdentifier equals af.FeatureId into gj
+                                 join af in activeFeaturesWithSelectedId on fd.UniqueIdentifier equals af.FeatureId into gj
                                  from subAf in gj.DefaultIfEmpty()
-                                 select new ActiveIndicator<FeatureDefinition>(fd, subAf != null && subAf.LocationId == selectedLocation.UniqueId)).ToArray();
+                                 select new ActiveIndicator<FeatureDefinition>(fd, subAf != null )).ToArray();
 
                 return resultWithActiveIndicator;
             }
@@ -456,12 +458,14 @@ namespace FeatureAdmin.OrigoDb
             }
             else
             {
+                var activeFeaturesWithSelectedId = ActivatedFeatures.Where(af => selectedFeatureDefinition.UniqueIdentifier == af.FeatureId);
+
                 // see https://docs.microsoft.com/en-us/dotnet/csharp/linq/perform-left-outer-joins
                 var resultWithActiveIndicator =
                                 (from l in searchResult
-                                 join af in ActivatedFeatures on l.UniqueId equals af.LocationId into gj
+                                 join af in activeFeaturesWithSelectedId on l.UniqueId equals af.LocationId into gj
                                  from subAf in gj.DefaultIfEmpty()
-                                 select new ActiveIndicator<Location>(l, subAf != null && subAf.FeatureId == selectedFeatureDefinition.UniqueIdentifier)).ToArray();
+                                 select new ActiveIndicator<Location>(l, subAf != null)).ToArray();
 
                 return resultWithActiveIndicator;
             }
