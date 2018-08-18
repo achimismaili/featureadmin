@@ -16,7 +16,6 @@ namespace FeatureAdmin.ViewModels
         {
             CanActivateFeatures = false;
             CanDeactivateFeatures = false;
-            CanUpgradeFeatures = false;
 
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
@@ -55,8 +54,6 @@ namespace FeatureAdmin.ViewModels
 
         public bool CanActivateFeatures { get; protected set; }
         public bool CanDeactivateFeatures { get; protected set; }
-
-        public bool CanUpgradeFeatures { get; protected set; }
 
         public Location SelectedLocation { get; protected set; }
 

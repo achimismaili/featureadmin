@@ -27,8 +27,6 @@ namespace FeatureAdmin.ViewModels
         {
             CanActivateFeatures = message.CanActivate;
             CanDeactivateFeatures = message.CanDeactivate;
-            CanUpgradeFeatures = message.CanUpgrade;
-
         }
 
         public void Handle(ItemSelected<Location> message)

@@ -96,8 +96,7 @@ namespace FeatureAdmin.ViewModels
         {
             bool canActivate = false;
             bool canDeactivate = false;
-            bool canUpgrade = false;
-
+            
             if (ActiveItem != null && ActiveItem.Item != null && SelectedLocation != null)
             {
                 int locationsThatCanActivate = repository.GetLocationsCanActivate
@@ -115,11 +114,10 @@ namespace FeatureAdmin.ViewModels
 
             CanActivateFeatures = canActivate;
             CanDeactivateFeatures = canDeactivate;
-            CanUpgradeFeatures = canUpgrade;
 
             // update ActivatedFeatureViewModel
             eventAggregator.PublishOnUIThread(
-                 new Messages.ActionOptionsUpdate(canActivate, canDeactivate, canUpgrade)
+                 new ActionOptionsUpdate(canActivate, canDeactivate)
                  );
         }
 

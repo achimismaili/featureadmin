@@ -101,15 +101,6 @@
                         <fa:FontAwesome Icon="MinusCircle" />
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem x:Name="UpgradeFeatures"  
-                          Background="Transparent" 
-                          ToolTip="Upgrade all activated feature instances with lower version to this version"
-                          
-                          >
-                    <MenuItem.Header>
-                        <fa:FontAwesome Icon="ChevronCircleUp" />
-                    </MenuItem.Header>
-                </MenuItem>
                 <MenuItem x:Name="UninstallFeatureDefinition" 
                           ToolTip="Uninstall feature definition"  
                           Background="Transparent"
