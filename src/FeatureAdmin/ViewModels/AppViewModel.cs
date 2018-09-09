@@ -184,6 +184,61 @@ namespace FeatureAdmin.ViewModels
             TriggerFarmLoadTask(Common.Constants.Tasks.TaskTitleReload);
         }
 
+        public void OpenUrl()
+        {
+            // see also https://support.microsoft.com/en-us/help/305703/how-to-start-the-default-internet-browser-programmatically-by-using-vi
+
+            string target = "https://www.featureadmin.com";
+            
+            try
+            {
+                System.Diagnostics.Process.Start(target);
+            }
+            catch
+                (
+                 System.ComponentModel.Win32Exception noBrowser)
+            {
+                if (noBrowser.ErrorCode == -2147467259)
+                {
+                    var dialog = new ConfirmationRequest(
+                        "No Browser found",
+                        noBrowser.Message
+                        );
+                    DialogViewModel dialogVm = new DialogViewModel(eventAggregator, dialog);
+                    this.windowManager.ShowDialog(dialogVm, null, GetDialogSettings());
+                }
+            }
+            catch (System.Exception other)
+            {
+                var dialog = new ConfirmationRequest(
+                        "System Exception when opening browser",
+                        other.Message
+                        );
+                DialogViewModel dialogVm = new DialogViewModel(eventAggregator, dialog);
+                this.windowManager.ShowDialog(dialogVm, null, GetDialogSettings());
+            }
+
+        }
+
+        public void About()
+        {
+
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
+            var year = System.IO.File.GetCreationTime(
+                System.Reflection.Assembly.GetExecutingAssembly().Location).Year;
+
+                    var dialog = new ConfirmationRequest(
+                        "About Feature Admin",
+                        "SharePoint Feature Admin\n" + 
+                        "Current version " + version + "\n\n" + 
+                        "Created by https://www.featureadmin.com in " + year
+                        );
+                    DialogViewModel dialogVm = new DialogViewModel(eventAggregator, dialog);
+                    this.windowManager.ShowDialog(dialogVm, null, GetDialogSettings());
+           
+        }
+
         private dynamic GetDialogSettings()
         {
             dynamic settings = new System.Dynamic.ExpandoObject();

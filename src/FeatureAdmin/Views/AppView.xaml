@@ -35,8 +35,9 @@
                     <MenuItem Header="_Force" x:Name="Force" ToolTip="When activated, feature modifications are executed with force flag, if applicable"
                                   Background="Transparent" IsCheckable="True" IsChecked="{Binding Force}"/>
                     <MenuItem Header="?"  Background="Transparent">
-                        <MenuItem Header="_Help" x:Name="Help" Background="Transparent"/>
+                        <!--<MenuItem Header="_Help" x:Name="Help" Background="Transparent"/>-->
                         <MenuItem Header="_About" x:Name="About" Background="Transparent"/>
+                        <MenuItem Header="_Homepage" x:Name="OpenUrl" Background="Transparent"/>
                     </MenuItem>
                 </Menu>
 
