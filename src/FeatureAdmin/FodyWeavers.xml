@@ -12,7 +12,6 @@
       Caliburn.Micro
       Caliburn.Micro.Platform
       Caliburn.Micro.Platform.Core
-      Equals
       FeatureAdmin.Backends.Demo
       FeatureAdmin.Backends.Sp2013
       FeatureAdmin.Core
@@ -29,5 +28,6 @@
       System.Windows.Interactivity
     </IncludeAssemblies>
   </Costura>
+  <PropertyChanged />
   <NullGuard Mode="Explicit" IncludeDebugAssert="false" />
 </Weavers>

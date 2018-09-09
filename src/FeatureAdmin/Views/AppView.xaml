@@ -75,33 +75,8 @@
 
             </Grid>
         </Grid>
-        <!--<ContentControl x:Name="StatusBarVm"
+        <ContentControl x:Name="StatusBarVm"
            Grid.Row="1"
-            ></ContentControl>-->
-        <!--Status Bar-->
-        <StatusBar Background="#33F0A30A" Grid.Row="1">
-            <StatusBarItem MinWidth="110">
-                <!-- Progress Section -->
-                <controls:MetroProgressBar 
-                    x:Name="ProgressBarStatus"
-                    Maximum="1" Minimum="0"
-                    VerticalAlignment="Center" 
-                    MinWidth="100"
-                    Margin="10 5" 
-                    Foreground="{DynamicResource AccentColorBrush}"
-                    />
-            </StatusBarItem>
-            <!--<Separator ></Separator>-->
-            <StatusBarItem>
-                <!-- Output Section -->
-                <TextBlock
-                    x:Name="TextStatus"
-                    VerticalAlignment="Center" 
-                    Margin="10 5" 
-                    Foreground="{DynamicResource AccentColorBrush}"
-                 />
-            </StatusBarItem>
-        </StatusBar>
-        
+            ></ContentControl>
     </Grid>
 </UserControl>

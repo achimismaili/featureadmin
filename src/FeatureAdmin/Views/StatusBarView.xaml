@@ -7,25 +7,11 @@
              mc:Ignorable="d" 
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              >
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />-->
-                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />-->
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />-->
-                <!--<ResourceDictionary Source="pack://application:,,,/FeatureAdmin;component/Resources/Icons.xaml" />-->
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Amber.xaml" />
-                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />-->
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-    <Grid>
-        <!--Status Bar-->
-        <StatusBar Background="#33F0A30A">
-            <StatusBarItem MinWidth="110">
-                <!-- Progress Section -->
-                <controls:MetroProgressBar 
+    <!--Status Bar-->
+    <StatusBar Background="#33F0A30A">
+        <StatusBarItem MinWidth="110">
+            <!-- Progress Section -->
+            <controls:MetroProgressBar 
                     x:Name="ProgressBarStatus"
                     Maximum="1" Minimum="0"
                     VerticalAlignment="Center" 
@@ -33,17 +19,16 @@
                     Margin="10 5" 
                     Foreground="{DynamicResource AccentColorBrush}"
                     />
-            </StatusBarItem>
-            <!--<Separator ></Separator>-->
-            <StatusBarItem>
-                <!-- Output Section -->
-                <TextBlock
+        </StatusBarItem>
+        <!--<Separator ></Separator>-->
+        <StatusBarItem>
+            <!-- Output Section -->
+            <TextBlock
                     x:Name="TextStatus"
                     VerticalAlignment="Center" 
                     Margin="10 5" 
                     Foreground="{DynamicResource AccentColorBrush}"
                  />
-            </StatusBarItem>
-        </StatusBar>
-    </Grid>
+        </StatusBarItem>
+    </StatusBar>
 </UserControl>
