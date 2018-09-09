@@ -10,6 +10,25 @@
 
 * [License](https://github.com/achimismaili/featureadmin/blob/master/license.md)
 
+## Version 3.0.2
+
+### Available SharePoint target versions
+
+* FeatureAdmin for SP 2013
+* FeatureAdmin Demo
+
+### New Features
+
+* Standard version automatically identifies, if SP 2013 is installed, if no, demo is started
+* Reduced size of executable, explicitly included required assemblies
+
+## Version 3.0.1
+
+### New Features
+
+* When selecting a feature definition, locations, where this definition is activated, are highlighted
+* When selecting a location, all feature definitions activated in this location are highlighted
+
 ## Version 3.0.0
 
 ### Available SharePoint target versions
