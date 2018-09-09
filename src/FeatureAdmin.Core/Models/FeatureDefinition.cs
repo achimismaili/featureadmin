@@ -37,11 +37,7 @@ namespace FeatureAdmin.Core.Models
             UIVersion = uIVersion == null ? string.Empty : uIVersion;
             Version = version;
             SandBoxedSolutionLocation = sandBoxedSolutionLocationId;
-            UniqueIdentifier = id + Common.Constants.MagicStrings.GuidSeparator.ToString() + compatibilityLevel;
-            if (!string.IsNullOrEmpty(sandBoxedSolutionLocationId))
-            {
-                UniqueIdentifier += Common.Constants.MagicStrings.GuidSeparator.ToString() + sandBoxedSolutionLocationId;
-            }
+            UniqueIdentifier = Common.StringHelper.GenerateUniqueId(id, compatibilityLevel, sandBoxedSolutionLocationId);
         }
 
         public int CanUpgrade { get; private set; }

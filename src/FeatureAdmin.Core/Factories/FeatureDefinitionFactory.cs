@@ -77,12 +77,12 @@ namespace FeatureAdmin.Core.Factories
 
                 if (!Int32.TryParse(compatibilityLevelAsString, out compatibilityLevel))
                 {
-                    compatibilityLevel = 0;
+                    compatibilityLevel = Common.Constants.Labels.FaultyFeatureCompatibilityLevel;
                 }
             }
             else
             {
-                compatibilityLevel = 0;
+                compatibilityLevel = Common.Constants.Labels.FaultyFeatureCompatibilityLevel;
             }
 
             if (splittedId.Length >= 3)
@@ -94,21 +94,18 @@ namespace FeatureAdmin.Core.Factories
                 sandBoxedSolutionLocation = null;
             }
 
-
-
-
             var featureDefinition = new FeatureDefinition(
                 featureId,
                 compatibilityLevel,
-                "Faulty, orphaned feature - no feature definition available",
-                "Faulty, orphaned feature",
+                Common.Constants.Labels.FaultyFeatureDescription,
+                Common.Constants.Labels.FaultyFeatureName,
                 false,
-                "Faulty, orphaned feature",
+                Common.Constants.Labels.FaultyFeatureName,
                 null,
                 scope,
-                "Faulty, orphaned feature",
+                Common.Constants.Labels.FaultyFeatureName,
                 Guid.Empty,
-                "n/a",
+                Common.Constants.Labels.FaultyFeatureUiVersion,
                 version,
                 sandBoxedSolutionLocation
                 );

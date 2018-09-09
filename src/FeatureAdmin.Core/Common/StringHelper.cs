@@ -38,5 +38,27 @@ namespace FeatureAdmin.Core.Common
 
             return Guid.Empty;
         }
+
+
+
+
+        /// <summary>
+        /// Generates a unique Id (proprietary format for feature admin)
+        /// </summary>
+        /// <param name="featureGuidId">the id of a feature definition or feature as guid</param>
+        /// <param name="compatibilityLevel">the compatibility level of the feature definition</param>
+        /// <param name="sandBoxedSolutionLocationId">the custom sandboxedSolutionLocationId</param>
+        /// <returns></returns>
+        public static string GenerateUniqueId(Guid uniqueId, int compatibilityLevel, string sandBoxedSolutionLocationId = null)
+        {
+
+            string uniqueIdentifier = uniqueId + Common.Constants.MagicStrings.GuidSeparator.ToString() + compatibilityLevel;
+            if (!string.IsNullOrEmpty(sandBoxedSolutionLocationId))
+            {
+                uniqueIdentifier += Common.Constants.MagicStrings.GuidSeparator.ToString() + sandBoxedSolutionLocationId;
+            }
+            
+            return uniqueIdentifier;
+        }
     }
 }

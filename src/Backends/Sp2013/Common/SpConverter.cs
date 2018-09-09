@@ -18,6 +18,10 @@ namespace FeatureAdmin.Backends.Sp2013.Common
             FeatureDefinition definition = null;
             bool faulty = false;
 
+            string featureUniqueId;
+            string displayName;
+            Version definitionVersion;
+
             try
             {
                 var fDef = spFeature.Definition;
@@ -48,29 +52,45 @@ namespace FeatureAdmin.Backends.Sp2013.Common
                         // Featuredefinitionscope must be farm or none now, in both cases, no location will be assigned to feature definition ...
                         definition = fDef.ToFeatureDefinition(null);
                     }
+
+                    featureUniqueId = definition.UniqueIdentifier;
+                    displayName = definition.DisplayName;
+                    definitionVersion = definition.Version;
                 }
                 else
                 {
-                    definition = FeatureDefinitionFactory.GetFaultyDefinition(spFeature.DefinitionId, location.Scope, spFeature.Version);
                     faulty = true;
+
+                    featureUniqueId = Core.Common.StringHelper.GenerateUniqueId(
+                                        spFeature.DefinitionId,
+                                        Core.Common.Constants.Labels.FaultyFeatureCompatibilityLevel
+                                        );
+                    displayName = Core.Common.Constants.Labels.FaultyFeatureName;
+                    definitionVersion = null;
                 }
             }
             catch (Exception)
             {
                 faulty = true;
+
+                featureUniqueId = Core.Common.StringHelper.GenerateUniqueId(
+                                        spFeature.DefinitionId,
+                                        Core.Common.Constants.Labels.FaultyFeatureCompatibilityLevel
+                                        );
+                displayName = Core.Common.Constants.Labels.FaultyFeatureName;
+                definitionVersion = null;
             }
 
-
             var feature = ActivatedFeatureFactory.GetActivatedFeature(
-                definition.UniqueIdentifier,
+                featureUniqueId,
                 location.UniqueId,
-                definition.DisplayName,
+                displayName,
                 faulty,
                 spFeature.Properties == null ? null :
                 spFeature.Properties.ToProperties(),
                 spFeature.TimeActivated,
                 spFeature.Version,
-                definition.Version,
+                definitionVersion,
                 spFeature.FeatureDefinitionScope.ToFeatureDefinitionScope()
                 );
 
@@ -394,7 +414,7 @@ namespace FeatureAdmin.Backends.Sp2013.Common
 
                 databaseId = site.ContentDatabase.Id;
             }
-            
+
             var location = LocationFactory.GetLocation(
                 id,
                 displayName,
