@@ -39,13 +39,6 @@
                         <MenuItem Header="_About" x:Name="About" Background="Transparent"/>
                     </MenuItem>
                 </Menu>
-                <!--<controls:ToggleSwitch x:Name="ElevatedPrivileges" Header="Elev.Priv." OnLabel="on" OffLabel="off" 
-                                           ToolTip="Run with elevated privileges" FontSize="10">                        
-                    </controls:ToggleSwitch>
-                    <controls:ToggleSwitch x:Name="Force" Header="Force" OnLabel="on" OffLabel="off" 
-                                           ToolTip="Use the 'force' flag, if applicable">                        
-                    </controls:ToggleSwitch>
-                </StackPanel>-->
 
                 <!-- Feature -->
                 <ContentControl x:Name="FeatureDefinitionListVm"
@@ -82,8 +75,33 @@
 
             </Grid>
         </Grid>
-        <ContentControl x:Name="StatusBarVm"
-           Grid.Row="2"
-            ></ContentControl>
+        <!--<ContentControl x:Name="StatusBarVm"
+           Grid.Row="1"
+            ></ContentControl>-->
+        <!--Status Bar-->
+        <StatusBar Background="#33F0A30A" Grid.Row="1">
+            <StatusBarItem MinWidth="110">
+                <!-- Progress Section -->
+                <controls:MetroProgressBar 
+                    x:Name="ProgressBarStatus"
+                    Maximum="1" Minimum="0"
+                    VerticalAlignment="Center" 
+                    MinWidth="100"
+                    Margin="10 5" 
+                    Foreground="{DynamicResource AccentColorBrush}"
+                    />
+            </StatusBarItem>
+            <!--<Separator ></Separator>-->
+            <StatusBarItem>
+                <!-- Output Section -->
+                <TextBlock
+                    x:Name="TextStatus"
+                    VerticalAlignment="Center" 
+                    Margin="10 5" 
+                    Foreground="{DynamicResource AccentColorBrush}"
+                 />
+            </StatusBarItem>
+        </StatusBar>
+        
     </Grid>
 </UserControl>
