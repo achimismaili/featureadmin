@@ -1,6 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Weavers>
-  <Costura />
-  <PropertyChanged />
+  <!--https://github.com/Fody/Costura-->
+  <Costura>
+    <IncludeAssemblies>
+      Akka
+      Akka.DI.AutoFac
+      Akka.DI.Core
+      AutoFac
+      Caliburn.Metro
+      Caliburn.Metro.Core
+      Caliburn.Micro
+      Caliburn.Micro.Platform
+      Caliburn.Micro.Platform.Core
+      Equals
+      FeatureAdmin.Backends.Demo
+      FeatureAdmin.Backends.Sp2013
+      FeatureAdmin.Core
+      FeatureAdmin.OrigoDb
+      FeatureAdmin.SampleData
+      FontAwesome.WPF
+      MahApps.Metro
+      Newtonsoft.Json
+      NullGuard
+      OrigoDB.Core
+      PropertyChanged
+      System.Collections.Immutable
+      System.Spatial
+      System.Windows.Interactivity
+    </IncludeAssemblies>
+  </Costura>
   <NullGuard Mode="Explicit" IncludeDebugAssert="false" />
 </Weavers>
