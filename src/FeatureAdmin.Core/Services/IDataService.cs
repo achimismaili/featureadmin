@@ -30,5 +30,10 @@ namespace FeatureAdmin.Core.Services
         string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force);
         string WebFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature);
         string Uninstall(FeatureDefinition definition);
+
+        /// <summary>
+        /// information, which data service is connected
+        /// </summary>
+        string ServiceMode { get; }
     }
 }

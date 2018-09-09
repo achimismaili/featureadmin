@@ -12,6 +12,14 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 {
     public class SpDataService : IDataService
     {
+        public string ServiceMode
+        {
+            get
+            {
+                return "SharePoint 2013+";
+            }
+        }
+
         public LoadedDto LoadFarm()
         {
             var loadedFarm = new LoadedDto(null);

@@ -10,6 +10,15 @@ namespace FeatureAdmin.Backends.Demo.Services
     public class DemoDataService : IDataService
     {
         private Repository.DemoRepository demoRepository;
+
+        public string ServiceMode
+        {
+            get
+            {
+                return "SharePoint - DEMO MODE";
+            }
+        }
+
         public DemoDataService()
         {
             demoRepository = new Repository.DemoRepository();

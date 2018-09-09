@@ -38,8 +38,6 @@ namespace FeatureAdmin.ViewModels
             // Load settings at the very beginning, so that they are up to date
             LoadSettings();
 
-            DisplayName = "Feature Admin 3 for SharePoint 2013";
-
             this.windowManager = windowManager;
 
             this.eventAggregator = eventAggregator;
@@ -47,6 +45,12 @@ namespace FeatureAdmin.ViewModels
 
             this.repository = repository;
             this.dataService = dataService;
+
+            DisplayName = string.Format(
+                "Feature Admin 3 for {0}",
+                dataService.ServiceMode
+                );
+
             StatusBarVm = new StatusBarViewModel(eventAggregator);
 
             FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator, repository);
