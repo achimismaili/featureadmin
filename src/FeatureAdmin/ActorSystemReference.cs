@@ -16,10 +16,11 @@ namespace FeatureAdmin
 
         private static void CreateActorSystem()
         {
+            // see also https://doc.akka.io/docs/akka/2.5/general/configuration.html#custom-application-conf
             ActorSystem = ActorSystem.Create("FeatureAdminActorSystem",
                 @"akka {
-                stdout - loglevel = DEBUG
-                    loglevel = DEBUG
+                stdout - loglevel = WARNING
+                    loglevel = WARNING
                     log - config - on - start = on
                     actor {
                             debug {
