@@ -258,24 +258,24 @@ namespace FeatureAdmin.Core.Models.Tasks
                 foreach (FeatureToggleRequest ftr in requestsToBeConfirmed)
                 {
 
-                    var locationId = ftr.Location.UniqueId;
+                    var akkaFriendlyActorId = ftr.Location.UniqueId.Replace('/', '_');
 
                     // create Location actors and trigger feature actions
 
-                    if (!executingActors.ContainsKey(locationId))
+                    if (!executingActors.ContainsKey(akkaFriendlyActorId))
                     {
                         IActorRef newLocationActor = Context.ActorOf(
                             LocationActor.Props(dataService),
-                            locationId.ToString()
+                            akkaFriendlyActorId
                             );
 
-                        executingActors.Add(locationId, newLocationActor);
+                        executingActors.Add(akkaFriendlyActorId, newLocationActor);
 
                         newLocationActor.Tell(ftr);
                     }
                     else
                     {
-                        executingActors[locationId].Tell(ftr);
+                        executingActors[akkaFriendlyActorId].Tell(ftr);
                     }
                 }
             }

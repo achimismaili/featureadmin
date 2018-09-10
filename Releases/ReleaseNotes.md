@@ -15,6 +15,7 @@
 ### Bugfixes
 
 * Web Application activated features are no longer loaded twice
+* Fixed actor cannot have special character "/" in its name
 
 ## Version 3.0.2
 

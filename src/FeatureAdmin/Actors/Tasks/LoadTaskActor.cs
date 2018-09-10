@@ -23,7 +23,7 @@ namespace FeatureAdmin.Core.Models.Tasks
         private readonly IDataService dataService;
         private readonly IActorRef farmLoadActor;
         private readonly IActorRef featureDefinitionActor;
-        private readonly Dictionary<Guid, IActorRef> locationActors;
+        private readonly Dictionary<string, IActorRef> locationActors;
         private readonly IFeatureRepository repository;
         private bool elevatedPrivileges = false;
         public LoadTaskActor(
@@ -33,7 +33,7 @@ namespace FeatureAdmin.Core.Models.Tasks
             Guid id)
             : base(eventAggregator, id)
         {
-            locationActors = new Dictionary<Guid, IActorRef>();
+            locationActors = new Dictionary<string, IActorRef>();
             this.repository = repository;
             this.dataService = dataService;
 
@@ -286,18 +286,18 @@ namespace FeatureAdmin.Core.Models.Tasks
                     throw new ArgumentException("The location must not be empty ");
                 }
 
-                var locationId = loadQuery.Location.Id;
+                var akkaFriendlyActorId = loadQuery.Location.UniqueId.Replace('/', '_');
 
-                if (!locationActors.ContainsKey(locationId))
+                if (!locationActors.ContainsKey(akkaFriendlyActorId))
                 {
                     IActorRef newLocationActor =
                       Context.ActorOf(LocationActor.Props(
-                      dataService), locationId.ToString());
+                      dataService), akkaFriendlyActorId);
 
-                    locationActors.Add(locationId, newLocationActor);
+                    locationActors.Add(akkaFriendlyActorId, newLocationActor);
                 }
 
-                locationActors[locationId].Tell(loadQuery);
+                locationActors[akkaFriendlyActorId].Tell(loadQuery);
             }
         }
 
