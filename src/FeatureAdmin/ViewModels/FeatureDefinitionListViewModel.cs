@@ -34,8 +34,28 @@ namespace FeatureAdmin.ViewModels
             eventAggregator.PublishOnUIThread(new Core.Messages.Request.FeatureToggleRequest(ActiveItem.Item, SelectedLocation, Core.Models.Enums.FeatureAction.Deactivate));
         }
 
+        public bool CanFilterRight { get; protected set; }
+
         public void FilterRight(string searchQuery)
         {
+            // In case feature definiton is scope=invalid, 
+            // and faulty activated feature is searched for with unique ID ending with "/15", 
+            // it will not be found, as activated feature will be faulty and will probably have ending "/0"
+            // Therefore, "/15" is cut of here
+            if (ActiveItem != null && ActiveItem.Item != null && ActiveItem.Item.Scope == Core.Models.Enums.Scope.ScopeInvalid)
+            {
+                // check if first part of search query is a guid
+                var firstPartOfQuery = searchQuery.Split('/');
+
+                Guid notNeededGuid;
+
+                if (firstPartOfQuery.Length > 0 && Guid.TryParse(firstPartOfQuery[0], out notNeededGuid))
+                {
+                    // then remove "/0" from the end
+                    searchQuery = firstPartOfQuery[0];
+                }
+            }
+
             var searchFilter = new SetSearchFilter<Core.Models.Location>(
                searchQuery, null);
             eventAggregator.BeginPublishOnUIThread(searchFilter);
@@ -83,6 +103,7 @@ namespace FeatureAdmin.ViewModels
         {
             SelectionChangedBase();
             CheckIfCanToggleFeatures();
+            CanFilterRight = ActiveItem != null;
             CanUninstallFeatureDefinition = ActiveItem != null;
             CanFilterLocation = ActiveItem != null;
         }

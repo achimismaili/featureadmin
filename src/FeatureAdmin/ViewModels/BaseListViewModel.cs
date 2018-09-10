@@ -35,7 +35,7 @@ namespace FeatureAdmin.ViewModels
         public bool CanSpecialAction { get; protected set; }
         public bool CanSpecialActionFiltered { get; protected set; }
         public bool CanSpecialActionFarm { get; protected set; }
-
+        public bool CanFilterFeatureDefinitions { get; protected set; }
 
         public ObservableCollection<Scope> ScopeFilters { get; private set; }
 
@@ -61,6 +61,24 @@ namespace FeatureAdmin.ViewModels
 
         public void FilterFeatureDefinitions(string searchQuery)
         {
+            // In case feature definiton is scope=invalid, 
+            // and faulty activated feature is searched for with unique ID ending with "/0", 
+            // it will not be found on the left
+            // Therefore, "/0" is cut of here
+            if (!string.IsNullOrEmpty(searchQuery) && searchQuery.EndsWith("/0"))
+            {
+                // check if first part of search query is a guid
+                var firstPartOfQuery = searchQuery.Split('/');
+
+                Guid notNeededGuid;
+
+                if (firstPartOfQuery.Length > 0 && Guid.TryParse(firstPartOfQuery[0], out notNeededGuid))
+                {
+                    // then remove "/0" from the end
+                    searchQuery = firstPartOfQuery[0];
+                }
+            }
+            
             var searchFilter = new SetSearchFilter<Core.Models.FeatureDefinition>(
                                             searchQuery, null);
             eventAggregator.BeginPublishOnUIThread(searchFilter);
@@ -169,8 +187,7 @@ namespace FeatureAdmin.ViewModels
                                 );
             }
 
-
-
+            CanFilterFeatureDefinitions = item != null;
             CanShowDetails = item != null;
             CanFilterThis = item != null;
             CanSpecialAction = item != null;
