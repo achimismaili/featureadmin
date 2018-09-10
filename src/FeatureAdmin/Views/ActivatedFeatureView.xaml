@@ -65,9 +65,9 @@
                     <TextBlock x:Name="ActiveItem_Item_TimeActivated" 
            Padding="5"
                Grid.Row="2" Grid.Column="1" />
-                    <Button Name="CopyName" Style="{DynamicResource MetroCircleButtonStyle}"
+                    <Button Name="CopyName"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_TimeActivated)"
-                        Height="30" Width="30"
+                        Background="Transparent" BorderBrush="Transparent" Height="20" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="2" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
@@ -77,9 +77,9 @@
                     <TextBlock x:Name="ActiveItem_Item_Version" 
             Padding="5"
                Grid.Row="3" Grid.Column="1" />
-                    <Button Name="CopyVersion" Style="{DynamicResource MetroCircleButtonStyle}"
+                    <Button Name="CopyVersion"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_Version)"
-                        Background="Transparent" Height="30" Width="30"
+                        Background="Transparent" BorderBrush="Transparent" Height="20" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="3" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />

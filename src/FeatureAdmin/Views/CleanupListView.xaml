@@ -187,9 +187,9 @@
                     <TextBlock x:Name="ActiveItem_Item_ActivatedFeature_DisplayName" 
            Padding="5"
                Grid.Row="1" Grid.Column="1" />
-                    <Button Name="CopyFeatureName" Style="{DynamicResource MetroCircleButtonStyle}"
+                    <Button Name="CopyFeatureName"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_Item_ActivatedFeature_DisplayName)"
-                        Background="Transparent" Height="30" Width="30"
+                        Background="Transparent" BorderBrush="Transparent" Height="20" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="1" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
@@ -206,9 +206,9 @@
                     <TextBlock x:Name="ActiveItem_Item_Location_Url" 
                                 Padding="5"
                Grid.Row="3" Grid.Column="1" />
-                    <Button Name="CopyUrl" Style="{DynamicResource MetroCircleButtonStyle}"
+                    <Button Name="CopyUrl"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_Item_Location_Url)"
-                        Background="Transparent" Height="30" Width="30"
+                        Background="Transparent" BorderBrush="Transparent" Height="20" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="3" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
@@ -219,9 +219,9 @@
                     <TextBlock x:Name="ActiveItem_Item_ActivatedFeature_FeatureId" 
                     Padding="5"
                Grid.Row="4" Grid.Column="1" />
-                    <Button Name="CopyFeatureId" Style="{DynamicResource MetroCircleButtonStyle}"
+                    <Button Name="CopyFeatureId"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_Item_ActivatedFeature_FeatureId)"
-                        Background="Transparent" Height="30" Width="30"
+                        Background="Transparent" BorderBrush="Transparent" Height="20" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="4" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
@@ -231,9 +231,9 @@
                     <TextBlock x:Name="ActiveItem_Item_Location_Id" 
                                 Padding="5"
                Grid.Row="5" Grid.Column="1" />
-                    <Button Name="CopyLocationId" Style="{DynamicResource MetroCircleButtonStyle}"
+                    <Button Name="CopyLocationId"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_Item_Location_Id)"
-                        Background="Transparent" Height="30" Width="30"
+                        Background="Transparent" BorderBrush="Transparent" Height="20" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="5" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
@@ -243,9 +243,9 @@
                     <TextBlock x:Name="ActiveItem_Item_Location_DisplayName" 
                                 Padding="5"
                Grid.Row="6" Grid.Column="1" />
-                    <Button Name="CopyLocationTitle" Style="{DynamicResource MetroCircleButtonStyle}"
+                    <Button Name="CopyLocationTitle"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_Item_Location_DisplayName)"
-                        Background="Transparent" Height="30" Width="30"
+                        Background="Transparent" BorderBrush="Transparent" Height="20" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="6" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
@@ -255,9 +255,9 @@
                     <TextBlock x:Name="ActiveItem_Item_ActivatedFeature_Definition_Title" 
                                 Padding="5"
                Grid.Row="7" Grid.Column="1" />
-                    <Button Name="CopyFeatureTitle" Style="{DynamicResource MetroCircleButtonStyle}"
+                    <Button Name="CopyFeatureTitle"
                         cal:Message.Attach="CopyToClipBoard(ActiveItem_Item_ActivatedFeature_Definition_Title)"
-                        Background="Transparent" Height="30" Width="30"
+                        Background="Transparent" BorderBrush="Transparent" Height="20" Width="30"
                         controls:ControlsHelper.ContentCharacterCasing="Normal"
                         Grid.Row="7" Grid.Column="2">
                         <fa:FontAwesome Icon="Clone" />
