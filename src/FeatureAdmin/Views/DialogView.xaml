@@ -18,7 +18,10 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TextBlock x:Name="DialogText" Margin="10"/>
+        <!-- How to make text block selectable, see https://stackoverflow.com/a/2506504/4998522 -->
+        <TextBox
+            IsReadOnly="True" TextWrapping="Wrap" Background="Transparent" BorderThickness="0"
+            x:Name="DialogText" Margin="10"/>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
             <Button Width="100" x:Name="Ok" IsDefault="True" IsCancel="True">
                 <TextBlock x:Name="OkText"></TextBlock>

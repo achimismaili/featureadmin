@@ -236,7 +236,8 @@ namespace FeatureAdmin.ViewModels
                         "About Feature Admin",
                         "SharePoint Feature Admin\n" + 
                         "Current version " + version + "\n\n" + 
-                        "Created by https://www.featureadmin.com in " + year
+                        "Created by Achim Ismaili in " + year + "\n" +
+                        "https://www.featureadmin.com"
                         );
                     DialogViewModel dialogVm = new DialogViewModel(eventAggregator, dialog);
                     this.windowManager.ShowDialog(dialogVm, null, GetDialogSettings());
