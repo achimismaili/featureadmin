@@ -55,8 +55,7 @@ namespace FeatureAdmin.Backends.Sp2013.Services
                 var waLocation = wa.ToLocation(farmLocation.UniqueId);
 
                 var activatedFeatures = wa.Features.ToActivatedFeatures(waLocation);
-                loadedElements.AddActivatedFeatures(activatedFeatures);
-
+                
                 // no non full trust farm features expected on scope web app
                 // (sand boxed and add-in features are only scoped site and web)
 
