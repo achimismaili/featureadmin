@@ -10,12 +10,13 @@
 
 * [License](https://github.com/achimismaili/featureadmin/blob/master/license.md)
 
+## Version 3.0.3
+
+### Bugfixes
+
+* Web Application activated features are no longer loaded twice
+
 ## Version 3.0.2
-
-### Available SharePoint target versions
-
-* FeatureAdmin for SP 2013
-* FeatureAdmin Demo
 
 ### New Features
 
