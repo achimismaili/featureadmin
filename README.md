@@ -27,6 +27,8 @@ If no SharePoint installation is found, it automatically switches to demo mode.
 * [Download release zip including license and release notes](https://github.com/achimismaili/featureadmin/raw/master/Releases/FeatureAdmin.zip)
 * [Download executable only](https://github.com/achimismaili/featureadmin/raw/master/Releases/FeatureAdmin.exe)
 
+![Screenshot FeatureAdmin 3](https://www.featureadmin.com/assets/img/featureadmin3.png)
+
 ### Previous SharePoint versions
 
 #### SP 2010
