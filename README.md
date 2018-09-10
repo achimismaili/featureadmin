@@ -1,6 +1,10 @@
-# FeatureAdmin
+# ![FeatureAdmin](https://www.featureadmin.com/assets/img/fa-logo/fa-logo-48.png) FeatureAdmin 3
 
 SharePoint Feature Administration and Clean Up Tool
+
+## Web site
+
+Please visit the feature admin web site at [www.featureadmin.com](https://www.featureadmin.com)
 
 ## Functionality
 
@@ -15,25 +19,24 @@ This is a tool to manage SharePoint features. It allows you to
 
 ## Downloads
 
-These are links to release downloads for the different SharePoint versions:
+### FeatureAdmin 3 for SharePoint 2013 and newer
 
-**Attention!** For feature administration, v. 2.4.8 is currently the best release, but if you are experiencing issues in removing faulty features, please use release 2.4.6 instead - we are working on a fixed version ...
+Get the modern FeatureAdmin 3, which automatically identifies your SharePoint 2013+ farm.
+If no SharePoint installation is found, it automatically switches to demo mode.
 
-### SP 2013
+* [Download release zip including license and release notes](https://github.com/achimismaili/featureadmin/raw/master/Releases/FeatureAdmin.zip)
+* [Download executable only](https://github.com/achimismaili/featureadmin/raw/master/Releases/FeatureAdmin.exe)
 
-* [Download release zip (v. 2.4.8) including license and release notes](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2013/2.4.8/FeatureAdmin2013.zip)
-* [Download executable only (v. 2.4.8)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2013/2.4.8/FeatureAdmin2013.exe)
-* [Download release zip (v. 2.4.6) including license and release notes](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2013/2.4.6/FeatureAdmin2013.zip) (recommended for removing orphaned/faulty features)
-* [Download executable only (v. 2.4.6)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2013/2.4.6/FeatureAdmin2013.exe) (recommended for removing orphaned/faulty features)
+### Previous SharePoint versions
 
-### SP 2010
+#### SP 2010
 
 * [Download release zip (v. 2.4.8) including license and release notes](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2010/2.4.8/FeatureAdmin2010.zip)
 * [Download executable only (v. 2.4.8)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2010/2.4.8/FeatureAdmin2010.exe)
 * [Download release zip (v. 2.4.6) including license and release notes](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2010/2.4.6/FeatureAdmin2010.zip) (recommended for removing orphaned/faulty features)
 * [Download executable only (v. 2.4.6)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2010/2.4.6/FeatureAdmin2010.exe) (recommended for removing orphaned/faulty features)
 
-### SP 2007
+#### SP 2007
 
 * [Download release zip (v. 2.4.8)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2007/2.4.8/FeatureAdmin2007.zip)
 * [Download executable only (v. 2.4.8)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2007/2.4.8/FeatureAdmin2007.exe)
@@ -41,24 +44,8 @@ These are links to release downloads for the different SharePoint versions:
 * [Download executable only (v. 2.4.6)](https://github.com/achimismaili/featureadmin/raw/master/Releases/Sp2007/2.4.6/FeatureAdmin2007.exe) (recommended for removing orphaned/faulty features)
 
 ### Demo
-* [Download release zip (v. 3.0.0) including license and release notes](https://github.com/achimismaili/featureadmin/raw/master/Releases/demo/FeatureAdminDemo.zip)
-* [Download executable only (v. 3.0.0)](https://github.com/achimismaili/featureadmin/raw/master/Releases/demo/FeatureAdminDemo.exe)
 
-## Development
-
-Here you find download links for releases that might still be in beta, not as stable or that are still under development. These releases are not recommended for production use.
-
-See also the [Release Notes](Releases/ReleaseNotes.md)
-
-### SP 2013
-
-* [Download release zip (current developer version) including license and release notes](https://github.com/achimismaili/featureadmin/raw/development/Releases/Sp2013/FeatureAdmin2013.zip)
-* [Download executable only (current developer version)](https://github.com/achimismaili/featureadmin/raw/development/Releases/Sp2013/FeatureAdmin2013.exe)
-
-### Demo
-
-* [Download release zip (current developer version) including license and release notes](https://github.com/achimismaili/featureadmin/raw/development/Releases/demo/FeatureAdminDemo.zip)
-* [Download executable only (current developer version)](https://github.com/achimismaili/featureadmin/raw/development/Releases/demo/FeatureAdminDemo.exe)
+Please download the FeatureAdmin 3 for SharePoint 2013+ and just start it on a computer with no SharePoint 2013+ installed.
 
 ## Installation
 
@@ -103,12 +90,14 @@ Ideal, for activating or deactivating features in large farms with many sites an
 
 <!-- ... if the _Feature Admin Tool_ was able to help you, too, please rate it. -->
 
-<!-- ## 'Features' of the FeatureAdmin Tool
-* Web Apps are parsed automatically, after selecting one, all Site Collections in the Web App are shown
-* When selecting a SiteCollection, all sites (webs) are listed automatically.
-* logging information is shown (e.g. change of selections, features added or removed)
-* Features and Feature Definitions are sorted (first after scope and then) after name
-* The FeatureAdmin window and all internal windows are resizeable (starting with version 2.1) -->
+## 'Features' of the FeatureAdmin Tool
+
+* Allows to cleanup feature definitions with scope:invalid and orphaned activated features - which could otherwise prevent you from a successful upgrade or migration
+* Allows to comfortably upgrade all features in your farm with the click of a button
+* Made for administrators: requires only .NET framework version 4.52, requires no administration
+* Once started, asynchronously loads all feature definitions, locations (farm, web apps, site collections, webs) and all activated features
+* Best if started as Administrator with farm admin rights, but FarmAdmin also tries to start with less privileges
+* PowerFul search and filter for features and locations, to find the features you are looking for
 
 <!-- ## Screenshots
 Feature View - remove Features
