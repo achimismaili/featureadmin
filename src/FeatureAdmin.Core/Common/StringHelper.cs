@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FeatureAdmin.Core.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -59,6 +60,27 @@ namespace FeatureAdmin.Core.Common
             }
             
             return uniqueIdentifier;
+        }
+
+        public static string GetApplicationDisplayName(Backend backend)
+        {
+            switch (backend)
+            {
+                case Backend.DEMO:
+                    return Constants.Labels.AppDisplayNameDemo;
+                case Backend.SP2007:
+                    return Constants.Labels.AppDisplayName2007;
+                case Backend.SP2010:
+                    return Constants.Labels.AppDisplayName2010;
+                case Backend.SP2013:
+                    return Constants.Labels.AppDisplayName2013;
+                case Backend.SP2016:
+                    return Constants.Labels.AppDisplayName2016;
+                case Backend.SP2019:
+                    return Constants.Labels.AppDisplayName2019;
+                default:
+                    return "Unknown SharePoint Version!";
+            }
         }
     }
 }

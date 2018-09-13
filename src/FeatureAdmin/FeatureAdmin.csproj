@@ -107,6 +107,12 @@
       <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FeatureAdmin.Backends.Demo">
+      <HintPath>..\lib\FeatureAdmin.Backends.Demo.dll</HintPath>
+    </Reference>
+    <Reference Include="FeatureAdmin.Backends.Sp2013">
+      <HintPath>..\lib\FeatureAdmin.Backends.Sp2013.dll</HintPath>
+    </Reference>
     <Reference Include="FontAwesome.WPF, Version=4.7.0.37774, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL">
       <HintPath>..\packages\FontAwesome.WPF.4.7.0.9\lib\net40\FontAwesome.WPF.dll</HintPath>
       <Private>True</Private>
@@ -170,6 +176,7 @@
     <Compile Include="Actors\Tasks\BaseTaskActor.cs" />
     <Compile Include="Actors\Tasks\FeatureTaskActor.cs" />
     <Compile Include="Actors\Tasks\LoadTaskActor.cs" />
+    <Compile Include="BackendSelector.cs" />
     <Compile Include="Caliburn.Metro.Autofac\AutofacBootstrapper.cs" />
     <Compile Include="Caliburn.Metro.Autofac\CaliburnMetroAutofacBootstrapper.cs" />
     <Compile Include="Common\Constants.cs" />
@@ -344,14 +351,6 @@
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Backends\Demo\Demo.csproj">
-      <Project>{e4a06935-054f-446a-b2af-996dc615d775}</Project>
-      <Name>Demo</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Backends\Sp2013\Sp2013.csproj">
-      <Project>{5d1949a6-17ed-4203-98f8-2b82415f97c1}</Project>
-      <Name>Sp2013</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
       <Project>{4cec2e98-5a3b-4793-b606-a5250d046f02}</Project>
       <Name>FeatureAdmin.Core</Name>

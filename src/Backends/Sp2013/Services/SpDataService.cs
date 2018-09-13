@@ -20,6 +20,14 @@ namespace FeatureAdmin.Backends.Sp2013.Services
             }
         }
 
+        public Backend CurrentBackend
+        {
+            get
+            {
+                return Backend.SP2013;
+            }
+        }
+
         public LoadedDto LoadFarm()
         {
             var loadedFarm = new LoadedDto(null);

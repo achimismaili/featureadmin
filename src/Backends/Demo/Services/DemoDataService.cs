@@ -11,17 +11,36 @@ namespace FeatureAdmin.Backends.Demo.Services
     {
         private Repository.DemoRepository demoRepository;
 
-        public string ServiceMode
-        {
-            get
-            {
-                return "SharePoint - DEMO MODE";
-            }
-        }
-
         public DemoDataService()
         {
             demoRepository = new Repository.DemoRepository();
+        }
+
+        public Backend CurrentBackend
+        {
+            get
+            {
+                return Backend.DEMO;
+            }
+        }
+        public string DeactivateFarmFeature(FeatureDefinition feature, Location location, bool force)
+        {
+            return DeactivateFeature(feature, location, false, force);
+        }
+
+        public string DeactivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
+        {
+            return DeactivateFeature(feature, location, elevatedPrivileges, force);
+        }
+
+        public string DeactivateWebAppFeature(FeatureDefinition feature, Location location, bool force)
+        {
+            return DeactivateFeature(feature, location, false, force);
+        }
+
+        public string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
+        {
+            return DeactivateFeature(feature, location, elevatedPrivileges, force);
         }
 
         public string FarmFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool force, out ActivatedFeature activatedFeature)
@@ -39,6 +58,57 @@ namespace FeatureAdmin.Backends.Demo.Services
             }
         }
 
+        public LoadedDto LoadFarm()
+        {
+            var loadedFarm = new LoadedDto(null);
+
+            var location = demoRepository.SearchLocations(string.Empty, Scope.Farm, null).FirstOrDefault();
+
+            if (location != null)
+            {
+                var activatedFeatures = GetDemoActivatedFeatures(location.Item);
+                var definitions = GetDemoFeatureDefinitions(location.Item);
+
+                loadedFarm.AddChild(location.Item, activatedFeatures, definitions);
+
+                return loadedFarm;
+            }
+
+            return null;
+        }
+
+        public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
+        {
+            var farmFeatureDefinitions =
+
+                demoRepository.SearchFeatureDefinitions(string.Empty, null, true, null).Select(i => i.Item).ToList();
+
+            return farmFeatureDefinitions;
+        }
+
+        public LoadedDto LoadWebAppChildren(Location location, bool elevatedPrivileges)
+        {
+            var siCos = loadChildLocations(location);
+
+            var allChildren = new LoadedDto(location);
+
+            foreach (var s in siCos.ChildLocations)
+            {
+                var webs = loadChildLocations(s);
+
+                allChildren.AddChildren(webs.ChildLocations, webs.ActivatedFeatures, webs.Definitions);
+            }
+
+            allChildren.AddChildren(siCos.ChildLocations, siCos.ActivatedFeatures, siCos.Definitions);
+
+            return allChildren;
+        }
+
+        public LoadedDto LoadWebApps()
+        {
+            return loadChildLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
+        }
+
         public string SiteFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool elevatedPrivileges, bool force, out ActivatedFeature activatedFeature)
         {
             switch (action)
@@ -53,6 +123,11 @@ namespace FeatureAdmin.Backends.Demo.Services
                     throw new NotImplementedException("This kind of action is not supported!");
             }
 
+        }
+
+        public string Uninstall(FeatureDefinition definition)
+        {
+            return demoRepository.RemoveFeatureDefinition(definition.UniqueIdentifier);
         }
 
         public string WebAppFeatureAction(FeatureDefinition feature, Location location, FeatureAction action, bool force, out ActivatedFeature activatedFeature)
@@ -84,77 +159,6 @@ namespace FeatureAdmin.Backends.Demo.Services
                     throw new NotImplementedException("This kind of action is not supported!");
             }
         }
-
-        public string DeactivateFarmFeature(FeatureDefinition feature, Location location, bool force)
-        {
-            return DeactivateFeature(feature, location, false, force);
-        }
-
-        public string DeactivateSiteFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
-        {
-            return DeactivateFeature(feature, location, elevatedPrivileges, force);
-        }
-
-        public string DeactivateWebAppFeature(FeatureDefinition feature, Location location, bool force)
-        {
-            return DeactivateFeature(feature, location, false, force);
-        }
-
-        public string DeactivateWebFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force)
-        {
-            return DeactivateFeature(feature, location, elevatedPrivileges, force);
-        }
-
-        public LoadedDto LoadFarm()
-        {
-            var loadedFarm = new LoadedDto(null);
-
-            var location = demoRepository.SearchLocations(string.Empty, Scope.Farm, null).FirstOrDefault();
-
-            if (location!= null)
-            {
-                var activatedFeatures = GetDemoActivatedFeatures(location.Item);
-            var definitions = GetDemoFeatureDefinitions(location.Item);
-
-            loadedFarm.AddChild(location.Item, activatedFeatures, definitions);
-
-            return loadedFarm;
-            }
-
-            return null;
-        }
-
-        public IEnumerable<FeatureDefinition> LoadFarmFeatureDefinitions()
-        {
-            var farmFeatureDefinitions =
-
-                demoRepository.SearchFeatureDefinitions(string.Empty, null, true, null).Select(i => i.Item).ToList();
-
-            return farmFeatureDefinitions;
-        }
-        public LoadedDto LoadWebAppChildren(Location location, bool elevatedPrivileges)
-        {
-            var siCos = loadChildLocations(location);
-
-            var allChildren = new LoadedDto(location);
-
-            foreach (var s in siCos.ChildLocations)
-            {
-                var webs = loadChildLocations(s);
-
-                allChildren.AddChildren(webs.ChildLocations, webs.ActivatedFeatures, webs.Definitions);
-            }
-
-            allChildren.AddChildren(siCos.ChildLocations, siCos.ActivatedFeatures, siCos.Definitions);
-
-            return allChildren;
-        }
-
-        public LoadedDto LoadWebApps()
-        {
-            return loadChildLocations(Core.Factories.LocationFactory.GetDummyFarmForLoadCommand());
-        }
-
         private string ActivateFeature(FeatureDefinition feature, Location location, bool elevatedPrivileges, bool force
             , out ActivatedFeature activatedFeature)
         {
@@ -302,11 +306,6 @@ namespace FeatureAdmin.Backends.Demo.Services
             DeactivateFeature(feature, location, elevatedPrivileges, force);
             return ActivateFeature(feature, location, elevatedPrivileges, force, out upgradedFeature);
 
-        }
-
-        public string Uninstall(FeatureDefinition definition)
-        {
-           return demoRepository.RemoveFeatureDefinition(definition.UniqueIdentifier);
         }
     }
 }

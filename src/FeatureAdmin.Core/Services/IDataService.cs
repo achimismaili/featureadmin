@@ -34,6 +34,6 @@ namespace FeatureAdmin.Core.Services
         /// <summary>
         /// information, which data service is connected
         /// </summary>
-        string ServiceMode { get; }
+        Backend CurrentBackend { get; }
     }
 }

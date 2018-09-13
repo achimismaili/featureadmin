@@ -46,10 +46,7 @@ namespace FeatureAdmin.ViewModels
             this.repository = repository;
             this.dataService = dataService;
 
-            DisplayName = string.Format(
-                "Feature Admin 3 for {0}",
-                dataService.ServiceMode
-                );
+            DisplayName = Core.Common.StringHelper.GetApplicationDisplayName(dataService.CurrentBackend);
 
             StatusBarVm = new StatusBarViewModel(eventAggregator);
 
