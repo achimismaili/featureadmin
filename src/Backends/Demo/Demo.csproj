@@ -105,6 +105,9 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\Fody.3.2.1\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Fody.3.2.1\build\Fody.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Release copy /Y "$(TargetDir)FeatureAdmin.Backends.$(ProjectName).dll" "$(SolutionDir)lib\FeatureAdmin.Backends.$(ProjectName).dll"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
