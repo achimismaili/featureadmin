@@ -24,7 +24,6 @@
       OrigoDB.Core
       PropertyChanged
       System.Collections.Immutable
-      System.Spatial
       System.Windows.Interactivity
     </IncludeAssemblies>
   </Costura>

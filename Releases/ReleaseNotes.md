@@ -10,6 +10,13 @@
 
 * [License](https://github.com/achimismaili/featureadmin/blob/master/license.md)
 
+
+## Version 3.0.4
+
+### Bugfixes
+
+* Fixed identification of SharePoint installation, so that also SP 2016 (and SP 2019) is identified
+
 ## Version 3.0.3
 
 ### Bugfixes

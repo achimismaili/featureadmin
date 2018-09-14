@@ -1,10 +1,5 @@
 ﻿using FeatureAdmin.Core.Models.Enums;
 using FeatureAdmin.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FeatureAdmin
 {
@@ -12,12 +7,23 @@ namespace FeatureAdmin
     {
         public static Backend EvaluateBackend()
         {
-            // evaluate SP 2019
-            if (CheckFarmExists<Backends.Sp2013.Services.SpDataService>(17))
+
+            //// evaluate SP 2007
+            //if (CheckFarmExists<Backends.Sp2007.Services.SpDataService>(12))
+            //{
+            //    return Backend.SP2007;
+            //}
+
+            //// evaluate SP 2010
+            //if (CheckFarmExists<Backends.Sp2010.Services.SpDataService>(14))
+            //{
+            //    return Backend.SP2010;
+            //}
+
+            // evaluate SP 2013
+            if (CheckFarmExists<Backends.Sp2013.Services.SpDataService>(15))
             {
                 return Backend.SP2013;
-                // commented out until implemented
-                // return Backend.SP2019;
             }
 
             // evaluate SP 2016
@@ -27,25 +33,14 @@ namespace FeatureAdmin
                 // commented out until implemented
                 // return Backend.SP2016;
             }
-
+            
             // evaluate SP 2019
-            if (CheckFarmExists<Backends.Sp2013.Services.SpDataService>(15))
+            if (CheckFarmExists<Backends.Sp2013.Services.SpDataService>(17))
             {
                 return Backend.SP2013;
+                // commented out until implemented
+                // return Backend.SP2019;
             }
-
-            //// evaluate SP 2019
-            //if (CheckFarmExists<Backends.Sp2010.Services.SpDataService>(14))
-            //{
-            //    return Backend.SP2010;
-            //}
-
-            //// evaluate SP 2019
-            //if (CheckFarmExists<Backends.Sp2007.Services.SpDataService>(12))
-            //{
-            //    return Backend.SP2007;
-            //}
-
             return Backend.DEMO;
         }
 
@@ -56,29 +51,32 @@ namespace FeatureAdmin
                 compatibilityLevel
                 );
 
+            return System.IO.File.Exists(SharePointDllPath);
 
-            if (!System.IO.File.Exists(SharePointDllPath))
-            {
+            // checking if farm exists, takes too long, therefore, commented out
 
-                return false;
-            }
+            //if (!System.IO.File.Exists(SharePointDllPath))
+            //{
 
-            try
-            {
-                T dataService = new T();
+            //    return false;
+            //}
 
-                var farm = dataService.LoadFarm();
+            //try
+            //{
+            //    T dataService = new T();
 
-                return farm != null;
+            //    var farm = dataService.LoadFarm();
 
-            }
-            catch (Exception ex)
-            {
+            //    return farm != null;
 
-                System.Diagnostics.Debug.WriteLine("Error when locating farm: {0}", ex.Message);
-                return false;
+            //}
+            //catch (Exception ex)
+            //{
 
-            }
+            //    System.Diagnostics.Debug.WriteLine("Error when locating farm: {0}", ex.Message);
+            //    return false;
+
+            //}
         }
     }
 }
