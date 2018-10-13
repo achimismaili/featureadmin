@@ -4,9 +4,8 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
-    [Equals]
     [Serializable]
-    public class ActivatedFeature
+    public class ActivatedFeature : BaseEquatable<ActivatedFeature>
     {
         public ActivatedFeature(
                 string featureId,
@@ -38,7 +37,6 @@ namespace FeatureAdmin.Core.Models
             FeatureDefinitionScope = featureDefinitionScope;
         }
 
-        [IgnoreDuringEquals]
         public bool CanUpgrade
         {
             get
@@ -49,10 +47,8 @@ namespace FeatureAdmin.Core.Models
 
         public Version DefinitionVersion { get; private set; }
 
-        [IgnoreDuringEquals]
         public string DisplayName { get; private set; }
 
-        [IgnoreDuringEquals]
         public bool Faulty { get; private set; }
 
 
@@ -84,16 +80,13 @@ namespace FeatureAdmin.Core.Models
         /// This ID is relevant for 'equal'
         /// </remarks>
         public string LocationId { get; private set; }
-        [IgnoreDuringEquals]
+
         public Dictionary<string, string> Properties { get; private set; } = new Dictionary<string, string>();
 
-        [IgnoreDuringEquals]
         public DateTime TimeActivated { get; private set; }
 
-        [IgnoreDuringEquals]
         public Version Version { get; private set; }
 
-        [IgnoreDuringEquals]
         public FeatureDefinitionScope FeatureDefinitionScope { get; private set; }
 
         public override string ToString()
@@ -104,6 +97,28 @@ namespace FeatureAdmin.Core.Models
                 this.FeatureId,
                 this.LocationId
                 );
+        }
+
+        protected override bool EqualsInternal(ActivatedFeature right)
+        {
+            return this.FeatureId == right.FeatureId &&
+            this.LocationId == right.LocationId &&
+            this.Version == right.Version &&
+            this.Faulty == right.Faulty;
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+        public static bool operator ==(ActivatedFeature left, ActivatedFeature right)
+        {
+            return object.Equals((object)left, (object)right);
+        }
+
+        public static bool operator !=(ActivatedFeature left, ActivatedFeature right)
+        {
+            return !object.Equals((object)left, (object)right);
         }
     }
 }

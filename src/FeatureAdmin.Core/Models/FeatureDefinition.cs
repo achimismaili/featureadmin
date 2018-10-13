@@ -4,9 +4,8 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
-    [Equals]
     [Serializable]
-    public class FeatureDefinition 
+    public class FeatureDefinition : BaseEquatable<FeatureDefinition> 
     {
         public FeatureDefinition(
             Guid id,
@@ -40,9 +39,8 @@ namespace FeatureAdmin.Core.Models
             UniqueIdentifier = Common.StringHelper.GenerateUniqueId(id, compatibilityLevel, sandBoxedSolutionLocationId);
         }
 
-        public int CanUpgrade { get; private set; }
         public int CompatibilityLevel { get; private set; }
-        [IgnoreDuringEquals]
+
         public string Description { get; private set; }
 
         public string DisplayName { get; protected set; }
@@ -53,7 +51,6 @@ namespace FeatureAdmin.Core.Models
 
         public string Name { get; private set; }
 
-        [IgnoreDuringEquals]
         public Dictionary<string, string> Properties { get; private set; }
 
         /// <summary>
@@ -67,13 +64,10 @@ namespace FeatureAdmin.Core.Models
 
         public Scope Scope { get; protected set; }
 
-        [IgnoreDuringEquals]
-        public Guid SolutionId { get; private set; }
+       public Guid SolutionId { get; private set; }
 
-        [IgnoreDuringEquals]
         public string Title { get; private set; }
 
-        [IgnoreDuringEquals]
         public string UIVersion { get; private set; }
 
         public string UniqueIdentifier { get; private set; }
@@ -88,6 +82,32 @@ namespace FeatureAdmin.Core.Models
                 this.Id,
                 this.Description
                 );
+        }
+
+        protected override bool EqualsInternal(FeatureDefinition right)
+        {
+            return this.UniqueIdentifier == right.UniqueIdentifier &&
+            this.DisplayName == right.DisplayName &&
+            this.Faulty == right.Faulty &&
+            this.Scope == right.Scope &&
+            this.Hidden == right.Hidden &&
+            this.SolutionId == right.SolutionId &&
+            this.Title == right.Title &&
+            this.UIVersion == right.UIVersion;
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+        public static bool operator ==(FeatureDefinition left, FeatureDefinition right)
+        {
+            return object.Equals((object)left, (object)right);
+        }
+
+        public static bool operator !=(FeatureDefinition left, FeatureDefinition right)
+        {
+            return !object.Equals((object)left, (object)right);
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Factories
 {
-    [Equals]
+
     public class ActivatedFeatureFactory
     {
         public static ActivatedFeature GetActivatedFeature(

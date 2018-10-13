@@ -3,15 +3,14 @@ using System;
 
 namespace FeatureAdmin.Core.Models
 {
-    [Equals]
     [Serializable]
-    public class Location 
+    public class Location : BaseEquatable<Location>
     {
-        public Location(Guid id, 
-            string displayName, 
-            string parentId, 
-            Scope scope, 
-            [NotNull] string url, 
+        public Location(Guid id,
+            string displayName,
+            string parentId,
+            Scope scope,
+            [NotNull] string url,
             int childCount = 0,
             Guid? databaseId = null,
             LockState lockState = LockState.NotLocked)
@@ -32,10 +31,9 @@ namespace FeatureAdmin.Core.Models
             {
                 UniqueId += Common.Constants.MagicStrings.GuidSeparator.ToString() + databaseId.Value;
             }
-            
+
         }
 
-        [IgnoreDuringEquals]
         public string DisplayName { get; protected set; }
 
         /// <summary>
@@ -57,7 +55,6 @@ namespace FeatureAdmin.Core.Models
 
         public Scope Scope { get; protected set; }
 
-        [IgnoreDuringEquals]
         public bool CanHaveChildren
         {
             get
@@ -66,12 +63,10 @@ namespace FeatureAdmin.Core.Models
             }
         }
 
-        [IgnoreDuringEquals]
-        public string ParentId { get;  }
+        public string ParentId { get; }
 
-        public string Url { get;  }
+        public string Url { get; }
 
-        [IgnoreDuringEquals]
         public int ChildCount { get; set; }
 
         public override string ToString()
@@ -81,6 +76,31 @@ namespace FeatureAdmin.Core.Models
                 this.Scope,
                 this.DisplayName,
                 this.Url);
+        }
+
+        protected override bool EqualsInternal(Location right)
+        {
+            return this.UniqueId == right.UniqueId &&
+            this.DisplayName == right.DisplayName &&
+            this.ParentId == right.ParentId &&
+            this.Scope == right.Scope &&
+            this.Url == right.Url &&
+            this.ChildCount == right.ChildCount &&
+            this.LockState == right.LockState;
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+        public static bool operator ==(Location left, Location right)
+        {
+            return object.Equals((object)left, (object)right);
+        }
+
+        public static bool operator !=(Location left, Location right)
+        {
+            return !object.Equals((object)left, (object)right);
         }
     }
 }

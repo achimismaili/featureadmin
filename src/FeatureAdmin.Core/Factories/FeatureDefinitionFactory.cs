@@ -60,8 +60,11 @@ namespace FeatureAdmin.Core.Factories
             if (splittedId.Length >= 1)
             {
                 var featureIdAsString = splittedId[0];
-
-                if (!Guid.TryParse(featureIdAsString, out featureId))
+                if (Common.StringHelper.IsGuid(featureIdAsString))
+                {
+                    featureId = Common.StringHelper.UniqueIdToGuid(featureIdAsString);
+                }
+                else
                 {
                     return null;
                 }

@@ -10,7 +10,6 @@ namespace FeatureAdmin.Core.Models
     /// <remarks>
     /// Used to return search results for Feature Cleanup and Feature Upgrade
     /// </remarks>
-    [Equals]
     [Serializable]
     public class ActivatedFeatureSpecial
     {

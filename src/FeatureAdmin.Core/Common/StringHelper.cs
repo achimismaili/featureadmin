@@ -23,18 +23,48 @@ namespace FeatureAdmin.Core.Common
                 return Guid.Empty;
             }
 
-            Guid newGuid;
+            string guidAsString;
 
-            if (Guid.TryParse(uniqueId, out newGuid))
-            { return newGuid; }
-            else if (uniqueId.Contains(Core.Common.Constants.MagicStrings.GuidSeparator))
+            if (uniqueId.Contains(Core.Common.Constants.MagicStrings.GuidSeparator))
             {
                 string[] guids = uniqueId.Split(Core.Common.Constants.MagicStrings.GuidSeparator);
-                if (Guid.TryParse(guids[0], out newGuid))
-                { return newGuid; }
+                guidAsString = guids[0];
+            }
+            else
+            {
+                guidAsString = uniqueId;
             }
 
-            return Guid.Empty;
+            if (IsGuid(guidAsString))
+            {
+                return new Guid(guidAsString);
+            }
+            else
+            {
+                return Guid.Empty;
+            }
+        }
+
+        /// <summary>
+        /// checks if string is a guid
+        /// </summary>
+        /// <param name="possibleGuid"></param>
+        /// <returns>true if string is a guid</returns>
+        /// <remarks>
+        /// Once downgraded to .net 3.5, Guid.TryParse is no longer available
+        /// see https://stackoverflow.com/questions/1688624/is-there-a-guid-tryparse-in-net-3-5 for this workaround
+        /// </remarks>
+        public static bool IsGuid(string possibleGuid)
+        {
+            try
+            {
+                Guid gid = new Guid(possibleGuid);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
 
