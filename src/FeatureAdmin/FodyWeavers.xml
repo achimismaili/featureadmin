@@ -13,6 +13,7 @@
       Caliburn.Micro.Platform
       Caliburn.Micro.Platform.Core
       FeatureAdmin.Backends.Demo
+      FeatureAdmin.Backends.Error
       <!--FeatureAdmin.Backends.Sp2010-->
       FeatureAdmin.Backends.Sp2013
       FeatureAdmin.Core
