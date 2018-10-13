@@ -10,6 +10,11 @@
 
 * [License](https://github.com/achimismaili/featureadmin/blob/master/license.md)
 
+## Version 3.0.5
+
+### New Features
+
+* Separated Demo and real version again. If no SharePoint backend is found, error message is shown.
 
 ## Version 3.0.4
 

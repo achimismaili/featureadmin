@@ -49,7 +49,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DEMO</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -351,9 +351,9 @@
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Backends\Sp2010\Sp2010.csproj">
-      <Project>{b015c2b1-43e7-49eb-9ba1-30601abf4fa7}</Project>
-      <Name>Sp2010</Name>
+    <ProjectReference Include="..\Backends\Error\Error.csproj">
+      <Project>{6b2f58ef-d224-4f15-b925-95d8b6ef757c}</Project>
+      <Name>Error</Name>
     </ProjectReference>
     <ProjectReference Include="..\FeatureAdmin.Core\FeatureAdmin.Core.csproj">
       <Project>{4cec2e98-5a3b-4793-b606-a5250d046f02}</Project>

@@ -48,6 +48,19 @@ namespace FeatureAdmin.ViewModels
 
             DisplayName = Core.Common.StringHelper.GetApplicationDisplayName(dataService.CurrentBackend);
 
+            if (dataService.CurrentBackend == Core.Models.Enums.Backend.ERROR)
+            {
+                var version = Constants.FeatureAdminVersion;
+
+                var errorNotification = new ConfirmationRequest(
+                    DisplayName,
+                    Constants.BackendErrorMessage + "\nCurrent version " + version + "\n"
+                    );
+
+                Handle(errorNotification);
+            }
+
+
             StatusBarVm = new StatusBarViewModel(eventAggregator);
 
             FeatureDefinitionListVm = new FeatureDefinitionListViewModel(eventAggregator, repository);
@@ -127,8 +140,8 @@ namespace FeatureAdmin.ViewModels
                 var resendSelectedDefinition = new ResendItemSelectedRequest<FeatureDefinition>();
                 eventAggregator.BeginPublishOnUIThread(resendSelectedDefinition);
             }
-            
-            if(!message.ShowWindow && ActivatedFeatureVm!= null)
+
+            if (!message.ShowWindow && ActivatedFeatureVm != null)
             {
                 ActivatedFeatureVm = null;
             }
@@ -190,7 +203,7 @@ namespace FeatureAdmin.ViewModels
             // see also https://support.microsoft.com/en-us/help/305703/how-to-start-the-default-internet-browser-programmatically-by-using-vi
 
             string target = "https://www.featureadmin.com";
-            
+
             try
             {
                 System.Diagnostics.Process.Start(target);
@@ -224,21 +237,21 @@ namespace FeatureAdmin.ViewModels
         public void About()
         {
 
-            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            var version = Constants.FeatureAdminVersion;
 
             var year = System.IO.File.GetCreationTime(
                 System.Reflection.Assembly.GetExecutingAssembly().Location).Year;
 
-                    var dialog = new ConfirmationRequest(
-                        "About Feature Admin",
-                        "SharePoint Feature Admin\n" + 
-                        "Current version " + version + "\n\n" + 
-                        "Created by Achim Ismaili in " + year + "\n" +
-                        "https://www.featureadmin.com"
-                        );
-                    DialogViewModel dialogVm = new DialogViewModel(eventAggregator, dialog);
-                    this.windowManager.ShowDialog(dialogVm, null, GetDialogSettings());
-           
+            var dialog = new ConfirmationRequest(
+                "About Feature Admin",
+                "SharePoint Feature Admin\n" +
+                "Current version " + version + "\n\n" +
+                "Created by Achim Ismaili in " + year + "\n" +
+                "https://www.featureadmin.com"
+                );
+            DialogViewModel dialogVm = new DialogViewModel(eventAggregator, dialog);
+            this.windowManager.ShowDialog(dialogVm, null, GetDialogSettings());
+
         }
 
         private dynamic GetDialogSettings()

@@ -3,31 +3,31 @@ using FeatureAdmin.Core.Services;
 
 namespace FeatureAdmin
 {
-    public static class BackendSelector
+    public class BackendSelector
     {
-        public static Backend EvaluateBackend()
+        public Backend EvaluateBackend()
         {
 
             //// evaluate SP 2007
-            //if (CheckFarmExists<Backends.Sp2007.Services.SpDataService>(12))
+            //if (CheckIfSharePointVersionIsInstalled(12))
             //{
             //    return Backend.SP2007;
             //}
 
             //// evaluate SP 2010
-            //if (CheckFarmExists<Backends.Sp2010.Services.SpDataService>(14))
+            //if (CheckIfSharePointVersionIsInstalled(14))
             //{
             //    return Backend.SP2010;
             //}
 
             // evaluate SP 2013
-            if (CheckFarmExists<Backends.Sp2013.Services.SpDataService>(15))
+            if (CheckIfSharePointVersionIsInstalled(15))
             {
                 return Backend.SP2013;
             }
 
             // evaluate SP 2016
-            if (CheckFarmExists<Backends.Sp2013.Services.SpDataService>(16))
+            if (CheckIfSharePointVersionIsInstalled(16))
             {
                 return Backend.SP2013;
                 // commented out until implemented
@@ -35,23 +35,38 @@ namespace FeatureAdmin
             }
             
             // evaluate SP 2019
-            if (CheckFarmExists<Backends.Sp2013.Services.SpDataService>(17))
+            if (CheckIfSharePointVersionIsInstalled(17))
             {
                 return Backend.SP2013;
                 // commented out until implemented
                 // return Backend.SP2019;
             }
-            return Backend.SP2010;
+
+            throw new System.ApplicationException("No supported SharePoint Version found, please check on https://www.featureadmin.com for updates, or download the demo.");
         }
 
-        private static bool CheckFarmExists<T>(int compatibilityLevel) where T : class, IDataService, new()
+        private bool SubKeyExist(string Subkey)
         {
-            string SharePointDllPath = string.Format(
-                @"C:\Program Files\Common Files\Microsoft Shared\Web Server Extensions\{0}\ISAPI\Microsoft.SharePoint.dll",
-                compatibilityLevel
-                );
+            // Check if a Subkey exist
+            var myKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(Subkey);
+            if (myKey == null)
+                return false;
+            else
+                return true;
+        }
 
-            return System.IO.File.Exists(SharePointDllPath);
+        private bool CheckIfSharePointVersionIsInstalled(int version) 
+        {
+            // string SharePointDllPath = string.Format(
+                // @"C:\Program Files\Common Files\Microsoft Shared\Web Server Extensions\{0}\ISAPI\Microsoft.SharePoint.dll",
+                // version
+                // );
+
+            var SharePointRegistryPath = string.Format(@"SOFTWARE\Microsoft\Office\{0}.0\BinPath", version);
+
+            return SubKeyExist(SharePointRegistryPath);
+
+            // return System.IO.File.Exists(SharePointDllPath);
 
             // checking if farm exists, takes too long, therefore, commented out
 

@@ -9,7 +9,10 @@ namespace FeatureAdmin.Common
 {
     public static class Constants
     {
-        public static class Search
+        // to be overwritten by AppBootstrapper.cs with an error message, in case of a start error
+        public static string BackendErrorMessage = "There was an error when trying to connect to the SharePoint farm.";
+
+            public static class Search
         {
             public static IEnumerable<Scope> ScopeFilterList = new List<Scope>()
             {
@@ -30,11 +33,6 @@ namespace FeatureAdmin.Common
         }
             public static class Text
         {
-            public static string FeatureAdminTitle = string.Format(
-            "FeatureAdmin for SharePoint {0} - v{1}",
-                Common.Constants.SharePointVersion,
-                version);
-
             public const string UndefinedActivatedFeature = "Faulty - Id: {0}";
 
             // warning, when no feature was selected
@@ -47,14 +45,6 @@ namespace FeatureAdmin.Common
             public const string UpgradesRequired = "UpgradesRequired";
         }
 
-        public static Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-
-#if (SP2013)
-        public static string SharePointVersion = "2013";
-#elif (SP2010)
-        public static string SharePointVersion = "2010";
-#else
-        public static string SharePointVersion = "Demo";
-#endif
+        public static Version FeatureAdminVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
     }
 }

@@ -12,14 +12,6 @@ namespace FeatureAdmin.Backends.Sp2013.Services
 {
     public class SpDataService : IDataService
     {
-        public string ServiceMode
-        {
-            get
-            {
-                return "SharePoint 2013+";
-            }
-        }
-
         public Backend CurrentBackend
         {
             get
