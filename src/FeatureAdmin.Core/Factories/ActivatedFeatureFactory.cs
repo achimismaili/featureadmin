@@ -14,7 +14,7 @@ namespace FeatureAdmin.Core.Factories
                 string displayName,
                 bool faulty,
                 Dictionary<string, string> properties,
-                DateTime timeActivated,
+                DateTime? timeActivated,
                 Version version,
                 Version definitionVersion,
                 FeatureDefinitionScope featureDefinitionScope = FeatureDefinitionScope.Farm

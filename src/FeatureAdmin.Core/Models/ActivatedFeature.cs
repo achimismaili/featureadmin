@@ -14,7 +14,7 @@ namespace FeatureAdmin.Core.Models
                 string displayName,
                 bool faulty,
                 Dictionary<string, string> properties,
-                DateTime timeActivated,
+                DateTime? timeActivated,
                 Version version,
                 Version definitionVersion,
                 FeatureDefinitionScope featureDefinitionScope = FeatureDefinitionScope.Farm
@@ -25,7 +25,14 @@ namespace FeatureAdmin.Core.Models
             DisplayName = displayName;
             Faulty = faulty;
             Properties = properties;
-            TimeActivated = timeActivated;
+            if (timeActivated.HasValue)
+            {
+                TimeActivated = timeActivated.Value;
+            }
+            else
+            {
+                TimeActivated = new DateTime(1900, 1, 1);
+            }
             Version = version;
             DefinitionVersion = definitionVersion;
             FeatureDefinitionScope = featureDefinitionScope;

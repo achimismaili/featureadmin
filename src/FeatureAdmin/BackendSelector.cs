@@ -41,7 +41,7 @@ namespace FeatureAdmin
                 // commented out until implemented
                 // return Backend.SP2019;
             }
-            return Backend.DEMO;
+            return Backend.SP2010;
         }
 
         private static bool CheckFarmExists<T>(int compatibilityLevel) where T : class, IDataService, new()
