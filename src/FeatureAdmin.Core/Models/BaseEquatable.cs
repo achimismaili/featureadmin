@@ -2,6 +2,7 @@
 
 namespace FeatureAdmin.Core.Models
 {
+    [Serializable]
     public abstract class BaseEquatable<T> : IEquatable<T> where T : class
     {
 
