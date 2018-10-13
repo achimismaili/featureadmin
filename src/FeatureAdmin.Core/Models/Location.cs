@@ -1,10 +1,11 @@
 ﻿using FeatureAdmin.Core.Models.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace FeatureAdmin.Core.Models
 {
     [Serializable]
-    public class Location : BaseEquatable<Location>
+    public class Location : IEquatable<Location>
     {
         public Location(Guid id,
             string displayName,
@@ -69,6 +70,36 @@ namespace FeatureAdmin.Core.Models
 
         public int ChildCount { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Location);
+        }
+
+        public bool Equals(Location other)
+        {
+            return other != null &&
+                   DisplayName == other.DisplayName &&
+                   UniqueId == other.UniqueId &&
+                   LockState == other.LockState &&
+                   Scope == other.Scope &&
+                   ParentId == other.ParentId &&
+                   Url == other.Url &&
+                   ChildCount == other.ChildCount;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 1789934933;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(DisplayName);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UniqueId);
+            hashCode = hashCode * -1521134295 + LockState.GetHashCode();
+            hashCode = hashCode * -1521134295 + Scope.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ParentId);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Url);
+            hashCode = hashCode * -1521134295 + ChildCount.GetHashCode();
+            return hashCode;
+        }
+
         public override string ToString()
         {
             return string.Format(
@@ -78,29 +109,14 @@ namespace FeatureAdmin.Core.Models
                 this.Url);
         }
 
-        protected override bool EqualsInternal(Location right)
+        public static bool operator ==(Location location1, Location location2)
         {
-            return this.UniqueId == right.UniqueId &&
-            this.DisplayName == right.DisplayName &&
-            this.ParentId == right.ParentId &&
-            this.Scope == right.Scope &&
-            this.Url == right.Url &&
-            this.ChildCount == right.ChildCount &&
-            this.LockState == right.LockState;
+            return EqualityComparer<Location>.Default.Equals(location1, location2);
         }
 
-        public override int GetHashCode()
+        public static bool operator !=(Location location1, Location location2)
         {
-            throw new NotImplementedException();
-        }
-        public static bool operator ==(Location left, Location right)
-        {
-            return object.Equals((object)left, (object)right);
-        }
-
-        public static bool operator !=(Location left, Location right)
-        {
-            return !object.Equals((object)left, (object)right);
+            return !(location1 == location2);
         }
     }
 }

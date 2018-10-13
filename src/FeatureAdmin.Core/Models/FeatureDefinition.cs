@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace FeatureAdmin.Core.Models
 {
     [Serializable]
-    public class FeatureDefinition : BaseEquatable<FeatureDefinition> 
+    public class FeatureDefinition : IEquatable<FeatureDefinition>
     {
         public FeatureDefinition(
             Guid id,
@@ -73,6 +73,42 @@ namespace FeatureAdmin.Core.Models
         public string UniqueIdentifier { get; private set; }
         public Version Version { get; private set; }
 
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as FeatureDefinition);
+        }
+
+        public bool Equals(FeatureDefinition other)
+        {
+            return other != null &&
+                   DisplayName == other.DisplayName &&
+                   Faulty == other.Faulty &&
+                   Hidden == other.Hidden &&
+                   Name == other.Name &&
+                   Scope == other.Scope &&
+                   SolutionId.Equals(other.SolutionId) &&
+                   Title == other.Title &&
+                   UIVersion == other.UIVersion &&
+                   UniqueIdentifier == other.UniqueIdentifier &&
+                   EqualityComparer<Version>.Default.Equals(Version, other.Version);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 632039311;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(DisplayName);
+            hashCode = hashCode * -1521134295 + Faulty.GetHashCode();
+            hashCode = hashCode * -1521134295 + Hidden.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
+            hashCode = hashCode * -1521134295 + Scope.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(SolutionId);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Title);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UIVersion);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(UniqueIdentifier);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Version>.Default.GetHashCode(Version);
+            return hashCode;
+        }
+
         public override string ToString()
         {
             return string.Format(
@@ -84,30 +120,14 @@ namespace FeatureAdmin.Core.Models
                 );
         }
 
-        protected override bool EqualsInternal(FeatureDefinition right)
+        public static bool operator ==(FeatureDefinition definition1, FeatureDefinition definition2)
         {
-            return this.UniqueIdentifier == right.UniqueIdentifier &&
-            this.DisplayName == right.DisplayName &&
-            this.Faulty == right.Faulty &&
-            this.Scope == right.Scope &&
-            this.Hidden == right.Hidden &&
-            this.SolutionId == right.SolutionId &&
-            this.Title == right.Title &&
-            this.UIVersion == right.UIVersion;
+            return EqualityComparer<FeatureDefinition>.Default.Equals(definition1, definition2);
         }
 
-        public override int GetHashCode()
+        public static bool operator !=(FeatureDefinition definition1, FeatureDefinition definition2)
         {
-            throw new NotImplementedException();
-        }
-        public static bool operator ==(FeatureDefinition left, FeatureDefinition right)
-        {
-            return object.Equals((object)left, (object)right);
-        }
-
-        public static bool operator !=(FeatureDefinition left, FeatureDefinition right)
-        {
-            return !object.Equals((object)left, (object)right);
+            return !(definition1 == definition2);
         }
     }
 }

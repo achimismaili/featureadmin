@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace FeatureAdmin.Core.Models
 {
     [Serializable]
-    public class ActivatedFeature : BaseEquatable<ActivatedFeature>
+    public class ActivatedFeature : IEquatable<ActivatedFeature>
     {
         public ActivatedFeature(
                 string featureId,
@@ -89,6 +89,30 @@ namespace FeatureAdmin.Core.Models
 
         public FeatureDefinitionScope FeatureDefinitionScope { get; private set; }
 
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ActivatedFeature);
+        }
+
+        public bool Equals(ActivatedFeature other)
+        {
+            return other != null &&
+                   Faulty == other.Faulty &&
+                   FeatureId == other.FeatureId &&
+                   LocationId == other.LocationId &&
+                   EqualityComparer<Version>.Default.Equals(Version, other.Version);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 2029977652;
+            hashCode = hashCode * -1521134295 + Faulty.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(FeatureId);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(LocationId);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Version>.Default.GetHashCode(Version);
+            return hashCode;
+        }
+
         public override string ToString()
         {
             return string.Format(
@@ -99,26 +123,14 @@ namespace FeatureAdmin.Core.Models
                 );
         }
 
-        protected override bool EqualsInternal(ActivatedFeature right)
+        public static bool operator ==(ActivatedFeature feature1, ActivatedFeature feature2)
         {
-            return this.FeatureId == right.FeatureId &&
-            this.LocationId == right.LocationId &&
-            this.Version == right.Version &&
-            this.Faulty == right.Faulty;
+            return EqualityComparer<ActivatedFeature>.Default.Equals(feature1, feature2);
         }
 
-        public override int GetHashCode()
+        public static bool operator !=(ActivatedFeature feature1, ActivatedFeature feature2)
         {
-            throw new NotImplementedException();
-        }
-        public static bool operator ==(ActivatedFeature left, ActivatedFeature right)
-        {
-            return object.Equals((object)left, (object)right);
-        }
-
-        public static bool operator !=(ActivatedFeature left, ActivatedFeature right)
-        {
-            return !object.Equals((object)left, (object)right);
+            return !(feature1 == feature2);
         }
     }
 }
