@@ -70,7 +70,7 @@
 * Ask user whether to use Force Flag
 * Upgrade left-hand lists (webapps, sites, webs) to multicolumn
 
-### Knows issues
+### Known issues
 * Web Application Features are sometimes not handled correctly
 * It is no longer possible to deactivate/remove faulty/orphaned features
 
