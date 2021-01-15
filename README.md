@@ -14,7 +14,7 @@ This is a tool to manage SharePoint features. It allows you to
 * Quickly get to and search within all locations, where features can be activated in SharePoint (Farm, Web Apps, Sites, Webs)
 * Identify, where which features are activated
 * Identify and cleanup orphaned/faulty/broken features and feature definitions that often cause issues (e.g. when installing CUs or when exporting and importing sites)
-* Activate, Deactivate and Upgrade features (, even in multiple locations (bulk), when selecting a parent location)
+* Activate, Deactivate and Upgrade features (even in multiple locations (bulk), when selecting a parent location)
 * Uninstall feature definitions
 
 ## Downloads
@@ -99,7 +99,7 @@ Ideal, for activating or deactivating features in large farms with many sites an
 * Made for administrators: requires only .NET framework version 4.52, requires no administration
 * Once started, asynchronously loads all feature definitions, locations (farm, web apps, site collections, webs) and all activated features
 * Best if started as Administrator with farm admin rights, but FarmAdmin also tries to start with less privileges
-* PowerFul search and filter for features and locations, to find the features you are looking for
+* Powerful search and filter for features and locations, to find the features you are looking for
 
 <!-- ## Screenshots
 Feature View - remove Features
